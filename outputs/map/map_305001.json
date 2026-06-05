@@ -1,0 +1,135 @@
+{
+  "page_id": "305001",
+  "source_url": "https://confluence.local/x/MDC-OTP-Service",
+  "title": "MDC OTP Service",
+  "space": "DEPT",
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Services"
+  ],
+  "owner": "carol",
+  "labels": [
+    "service",
+    "otp",
+    "mdc"
+  ],
+  "confluence_version": 2,
+  "update_at": "2026-04-30T08:00:00Z",
+  "captured_at": "2026-06-04T00:00:00Z",
+  "page_summary": {
+    "summary_en": "MDC OTP Service contains 3 sections about MDC OTP Service.",
+    "summary_zh": "MDC OTP Service 包含 3 个 section，主题包括 MDC OTP Service。",
+    "cross_questions_en": [
+      "How do the sections in MDC OTP Service relate?"
+    ],
+    "cross_questions_zh": [
+      "MDC OTP Service 里的各部分如何关联?"
+    ]
+  },
+  "sections": [
+    {
+      "anchor": "MDC OTP Service > What is the MDC OTP Service",
+      "heading_path": [
+        "MDC OTP Service",
+        "What is the MDC OTP Service"
+      ],
+      "concepts": [
+        "MDC OTP Service"
+      ],
+      "keywords_raw": [
+        "MDC OTP Service",
+        "OTP"
+      ],
+      "info_type": "what-is",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "What is the MDC OTP Service covers what-is information for MDC OTP Service (narrative).",
+      "summary_zh": "What is the MDC OTP Service 说明 MDC OTP Service 的 what-is 信息(narrative)。",
+      "questions_en": [
+        "What is MDC OTP Service?",
+        "MDC OTP Service what-is",
+        "Where is MDC OTP Service documented?"
+      ],
+      "questions_zh": [
+        "MDC OTP Service 是什么?",
+        "MDC OTP Service what-is",
+        "MDC OTP Service 在哪里说明?"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "anchor": "MDC OTP Service > OTP Generation Config",
+      "heading_path": [
+        "MDC OTP Service",
+        "OTP Generation Config"
+      ],
+      "concepts": [
+        "MDC OTP Service"
+      ],
+      "keywords_raw": [
+        "OTP",
+        "otp_length",
+        "otp_ttl"
+      ],
+      "info_type": "config",
+      "tier": "inline-value",
+      "fact_value": "otp_length: 6; otp_ttl: 300",
+      "pointer_to": null,
+      "has_table": true,
+      "has_image": false,
+      "summary_en": "OTP Generation Config provides exact config values for MDC OTP Service: otp_length: 6; otp_ttl: 300.",
+      "summary_zh": "OTP Generation Config 提供 MDC OTP Service 的精确 config 信息:otp_length: 6; otp_ttl: 300。",
+      "questions_en": [
+        "What exact values are configured for MDC OTP Service?",
+        "What is MDC OTP Service?",
+        "OTP config",
+        "Where is MDC OTP Service documented?"
+      ],
+      "questions_zh": [
+        "MDC OTP Service 的精确配置值是什么?",
+        "MDC OTP Service 是什么?",
+        "OTP config",
+        "MDC OTP Service 在哪里说明?"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "anchor": "MDC OTP Service > Troubleshooting",
+      "heading_path": [
+        "MDC OTP Service",
+        "Troubleshooting"
+      ],
+      "concepts": [
+        "MDC OTP Service"
+      ],
+      "keywords_raw": [
+        "OTP",
+        "otp_ttl"
+      ],
+      "info_type": "troubleshoot",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Troubleshooting covers troubleshoot information for MDC OTP Service (narrative).",
+      "summary_zh": "Troubleshooting 说明 MDC OTP Service 的 troubleshoot 信息(narrative)。",
+      "questions_en": [
+        "What is MDC OTP Service?",
+        "OTP troubleshoot",
+        "Where is MDC OTP Service documented?"
+      ],
+      "questions_zh": [
+        "MDC OTP Service 是什么?",
+        "OTP troubleshoot",
+        "MDC OTP Service 在哪里说明?"
+      ],
+      "confidence": 0.86
+    }
+  ]
+}

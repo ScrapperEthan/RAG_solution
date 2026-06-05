@@ -1,0 +1,21 @@
+{
+  "page_id": "160033",
+  "title": "Message Inventory",
+  "space": "DEPT",
+  "source_url": "https://confluence.local/x/Message-Inventory",
+  "owner": "dan",
+  "labels": [
+    "inventory",
+    "messages"
+  ],
+  "captured_at": "2026-06-04T00:00:00Z",
+  "update_at": "2026-05-10T10:00:00Z",
+  "confluence_version": 3,
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Message Inventory"
+  ],
+  "body_md": "## Overview\n\nThis page lists the message types in scope for the 2026 project and how each is produced\nand consumed.\n\n## Batch Processing Notes\n\nMessage batches are processed by the **DM plugin**; the number of messages per batch is\ngoverned by the DM plugin configuration (`batch_size`). Teams sizing throughput should\nrefer to the DM plugin configuration rather than assuming a fixed number here.\n"
+}

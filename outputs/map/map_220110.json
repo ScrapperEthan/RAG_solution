@@ -1,0 +1,138 @@
+{
+  "page_id": "220110",
+  "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
+  "title": "Journey Plugin Overview",
+  "space": "DEPT",
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Plugins"
+  ],
+  "owner": "alice",
+  "labels": [
+    "plugin",
+    "journey"
+  ],
+  "confluence_version": 4,
+  "update_at": "2026-05-15T11:00:00Z",
+  "captured_at": "2026-06-04T00:00:00Z",
+  "page_summary": {
+    "summary_en": "Journey Plugin Overview contains 3 sections about Adaptor, DM Plugin, Journey Plugin.",
+    "summary_zh": "Journey Plugin Overview 包含 3 个 section，主题包括 Adaptor、DM Plugin、Journey Plugin。",
+    "cross_questions_en": [
+      "How do the sections in Journey Plugin Overview relate?"
+    ],
+    "cross_questions_zh": [
+      "Journey Plugin Overview 里的各部分如何关联?"
+    ]
+  },
+  "sections": [
+    {
+      "anchor": "Journey Plugin Overview > What is the Journey Plugin",
+      "heading_path": [
+        "Journey Plugin Overview",
+        "What is the Journey Plugin"
+      ],
+      "concepts": [
+        "DM Plugin",
+        "Journey Plugin"
+      ],
+      "keywords_raw": [
+        "DM plugin",
+        "Journey plugin"
+      ],
+      "info_type": "what-is",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "What is the Journey Plugin covers what-is information for DM Plugin, Journey Plugin (narrative).",
+      "summary_zh": "What is the Journey Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。",
+      "questions_en": [
+        "What is DM Plugin?",
+        "DM plugin what-is",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 是什么?",
+        "DM plugin what-is",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "anchor": "Journey Plugin Overview > Receiving from DM",
+      "heading_path": [
+        "Journey Plugin Overview",
+        "Receiving from DM"
+      ],
+      "concepts": [
+        "DM Plugin",
+        "Journey Plugin",
+        "Adaptor"
+      ],
+      "keywords_raw": [
+        "DM plugin",
+        "Journey plugin",
+        "adaptor",
+        "campaign_id",
+        "user_id"
+      ],
+      "info_type": "how-to",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Receiving from DM covers how-to information for DM Plugin, Journey Plugin, Adaptor (narrative).",
+      "summary_zh": "Receiving from DM 说明 DM Plugin, Journey Plugin, Adaptor 的 how-to 信息(narrative)。",
+      "questions_en": [
+        "What is DM Plugin?",
+        "DM plugin how-to",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 是什么?",
+        "DM plugin how-to",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "anchor": "Journey Plugin Overview > Configuration",
+      "heading_path": [
+        "Journey Plugin Overview",
+        "Configuration"
+      ],
+      "concepts": [
+        "Journey Plugin"
+      ],
+      "keywords_raw": [
+        "max_concurrent_journeys"
+      ],
+      "info_type": "config",
+      "tier": "inline-value",
+      "fact_value": "max_concurrent_journeys: 50",
+      "pointer_to": null,
+      "has_table": true,
+      "has_image": false,
+      "summary_en": "Configuration provides exact config values for Journey Plugin: max_concurrent_journeys: 50.",
+      "summary_zh": "Configuration 提供 Journey Plugin 的精确 config 信息:max_concurrent_journeys: 50。",
+      "questions_en": [
+        "What exact values are configured for Journey Plugin?",
+        "What is Journey Plugin?",
+        "max_concurrent_journeys config",
+        "Where is Journey Plugin documented?"
+      ],
+      "questions_zh": [
+        "Journey Plugin 的精确配置值是什么?",
+        "Journey Plugin 是什么?",
+        "max_concurrent_journeys config",
+        "Journey Plugin 在哪里说明?"
+      ],
+      "confidence": 0.95
+    }
+  ]
+}

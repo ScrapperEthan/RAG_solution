@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: rag-solution-poc
+Version: 0.1.0
+Summary: Confluence RAG/card PoC pipeline with offline fixtures and intranet adapter stubs.
+Requires-Python: <3.13,>=3.10
+Requires-Dist: chromadb>=1.5.2
+Requires-Dist: langchain-community<0.4
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: ragas>=0.4.3

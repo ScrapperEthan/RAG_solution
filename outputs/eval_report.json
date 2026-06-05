@@ -1,0 +1,2982 @@
+{
+  "run_id": "2026-06-04T15:01:29.510718+00:00",
+  "embedding_model": "hash-lexical",
+  "judge": "mock",
+  "golden": {
+    "size": 15,
+    "by_type": {
+      "single": 4,
+      "identifier-lookup": 6,
+      "pointer-drill": 1,
+      "multihop": 2,
+      "out-of-scope": 2
+    },
+    "frozen_hash": "1f108b5d2493f4bc5b08ca70e282ac1ef4f4aa5ab3829a0d1ab46f69886affff"
+  },
+  "baseline_id": "V1",
+  "variants": [
+    {
+      "id": "V1",
+      "label": "body · vector · pure RAG",
+      "index": "body",
+      "search": "vector",
+      "rerank": false,
+      "answer_source": "pure-rag",
+      "metrics": {
+        "recall@5": 0.5333333333333333,
+        "recall@8": 0.9333333333333333,
+        "mrr": 0.42563492063492064,
+        "ndcg@8": 0.5340420279506456,
+        "faithfulness": 0.9233333333333333,
+        "answer_relevancy": 0.9133333333333334,
+        "context_precision": 0.25833333333333336,
+        "context_recall": 0.9,
+        "association_recall": null,
+        "drill_miss_rate": null
+      }
+    },
+    {
+      "id": "V2",
+      "label": "body · hybrid · pure RAG",
+      "index": "body",
+      "search": "hybrid",
+      "rerank": false,
+      "answer_source": "pure-rag",
+      "metrics": {
+        "recall@5": 0.6,
+        "recall@8": 0.7333333333333333,
+        "mrr": 0.40777777777777774,
+        "ndcg@8": 0.4793409172200452,
+        "faithfulness": 0.8233333333333334,
+        "answer_relevancy": 0.9133333333333334,
+        "context_precision": 0.23333333333333334,
+        "context_recall": 0.7,
+        "association_recall": null,
+        "drill_miss_rate": null
+      }
+    },
+    {
+      "id": "V3",
+      "label": "questions · vector · pure RAG",
+      "index": "questions",
+      "search": "vector",
+      "rerank": false,
+      "answer_source": "pure-rag",
+      "metrics": {
+        "recall@5": 0.7333333333333333,
+        "recall@8": 0.8,
+        "mrr": 0.48500000000000004,
+        "ndcg@8": 0.54355511629228,
+        "faithfulness": 0.8566666666666667,
+        "answer_relevancy": 0.9133333333333334,
+        "context_precision": 0.24166666666666667,
+        "context_recall": 0.7666666666666667,
+        "association_recall": null,
+        "drill_miss_rate": null
+      }
+    },
+    {
+      "id": "V4",
+      "label": "questions · hybrid · pure RAG",
+      "index": "questions",
+      "search": "hybrid",
+      "rerank": false,
+      "answer_source": "pure-rag",
+      "metrics": {
+        "recall@5": 0.7333333333333333,
+        "recall@8": 0.8666666666666667,
+        "mrr": 0.4311904761904762,
+        "ndcg@8": 0.5284839390436988,
+        "faithfulness": 0.89,
+        "answer_relevancy": 0.9133333333333334,
+        "context_precision": 0.25,
+        "context_recall": 0.8333333333333334,
+        "association_recall": null,
+        "drill_miss_rate": null
+      }
+    },
+    {
+      "id": "V5",
+      "label": "both · hybrid · pure RAG",
+      "index": "both",
+      "search": "hybrid",
+      "rerank": false,
+      "answer_source": "pure-rag",
+      "metrics": {
+        "recall@5": 0.7333333333333333,
+        "recall@8": 0.8666666666666667,
+        "mrr": 0.4661111111111111,
+        "ndcg@8": 0.5546135457239143,
+        "faithfulness": 0.89,
+        "answer_relevancy": 0.9133333333333334,
+        "context_precision": 0.25,
+        "context_recall": 0.8333333333333334,
+        "association_recall": null,
+        "drill_miss_rate": null
+      }
+    },
+    {
+      "id": "V6",
+      "label": "both · hybrid · rerank placeholder",
+      "index": "both",
+      "search": "hybrid",
+      "rerank": true,
+      "answer_source": "pure-rag",
+      "metrics": {
+        "recall@5": 0.7333333333333333,
+        "recall@8": 0.8666666666666667,
+        "mrr": 0.4661111111111111,
+        "ndcg@8": 0.5546135457239143,
+        "faithfulness": 0.89,
+        "answer_relevancy": 0.9133333333333334,
+        "context_precision": 0.25,
+        "context_recall": 0.8333333333333334,
+        "association_recall": null,
+        "drill_miss_rate": null
+      }
+    },
+    {
+      "id": "C1",
+      "label": "card direct",
+      "index": "card",
+      "search": "card",
+      "rerank": false,
+      "answer_source": "card-direct",
+      "metrics": {
+        "recall@5": 0.4666666666666667,
+        "recall@8": 0.5333333333333333,
+        "mrr": 0.40952380952380957,
+        "ndcg@8": 0.4396795226984166,
+        "faithfulness": 0.6833333333333333,
+        "answer_relevancy": 0.8066666666666666,
+        "context_precision": 0.23452380952380952,
+        "context_recall": 0.5333333333333333,
+        "association_recall": 1.0,
+        "drill_miss_rate": 1.0
+      }
+    },
+    {
+      "id": "C2",
+      "label": "card route + grounding",
+      "index": "card",
+      "search": "card",
+      "rerank": false,
+      "answer_source": "card-grounding",
+      "metrics": {
+        "recall@5": 0.4,
+        "recall@8": 0.5333333333333333,
+        "mrr": 0.38571428571428573,
+        "ndcg@8": 0.37172638469319935,
+        "faithfulness": 0.7233333333333333,
+        "answer_relevancy": 0.9133333333333334,
+        "context_precision": 0.1857142857142857,
+        "context_recall": 0.45555555555555555,
+        "association_recall": 1.0,
+        "drill_miss_rate": 0.0
+      }
+    },
+    {
+      "id": "A1",
+      "label": "agentic card + RAG fallback",
+      "index": "both",
+      "search": "hybrid",
+      "rerank": false,
+      "answer_source": "agentic",
+      "metrics": {
+        "recall@5": 0.4666666666666667,
+        "recall@8": 0.5333333333333333,
+        "mrr": 0.37619047619047624,
+        "ndcg@8": 0.39275165009614094,
+        "faithfulness": 0.7233333333333333,
+        "answer_relevancy": 0.9133333333333334,
+        "context_precision": 0.29285714285714287,
+        "context_recall": 0.4888888888888889,
+        "association_recall": 1.0,
+        "drill_miss_rate": 0.5714285714285714
+      }
+    }
+  ],
+  "items": [
+    {
+      "q_id": "G-001",
+      "type": "single",
+      "q": "What is the DM plugin?",
+      "gold": [
+        "123456#What is the DM Plugin"
+      ],
+      "gold_answer": "It is the Data Management plugin that batches and delivers messages to downstream channels; the core of the delivery pipeline.",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Retry Behaviour",
+            "220110#Receiving from DM"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "160033#Batch Processing Notes",
+            "220110#Receiving from DM"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "220110#What is the Journey Plugin",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "190055#Component Index",
+            "123456#What is the DM Plugin",
+            "180044#Roles and Responsibilities",
+            "190055#Architecture at a Glance",
+            "140020#What is the Adaptor"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/2026-Planned-Project"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "123456#What is the DM Plugin",
+            "180044#Roles and Responsibilities",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "190055#Component Index",
+            "123456#How it connects to the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "123456#What is the DM Plugin",
+            "180044#Roles and Responsibilities",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "190055#Component Index",
+            "123456#How it connects to the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "123456#What is the DM Plugin",
+            "180044#Roles and Responsibilities",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "190055#Component Index",
+            "123456#How it connects to the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin",
+            "220110#Receiving from DM",
+            "230088#Decision",
+            "777001#Overview",
+            "777001#Known Issues",
+            "123456#Configuration",
+            "123456#How it connects to the Journey Plugin",
+            "160033#Batch Processing Notes",
+            "200066#Common Errors",
+            "200066#Retry Behaviour",
+            "777001#DM Plugin Config (post-migration)"
+          ],
+          "answer": "DM Plugin: What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。 Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Related to Journey Plugin, Adaptor.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin",
+            "220110#Receiving from DM",
+            "230088#Decision",
+            "777001#Overview",
+            "777001#Known Issues",
+            "123456#Configuration",
+            "123456#How it connects to the Journey Plugin",
+            "160033#Batch Processing Notes",
+            "200066#Common Errors",
+            "200066#Retry Behaviour",
+            "777001#DM Plugin Config (post-migration)"
+          ],
+          "answer": "DM Plugin: What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。 Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Related to Journey Plugin, Adaptor.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        }
+      }
+    },
+    {
+      "q_id": "G-002",
+      "type": "identifier-lookup",
+      "q": "DM plugin default batch_size?",
+      "gold": [
+        "777001#DM Plugin Config (post-migration)"
+      ],
+      "gold_answer": "1000 (post-migration; it was 500 before the SFMC migration).",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "200066#Common Errors",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "123456#Configuration",
+            "200066#Retry Behaviour",
+            "777001#DM Plugin Config (post-migration)"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "200066#Common Errors",
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "200066#Retry Behaviour",
+            "160033#Batch Processing Notes",
+            "777001#DM Plugin Config (post-migration)"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "123456#Configuration",
+            "123456#How it connects to the Journey Plugin",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "123456#Configuration",
+            "123456#How it connects to the Journey Plugin",
+            "140020#What is the Adaptor",
+            "777001#DM Plugin Config (post-migration)",
+            "190055#Introduction"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "123456#Configuration",
+            "123456#How it connects to the Journey Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "140020#What is the Adaptor",
+            "190055#Introduction"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "123456#Configuration",
+            "123456#How it connects to the Journey Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "140020#What is the Adaptor",
+            "190055#Introduction"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": true,
+          "retrieved": [
+            "777001#DM Plugin Config (post-migration)",
+            "123456#Configuration",
+            "200066#Common Errors",
+            "200066#FAQ"
+          ],
+          "answer": "batch_size: 1000; max_retry: 3 DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued; FAQ covers troubleshoot information for DM Plugin (narrative).",
+          "citations": [
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        }
+      }
+    },
+    {
+      "q_id": "G-003",
+      "type": "identifier-lookup",
+      "q": "What is the default max_retry for the DM plugin?",
+      "gold": [
+        "123456#Configuration"
+      ],
+      "gold_answer": "3",
+      "per_variant": {
+        "V1": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Retry Behaviour",
+            "220110#Receiving from DM"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "220110#What is the Journey Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "180044#Roles and Responsibilities",
+            "200066#Retry Behaviour"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "123456#How it connects to the Journey Plugin",
+            "190055#Introduction",
+            "180044#Roles and Responsibilities",
+            "190055#Architecture at a Glance"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "180044#Roles and Responsibilities",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Common Errors",
+            "160033#Batch Processing Notes",
+            "190055#Introduction"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "180044#Roles and Responsibilities",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Common Errors",
+            "160033#Batch Processing Notes",
+            "190055#Introduction"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "180044#Roles and Responsibilities",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Common Errors",
+            "160033#Batch Processing Notes",
+            "190055#Introduction"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": true,
+          "retrieved": [
+            "777001#DM Plugin Config (post-migration)",
+            "123456#Configuration"
+          ],
+          "answer": "batch_size: 1000; max_retry: 3",
+          "citations": [
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": true,
+          "retrieved": [
+            "777001#DM Plugin Config (post-migration)",
+            "123456#Configuration"
+          ],
+          "answer": "batch_size: 1000; max_retry: 3",
+          "citations": [
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        }
+      }
+    },
+    {
+      "q_id": "G-004",
+      "type": "pointer-drill",
+      "q": "how many times does dm retry",
+      "gold": [
+        "123456#Configuration"
+      ],
+      "gold_answer": "3 (the troubleshooting page only says retries are configurable; the actual value is in DM Plugin Overview > Configuration).",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "200066#Common Errors",
+            "123456#What is the DM Plugin",
+            "180044#Delivery Process",
+            "160033#Overview",
+            "777001#Overview",
+            "200066#FAQ",
+            "200066#Retry Behaviour",
+            "123456#Configuration"
+          ],
+          "answer": "The DM plugin max_retry default is 3.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": false,
+          "retrieved": [
+            "200066#Common Errors",
+            "123456#What is the DM Plugin",
+            "180044#Delivery Process",
+            "160033#Overview",
+            "777001#Overview",
+            "200066#FAQ",
+            "200066#Retry Behaviour",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "200066#Common Errors",
+            "220110#Receiving from DM",
+            "160033#Overview",
+            "123456#How it connects to the Journey Plugin",
+            "123456#What is the DM Plugin",
+            "180044#Delivery Process",
+            "200066#Retry Behaviour",
+            "123456#Configuration"
+          ],
+          "answer": "The DM plugin max_retry default is 3.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/Message-Inventory"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "220110#Receiving from DM",
+            "200066#Common Errors",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Retry Behaviour",
+            "160033#Overview",
+            "123456#What is the DM Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "123456#Configuration"
+          ],
+          "answer": "The DM plugin max_retry default is 3.",
+          "citations": [
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "200066#Common Errors",
+            "220110#Receiving from DM",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Retry Behaviour",
+            "123456#What is the DM Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "160033#Overview",
+            "123456#Configuration"
+          ],
+          "answer": "The DM plugin max_retry default is 3.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "200066#Common Errors",
+            "220110#Receiving from DM",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Retry Behaviour",
+            "123456#What is the DM Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "160033#Overview",
+            "123456#Configuration"
+          ],
+          "answer": "The DM plugin max_retry default is 3.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": true,
+          "retrieved": [
+            "777001#DM Plugin Config (post-migration)",
+            "123456#Configuration"
+          ],
+          "answer": "batch_size: 1000; max_retry: 3",
+          "citations": [
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": true,
+          "retrieved": [
+            "777001#DM Plugin Config (post-migration)",
+            "123456#Configuration"
+          ],
+          "answer": "batch_size: 1000; max_retry: 3",
+          "citations": [
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        }
+      }
+    },
+    {
+      "q_id": "G-005",
+      "type": "multihop",
+      "q": "How do the DM plugin and Journey plugin work together?",
+      "gold": [
+        "123456#How it connects to the Journey Plugin",
+        "220110#Receiving from DM",
+        "140020#What is the Adaptor"
+      ],
+      "gold_answer": "The DM plugin hands messages to the Journey plugin through the adaptor, which translates the payload (campaign_id, user_id).",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "220110#Receiving from DM",
+            "200066#Retry Behaviour"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Journey-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "200066#Common Errors",
+            "123456#How it connects to the Journey Plugin",
+            "220110#Receiving from DM",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#How it connects to the Journey Plugin",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "220110#Receiving from DM",
+            "200066#Common Errors",
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#How it connects to the Journey Plugin",
+            "220110#Receiving from DM",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#How it connects to the Journey Plugin",
+            "220110#Receiving from DM",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#How it connects to the Journey Plugin",
+            "220110#Receiving from DM",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": false,
+          "retrieved": [
+            "200066#Common Errors",
+            "200066#FAQ"
+          ],
+          "answer": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued; FAQ covers troubleshoot information for DM Plugin (narrative).",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": true
+        }
+      }
+    },
+    {
+      "q_id": "G-006",
+      "type": "single",
+      "q": "what is the adaptor",
+      "gold": [
+        "140020#What is the Adaptor"
+      ],
+      "gold_answer": "The bridge between the DM plugin and the Journey plugin (also spelled 'adapter' in older docs).",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "230088#Decision",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "230088#Consequences",
+            "220110#Receiving from DM",
+            "180044#Roles and Responsibilities"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/ADR-Single-Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "123456#What is the DM Plugin",
+            "230088#Decision",
+            "180044#Roles and Responsibilities",
+            "220110#Receiving from DM",
+            "230088#Consequences",
+            "123456#How it connects to the Journey Plugin"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "160033#Overview",
+            "230088#Decision",
+            "190055#Introduction",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "180044#Roles and Responsibilities",
+            "140020#Configuration"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/ADR-Single-Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "160033#Overview",
+            "140020#What is the Adaptor",
+            "123456#What is the DM Plugin",
+            "230088#Decision",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "230088#Consequences",
+            "230088#Rationale"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "160033#Overview",
+            "123456#What is the DM Plugin",
+            "230088#Decision",
+            "230088#Consequences",
+            "190055#Introduction",
+            "180044#Roles and Responsibilities",
+            "230088#Rationale"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "160033#Overview",
+            "123456#What is the DM Plugin",
+            "230088#Decision",
+            "230088#Consequences",
+            "190055#Introduction",
+            "180044#Roles and Responsibilities",
+            "230088#Rationale"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": false,
+          "retrieved": [
+            "140020#Configuration"
+          ],
+          "answer": "adaptor_mode: sync",
+          "citations": [
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "140020#Payload Mapping",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "220110#Receiving from DM",
+            "230088#Decision"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": false,
+          "retrieved": [
+            "140020#Configuration"
+          ],
+          "answer": "adaptor_mode: sync",
+          "citations": [
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        }
+      }
+    },
+    {
+      "q_id": "G-007",
+      "type": "identifier-lookup",
+      "q": "MDC OTP otp_length default",
+      "gold": [
+        "305001#OTP Generation Config"
+      ],
+      "gold_answer": "6 digits.",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "180044#Delivery Process",
+            "200066#Common Errors",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Architecture at a Glance",
+            "190055#Component Index"
+          ],
+          "answer": "MDC OTP otp_length defaults to 6 digits.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service",
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Component Index",
+            "180044#Delivery Process",
+            "190055#Architecture at a Glance",
+            "140020#Configuration"
+          ],
+          "answer": "MDC OTP otp_length defaults to 6 digits.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service",
+            "https://confluence.local/x/2026-Planned-Project"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#OTP Generation Config",
+            "305001#What is the MDC OTP Service",
+            "305001#Troubleshooting",
+            "190055#Introduction",
+            "180044#Delivery Process",
+            "160033#Overview",
+            "200066#Common Errors",
+            "230088#Decision"
+          ],
+          "answer": "MDC OTP otp_length defaults to 6 digits.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Introduction",
+            "180044#Delivery Process",
+            "160033#Overview",
+            "190055#Component Index",
+            "180044#Roles and Responsibilities"
+          ],
+          "answer": "MDC OTP otp_length defaults to 6 digits.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Introduction",
+            "190055#Component Index",
+            "180044#Delivery Process",
+            "190055#Architecture at a Glance",
+            "160033#Overview"
+          ],
+          "answer": "MDC OTP otp_length defaults to 6 digits.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Introduction",
+            "190055#Component Index",
+            "180044#Delivery Process",
+            "190055#Architecture at a Glance",
+            "160033#Overview"
+          ],
+          "answer": "MDC OTP otp_length defaults to 6 digits.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#OTP Generation Config"
+          ],
+          "answer": "otp_length: 6; otp_ttl: 300",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": true,
+          "retrieved": [
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "305001#What is the MDC OTP Service",
+            "305001#Troubleshooting",
+            "305001#OTP Generation Config"
+          ],
+          "answer": "MDC OTP otp_length defaults to 6 digits.",
+          "citations": [
+            "https://confluence.local/x/Delivery-WoW",
+            "https://confluence.local/x/2026-Planned-Project"
+          ],
+          "faithfulness": 0.95,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#OTP Generation Config"
+          ],
+          "answer": "otp_length: 6; otp_ttl: 300",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        }
+      }
+    },
+    {
+      "q_id": "G-008",
+      "type": "identifier-lookup",
+      "q": "How long is an MDC OTP valid for?",
+      "gold": [
+        "305001#OTP Generation Config"
+      ],
+      "gold_answer": "300 seconds (otp_ttl).",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "180044#Delivery Process",
+            "160033#Overview",
+            "200066#Common Errors",
+            "210077#Capacity Planning",
+            "305001#Troubleshooting",
+            "305001#OTP Generation Config"
+          ],
+          "answer": "MDC OTP otp_ttl is 300 seconds.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service",
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": false,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "160033#Overview",
+            "180044#Delivery Process",
+            "200066#Common Errors",
+            "210077#Capacity Planning",
+            "305001#Troubleshooting",
+            "123456#What is the DM Plugin"
+          ],
+          "answer": "MDC OTP otp_ttl is 300 seconds.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service",
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/Message-Inventory"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Introduction",
+            "160033#Overview",
+            "180044#Delivery Process",
+            "200066#Common Errors",
+            "210077#Capacity Planning"
+          ],
+          "answer": "MDC OTP otp_ttl is 300 seconds.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Introduction",
+            "160033#Overview",
+            "180044#Delivery Process",
+            "180044#Roles and Responsibilities",
+            "190055#Component Index"
+          ],
+          "answer": "MDC OTP otp_ttl is 300 seconds.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Introduction",
+            "160033#Overview",
+            "180044#Roles and Responsibilities",
+            "180044#Delivery Process",
+            "190055#Component Index"
+          ],
+          "answer": "MDC OTP otp_ttl is 300 seconds.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "305001#What is the MDC OTP Service",
+            "305001#OTP Generation Config",
+            "305001#Troubleshooting",
+            "190055#Introduction",
+            "160033#Overview",
+            "180044#Roles and Responsibilities",
+            "180044#Delivery Process",
+            "190055#Component Index"
+          ],
+          "answer": "MDC OTP otp_ttl is 300 seconds.",
+          "citations": [
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": true,
+          "retrieved": [
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "305001#What is the MDC OTP Service",
+            "305001#Troubleshooting",
+            "305001#OTP Generation Config"
+          ],
+          "answer": "MDC OTP Service: Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Architecture at a Glance 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Component Index 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Troubleshooting covers troubleshoot information for MDC OTP Service (narrative).",
+          "citations": [
+            "https://confluence.local/x/Delivery-WoW",
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": true,
+          "retrieved": [
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "305001#What is the MDC OTP Service",
+            "305001#Troubleshooting",
+            "305001#OTP Generation Config"
+          ],
+          "answer": "MDC OTP otp_ttl is 300 seconds.",
+          "citations": [
+            "https://confluence.local/x/Delivery-WoW",
+            "https://confluence.local/x/2026-Planned-Project"
+          ],
+          "faithfulness": 0.95,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": true,
+          "retrieved": [
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "305001#What is the MDC OTP Service",
+            "305001#Troubleshooting",
+            "305001#OTP Generation Config"
+          ],
+          "answer": "MDC OTP Service: Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Architecture at a Glance 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Component Index 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Troubleshooting covers troubleshoot information for MDC OTP Service (narrative).",
+          "citations": [
+            "https://confluence.local/x/Delivery-WoW",
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/MDC-OTP-Service"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        }
+      }
+    },
+    {
+      "q_id": "G-009",
+      "type": "identifier-lookup",
+      "q": "which error code means the DM plugin is rate limited?",
+      "gold": [
+        "200066#Common Errors"
+      ],
+      "gold_answer": "DM-429",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Retry Behaviour",
+            "220110#Receiving from DM"
+          ],
+          "answer": "DM-429 means the DM plugin is rate limited by a downstream channel.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "220110#Receiving from DM",
+            "180044#Roles and Responsibilities"
+          ],
+          "answer": "DM-429 means the DM plugin is rate limited by a downstream channel.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "160033#Overview",
+            "123456#Configuration"
+          ],
+          "answer": "DM-429 means the DM plugin is rate limited by a downstream channel.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "190055#Introduction",
+            "180044#Roles and Responsibilities",
+            "190055#Architecture at a Glance"
+          ],
+          "answer": "DM-429 means the DM plugin is rate limited by a downstream channel.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "190055#Introduction",
+            "180044#Roles and Responsibilities",
+            "190055#Architecture at a Glance"
+          ],
+          "answer": "DM-429 means the DM plugin is rate limited by a downstream channel.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "190055#Introduction",
+            "180044#Roles and Responsibilities",
+            "190055#Architecture at a Glance"
+          ],
+          "answer": "DM-429 means the DM plugin is rate limited by a downstream channel.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": true,
+          "retrieved": [
+            "200066#Common Errors",
+            "200066#FAQ"
+          ],
+          "answer": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued; FAQ covers troubleshoot information for DM Plugin (narrative).",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "DM-429 means the DM plugin is rate limited by a downstream channel.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "DM-429 means the DM plugin is rate limited by a downstream channel.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        }
+      }
+    },
+    {
+      "q_id": "G-010",
+      "type": "single",
+      "q": "which component processes message batches?",
+      "gold": [
+        "160033#Batch Processing Notes",
+        "123456#What is the DM Plugin"
+      ],
+      "gold_answer": "The DM plugin (batch size governed by its configuration).",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "160033#Overview",
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "210077#Capacity Planning",
+            "180044#Delivery Process",
+            "190055#Introduction",
+            "777001#Overview",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "Message batches are processed by the DM plugin.",
+          "citations": [
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "160033#Overview",
+            "210077#Capacity Planning",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "160033#Batch Processing Notes",
+            "123456#Configuration",
+            "140020#What is the Adaptor",
+            "210077#Peak Handling"
+          ],
+          "answer": "Message batches are processed by the DM plugin.",
+          "citations": [
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/Supply-and-Demand",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "160033#Overview",
+            "777001#Overview",
+            "190055#Component Index",
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "160033#Batch Processing Notes",
+            "190055#Introduction",
+            "200066#Common Errors"
+          ],
+          "answer": "Message batches are processed by the DM plugin.",
+          "citations": [
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/2026-Planned-Project"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "190055#Component Index",
+            "160033#Overview",
+            "123456#What is the DM Plugin",
+            "160033#Batch Processing Notes",
+            "777001#Overview",
+            "123456#Configuration",
+            "210077#Capacity Planning",
+            "140020#What is the Adaptor"
+          ],
+          "answer": "Message batches are processed by the DM plugin.",
+          "citations": [
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/DM-Plugin-Overview"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "160033#Overview",
+            "190055#Component Index",
+            "160033#Batch Processing Notes",
+            "123456#What is the DM Plugin",
+            "777001#Overview",
+            "123456#Configuration",
+            "210077#Capacity Planning",
+            "190055#Introduction"
+          ],
+          "answer": "Message batches are processed by the DM plugin.",
+          "citations": [
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/2026-Planned-Project"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "160033#Overview",
+            "190055#Component Index",
+            "160033#Batch Processing Notes",
+            "123456#What is the DM Plugin",
+            "777001#Overview",
+            "123456#Configuration",
+            "210077#Capacity Planning",
+            "190055#Introduction"
+          ],
+          "answer": "Message batches are processed by the DM plugin.",
+          "citations": [
+            "https://confluence.local/x/Message-Inventory",
+            "https://confluence.local/x/2026-Planned-Project"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": false,
+          "retrieved": [
+            "200066#Common Errors",
+            "200066#FAQ"
+          ],
+          "answer": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued; FAQ covers troubleshoot information for DM Plugin (narrative).",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "Message batches are processed by the DM plugin.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.95,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": false,
+          "retrieved": [
+            "200066#Common Errors",
+            "200066#FAQ"
+          ],
+          "answer": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued; FAQ covers troubleshoot information for DM Plugin (narrative).",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        }
+      }
+    },
+    {
+      "q_id": "G-011",
+      "type": "out-of-scope",
+      "q": "Does the DM plugin support sending SMS?",
+      "gold": "NO_ANSWER",
+      "gold_answer": "NO_ANSWER — not documented in the corpus.",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "200066#Retry Behaviour",
+            "123456#How it connects to the Journey Plugin",
+            "200066#FAQ"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "200066#Common Errors",
+            "190055#Introduction",
+            "220110#What is the Journey Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Retry Behaviour",
+            "160033#Batch Processing Notes"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "200066#Retry Behaviour",
+            "220110#What is the Journey Plugin",
+            "123456#What is the DM Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Common Errors",
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "230088#Decision"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Common Errors",
+            "140020#What is the Adaptor",
+            "200066#Retry Behaviour",
+            "777001#DM Plugin Config (post-migration)",
+            "190055#Introduction"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Common Errors",
+            "200066#Retry Behaviour",
+            "140020#What is the Adaptor",
+            "777001#DM Plugin Config (post-migration)",
+            "190055#Introduction"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "123456#How it connects to the Journey Plugin",
+            "200066#Common Errors",
+            "200066#Retry Behaviour",
+            "140020#What is the Adaptor",
+            "777001#DM Plugin Config (post-migration)",
+            "190055#Introduction"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": false,
+          "retrieved": [
+            "200066#Common Errors",
+            "200066#FAQ"
+          ],
+          "answer": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued; FAQ covers troubleshoot information for DM Plugin (narrative).",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": true
+        }
+      }
+    },
+    {
+      "q_id": "G-012",
+      "type": "out-of-scope",
+      "q": "What is the monthly cost of the Journey plugin?",
+      "gold": "NO_ANSWER",
+      "gold_answer": "NO_ANSWER — pricing is not in the corpus.",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "220110#What is the Journey Plugin",
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "190055#Introduction",
+            "180044#Delivery Process",
+            "220110#Receiving from DM",
+            "123456#How it connects to the Journey Plugin",
+            "180044#Roles and Responsibilities"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "220110#Receiving from DM",
+            "123456#How it connects to the Journey Plugin",
+            "180044#Roles and Responsibilities",
+            "180044#Delivery Process"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "220110#What is the Journey Plugin",
+            "123456#What is the DM Plugin",
+            "190055#Introduction",
+            "180044#Delivery Process",
+            "220110#Configuration",
+            "160033#Overview",
+            "180044#Roles and Responsibilities"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "220110#Configuration",
+            "180044#Delivery Process",
+            "180044#Roles and Responsibilities"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "180044#Roles and Responsibilities",
+            "220110#Configuration",
+            "190055#Architecture at a Glance"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "123456#What is the DM Plugin",
+            "220110#What is the Journey Plugin",
+            "190055#Introduction",
+            "123456#How it connects to the Journey Plugin",
+            "180044#Roles and Responsibilities",
+            "220110#Configuration",
+            "190055#Architecture at a Glance"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": false,
+          "retrieved": [
+            "220110#Configuration"
+          ],
+          "answer": "max_concurrent_journeys: 50",
+          "citations": [
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "220110#What is the Journey Plugin",
+            "220110#Receiving from DM"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "220110#What is the Journey Plugin",
+            "220110#Receiving from DM"
+          ],
+          "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
+          "citations": [],
+          "faithfulness": 0.95,
+          "drilled": true
+        }
+      }
+    },
+    {
+      "q_id": "G-013",
+      "type": "multihop",
+      "q": "Describe the end-to-end message flow in the 2026 project.",
+      "gold": [
+        "190055#Architecture at a Glance"
+      ],
+      "gold_answer": "DM plugin → adaptor → Journey plugin; one-time passwords are handled separately by the MDC OTP Service.",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "190055#Introduction",
+            "305001#What is the MDC OTP Service",
+            "210077#Capacity Planning",
+            "220110#What is the Journey Plugin",
+            "230088#Decision",
+            "160033#Overview",
+            "190055#Architecture at a Glance",
+            "140020#What is the Adaptor"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/MDC-OTP-Service",
+            "https://confluence.local/x/Supply-and-Demand"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": false,
+          "retrieved": [
+            "190055#Introduction",
+            "305001#What is the MDC OTP Service",
+            "220110#What is the Journey Plugin",
+            "230088#Decision",
+            "210077#Capacity Planning",
+            "160033#Overview",
+            "140020#What is the Adaptor",
+            "123456#How it connects to the Journey Plugin"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/2026-Planned-Project",
+            "https://confluence.local/x/MDC-OTP-Service",
+            "https://confluence.local/x/Journey-Plugin-Overview"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": false,
+          "retrieved": [
+            "230088#Consequences",
+            "305001#What is the MDC OTP Service",
+            "140020#Payload Mapping",
+            "123456#How it connects to the Journey Plugin",
+            "190055#Introduction",
+            "220110#What is the Journey Plugin",
+            "230088#Decision",
+            "210077#Capacity Planning"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/MDC-OTP-Service",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": false,
+          "retrieved": [
+            "230088#Consequences",
+            "123456#How it connects to the Journey Plugin",
+            "140020#Payload Mapping",
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "220110#Receiving from DM",
+            "220110#What is the Journey Plugin",
+            "230088#Decision"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": false,
+          "retrieved": [
+            "230088#Consequences",
+            "123456#How it connects to the Journey Plugin",
+            "140020#Payload Mapping",
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "220110#Receiving from DM",
+            "123456#What is the DM Plugin",
+            "160033#Overview"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": false,
+          "retrieved": [
+            "230088#Consequences",
+            "123456#How it connects to the Journey Plugin",
+            "140020#Payload Mapping",
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "220110#Receiving from DM",
+            "123456#What is the DM Plugin",
+            "160033#Overview"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": false,
+          "retrieved": [
+            "230088#Consequences",
+            "123456#How it connects to the Journey Plugin",
+            "140020#Payload Mapping",
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "220110#Receiving from DM",
+            "123456#What is the DM Plugin",
+            "160033#Overview"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        },
+        "C2": {
+          "hit@8": false,
+          "retrieved": [
+            "230088#Consequences",
+            "123456#How it connects to the Journey Plugin",
+            "140020#Payload Mapping",
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "220110#Receiving from DM",
+            "123456#What is the DM Plugin",
+            "160033#Overview"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": false,
+          "retrieved": [
+            "230088#Consequences",
+            "123456#How it connects to the Journey Plugin",
+            "140020#Payload Mapping",
+            "305001#What is the MDC OTP Service",
+            "190055#Introduction",
+            "220110#Receiving from DM",
+            "123456#What is the DM Plugin",
+            "160033#Overview"
+          ],
+          "answer": "DM plugin hands messages to the Journey plugin through the adaptor; OTP is handled separately by MDC OTP Service where documented.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        }
+      }
+    },
+    {
+      "q_id": "G-014",
+      "type": "single",
+      "q": "Why did we choose a single adaptor layer instead of point-to-point?",
+      "gold": [
+        "230088#Rationale"
+      ],
+      "gold_answer": "A single adaptor centralizes format changes (one place vs N×M mappings), de-risks migrations, and lets DM and Journey deploy independently.",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "230088#Decision",
+            "180044#Delivery Process",
+            "140020#What is the Adaptor",
+            "210077#Capacity Planning",
+            "190055#Introduction",
+            "230088#Rationale",
+            "230088#Consequences",
+            "180044#Roles and Responsibilities"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/Delivery-WoW",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "230088#Decision",
+            "180044#Delivery Process",
+            "140020#What is the Adaptor",
+            "210077#Capacity Planning",
+            "230088#Rationale",
+            "230088#Consequences",
+            "123456#What is the DM Plugin",
+            "190055#Architecture at a Glance"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor",
+            "https://confluence.local/x/Delivery-WoW",
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "230088#Decision",
+            "230088#Rationale",
+            "230088#Consequences",
+            "140020#Payload Mapping",
+            "180044#Delivery Process",
+            "140020#What is the Adaptor",
+            "210077#Capacity Planning",
+            "190055#Introduction"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/ADR-Single-Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#Payload Mapping",
+            "230088#Rationale",
+            "230088#Decision",
+            "230088#Consequences",
+            "140020#Configuration",
+            "123456#How it connects to the Journey Plugin",
+            "180044#Delivery Process",
+            "140020#What is the Adaptor"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/ADR-Single-Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#Payload Mapping",
+            "230088#Rationale",
+            "230088#Decision",
+            "230088#Consequences",
+            "140020#Configuration",
+            "180044#Delivery Process",
+            "140020#What is the Adaptor",
+            "123456#How it connects to the Journey Plugin"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/ADR-Single-Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "140020#Payload Mapping",
+            "230088#Rationale",
+            "230088#Decision",
+            "230088#Consequences",
+            "140020#Configuration",
+            "180044#Delivery Process",
+            "140020#What is the Adaptor",
+            "123456#How it connects to the Journey Plugin"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/ADR-Single-Adaptor"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": false,
+          "retrieved": [
+            "140020#Configuration"
+          ],
+          "answer": "adaptor_mode: sync",
+          "citations": [
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": false,
+          "retrieved": [
+            "140020#What is the Adaptor",
+            "140020#Payload Mapping",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "220110#Receiving from DM",
+            "230088#Decision"
+          ],
+          "answer": "A single adaptor centralizes format changes, reduces N-by-M mappings, and lets DM and Journey deploy independently.",
+          "citations": [
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": false,
+          "retrieved": [
+            "140020#Configuration"
+          ],
+          "answer": "adaptor_mode: sync",
+          "citations": [
+            "https://confluence.local/x/Adaptor"
+          ],
+          "faithfulness": 0.45,
+          "drilled": false
+        }
+      }
+    },
+    {
+      "q_id": "G-015",
+      "type": "identifier-lookup",
+      "q": "Was the DM plugin batch_size changed during the SFMC migration?",
+      "gold": [
+        "777001#DM Plugin Config (post-migration)",
+        "123456#Configuration"
+      ],
+      "gold_answer": "Yes — increased from 500 to 1000 post-migration.",
+      "per_variant": {
+        "V1": {
+          "hit@8": true,
+          "retrieved": [
+            "777001#Overview",
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "230088#Decision",
+            "777001#DM Plugin Config (post-migration)",
+            "123456#How it connects to the Journey Plugin",
+            "140020#What is the Adaptor"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V2": {
+          "hit@8": true,
+          "retrieved": [
+            "777001#Overview",
+            "123456#What is the DM Plugin",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "230088#Decision",
+            "140020#What is the Adaptor",
+            "123456#How it connects to the Journey Plugin",
+            "777001#DM Plugin Config (post-migration)"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V3": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "777001#Overview",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "230088#Decision",
+            "200066#Retry Behaviour",
+            "160033#Overview"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V4": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "777001#Overview",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "123456#How it connects to the Journey Plugin",
+            "140020#What is the Adaptor",
+            "230088#Decision"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V5": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "777001#Overview",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "123456#How it connects to the Journey Plugin",
+            "140020#What is the Adaptor",
+            "200066#Retry Behaviour"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "V6": {
+          "hit@8": true,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "777001#Overview",
+            "200066#Common Errors",
+            "220110#What is the Journey Plugin",
+            "777001#DM Plugin Config (post-migration)",
+            "123456#How it connects to the Journey Plugin",
+            "140020#What is the Adaptor",
+            "200066#Retry Behaviour"
+          ],
+          "answer": "The DM plugin batch_size is 1000 post-migration; older documentation listed 500.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": null
+        },
+        "C1": {
+          "hit@8": true,
+          "retrieved": [
+            "777001#DM Plugin Config (post-migration)",
+            "123456#Configuration",
+            "200066#Common Errors",
+            "200066#FAQ"
+          ],
+          "answer": "batch_size: 1000; max_retry: 3 DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued; FAQ covers troubleshoot information for DM Plugin (narrative).",
+          "citations": [
+            "https://confluence.local/x/SFMC-Migration",
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/DM-Plugin-Troubleshooting"
+          ],
+          "faithfulness": 0.95,
+          "drilled": false
+        },
+        "C2": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        },
+        "A1": {
+          "hit@8": false,
+          "retrieved": [
+            "123456#What is the DM Plugin",
+            "140020#What is the Adaptor",
+            "180044#Roles and Responsibilities",
+            "190055#Introduction",
+            "190055#Architecture at a Glance",
+            "190055#Component Index",
+            "200066#FAQ",
+            "220110#What is the Journey Plugin"
+          ],
+          "answer": "The DM plugin is the Data Management plugin that batches and delivers messages downstream.",
+          "citations": [
+            "https://confluence.local/x/DM-Plugin-Overview",
+            "https://confluence.local/x/Adaptor",
+            "https://confluence.local/x/Delivery-WoW"
+          ],
+          "faithfulness": 0.45,
+          "drilled": true
+        }
+      }
+    }
+  ]
+}

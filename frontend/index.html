@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Confluence RAG PoC Eval Dashboard</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Confluence Card + RAG PoC</div>
+        <h1>Evaluation Dashboard</h1>
+      </div>
+      <div class="actions">
+        <button id="reloadBtn" type="button">Reload</button>
+        <button id="printBtn" type="button">Export</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="overview" id="overview"></section>
+
+      <section class="band">
+        <div class="section-header">
+          <h2>Variant Ladder</h2>
+          <p>Same frozen golden set, one comparable result table.</p>
+        </div>
+        <div id="variantChart" class="chart"></div>
+        <div id="variantTable" class="table-wrap"></div>
+      </section>
+
+      <section class="band split">
+        <div>
+          <div class="section-header">
+            <h2>Card Value</h2>
+            <p>Association recall shows page coverage; drill miss rate shows exact-answer risk.</p>
+          </div>
+          <div id="cardMetrics" class="metric-list"></div>
+        </div>
+        <div>
+          <div class="section-header">
+            <h2>Golden Types</h2>
+            <p>Coverage across single, multihop, exact lookup, pointer drill, and no-answer questions.</p>
+          </div>
+          <div id="typeDistribution" class="donut-wrap"></div>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="section-header with-controls">
+          <div>
+            <h2>Question Drilldown</h2>
+            <p>Inspect retrieved sections, answers, citations, and grounding behavior by variant.</p>
+          </div>
+          <div class="filters">
+            <select id="variantSelect"></select>
+            <select id="typeSelect">
+              <option value="all">All types</option>
+            </select>
+          </div>
+        </div>
+        <div id="items" class="items"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+

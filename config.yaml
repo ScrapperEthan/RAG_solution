@@ -1,0 +1,33 @@
+providers:
+  confluence: file
+  llm: mock
+  embedder: hash
+  store: json
+
+slice:
+  root: "06-Delivery/10. Planned Project/2026 Planned Project"
+
+paths:
+  fixtures_dir: fixtures/confluence
+  golden_seed: fixtures/golden_seed/golden_seed.jsonl
+  outputs_dir: outputs
+  keyword_registry: card_ingestion_sop/templates/canonical_keywords_受控词表.md
+
+store:
+  path: outputs/store/store.json
+  chroma_path: outputs/chroma
+  dsn: postgresql://postgres:postgres@localhost:5432/rag_poc
+
+retrieval:
+  index: both
+  search: hybrid
+  top_k: 8
+  rrf_k: 60
+  rerank: false
+
+chunk:
+  # Keep fixture section ids stable. For real Confluence slices, raise this
+  # toward 100 after checking that golden section ids are regenerated.
+  min_merge_tokens: 0
+  max_tokens: 1000
+  overlap_tokens: 50

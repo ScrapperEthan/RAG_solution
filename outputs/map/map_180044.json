@@ -1,0 +1,103 @@
+{
+  "page_id": "180044",
+  "source_url": "https://confluence.local/x/Delivery-WoW",
+  "title": "Delivery Way of Working",
+  "space": "DEPT",
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Way of Working"
+  ],
+  "owner": "erin",
+  "labels": [
+    "process",
+    "way-of-working"
+  ],
+  "confluence_version": 6,
+  "update_at": "2026-05-22T10:00:00Z",
+  "captured_at": "2026-06-04T00:00:00Z",
+  "page_summary": {
+    "summary_en": "Delivery Way of Working contains 2 sections about Adaptor, DM Plugin, Delivery Process, Journey Plugin, MDC OTP Service.",
+    "summary_zh": "Delivery Way of Working 包含 2 个 section，主题包括 Adaptor、DM Plugin、Delivery Process、Journey Plugin、MDC OTP Service。",
+    "cross_questions_en": [
+      "How do the sections in Delivery Way of Working relate?"
+    ],
+    "cross_questions_zh": [
+      "Delivery Way of Working 里的各部分如何关联?"
+    ]
+  },
+  "sections": [
+    {
+      "anchor": "Delivery Way of Working > Delivery Process",
+      "heading_path": [
+        "Delivery Way of Working",
+        "Delivery Process"
+      ],
+      "concepts": [
+        "Delivery Process"
+      ],
+      "keywords_raw": [
+        "Delivery Process"
+      ],
+      "info_type": "what-is",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Delivery Process covers what-is information for Delivery Process (narrative).",
+      "summary_zh": "Delivery Process 说明 Delivery Process 的 what-is 信息(narrative)。",
+      "questions_en": [
+        "What is Delivery Process?",
+        "Delivery Process what-is",
+        "Where is Delivery Process documented?"
+      ],
+      "questions_zh": [
+        "Delivery Process 是什么?",
+        "Delivery Process what-is",
+        "Delivery Process 在哪里说明?"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "anchor": "Delivery Way of Working > Roles and Responsibilities",
+      "heading_path": [
+        "Delivery Way of Working",
+        "Roles and Responsibilities"
+      ],
+      "concepts": [
+        "DM Plugin",
+        "Journey Plugin",
+        "Adaptor",
+        "MDC OTP Service"
+      ],
+      "keywords_raw": [
+        "DM plugin",
+        "Journey plugin",
+        "adaptor",
+        "MDC OTP Service",
+        "OTP"
+      ],
+      "info_type": "what-is",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Roles and Responsibilities covers what-is information for DM Plugin, Journey Plugin, Adaptor, MDC OTP Service (narrative).",
+      "summary_zh": "Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+      "questions_en": [
+        "What is DM Plugin?",
+        "DM plugin what-is",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 是什么?",
+        "DM plugin what-is",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.86
+    }
+  ]
+}

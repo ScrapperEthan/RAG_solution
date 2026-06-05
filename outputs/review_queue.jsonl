@@ -1,0 +1,3 @@
+{"queue_id": "RQ-conflict-C-0007-001", "type": "conflict", "canonical_id": "C-0007", "field": "config", "detail": "batch_size conflict; temporarily chose newest value 1000.", "options": ["batch_size: 1000 (777001)", "batch_size: 500 (123456)"], "status": "open"}
+{"queue_id": "RQ-0011", "type": "alias-confirmation", "canonical_id": "C-0007", "field": "aliases", "detail": "Confirm whether DMP should be treated as an alias of DM Plugin in this slice.", "options": ["yes", "no"], "status": "open"}
+{"queue_id": "RQ-0019", "type": "ambiguity", "canonical_id": "C-0014", "field": "aliases", "detail": "OTP may mean MDC OTP Service or generic one-time password; confirm usage.", "options": ["MDC OTP Service", "generic OTP / split"], "status": "open"}

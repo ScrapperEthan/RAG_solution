@@ -1,0 +1,22 @@
+{
+  "page_id": "200066",
+  "title": "DM Plugin Troubleshooting",
+  "space": "DEPT",
+  "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
+  "owner": "bob",
+  "labels": [
+    "plugin",
+    "troubleshoot",
+    "faq"
+  ],
+  "captured_at": "2026-06-04T00:00:00Z",
+  "update_at": "2026-05-19T16:00:00Z",
+  "confluence_version": 4,
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Plugins"
+  ],
+  "body_md": "## Common Errors\n\n- **DM-429**: the DM plugin is rate limited by a downstream channel. Reduce `batch_size`\n  or add backoff.\n- **DM-503**: downstream channel unavailable; messages are requeued.\n\n## Retry Behaviour\n\nThe DM plugin **supports retry configuration**; configure it according to your channel's\nrate limits. (This page does not state the default number of retries — see the DM Plugin\nOverview Configuration for the actual value.)\n\n## FAQ\n\n**Q: Does a DM-429 drop messages?** No — affected messages are retried subject to the\nretry configuration.\n"
+}

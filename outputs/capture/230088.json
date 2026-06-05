@@ -1,0 +1,22 @@
+{
+  "page_id": "230088",
+  "title": "Design Decision: Single Adaptor Layer",
+  "space": "DEPT",
+  "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
+  "owner": "carol",
+  "labels": [
+    "design",
+    "decision",
+    "adr"
+  ],
+  "captured_at": "2026-06-04T00:00:00Z",
+  "update_at": "2026-05-12T10:00:00Z",
+  "confluence_version": 2,
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Design"
+  ],
+  "body_md": "## Decision\n\nWe will use a **single adaptor** layer between the DM plugin and the Journey plugin,\nrather than point-to-point integrations between every producer and consumer.\n\n## Rationale\n\nA single adaptor means format changes are handled in one place. Point-to-point would\nrequire N×M mappings and make migrations (e.g., SFMC) far riskier. The adaptor also lets\nDM and Journey deploy independently.\n\n## Consequences\n\nThe adaptor becomes a critical path component and must be highly available. Its payload\nmapping (see the Adaptor page) is the single source of truth for field translation.\n"
+}

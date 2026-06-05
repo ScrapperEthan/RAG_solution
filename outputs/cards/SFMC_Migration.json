@@ -1,0 +1,88 @@
+{
+  "canonical_id": "C-0100",
+  "canonical_name": "SFMC Migration",
+  "aliases": [
+    "SFMC"
+  ],
+  "component": "SFMC",
+  "status": "proposed",
+  "fields": [
+    {
+      "field": "definition",
+      "tier": "narrative",
+      "value": "SFMC Migration: Rationale 说明 Adaptor, SFMC Migration 的 decision 信息(narrative)。 Overview 说明 DM Plugin, SFMC Migration 的 config 信息(narrative)。 Known Issues 说明 DM Plugin 的 config 信息(narrative)。",
+      "sources": [
+        {
+          "page_id": "230088",
+          "anchor": "Design Decision: Single Adaptor Layer > Rationale",
+          "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
+          "confluence_version": 2
+        },
+        {
+          "page_id": "777001",
+          "anchor": "SFMC Migration > Overview",
+          "source_url": "https://confluence.local/x/SFMC-Migration",
+          "confluence_version": 3
+        },
+        {
+          "page_id": "777001",
+          "anchor": "SFMC Migration > Known Issues",
+          "source_url": "https://confluence.local/x/SFMC-Migration",
+          "confluence_version": 3
+        }
+      ]
+    },
+    {
+      "field": "config",
+      "tier": "inline-value",
+      "value": "batch_size: 1000",
+      "authoritative": true,
+      "conflict": false,
+      "conflict_detail": [],
+      "sources": [
+        {
+          "page_id": "777001",
+          "anchor": "SFMC Migration > DM Plugin Config (post-migration)",
+          "source_url": "https://confluence.local/x/SFMC-Migration",
+          "confluence_version": 3
+        }
+      ]
+    },
+    {
+      "field": "related_components",
+      "tier": "narrative",
+      "value": "Related to DM Plugin, Adaptor.",
+      "soft_links": [
+        "C-0007",
+        "C-0009"
+      ],
+      "sources": [
+        {
+          "page_id": "230088",
+          "anchor": "Design Decision: Single Adaptor Layer > Rationale",
+          "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
+          "confluence_version": 2
+        },
+        {
+          "page_id": "777001",
+          "anchor": "SFMC Migration > Overview",
+          "source_url": "https://confluence.local/x/SFMC-Migration",
+          "confluence_version": 3
+        },
+        {
+          "page_id": "777001",
+          "anchor": "SFMC Migration > DM Plugin Config (post-migration)",
+          "source_url": "https://confluence.local/x/SFMC-Migration",
+          "confluence_version": 3
+        },
+        {
+          "page_id": "777001",
+          "anchor": "SFMC Migration > Known Issues",
+          "source_url": "https://confluence.local/x/SFMC-Migration",
+          "confluence_version": 3
+        }
+      ]
+    }
+  ],
+  "flags": []
+}

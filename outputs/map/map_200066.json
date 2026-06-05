@@ -1,0 +1,136 @@
+{
+  "page_id": "200066",
+  "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
+  "title": "DM Plugin Troubleshooting",
+  "space": "DEPT",
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Plugins"
+  ],
+  "owner": "bob",
+  "labels": [
+    "plugin",
+    "troubleshoot",
+    "faq"
+  ],
+  "confluence_version": 4,
+  "update_at": "2026-05-19T16:00:00Z",
+  "captured_at": "2026-06-04T00:00:00Z",
+  "page_summary": {
+    "summary_en": "DM Plugin Troubleshooting contains 3 sections about DM Plugin.",
+    "summary_zh": "DM Plugin Troubleshooting 包含 3 个 section，主题包括 DM Plugin。",
+    "cross_questions_en": [
+      "How do the sections in DM Plugin Troubleshooting relate?"
+    ],
+    "cross_questions_zh": [
+      "DM Plugin Troubleshooting 里的各部分如何关联?"
+    ]
+  },
+  "sections": [
+    {
+      "anchor": "DM Plugin Troubleshooting > Common Errors",
+      "heading_path": [
+        "DM Plugin Troubleshooting",
+        "Common Errors"
+      ],
+      "concepts": [
+        "DM Plugin"
+      ],
+      "keywords_raw": [
+        "DM plugin",
+        "batch_size",
+        "DM-429",
+        "DM-503"
+      ],
+      "info_type": "troubleshoot",
+      "tier": "inline-value",
+      "fact_value": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued",
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Common Errors provides exact troubleshoot values for DM Plugin: DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued.",
+      "summary_zh": "Common Errors 提供 DM Plugin 的精确 troubleshoot 信息:DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued。",
+      "questions_en": [
+        "What exact values are configured for DM Plugin?",
+        "What is DM Plugin?",
+        "DM plugin troubleshoot",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 的精确配置值是什么?",
+        "DM Plugin 是什么?",
+        "DM plugin troubleshoot",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "anchor": "DM Plugin Troubleshooting > Retry Behaviour",
+      "heading_path": [
+        "DM Plugin Troubleshooting",
+        "Retry Behaviour"
+      ],
+      "concepts": [
+        "DM Plugin"
+      ],
+      "keywords_raw": [
+        "DM plugin"
+      ],
+      "info_type": "config",
+      "tier": "pointer-only",
+      "fact_value": null,
+      "pointer_to": "DM Plugin Overview > Configuration",
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Retry Behaviour covers config information for DM Plugin (pointer-only).",
+      "summary_zh": "Retry Behaviour 说明 DM Plugin 的 config 信息(pointer-only)。",
+      "questions_en": [
+        "Where should I look up the exact value for DM Plugin?",
+        "What is DM Plugin?",
+        "DM plugin config",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 的精确值应该去哪里查?",
+        "DM Plugin 是什么?",
+        "DM plugin config",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.65
+    },
+    {
+      "anchor": "DM Plugin Troubleshooting > FAQ",
+      "heading_path": [
+        "DM Plugin Troubleshooting",
+        "FAQ"
+      ],
+      "concepts": [
+        "DM Plugin"
+      ],
+      "keywords_raw": [
+        "DM-429"
+      ],
+      "info_type": "troubleshoot",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "FAQ covers troubleshoot information for DM Plugin (narrative).",
+      "summary_zh": "FAQ 说明 DM Plugin 的 troubleshoot 信息(narrative)。",
+      "questions_en": [
+        "What is DM Plugin?",
+        "DM-429 troubleshoot",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 是什么?",
+        "DM-429 troubleshoot",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.86
+    }
+  ]
+}

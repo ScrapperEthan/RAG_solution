@@ -1,0 +1,21 @@
+{
+  "page_id": "210077",
+  "title": "Supply and Demand (Capacity Planning)",
+  "space": "DEPT",
+  "source_url": "https://confluence.local/x/Supply-and-Demand",
+  "owner": "dan",
+  "labels": [
+    "capacity",
+    "planning"
+  ],
+  "captured_at": "2026-06-04T00:00:00Z",
+  "update_at": "2026-05-05T10:00:00Z",
+  "confluence_version": 1,
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Supply and Demand"
+  ],
+  "body_md": "## Capacity Planning\n\nForecast monthly message volume and reserve capacity at the 95th percentile of the last\n12 months. Capacity reviews happen quarterly. This page is about planning numbers, not\ncomponent configuration.\n\n## Peak Handling\n\nFor seasonal peaks, pre-scale workers a week ahead. Note: this page intentionally does not\ncover plugin-level settings such as batch sizes or retries — those live on the component\npages.\n"
+}

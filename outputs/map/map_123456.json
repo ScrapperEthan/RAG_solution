@@ -1,0 +1,143 @@
+{
+  "page_id": "123456",
+  "source_url": "https://confluence.local/x/DM-Plugin-Overview",
+  "title": "DM Plugin Overview",
+  "space": "DEPT",
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Plugins"
+  ],
+  "owner": "alice",
+  "labels": [
+    "plugin",
+    "delivery"
+  ],
+  "confluence_version": 7,
+  "update_at": "2026-05-20T10:00:00Z",
+  "captured_at": "2026-06-04T00:00:00Z",
+  "page_summary": {
+    "summary_en": "DM Plugin Overview contains 3 sections about Adaptor, DM Plugin, Journey Plugin.",
+    "summary_zh": "DM Plugin Overview 包含 3 个 section，主题包括 Adaptor、DM Plugin、Journey Plugin。",
+    "cross_questions_en": [
+      "How do the sections in DM Plugin Overview relate?"
+    ],
+    "cross_questions_zh": [
+      "DM Plugin Overview 里的各部分如何关联?"
+    ]
+  },
+  "sections": [
+    {
+      "anchor": "DM Plugin Overview > What is the DM Plugin",
+      "heading_path": [
+        "DM Plugin Overview",
+        "What is the DM Plugin"
+      ],
+      "concepts": [
+        "DM Plugin",
+        "Journey Plugin"
+      ],
+      "keywords_raw": [
+        "Data Management plugin",
+        "DM plugin",
+        "DMP",
+        "Journey plugin"
+      ],
+      "info_type": "what-is",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "What is the DM Plugin covers what-is information for DM Plugin, Journey Plugin (narrative).",
+      "summary_zh": "What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。",
+      "questions_en": [
+        "What is DM Plugin?",
+        "Data Management plugin what-is",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 是什么?",
+        "Data Management plugin what-is",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "anchor": "DM Plugin Overview > Configuration",
+      "heading_path": [
+        "DM Plugin Overview",
+        "Configuration"
+      ],
+      "concepts": [
+        "DM Plugin"
+      ],
+      "keywords_raw": [
+        "batch_size",
+        "max_retry"
+      ],
+      "info_type": "config",
+      "tier": "inline-value",
+      "fact_value": "batch_size: 500; max_retry: 3",
+      "pointer_to": null,
+      "has_table": true,
+      "has_image": false,
+      "summary_en": "Configuration provides exact config values for DM Plugin: batch_size: 500; max_retry: 3.",
+      "summary_zh": "Configuration 提供 DM Plugin 的精确 config 信息:batch_size: 500; max_retry: 3。",
+      "questions_en": [
+        "What exact values are configured for DM Plugin?",
+        "What is DM Plugin?",
+        "batch_size config",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 的精确配置值是什么?",
+        "DM Plugin 是什么?",
+        "batch_size config",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
+      "heading_path": [
+        "DM Plugin Overview",
+        "How it connects to the Journey Plugin"
+      ],
+      "concepts": [
+        "DM Plugin",
+        "Journey Plugin",
+        "Adaptor"
+      ],
+      "keywords_raw": [
+        "DM plugin",
+        "Journey plugin",
+        "adaptor",
+        "campaign_id",
+        "user_id"
+      ],
+      "info_type": "how-to",
+      "tier": "pointer-only",
+      "fact_value": null,
+      "pointer_to": "Journey Plugin page > Integration",
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "How it connects to the Journey Plugin covers how-to information for DM Plugin, Journey Plugin, Adaptor (pointer-only).",
+      "summary_zh": "How it connects to the Journey Plugin 说明 DM Plugin, Journey Plugin, Adaptor 的 how-to 信息(pointer-only)。",
+      "questions_en": [
+        "Where should I look up the exact value for DM Plugin?",
+        "What is DM Plugin?",
+        "DM plugin how-to",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 的精确值应该去哪里查?",
+        "DM Plugin 是什么?",
+        "DM plugin how-to",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.65
+    }
+  ]
+}

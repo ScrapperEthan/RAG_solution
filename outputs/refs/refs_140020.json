@@ -1,0 +1,98 @@
+[
+  {
+    "ref_id": 0,
+    "section_id": "140020#What is the Adaptor",
+    "page_id": "140020",
+    "space": "DEPT",
+    "source_url": "https://confluence.local/x/Adaptor",
+    "title": "Adaptor",
+    "heading_path": [
+      "Adaptor",
+      "What is the Adaptor"
+    ],
+    "tree_path": [
+      "06-Delivery",
+      "10. Planned Project",
+      "2026 Planned Project",
+      "Plugins"
+    ],
+    "owner": "bob",
+    "labels": [
+      "plugin",
+      "integration"
+    ],
+    "content_type": "what-is",
+    "component": "journey",
+    "status": "",
+    "has_table": false,
+    "has_image": false,
+    "body_md": "The **adaptor** (also spelled **adapter** in older documents) is the bridge between the\nDM plugin and the Journey plugin. It translates the DM plugin's output into the format the\nJourney plugin expects.",
+    "confluence_version": 5,
+    "update_at": "2026-05-18T14:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "140020#Configuration",
+    "page_id": "140020",
+    "space": "DEPT",
+    "source_url": "https://confluence.local/x/Adaptor",
+    "title": "Adaptor",
+    "heading_path": [
+      "Adaptor",
+      "Configuration"
+    ],
+    "tree_path": [
+      "06-Delivery",
+      "10. Planned Project",
+      "2026 Planned Project",
+      "Plugins"
+    ],
+    "owner": "bob",
+    "labels": [
+      "plugin",
+      "integration"
+    ],
+    "content_type": "config",
+    "component": "adaptor",
+    "status": "",
+    "has_table": true,
+    "has_image": false,
+    "body_md": "| Param          | Default | Notes                              |\n|----------------|---------|------------------------------------|\n| `adaptor_mode` | sync    | `sync` or `async`                  |",
+    "confluence_version": 5,
+    "update_at": "2026-05-18T14:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "140020#Payload Mapping",
+    "page_id": "140020",
+    "space": "DEPT",
+    "source_url": "https://confluence.local/x/Adaptor",
+    "title": "Adaptor",
+    "heading_path": [
+      "Adaptor",
+      "Payload Mapping"
+    ],
+    "tree_path": [
+      "06-Delivery",
+      "10. Planned Project",
+      "2026 Planned Project",
+      "Plugins"
+    ],
+    "owner": "bob",
+    "labels": [
+      "plugin",
+      "integration"
+    ],
+    "content_type": "what-is",
+    "component": "journey",
+    "status": "",
+    "has_table": false,
+    "has_image": false,
+    "body_md": "The adaptor maps DM output fields to Journey input fields: `msg_id` → `message_id`,\n`uid` → `user_id`. Unmapped fields are dropped.",
+    "confluence_version": 5,
+    "update_at": "2026-05-18T14:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  }
+]

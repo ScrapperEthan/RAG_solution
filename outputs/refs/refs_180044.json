@@ -1,0 +1,66 @@
+[
+  {
+    "ref_id": 0,
+    "section_id": "180044#Delivery Process",
+    "page_id": "180044",
+    "space": "DEPT",
+    "source_url": "https://confluence.local/x/Delivery-WoW",
+    "title": "Delivery Way of Working",
+    "heading_path": [
+      "Delivery Way of Working",
+      "Delivery Process"
+    ],
+    "tree_path": [
+      "06-Delivery",
+      "10. Planned Project",
+      "2026 Planned Project",
+      "Way of Working"
+    ],
+    "owner": "erin",
+    "labels": [
+      "process",
+      "way-of-working"
+    ],
+    "content_type": "what-is",
+    "component": "common",
+    "status": "",
+    "has_table": false,
+    "has_image": false,
+    "body_md": "The delivery process has four stages: planning, build, test, and release. Each stage has\nan entry and exit checklist. Releases are cut on a two-week cadence.",
+    "confluence_version": 6,
+    "update_at": "2026-05-22T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "180044#Roles and Responsibilities",
+    "page_id": "180044",
+    "space": "DEPT",
+    "source_url": "https://confluence.local/x/Delivery-WoW",
+    "title": "Delivery Way of Working",
+    "heading_path": [
+      "Delivery Way of Working",
+      "Roles and Responsibilities"
+    ],
+    "tree_path": [
+      "06-Delivery",
+      "10. Planned Project",
+      "2026 Planned Project",
+      "Way of Working"
+    ],
+    "owner": "erin",
+    "labels": [
+      "process",
+      "way-of-working"
+    ],
+    "content_type": "what-is",
+    "component": "OTP",
+    "status": "",
+    "has_table": false,
+    "has_image": false,
+    "body_md": "The DM plugin and the adaptor are owned by the Platform team; the Journey plugin is owned\nby the Engagement team. The MDC OTP Service is owned by the Security team. Cross-team\nchanges require sign-off from both owning teams.",
+    "confluence_version": 6,
+    "update_at": "2026-05-22T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  }
+]

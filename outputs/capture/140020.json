@@ -1,0 +1,21 @@
+{
+  "page_id": "140020",
+  "title": "Adaptor",
+  "space": "DEPT",
+  "source_url": "https://confluence.local/x/Adaptor",
+  "owner": "bob",
+  "labels": [
+    "plugin",
+    "integration"
+  ],
+  "captured_at": "2026-06-04T00:00:00Z",
+  "update_at": "2026-05-18T14:00:00Z",
+  "confluence_version": 5,
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Plugins"
+  ],
+  "body_md": "## What is the Adaptor\n\nThe **adaptor** (also spelled **adapter** in older documents) is the bridge between the\nDM plugin and the Journey plugin. It translates the DM plugin's output into the format the\nJourney plugin expects.\n\n## Configuration\n\n| Param          | Default | Notes                              |\n|----------------|---------|------------------------------------|\n| `adaptor_mode` | sync    | `sync` or `async`                  |\n\n## Payload Mapping\n\nThe adaptor maps DM output fields to Journey input fields: `msg_id` → `message_id`,\n`uid` → `user_id`. Unmapped fields are dropped.\n"
+}

@@ -1,0 +1,134 @@
+{
+  "page_id": "777001",
+  "source_url": "https://confluence.local/x/SFMC-Migration",
+  "title": "SFMC Migration",
+  "space": "DEPT",
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Migration"
+  ],
+  "owner": "bob",
+  "labels": [
+    "migration",
+    "sfmc"
+  ],
+  "confluence_version": 3,
+  "update_at": "2026-05-28T09:00:00Z",
+  "captured_at": "2026-06-04T00:00:00Z",
+  "page_summary": {
+    "summary_en": "SFMC Migration contains 3 sections about DM Plugin, SFMC Migration.",
+    "summary_zh": "SFMC Migration 包含 3 个 section，主题包括 DM Plugin、SFMC Migration。",
+    "cross_questions_en": [
+      "How do the sections in SFMC Migration relate?"
+    ],
+    "cross_questions_zh": [
+      "SFMC Migration 里的各部分如何关联?"
+    ]
+  },
+  "sections": [
+    {
+      "anchor": "SFMC Migration > Overview",
+      "heading_path": [
+        "SFMC Migration",
+        "Overview"
+      ],
+      "concepts": [
+        "DM Plugin",
+        "SFMC Migration"
+      ],
+      "keywords_raw": [
+        "DM plugin",
+        "SFMC"
+      ],
+      "info_type": "config",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Overview covers config information for DM Plugin, SFMC Migration (narrative).",
+      "summary_zh": "Overview 说明 DM Plugin, SFMC Migration 的 config 信息(narrative)。",
+      "questions_en": [
+        "What is DM Plugin?",
+        "DM plugin config",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 是什么?",
+        "DM plugin config",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "anchor": "SFMC Migration > DM Plugin Config (post-migration)",
+      "heading_path": [
+        "SFMC Migration",
+        "DM Plugin Config (post-migration)"
+      ],
+      "concepts": [
+        "DM Plugin"
+      ],
+      "keywords_raw": [
+        "DM plugin",
+        "batch_size",
+        "max_retry"
+      ],
+      "info_type": "config",
+      "tier": "inline-value",
+      "fact_value": "batch_size: 1000",
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "DM Plugin Config (post-migration) provides exact config values for DM Plugin: batch_size: 1000.",
+      "summary_zh": "DM Plugin Config (post-migration) 提供 DM Plugin 的精确 config 信息:batch_size: 1000。",
+      "questions_en": [
+        "What exact values are configured for DM Plugin?",
+        "What is DM Plugin?",
+        "DM plugin config",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 的精确配置值是什么?",
+        "DM Plugin 是什么?",
+        "DM plugin config",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "anchor": "SFMC Migration > Known Issues",
+      "heading_path": [
+        "SFMC Migration",
+        "Known Issues"
+      ],
+      "concepts": [
+        "DM Plugin"
+      ],
+      "keywords_raw": [
+        "batch_size"
+      ],
+      "info_type": "config",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Known Issues covers config information for DM Plugin (narrative).",
+      "summary_zh": "Known Issues 说明 DM Plugin 的 config 信息(narrative)。",
+      "questions_en": [
+        "What is DM Plugin?",
+        "batch_size config",
+        "Where is DM Plugin documented?"
+      ],
+      "questions_zh": [
+        "DM Plugin 是什么?",
+        "batch_size config",
+        "DM Plugin 在哪里说明?"
+      ],
+      "confidence": 0.86
+    }
+  ]
+}

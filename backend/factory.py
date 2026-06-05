@@ -1,0 +1,56 @@
+from __future__ import annotations
+
+from typing import Any, Dict
+
+from backend.adapters.confluence_file import FileConfluenceSource
+from backend.adapters.confluence_mcp import McpConfluenceSource
+from backend.adapters.embedder_hash import HashEmbedder
+from backend.adapters.embedder_intranet import IntranetEmbedder
+from backend.adapters.llm_gpt55 import Gpt55LLM
+from backend.adapters.llm_mock import MockLLM
+from backend.adapters.llm_openai_compat import OpenAICompatLLM
+from backend.adapters.store_chroma import ChromaVectorStore
+from backend.adapters.store_json import JsonVectorStore
+from backend.adapters.store_pgvector import PgVectorStore
+from backend.config import resolve_path
+from backend.ports import ConfluenceSource, Embedder, LLM, VectorStore
+
+
+def build_confluence_source(config: Dict[str, Any]) -> ConfluenceSource:
+    provider = config["providers"]["confluence"]
+    if provider == "file":
+        return FileConfluenceSource(resolve_path(config["paths"]["fixtures_dir"]))
+    if provider == "mcp":
+        return McpConfluenceSource(config)
+    raise ValueError(f"Unknown confluence provider: {provider}")
+
+
+def build_llm(config: Dict[str, Any]) -> LLM:
+    provider = config["providers"]["llm"]
+    if provider == "mock":
+        return MockLLM()
+    if provider == "openai_compat":
+        return OpenAICompatLLM(config["llm"])
+    if provider == "gpt55":
+        return Gpt55LLM(config["llm"])
+    raise ValueError(f"Unknown llm provider: {provider}")
+
+
+def build_embedder(config: Dict[str, Any]) -> Embedder:
+    provider = config["providers"]["embedder"]
+    if provider in {"hash", "local"}:
+        return HashEmbedder(dim=int(config["embedder"]["dim"]))
+    if provider == "intranet":
+        return IntranetEmbedder(config["embedder"])
+    raise ValueError(f"Unknown embedder provider: {provider}")
+
+
+def build_store(config: Dict[str, Any], embedder: Embedder) -> VectorStore:
+    provider = config["providers"]["store"]
+    if provider == "json":
+        return JsonVectorStore(resolve_path(config["store"]["path"]), embedder.dim)
+    if provider == "chroma":
+        return ChromaVectorStore(resolve_path(config["store"].get("chroma_path", "outputs/chroma")), embedder.dim)
+    if provider == "pgvector":
+        return PgVectorStore(config["store"]["dsn"], embedder.dim)
+    raise ValueError(f"Unknown store provider: {provider}")

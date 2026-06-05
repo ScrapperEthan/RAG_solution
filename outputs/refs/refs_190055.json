@@ -1,0 +1,95 @@
+[
+  {
+    "ref_id": 0,
+    "section_id": "190055#Introduction",
+    "page_id": "190055",
+    "space": "DEPT",
+    "source_url": "https://confluence.local/x/2026-Planned-Project",
+    "title": "2026 Planned Project Overview",
+    "heading_path": [
+      "2026 Planned Project Overview",
+      "Introduction"
+    ],
+    "tree_path": [
+      "06-Delivery",
+      "10. Planned Project",
+      "2026 Planned Project"
+    ],
+    "owner": "alice",
+    "labels": [
+      "overview",
+      "index"
+    ],
+    "content_type": "what-is",
+    "component": "OTP",
+    "status": "",
+    "has_table": false,
+    "has_image": false,
+    "body_md": "The 2026 Planned Project delivers the new messaging stack. Its main components are the\nDM plugin, the Journey plugin, the adaptor, and the MDC OTP Service.",
+    "confluence_version": 8,
+    "update_at": "2026-05-25T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "190055#Architecture at a Glance",
+    "page_id": "190055",
+    "space": "DEPT",
+    "source_url": "https://confluence.local/x/2026-Planned-Project",
+    "title": "2026 Planned Project Overview",
+    "heading_path": [
+      "2026 Planned Project Overview",
+      "Architecture at a Glance"
+    ],
+    "tree_path": [
+      "06-Delivery",
+      "10. Planned Project",
+      "2026 Planned Project"
+    ],
+    "owner": "alice",
+    "labels": [
+      "overview",
+      "index"
+    ],
+    "content_type": "what-is",
+    "component": "OTP",
+    "status": "",
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Messages flow end to end as: **DM plugin → adaptor → Journey plugin**. One-time passwords\nare handled separately by the **MDC OTP Service**. The adaptor decouples DM from Journey so\neither side can change format independently.",
+    "confluence_version": 8,
+    "update_at": "2026-05-25T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "190055#Component Index",
+    "page_id": "190055",
+    "space": "DEPT",
+    "source_url": "https://confluence.local/x/2026-Planned-Project",
+    "title": "2026 Planned Project Overview",
+    "heading_path": [
+      "2026 Planned Project Overview",
+      "Component Index"
+    ],
+    "tree_path": [
+      "06-Delivery",
+      "10. Planned Project",
+      "2026 Planned Project"
+    ],
+    "owner": "alice",
+    "labels": [
+      "overview",
+      "index"
+    ],
+    "content_type": "what-is",
+    "component": "OTP",
+    "status": "",
+    "has_table": false,
+    "has_image": false,
+    "body_md": "- DM Plugin Overview — the delivery core\n- Journey Plugin Overview — journey orchestration\n- Adaptor — DM↔Journey bridge\n- MDC OTP Service — one-time passwords",
+    "confluence_version": 8,
+    "update_at": "2026-05-25T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  }
+]

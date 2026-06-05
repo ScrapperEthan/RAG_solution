@@ -1,0 +1,21 @@
+{
+  "page_id": "777001",
+  "title": "SFMC Migration",
+  "space": "DEPT",
+  "source_url": "https://confluence.local/x/SFMC-Migration",
+  "owner": "bob",
+  "labels": [
+    "migration",
+    "sfmc"
+  ],
+  "captured_at": "2026-06-04T00:00:00Z",
+  "update_at": "2026-05-28T09:00:00Z",
+  "confluence_version": 3,
+  "tree_path": [
+    "06-Delivery",
+    "10. Planned Project",
+    "2026 Planned Project",
+    "Migration"
+  ],
+  "body_md": "## Overview\n\nThis page tracks the migration from the legacy delivery stack to SFMC. It covers\nconfiguration changes to existing components, including the DM plugin.\n\n## DM Plugin Config (post-migration)\n\nAfter migration, the **DM plugin** `batch_size` is increased to **1000** to handle the\nhigher post-migration volume. This supersedes the previous default. `max_retry` is\nunchanged.\n\n## Known Issues\n\nDuring cutover, duplicate sends were observed when `batch_size` was changed without\ndraining the queue first. Drain before changing batch configuration.\n"
+}
