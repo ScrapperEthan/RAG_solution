@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/MDC-OTP-Service"
 owner: "carol"
 labels: ["service", "otp", "mdc"]
+module: ["MDC development guideline", "Integration & API standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Services"]
 update_at: "2026-04-30T08:00:00Z"
 confluence_version: 2

@@ -2,52 +2,21 @@
   "canonical_id": "C-0008",
   "canonical_name": "Journey Plugin",
   "aliases": [
-    "journey plugin"
+    "Journey plugin"
   ],
-  "component": "journey",
+  "module": [
+    "Channel standard",
+    "Delivery & tracking standard"
+  ],
+  "boundary": "用户旅程编排与并发 Journey 配置；不含 DM 投递和 Adaptor 转换。",
+  "topic_type": "component",
   "status": "approved",
   "fields": [
     {
       "field": "definition",
       "tier": "narrative",
-      "value": "Journey Plugin: What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。 Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+      "value": "Journey Plugin: What is the Journey Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 Receiving from DM 说明 DM Plugin, Journey Plugin, Adaptor 的 how-to 信息(narrative)。",
       "sources": [
-        {
-          "page_id": "123456",
-          "anchor": "DM Plugin Overview > What is the DM Plugin",
-          "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-          "confluence_version": 7
-        },
-        {
-          "page_id": "140020",
-          "anchor": "Adaptor > What is the Adaptor",
-          "source_url": "https://confluence.local/x/Adaptor",
-          "confluence_version": 5
-        },
-        {
-          "page_id": "180044",
-          "anchor": "Delivery Way of Working > Roles and Responsibilities",
-          "source_url": "https://confluence.local/x/Delivery-WoW",
-          "confluence_version": 6
-        },
-        {
-          "page_id": "190055",
-          "anchor": "2026 Planned Project Overview > Introduction",
-          "source_url": "https://confluence.local/x/2026-Planned-Project",
-          "confluence_version": 8
-        },
-        {
-          "page_id": "190055",
-          "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-          "source_url": "https://confluence.local/x/2026-Planned-Project",
-          "confluence_version": 8
-        },
-        {
-          "page_id": "190055",
-          "anchor": "2026 Planned Project Overview > Component Index",
-          "source_url": "https://confluence.local/x/2026-Planned-Project",
-          "confluence_version": 8
-        },
         {
           "page_id": "220110",
           "anchor": "Journey Plugin Overview > What is the Journey Plugin",
@@ -59,12 +28,6 @@
           "anchor": "Journey Plugin Overview > Receiving from DM",
           "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
           "confluence_version": 4
-        },
-        {
-          "page_id": "230088",
-          "anchor": "Design Decision: Single Adaptor Layer > Decision",
-          "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-          "confluence_version": 2
         }
       ]
     },
@@ -85,20 +48,6 @@
       ]
     },
     {
-      "field": "pointer",
-      "tier": "pointer-only",
-      "value": null,
-      "pointer_to": "Journey Plugin page > Integration",
-      "sources": [
-        {
-          "page_id": "123456",
-          "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
-          "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-          "confluence_version": 7
-        }
-      ]
-    },
-    {
       "field": "related_components",
       "tier": "narrative",
       "value": "Related to DM Plugin, Adaptor.",
@@ -107,48 +56,6 @@
         "C-0009"
       ],
       "sources": [
-        {
-          "page_id": "123456",
-          "anchor": "DM Plugin Overview > What is the DM Plugin",
-          "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-          "confluence_version": 7
-        },
-        {
-          "page_id": "123456",
-          "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
-          "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-          "confluence_version": 7
-        },
-        {
-          "page_id": "140020",
-          "anchor": "Adaptor > What is the Adaptor",
-          "source_url": "https://confluence.local/x/Adaptor",
-          "confluence_version": 5
-        },
-        {
-          "page_id": "180044",
-          "anchor": "Delivery Way of Working > Roles and Responsibilities",
-          "source_url": "https://confluence.local/x/Delivery-WoW",
-          "confluence_version": 6
-        },
-        {
-          "page_id": "190055",
-          "anchor": "2026 Planned Project Overview > Introduction",
-          "source_url": "https://confluence.local/x/2026-Planned-Project",
-          "confluence_version": 8
-        },
-        {
-          "page_id": "190055",
-          "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-          "source_url": "https://confluence.local/x/2026-Planned-Project",
-          "confluence_version": 8
-        },
-        {
-          "page_id": "190055",
-          "anchor": "2026 Planned Project Overview > Component Index",
-          "source_url": "https://confluence.local/x/2026-Planned-Project",
-          "confluence_version": 8
-        },
         {
           "page_id": "220110",
           "anchor": "Journey Plugin Overview > What is the Journey Plugin",
@@ -166,17 +73,9 @@
           "anchor": "Journey Plugin Overview > Configuration",
           "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
           "confluence_version": 4
-        },
-        {
-          "page_id": "230088",
-          "anchor": "Design Decision: Single Adaptor Layer > Decision",
-          "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-          "confluence_version": 2
         }
       ]
     }
   ],
-  "flags": [
-    "alias 'DMP' should remain auditable in Business review"
-  ]
+  "flags": []
 }

@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/SFMC-Migration"
 owner: "bob"
 labels: ["migration", "sfmc"]
+module: ["Channel standard", "Delivery & tracking standard", "Operations & release standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Migration"]
 update_at: "2026-05-28T09:00:00Z"
 confluence_version: 3

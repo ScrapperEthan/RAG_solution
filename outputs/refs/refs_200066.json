@@ -24,6 +24,12 @@
     ],
     "content_type": "troubleshoot",
     "component": "DM",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -57,6 +63,12 @@
     ],
     "content_type": "troubleshoot",
     "component": "DM",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -90,6 +102,12 @@
     ],
     "content_type": "troubleshoot",
     "component": "common",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,

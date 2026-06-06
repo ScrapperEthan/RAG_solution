@@ -3,10 +3,16 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
+from backend.adapters.llm_mock import MockLLM
+from backend.adapters.store_pgvector import filter_sql
 from backend.ingest.chunk import chunk_page
+from backend.reducer.canonicals import canonical_ids_for, load_vocabulary
+from backend.reducer.service import ReducerService, merge_config_field
+from backend.retrieve.service import Retriever
 from backend.schemas.validation import validate_card, validate_map_page
 
 
@@ -29,6 +35,8 @@ class PipelineDemoTest(unittest.TestCase):
         config = next(field for field in card["fields"] if field["field"] == "config")
         self.assertIn("batch_size: 1000", config["value"])
         self.assertTrue(config["conflict"])
+        definition = next(field for field in card["fields"] if field["field"] == "definition")
+        self.assertNotIn("190055", {source["page_id"] for source in definition["sources"]})
 
     def test_review_queue_contains_known_items(self) -> None:
         text = (ROOT / "outputs" / "review_queue.jsonl").read_text(encoding="utf-8")
@@ -39,8 +47,58 @@ class PipelineDemoTest(unittest.TestCase):
     def test_eval_report_has_agentic_variant(self) -> None:
         report = json.loads((ROOT / "outputs" / "eval_report.json").read_text(encoding="utf-8"))
         variant_ids = {variant["id"] for variant in report["variants"]}
+        families = {variant["family"] for variant in report["variants"]}
         self.assertIn("A1", variant_ids)
+        self.assertEqual(families, {"rag", "llm-wiki", "agentic"})
         self.assertEqual(report["golden"]["size"], 15)
+        self.assertEqual(report["judge"], "mock")
+        self.assertIn("hash", report["embedding_model"])
+
+    def test_frontend_marks_hash_mock_report_as_demo(self) -> None:
+        index = (ROOT / "frontend" / "index.html").read_text(encoding="utf-8")
+        app = (ROOT / "frontend" / "app.js").read_text(encoding="utf-8")
+        self.assertIn("demoBanner", index)
+        self.assertIn("familyComparison", index)
+        self.assertIn("LLM + Wiki", index)
+        self.assertIn("模型直答 · 无 grounding", index)
+        self.assertNotIn("answerModeSelect", index)
+        self.assertIn("isDemoReport", app)
+        self.assertIn('judge === "mock"', app)
+        self.assertIn('"llm-direct"', app)
+        self.assertNotIn("llm-wiki-direct", app)
+
+    def test_loaded_summaries_use_independent_ids(self) -> None:
+        summaries = json.loads((ROOT / "outputs" / "loaded_summaries.json").read_text(encoding="utf-8"))
+        self.assertTrue(summaries)
+        self.assertTrue(all(str(row["sum_id"]).startswith("s") for row in summaries))
+        self.assertTrue(all("ref_id" not in row for row in summaries))
+        self.assertTrue(all(row.get("ref_ids") for row in summaries))
+        self.assertTrue(all(isinstance(row.get("module"), list) for row in summaries))
+
+    def test_module_is_multivalue_across_card_inverted_and_refs(self) -> None:
+        card = json.loads((ROOT / "outputs" / "cards" / "DM_Plugin.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(card["module"]), 2)
+        inverted = [
+            json.loads(line)
+            for line in (ROOT / "outputs" / "inverted_index.jsonl").read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        self.assertTrue(all(isinstance(row["module"], list) for row in inverted))
+        refs = json.loads((ROOT / "outputs" / "loaded_refs.json").read_text(encoding="utf-8"))
+        self.assertTrue(all(isinstance(row["module"], list) for row in refs))
+
+    def test_demo_keeps_every_fixture_page(self) -> None:
+        fixture_pages = list((ROOT / "fixtures" / "confluence").glob("*.md"))
+        loaded_refs = json.loads((ROOT / "outputs" / "loaded_refs.json").read_text(encoding="utf-8"))
+        self.assertEqual(len({row["page_id"] for row in loaded_refs}), len(fixture_pages))
+
+    def test_rerank_variant_changes_at_least_one_ranking(self) -> None:
+        report = json.loads((ROOT / "outputs" / "eval_report.json").read_text(encoding="utf-8"))
+        changed = any(
+            item["per_variant"]["V5"]["retrieved"] != item["per_variant"]["V6"]["retrieved"]
+            for item in report["items"]
+        )
+        self.assertTrue(changed)
 
     def test_chroma_config_retrieves_after_demo(self) -> None:
         subprocess.run(
@@ -60,6 +118,8 @@ class PipelineDemoTest(unittest.TestCase):
                 "config.chroma.yaml",
                 "--query",
                 "DM plugin default batch_size?",
+                "--filter",
+                "module=Delivery & tracking standard",
             ],
             cwd=str(ROOT),
             check=True,
@@ -68,6 +128,7 @@ class PipelineDemoTest(unittest.TestCase):
         )
         payload = json.loads(result.stdout)
         self.assertTrue(payload["hits"])
+        self.assertTrue(all("Delivery & tracking standard" in hit["module"] for hit in payload["hits"]))
 
 
 class ChunkingAndSchemaTest(unittest.TestCase):
@@ -97,6 +158,117 @@ class ChunkingAndSchemaTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_card(card)
 
+    def test_merge_config_field_parses_datetime_before_choosing_newest(self) -> None:
+        old = section_stub("S > Old", "batch_size: 500", "2026-06-02T08:00:00+08:00", 1)
+        new = section_stub("S > New", "batch_size: 1000", "2026-06-02T01:00:00Z", 1)
+        field, conflicts = merge_config_field([old, new])
+        self.assertIn("batch_size: 1000", field["value"])
+        self.assertTrue(conflicts)
+
+    def test_vocabulary_loads_only_approved_rows_and_aliases_match(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "keyword_table.jsonl"
+            path.write_text(
+                "\n".join(
+                    [
+                        json.dumps(
+                            {
+                                "canonical_id": "C-1",
+                                "topic": "DM Plugin",
+                                "aliases": ["DMP", "Data Management"],
+                                "module": ["Integration", "Delivery"],
+                                "related page": ["P-1"],
+                                "status": "approved",
+                            }
+                        ),
+                        json.dumps({"canonical_id": "C-2", "topic": "Draft", "status": "proposed"}),
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            vocabulary = load_vocabulary(path)
+            self.assertEqual(set(vocabulary), {"C-1"})
+            self.assertEqual(vocabulary["C-1"]["module"], ["Integration", "Delivery"])
+            self.assertEqual(
+                canonical_ids_for(
+                    {
+                        "title": "Data Management Overview",
+                        "heading_path": ["Data Management Overview", "Configuration"],
+                        "concepts": ["Data Management"],
+                        "keywords_raw": ["DMP"],
+                    },
+                    vocabulary,
+                ),
+                ["C-1"],
+            )
+
+    def test_reduce_reports_unknown_main_subject_without_creating_topic(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            outputs = Path(tmp)
+            map_dir = outputs / "map"
+            map_dir.mkdir(parents=True)
+            page = {
+                "page_id": "P-NEW",
+                "source_url": "https://example.test/new",
+                "title": "Quantum Switch",
+                "space": "TEST",
+                "tree_path": ["Root"],
+                "owner": "tester",
+                "labels": [],
+                "confluence_version": 1,
+                "update_at": "2026-06-04T00:00:00Z",
+                "captured_at": "2026-06-04T00:00:00Z",
+                "page_summary": {
+                    "summary_en": "Quantum Switch page.",
+                    "summary_zh": "Quantum Switch 页面。",
+                    "cross_questions_en": ["What is Quantum Switch?"],
+                    "cross_questions_zh": ["Quantum Switch 是什么?"],
+                },
+                "sections": [
+                    {
+                        "anchor": "Quantum Switch > Overview",
+                        "heading_path": ["Quantum Switch", "Overview"],
+                        "concepts": ["Quantum Switch"],
+                        "keywords_raw": ["Quantum Switch", "QS"],
+                        "info_type": "what-is",
+                        "tier": "narrative",
+                        "fact_value": None,
+                        "pointer_to": None,
+                        "has_table": False,
+                        "has_image": False,
+                        "summary_en": "Defines Quantum Switch.",
+                        "summary_zh": "定义 Quantum Switch。",
+                        "questions_en": ["What is Quantum Switch?"],
+                        "questions_zh": ["Quantum Switch 是什么?"],
+                        "confidence": 0.9,
+                    }
+                ],
+            }
+            (map_dir / "map_P-NEW.json").write_text(json.dumps(page, ensure_ascii=False), encoding="utf-8")
+            ReducerService(outputs, MockLLM(), ROOT / "fixtures" / "keyword_table.jsonl").run()
+            cards = json.loads((outputs / "cards_index.json").read_text(encoding="utf-8"))
+            self.assertEqual(cards, [])
+            review = (outputs / "review_queue.jsonl").read_text(encoding="utf-8")
+            self.assertIn("unmatched-section", review)
+            self.assertNotIn("new-concept", review)
+
+    def test_summary_hits_expand_to_page_refs(self) -> None:
+        store = FakeStore()
+        retriever = Retriever(FakeEmbedder(), store)
+        refs = retriever.retrieve("integration", top_k=4)
+        self.assertEqual([ref["ref_id"] for ref in refs], [1, 2])
+
+    def test_summary_expansion_respects_module_filter(self) -> None:
+        store = FakeStore()
+        retriever = Retriever(FakeEmbedder(), store)
+        refs = retriever.retrieve("integration", top_k=4, filters={"module": "Integration"})
+        self.assertEqual([ref["ref_id"] for ref in refs], [1])
+
+    def test_pgvector_module_filter_uses_array_membership(self) -> None:
+        where, params = filter_sql({"module": "Integration & API standard", "page_id": "123456", "card_worthy": True})
+        self.assertIn("%s = ANY(module)", where)
+        self.assertEqual(params, ["Integration & API standard", "page_id", "123456", "card_worthy", "true"])
+
 
 def raw_page(body: str) -> dict:
     return {
@@ -110,8 +282,54 @@ def raw_page(body: str) -> dict:
         "update_at": "2026-06-04T00:00:00Z",
         "confluence_version": 1,
         "tree_path": ["Root"],
+        "module": [],
+        "card_worthy": False,
         "body_md": body,
     }
+
+
+def section_stub(anchor: str, fact_value: str, update_at: str, version: int) -> dict:
+    return {
+        "anchor": anchor,
+        "page_id": anchor.split(" > ", 1)[0],
+        "source_url": "https://example.test",
+        "confluence_version": version,
+        "update_at": update_at,
+        "fact_value": fact_value,
+        "summary_en": "",
+        "info_type": "config",
+        "tier": "inline-value",
+        "confidence": 0.9,
+    }
+
+
+class FakeEmbedder:
+    @property
+    def dim(self) -> int:
+        return 2
+
+    def embed(self, texts, *, kind):
+        return [[1.0, 0.0] for _ in texts]
+
+
+class FakeStore:
+    def __init__(self) -> None:
+        self.refs = [
+            {"ref_id": 1, "section_id": "P#A", "body_md": "A", "module": ["Integration"], "score": 0.0},
+            {"ref_id": 2, "section_id": "P#B", "body_md": "B", "module": ["Delivery"], "score": 0.0},
+        ]
+
+    def search_vector(self, table, query_vec, k, filters=None):
+        if table == "summaries":
+            return [{"table": "summaries", "hit_id": "s1", "ref_ids": [1, 2], "score": 1.0, "source": "vector"}]
+        return []
+
+    def search_fts(self, table, query_text, k, filters=None):
+        return []
+
+    def get_refs(self, ref_ids):
+        by_id = {row["ref_id"]: row for row in self.refs}
+        return [dict(by_id[ref_id]) for ref_id in ref_ids if ref_id in by_id]
 
 
 if __name__ == "__main__":

@@ -18,5 +18,10 @@
     "2026 Planned Project",
     "Services"
   ],
+  "module": [
+    "MDC development guideline",
+    "Integration & API standard"
+  ],
+  "card_worthy": true,
   "body_md": "## What is the MDC OTP Service\n\nThe **MDC OTP Service** generates and validates one-time passwords (**OTP**) for the MDC\nflow. Note that \"OTP\" in this department most often refers specifically to this service,\nnot to OTP in general.\n\n## OTP Generation Config\n\n| Param        | Default | Notes                      |\n|--------------|---------|----------------------------|\n| `otp_length` | 6       | number of digits           |\n| `otp_ttl`    | 300     | time-to-live in seconds    |\n\n## Troubleshooting\n\nIf users report \"OTP expired\" errors, check clock skew between the issuing and validating\nnodes; an OTP is only valid within `otp_ttl` seconds of issuance.\n"
 }

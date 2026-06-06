@@ -22,7 +22,7 @@ DEFAULT_CONFIG: Dict[str, Any] = {
         "fixtures_dir": "fixtures/confluence",
         "golden_seed": "fixtures/golden_seed/golden_seed.jsonl",
         "outputs_dir": "outputs",
-        "keyword_registry": "card_ingestion_sop/templates/canonical_keywords_受控词表.md",
+        "keyword_table": "fixtures/keyword_table.jsonl",
     },
     "slice": {
         "root": "06-Delivery/10. Planned Project/2026 Planned Project",
@@ -37,6 +37,9 @@ DEFAULT_CONFIG: Dict[str, Any] = {
         "model": "hash-lexical",
         "dim": 256,
     },
+    "reranker": {
+        "model": "BAAI/bge-reranker-v2-m3",
+    },
     "store": {
         "path": "outputs/store/store.json",
         "chroma_path": "outputs/chroma",
@@ -48,6 +51,9 @@ DEFAULT_CONFIG: Dict[str, Any] = {
         "top_k": 8,
         "rrf_k": 60,
         "rerank": False,
+    },
+    "reduce": {
+        "resolve_aliases": False,
     },
     "chunk": {
         "min_merge_tokens": 0,

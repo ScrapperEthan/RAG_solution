@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/DM-Plugin-Troubleshooting"
 owner: "bob"
 labels: ["plugin", "troubleshoot", "faq"]
+module: ["Integration & API standard", "Delivery & tracking standard", "Operations & release standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Plugins"]
 update_at: "2026-05-19T16:00:00Z"
 confluence_version: 4

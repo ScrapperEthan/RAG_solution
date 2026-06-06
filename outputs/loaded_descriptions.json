@@ -1,10 +1,15 @@
 [
   {
-    "desc_id": 1,
+    "desc_id": "d1",
     "ref_id": 1,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -265,11 +270,16 @@
     ]
   },
   {
-    "desc_id": 2,
+    "desc_id": "d2",
     "ref_id": 1,
     "kind": "question",
     "lang": "en",
     "text": "Data Management plugin what-is",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -530,11 +540,16 @@
     ]
   },
   {
-    "desc_id": 3,
+    "desc_id": "d3",
     "ref_id": 1,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -795,11 +810,16 @@
     ]
   },
   {
-    "desc_id": 4,
+    "desc_id": "d4",
     "ref_id": 1,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -1060,11 +1080,16 @@
     ]
   },
   {
-    "desc_id": 5,
+    "desc_id": "d5",
     "ref_id": 1,
     "kind": "question",
     "lang": "en",
     "text": "Data Management plugin what-is",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -1325,11 +1350,16 @@
     ]
   },
   {
-    "desc_id": 6,
+    "desc_id": "d6",
     "ref_id": 1,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -1590,11 +1620,16 @@
     ]
   },
   {
-    "desc_id": 7,
+    "desc_id": "d7",
     "ref_id": 1,
     "kind": "summary",
     "lang": "en",
     "text": "What is the DM Plugin covers what-is information for DM Plugin, Journey Plugin (narrative).",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -1855,11 +1890,16 @@
     ]
   },
   {
-    "desc_id": 8,
+    "desc_id": "d8",
     "ref_id": 1,
     "kind": "summary",
     "lang": "zh",
     "text": "What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.19245008972987526,
@@ -2120,11 +2160,16 @@
     ]
   },
   {
-    "desc_id": 9,
+    "desc_id": "d9",
     "ref_id": 2,
     "kind": "question",
     "lang": "en",
     "text": "What exact values are configured for DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -2385,11 +2430,16 @@
     ]
   },
   {
-    "desc_id": 10,
+    "desc_id": "d10",
     "ref_id": 2,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -2650,11 +2700,16 @@
     ]
   },
   {
-    "desc_id": 11,
+    "desc_id": "d11",
     "ref_id": 2,
     "kind": "question",
     "lang": "en",
     "text": "batch_size config",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -2915,11 +2970,16 @@
     ]
   },
   {
-    "desc_id": 12,
+    "desc_id": "d12",
     "ref_id": 2,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -3180,11 +3240,16 @@
     ]
   },
   {
-    "desc_id": 13,
+    "desc_id": "d13",
     "ref_id": 2,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 的精确配置值是什么?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -3445,11 +3510,16 @@
     ]
   },
   {
-    "desc_id": 14,
+    "desc_id": "d14",
     "ref_id": 2,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -3710,11 +3780,16 @@
     ]
   },
   {
-    "desc_id": 15,
+    "desc_id": "d15",
     "ref_id": 2,
     "kind": "question",
     "lang": "en",
     "text": "batch_size config",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -3975,11 +4050,16 @@
     ]
   },
   {
-    "desc_id": 16,
+    "desc_id": "d16",
     "ref_id": 2,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -4240,11 +4320,16 @@
     ]
   },
   {
-    "desc_id": 17,
+    "desc_id": "d17",
     "ref_id": 2,
     "kind": "summary",
     "lang": "en",
     "text": "Configuration provides exact config values for DM Plugin: batch_size: 500; max_retry: 3.",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -4505,11 +4590,16 @@
     ]
   },
   {
-    "desc_id": 18,
+    "desc_id": "d18",
     "ref_id": 2,
     "kind": "summary",
     "lang": "zh",
     "text": "Configuration 提供 DM Plugin 的精确 config 信息:batch_size: 500; max_retry: 3。",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.30151134457776363,
@@ -4770,11 +4860,16 @@
     ]
   },
   {
-    "desc_id": 19,
+    "desc_id": "d19",
     "ref_id": 3,
     "kind": "question",
     "lang": "en",
     "text": "Where should I look up the exact value for DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -5035,11 +5130,16 @@
     ]
   },
   {
-    "desc_id": 20,
+    "desc_id": "d20",
     "ref_id": 3,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -5300,11 +5400,16 @@
     ]
   },
   {
-    "desc_id": 21,
+    "desc_id": "d21",
     "ref_id": 3,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin how-to",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -5565,11 +5670,16 @@
     ]
   },
   {
-    "desc_id": 22,
+    "desc_id": "d22",
     "ref_id": 3,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -5830,11 +5940,16 @@
     ]
   },
   {
-    "desc_id": 23,
+    "desc_id": "d23",
     "ref_id": 3,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 的精确值应该去哪里查?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -6095,11 +6210,16 @@
     ]
   },
   {
-    "desc_id": 24,
+    "desc_id": "d24",
     "ref_id": 3,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -6360,11 +6480,16 @@
     ]
   },
   {
-    "desc_id": 25,
+    "desc_id": "d25",
     "ref_id": 3,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin how-to",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -6625,11 +6750,16 @@
     ]
   },
   {
-    "desc_id": 26,
+    "desc_id": "d26",
     "ref_id": 3,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -6890,11 +7020,16 @@
     ]
   },
   {
-    "desc_id": 27,
+    "desc_id": "d27",
     "ref_id": 3,
     "kind": "summary",
     "lang": "en",
     "text": "How it connects to the Journey Plugin covers how-to information for DM Plugin, Journey Plugin, Adaptor (pointer-only).",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -7155,11 +7290,16 @@
     ]
   },
   {
-    "desc_id": 28,
+    "desc_id": "d28",
     "ref_id": 3,
     "kind": "summary",
     "lang": "zh",
     "text": "How it connects to the Journey Plugin 说明 DM Plugin, Journey Plugin, Adaptor 的 how-to 信息(pointer-only)。",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.1796053020267749,
@@ -7420,11 +7560,15 @@
     ]
   },
   {
-    "desc_id": 29,
+    "desc_id": "d29",
     "ref_id": 4,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -7685,11 +7829,15 @@
     ]
   },
   {
-    "desc_id": 30,
+    "desc_id": "d30",
     "ref_id": 4,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -7950,11 +8098,15 @@
     ]
   },
   {
-    "desc_id": 31,
+    "desc_id": "d31",
     "ref_id": 4,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -8215,11 +8367,15 @@
     ]
   },
   {
-    "desc_id": 32,
+    "desc_id": "d32",
     "ref_id": 4,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -8480,11 +8636,15 @@
     ]
   },
   {
-    "desc_id": 33,
+    "desc_id": "d33",
     "ref_id": 4,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -8745,11 +8905,15 @@
     ]
   },
   {
-    "desc_id": 34,
+    "desc_id": "d34",
     "ref_id": 4,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -9010,11 +9174,15 @@
     ]
   },
   {
-    "desc_id": 35,
+    "desc_id": "d35",
     "ref_id": 4,
     "kind": "summary",
     "lang": "en",
     "text": "What is the Adaptor covers what-is information for DM Plugin, Journey Plugin, Adaptor (narrative).",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -9275,11 +9443,15 @@
     ]
   },
   {
-    "desc_id": 36,
+    "desc_id": "d36",
     "ref_id": 4,
     "kind": "summary",
     "lang": "zh",
     "text": "What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.20851441405707477,
@@ -9540,11 +9712,15 @@
     ]
   },
   {
-    "desc_id": 37,
+    "desc_id": "d37",
     "ref_id": 5,
     "kind": "question",
     "lang": "en",
     "text": "What exact values are configured for Adaptor?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -9805,11 +9981,15 @@
     ]
   },
   {
-    "desc_id": 38,
+    "desc_id": "d38",
     "ref_id": 5,
     "kind": "question",
     "lang": "en",
     "text": "What is Adaptor?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -10070,11 +10250,15 @@
     ]
   },
   {
-    "desc_id": 39,
+    "desc_id": "d39",
     "ref_id": 5,
     "kind": "question",
     "lang": "en",
     "text": "adaptor config",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -10335,11 +10519,15 @@
     ]
   },
   {
-    "desc_id": 40,
+    "desc_id": "d40",
     "ref_id": 5,
     "kind": "question",
     "lang": "en",
     "text": "Where is Adaptor documented?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -10600,11 +10788,15 @@
     ]
   },
   {
-    "desc_id": 41,
+    "desc_id": "d41",
     "ref_id": 5,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 的精确配置值是什么?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -10865,11 +11057,15 @@
     ]
   },
   {
-    "desc_id": 42,
+    "desc_id": "d42",
     "ref_id": 5,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 是什么?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -11130,11 +11326,15 @@
     ]
   },
   {
-    "desc_id": 43,
+    "desc_id": "d43",
     "ref_id": 5,
     "kind": "question",
     "lang": "en",
     "text": "adaptor config",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -11395,11 +11595,15 @@
     ]
   },
   {
-    "desc_id": 44,
+    "desc_id": "d44",
     "ref_id": 5,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 在哪里说明?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -11660,11 +11864,15 @@
     ]
   },
   {
-    "desc_id": 45,
+    "desc_id": "d45",
     "ref_id": 5,
     "kind": "summary",
     "lang": "en",
     "text": "Configuration provides exact config values for Adaptor: adaptor_mode: sync.",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -11925,11 +12133,15 @@
     ]
   },
   {
-    "desc_id": 46,
+    "desc_id": "d46",
     "ref_id": 5,
     "kind": "summary",
     "lang": "zh",
     "text": "Configuration 提供 Adaptor 的精确 config 信息:adaptor_mode: sync。",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.35355339059327373,
@@ -12190,11 +12402,15 @@
     ]
   },
   {
-    "desc_id": 47,
+    "desc_id": "d47",
     "ref_id": 6,
     "kind": "question",
     "lang": "en",
     "text": "What is Adaptor?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -12455,11 +12671,15 @@
     ]
   },
   {
-    "desc_id": 48,
+    "desc_id": "d48",
     "ref_id": 6,
     "kind": "question",
     "lang": "en",
     "text": "adaptor how-to",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -12720,11 +12940,15 @@
     ]
   },
   {
-    "desc_id": 49,
+    "desc_id": "d49",
     "ref_id": 6,
     "kind": "question",
     "lang": "en",
     "text": "Where is Adaptor documented?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -12985,11 +13209,15 @@
     ]
   },
   {
-    "desc_id": 50,
+    "desc_id": "d50",
     "ref_id": 6,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 是什么?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -13250,11 +13478,15 @@
     ]
   },
   {
-    "desc_id": 51,
+    "desc_id": "d51",
     "ref_id": 6,
     "kind": "question",
     "lang": "en",
     "text": "adaptor how-to",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -13515,11 +13747,15 @@
     ]
   },
   {
-    "desc_id": 52,
+    "desc_id": "d52",
     "ref_id": 6,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 在哪里说明?",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -13780,11 +14016,15 @@
     ]
   },
   {
-    "desc_id": 53,
+    "desc_id": "d53",
     "ref_id": 6,
     "kind": "summary",
     "lang": "en",
     "text": "Payload Mapping covers how-to information for Adaptor (narrative).",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -14045,11 +14285,15 @@
     ]
   },
   {
-    "desc_id": 54,
+    "desc_id": "d54",
     "ref_id": 6,
     "kind": "summary",
     "lang": "zh",
     "text": "Payload Mapping 说明 Adaptor 的 how-to 信息(narrative)。",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.3333333333333333,
@@ -14310,11 +14554,16 @@
     ]
   },
   {
-    "desc_id": 55,
+    "desc_id": "d55",
     "ref_id": 7,
     "kind": "question",
     "lang": "en",
     "text": "What is Overview?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -14575,11 +14824,16 @@
     ]
   },
   {
-    "desc_id": 56,
+    "desc_id": "d56",
     "ref_id": 7,
     "kind": "question",
     "lang": "en",
     "text": "Overview what-is",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -14840,11 +15094,16 @@
     ]
   },
   {
-    "desc_id": 57,
+    "desc_id": "d57",
     "ref_id": 7,
     "kind": "question",
     "lang": "en",
     "text": "Where is Overview documented?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -15105,11 +15364,16 @@
     ]
   },
   {
-    "desc_id": 58,
+    "desc_id": "d58",
     "ref_id": 7,
     "kind": "question",
     "lang": "zh",
     "text": "Overview 是什么?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -15370,11 +15634,16 @@
     ]
   },
   {
-    "desc_id": 59,
+    "desc_id": "d59",
     "ref_id": 7,
     "kind": "question",
     "lang": "en",
     "text": "Overview what-is",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -15635,11 +15904,16 @@
     ]
   },
   {
-    "desc_id": 60,
+    "desc_id": "d60",
     "ref_id": 7,
     "kind": "question",
     "lang": "zh",
     "text": "Overview 在哪里说明?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -15900,11 +16174,16 @@
     ]
   },
   {
-    "desc_id": 61,
+    "desc_id": "d61",
     "ref_id": 7,
     "kind": "summary",
     "lang": "en",
     "text": "Overview covers what-is information for Overview (narrative).",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -16165,11 +16444,16 @@
     ]
   },
   {
-    "desc_id": 62,
+    "desc_id": "d62",
     "ref_id": 7,
     "kind": "summary",
     "lang": "zh",
     "text": "Overview 说明 Overview 的 what-is 信息(narrative)。",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.31622776601683794,
@@ -16430,11 +16714,16 @@
     ]
   },
   {
-    "desc_id": 63,
+    "desc_id": "d63",
     "ref_id": 8,
     "kind": "question",
     "lang": "en",
     "text": "Where should I look up the exact value for DM Plugin?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -16695,11 +16984,16 @@
     ]
   },
   {
-    "desc_id": 64,
+    "desc_id": "d64",
     "ref_id": 8,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -16960,11 +17254,16 @@
     ]
   },
   {
-    "desc_id": 65,
+    "desc_id": "d65",
     "ref_id": 8,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin config",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -17225,11 +17524,16 @@
     ]
   },
   {
-    "desc_id": 66,
+    "desc_id": "d66",
     "ref_id": 8,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -17490,11 +17794,16 @@
     ]
   },
   {
-    "desc_id": 67,
+    "desc_id": "d67",
     "ref_id": 8,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 的精确值应该去哪里查?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -17755,11 +18064,16 @@
     ]
   },
   {
-    "desc_id": 68,
+    "desc_id": "d68",
     "ref_id": 8,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -18020,11 +18334,16 @@
     ]
   },
   {
-    "desc_id": 69,
+    "desc_id": "d69",
     "ref_id": 8,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin config",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -18285,11 +18604,16 @@
     ]
   },
   {
-    "desc_id": 70,
+    "desc_id": "d70",
     "ref_id": 8,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -18550,11 +18874,16 @@
     ]
   },
   {
-    "desc_id": 71,
+    "desc_id": "d71",
     "ref_id": 8,
     "kind": "summary",
     "lang": "en",
     "text": "Batch Processing Notes covers config information for DM Plugin (pointer-only).",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -18815,11 +19144,16 @@
     ]
   },
   {
-    "desc_id": 72,
+    "desc_id": "d72",
     "ref_id": 8,
     "kind": "summary",
     "lang": "zh",
     "text": "Batch Processing Notes 说明 DM Plugin 的 config 信息(pointer-only)。",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.30151134457776363,
@@ -19080,11 +19414,15 @@
     ]
   },
   {
-    "desc_id": 73,
+    "desc_id": "d73",
     "ref_id": 9,
     "kind": "question",
     "lang": "en",
     "text": "What is Delivery Process?",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -19345,11 +19683,15 @@
     ]
   },
   {
-    "desc_id": 74,
+    "desc_id": "d74",
     "ref_id": 9,
     "kind": "question",
     "lang": "en",
     "text": "Delivery Process what-is",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -19610,11 +19952,15 @@
     ]
   },
   {
-    "desc_id": 75,
+    "desc_id": "d75",
     "ref_id": 9,
     "kind": "question",
     "lang": "en",
     "text": "Where is Delivery Process documented?",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -19875,11 +20221,15 @@
     ]
   },
   {
-    "desc_id": 76,
+    "desc_id": "d76",
     "ref_id": 9,
     "kind": "question",
     "lang": "zh",
     "text": "Delivery Process 是什么?",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -20140,11 +20490,15 @@
     ]
   },
   {
-    "desc_id": 77,
+    "desc_id": "d77",
     "ref_id": 9,
     "kind": "question",
     "lang": "en",
     "text": "Delivery Process what-is",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -20405,11 +20759,15 @@
     ]
   },
   {
-    "desc_id": 78,
+    "desc_id": "d78",
     "ref_id": 9,
     "kind": "question",
     "lang": "zh",
     "text": "Delivery Process 在哪里说明?",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -20670,11 +21028,15 @@
     ]
   },
   {
-    "desc_id": 79,
+    "desc_id": "d79",
     "ref_id": 9,
     "kind": "summary",
     "lang": "en",
     "text": "Delivery Process covers what-is information for Delivery Process (narrative).",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -20935,11 +21297,15 @@
     ]
   },
   {
-    "desc_id": 80,
+    "desc_id": "d80",
     "ref_id": 9,
     "kind": "summary",
     "lang": "zh",
     "text": "Delivery Process 说明 Delivery Process 的 what-is 信息(narrative)。",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.2672612419124244,
@@ -21200,11 +21566,15 @@
     ]
   },
   {
-    "desc_id": 81,
+    "desc_id": "d81",
     "ref_id": 10,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -21465,11 +21835,15 @@
     ]
   },
   {
-    "desc_id": 82,
+    "desc_id": "d82",
     "ref_id": 10,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -21730,11 +22104,15 @@
     ]
   },
   {
-    "desc_id": 83,
+    "desc_id": "d83",
     "ref_id": 10,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -21995,11 +22373,15 @@
     ]
   },
   {
-    "desc_id": 84,
+    "desc_id": "d84",
     "ref_id": 10,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -22260,11 +22642,15 @@
     ]
   },
   {
-    "desc_id": 85,
+    "desc_id": "d85",
     "ref_id": 10,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -22525,11 +22911,15 @@
     ]
   },
   {
-    "desc_id": 86,
+    "desc_id": "d86",
     "ref_id": 10,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -22790,11 +23180,15 @@
     ]
   },
   {
-    "desc_id": 87,
+    "desc_id": "d87",
     "ref_id": 10,
     "kind": "summary",
     "lang": "en",
     "text": "Roles and Responsibilities covers what-is information for DM Plugin, Journey Plugin, Adaptor, MDC OTP Service (narrative).",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -23055,11 +23449,15 @@
     ]
   },
   {
-    "desc_id": 88,
+    "desc_id": "d88",
     "ref_id": 10,
     "kind": "summary",
     "lang": "zh",
     "text": "Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.22941573387056174,
@@ -23320,11 +23718,20 @@
     ]
   },
   {
-    "desc_id": 89,
+    "desc_id": "d89",
     "ref_id": 11,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -23585,11 +23992,20 @@
     ]
   },
   {
-    "desc_id": 90,
+    "desc_id": "d90",
     "ref_id": 11,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -23850,11 +24266,20 @@
     ]
   },
   {
-    "desc_id": 91,
+    "desc_id": "d91",
     "ref_id": 11,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -24115,11 +24540,20 @@
     ]
   },
   {
-    "desc_id": 92,
+    "desc_id": "d92",
     "ref_id": 11,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -24380,11 +24814,20 @@
     ]
   },
   {
-    "desc_id": 93,
+    "desc_id": "d93",
     "ref_id": 11,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -24645,11 +25088,20 @@
     ]
   },
   {
-    "desc_id": 94,
+    "desc_id": "d94",
     "ref_id": 11,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -24910,11 +25362,20 @@
     ]
   },
   {
-    "desc_id": 95,
+    "desc_id": "d95",
     "ref_id": 11,
     "kind": "summary",
     "lang": "en",
     "text": "Introduction covers what-is information for DM Plugin, Journey Plugin, Adaptor, MDC OTP Service (narrative).",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -25175,11 +25636,20 @@
     ]
   },
   {
-    "desc_id": 96,
+    "desc_id": "d96",
     "ref_id": 11,
     "kind": "summary",
     "lang": "zh",
     "text": "Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.24253562503633297,
@@ -25440,11 +25910,20 @@
     ]
   },
   {
-    "desc_id": 97,
+    "desc_id": "d97",
     "ref_id": 12,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -25705,11 +26184,20 @@
     ]
   },
   {
-    "desc_id": 98,
+    "desc_id": "d98",
     "ref_id": 12,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -25970,11 +26458,20 @@
     ]
   },
   {
-    "desc_id": 99,
+    "desc_id": "d99",
     "ref_id": 12,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -26235,11 +26732,20 @@
     ]
   },
   {
-    "desc_id": 100,
+    "desc_id": "d100",
     "ref_id": 12,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -26500,11 +27006,20 @@
     ]
   },
   {
-    "desc_id": 101,
+    "desc_id": "d101",
     "ref_id": 12,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -26765,11 +27280,20 @@
     ]
   },
   {
-    "desc_id": 102,
+    "desc_id": "d102",
     "ref_id": 12,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -27030,11 +27554,20 @@
     ]
   },
   {
-    "desc_id": 103,
+    "desc_id": "d103",
     "ref_id": 12,
     "kind": "summary",
     "lang": "en",
     "text": "Architecture at a Glance covers what-is information for DM Plugin, Journey Plugin, Adaptor, MDC OTP Service (narrative).",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -27295,11 +27828,20 @@
     ]
   },
   {
-    "desc_id": 104,
+    "desc_id": "d104",
     "ref_id": 12,
     "kind": "summary",
     "lang": "zh",
     "text": "Architecture at a Glance 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.22360679774997896,
@@ -27560,11 +28102,20 @@
     ]
   },
   {
-    "desc_id": 105,
+    "desc_id": "d105",
     "ref_id": 13,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -27825,11 +28376,20 @@
     ]
   },
   {
-    "desc_id": 106,
+    "desc_id": "d106",
     "ref_id": 13,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -28090,11 +28650,20 @@
     ]
   },
   {
-    "desc_id": 107,
+    "desc_id": "d107",
     "ref_id": 13,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -28355,11 +28924,20 @@
     ]
   },
   {
-    "desc_id": 108,
+    "desc_id": "d108",
     "ref_id": 13,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -28620,11 +29198,20 @@
     ]
   },
   {
-    "desc_id": 109,
+    "desc_id": "d109",
     "ref_id": 13,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -28885,11 +29472,20 @@
     ]
   },
   {
-    "desc_id": 110,
+    "desc_id": "d110",
     "ref_id": 13,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -29150,11 +29746,20 @@
     ]
   },
   {
-    "desc_id": 111,
+    "desc_id": "d111",
     "ref_id": 13,
     "kind": "summary",
     "lang": "en",
     "text": "Component Index covers what-is information for DM Plugin, Journey Plugin, Adaptor, MDC OTP Service (narrative).",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -29415,11 +30020,20 @@
     ]
   },
   {
-    "desc_id": 112,
+    "desc_id": "d112",
     "ref_id": 13,
     "kind": "summary",
     "lang": "zh",
     "text": "Component Index 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.23570226039551587,
@@ -29680,11 +30294,17 @@
     ]
   },
   {
-    "desc_id": 113,
+    "desc_id": "d113",
     "ref_id": 14,
     "kind": "question",
     "lang": "en",
     "text": "What exact values are configured for DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -29945,11 +30565,17 @@
     ]
   },
   {
-    "desc_id": 114,
+    "desc_id": "d114",
     "ref_id": 14,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -30210,11 +30836,17 @@
     ]
   },
   {
-    "desc_id": 115,
+    "desc_id": "d115",
     "ref_id": 14,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin troubleshoot",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -30475,11 +31107,17 @@
     ]
   },
   {
-    "desc_id": 116,
+    "desc_id": "d116",
     "ref_id": 14,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -30740,11 +31378,17 @@
     ]
   },
   {
-    "desc_id": 117,
+    "desc_id": "d117",
     "ref_id": 14,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 的精确配置值是什么?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -31005,11 +31649,17 @@
     ]
   },
   {
-    "desc_id": 118,
+    "desc_id": "d118",
     "ref_id": 14,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -31270,11 +31920,17 @@
     ]
   },
   {
-    "desc_id": 119,
+    "desc_id": "d119",
     "ref_id": 14,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin troubleshoot",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -31535,11 +32191,17 @@
     ]
   },
   {
-    "desc_id": 120,
+    "desc_id": "d120",
     "ref_id": 14,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -31800,11 +32462,17 @@
     ]
   },
   {
-    "desc_id": 121,
+    "desc_id": "d121",
     "ref_id": 14,
     "kind": "summary",
     "lang": "en",
     "text": "Common Errors provides exact troubleshoot values for DM Plugin: DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued.",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -32065,11 +32733,17 @@
     ]
   },
   {
-    "desc_id": 122,
+    "desc_id": "d122",
     "ref_id": 14,
     "kind": "summary",
     "lang": "zh",
     "text": "Common Errors 提供 DM Plugin 的精确 troubleshoot 信息:DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued。",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.14744195615489714,
@@ -32330,11 +33004,17 @@
     ]
   },
   {
-    "desc_id": 123,
+    "desc_id": "d123",
     "ref_id": 15,
     "kind": "question",
     "lang": "en",
     "text": "Where should I look up the exact value for DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -32595,11 +33275,17 @@
     ]
   },
   {
-    "desc_id": 124,
+    "desc_id": "d124",
     "ref_id": 15,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -32860,11 +33546,17 @@
     ]
   },
   {
-    "desc_id": 125,
+    "desc_id": "d125",
     "ref_id": 15,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin config",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -33125,11 +33817,17 @@
     ]
   },
   {
-    "desc_id": 126,
+    "desc_id": "d126",
     "ref_id": 15,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -33390,11 +34088,17 @@
     ]
   },
   {
-    "desc_id": 127,
+    "desc_id": "d127",
     "ref_id": 15,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 的精确值应该去哪里查?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -33655,11 +34359,17 @@
     ]
   },
   {
-    "desc_id": 128,
+    "desc_id": "d128",
     "ref_id": 15,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -33920,11 +34630,17 @@
     ]
   },
   {
-    "desc_id": 129,
+    "desc_id": "d129",
     "ref_id": 15,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin config",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -34185,11 +34901,17 @@
     ]
   },
   {
-    "desc_id": 130,
+    "desc_id": "d130",
     "ref_id": 15,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -34450,11 +35172,17 @@
     ]
   },
   {
-    "desc_id": 131,
+    "desc_id": "d131",
     "ref_id": 15,
     "kind": "summary",
     "lang": "en",
     "text": "Retry Behaviour covers config information for DM Plugin (pointer-only).",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -34715,11 +35443,17 @@
     ]
   },
   {
-    "desc_id": 132,
+    "desc_id": "d132",
     "ref_id": 15,
     "kind": "summary",
     "lang": "zh",
     "text": "Retry Behaviour 说明 DM Plugin 的 config 信息(pointer-only)。",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.31622776601683794,
@@ -34980,11 +35714,17 @@
     ]
   },
   {
-    "desc_id": 133,
+    "desc_id": "d133",
     "ref_id": 16,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -35245,11 +35985,17 @@
     ]
   },
   {
-    "desc_id": 134,
+    "desc_id": "d134",
     "ref_id": 16,
     "kind": "question",
     "lang": "en",
     "text": "DM-429 troubleshoot",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -35510,11 +36256,17 @@
     ]
   },
   {
-    "desc_id": 135,
+    "desc_id": "d135",
     "ref_id": 16,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -35775,11 +36527,17 @@
     ]
   },
   {
-    "desc_id": 136,
+    "desc_id": "d136",
     "ref_id": 16,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -36040,11 +36798,17 @@
     ]
   },
   {
-    "desc_id": 137,
+    "desc_id": "d137",
     "ref_id": 16,
     "kind": "question",
     "lang": "en",
     "text": "DM-429 troubleshoot",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -36305,11 +37069,17 @@
     ]
   },
   {
-    "desc_id": 138,
+    "desc_id": "d138",
     "ref_id": 16,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -36570,11 +37340,17 @@
     ]
   },
   {
-    "desc_id": 139,
+    "desc_id": "d139",
     "ref_id": 16,
     "kind": "summary",
     "lang": "en",
     "text": "FAQ covers troubleshoot information for DM Plugin (narrative).",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -36835,11 +37611,17 @@
     ]
   },
   {
-    "desc_id": 140,
+    "desc_id": "d140",
     "ref_id": 16,
     "kind": "summary",
     "lang": "zh",
     "text": "FAQ 说明 DM Plugin 的 troubleshoot 信息(narrative)。",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.35355339059327373,
@@ -37100,11 +37882,16 @@
     ]
   },
   {
-    "desc_id": 141,
+    "desc_id": "d141",
     "ref_id": 17,
     "kind": "question",
     "lang": "en",
     "text": "What is Capacity Planning?",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -37365,11 +38152,16 @@
     ]
   },
   {
-    "desc_id": 142,
+    "desc_id": "d142",
     "ref_id": 17,
     "kind": "question",
     "lang": "en",
     "text": "Capacity Planning config",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -37630,11 +38422,16 @@
     ]
   },
   {
-    "desc_id": 143,
+    "desc_id": "d143",
     "ref_id": 17,
     "kind": "question",
     "lang": "en",
     "text": "Where is Capacity Planning documented?",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -37895,11 +38692,16 @@
     ]
   },
   {
-    "desc_id": 144,
+    "desc_id": "d144",
     "ref_id": 17,
     "kind": "question",
     "lang": "zh",
     "text": "Capacity Planning 是什么?",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -38160,11 +38962,16 @@
     ]
   },
   {
-    "desc_id": 145,
+    "desc_id": "d145",
     "ref_id": 17,
     "kind": "question",
     "lang": "en",
     "text": "Capacity Planning config",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -38425,11 +39232,16 @@
     ]
   },
   {
-    "desc_id": 146,
+    "desc_id": "d146",
     "ref_id": 17,
     "kind": "question",
     "lang": "zh",
     "text": "Capacity Planning 在哪里说明?",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -38690,11 +39502,16 @@
     ]
   },
   {
-    "desc_id": 147,
+    "desc_id": "d147",
     "ref_id": 17,
     "kind": "summary",
     "lang": "en",
     "text": "Capacity Planning covers config information for Capacity Planning (narrative).",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -38955,11 +39772,16 @@
     ]
   },
   {
-    "desc_id": 148,
+    "desc_id": "d148",
     "ref_id": 17,
     "kind": "summary",
     "lang": "zh",
     "text": "Capacity Planning 说明 Capacity Planning 的 config 信息(narrative)。",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.2773500981126146,
@@ -39220,11 +40042,16 @@
     ]
   },
   {
-    "desc_id": 149,
+    "desc_id": "d149",
     "ref_id": 18,
     "kind": "question",
     "lang": "en",
     "text": "What is Peak Handling?",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -39485,11 +40312,16 @@
     ]
   },
   {
-    "desc_id": 150,
+    "desc_id": "d150",
     "ref_id": 18,
     "kind": "question",
     "lang": "en",
     "text": "Peak Handling what-is",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -39750,11 +40582,16 @@
     ]
   },
   {
-    "desc_id": 151,
+    "desc_id": "d151",
     "ref_id": 18,
     "kind": "question",
     "lang": "en",
     "text": "Where is Peak Handling documented?",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -40015,11 +40852,16 @@
     ]
   },
   {
-    "desc_id": 152,
+    "desc_id": "d152",
     "ref_id": 18,
     "kind": "question",
     "lang": "zh",
     "text": "Peak Handling 是什么?",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -40280,11 +41122,16 @@
     ]
   },
   {
-    "desc_id": 153,
+    "desc_id": "d153",
     "ref_id": 18,
     "kind": "question",
     "lang": "en",
     "text": "Peak Handling what-is",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -40545,11 +41392,16 @@
     ]
   },
   {
-    "desc_id": 154,
+    "desc_id": "d154",
     "ref_id": 18,
     "kind": "question",
     "lang": "zh",
     "text": "Peak Handling 在哪里说明?",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -40810,11 +41662,16 @@
     ]
   },
   {
-    "desc_id": 155,
+    "desc_id": "d155",
     "ref_id": 18,
     "kind": "summary",
     "lang": "en",
     "text": "Peak Handling covers what-is information for Peak Handling (narrative).",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -41075,11 +41932,16 @@
     ]
   },
   {
-    "desc_id": 156,
+    "desc_id": "d156",
     "ref_id": 18,
     "kind": "summary",
     "lang": "zh",
     "text": "Peak Handling 说明 Peak Handling 的 what-is 信息(narrative)。",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.2672612419124244,
@@ -41340,11 +42202,16 @@
     ]
   },
   {
-    "desc_id": 157,
+    "desc_id": "d157",
     "ref_id": 19,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -41605,11 +42472,16 @@
     ]
   },
   {
-    "desc_id": 158,
+    "desc_id": "d158",
     "ref_id": 19,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -41870,11 +42742,16 @@
     ]
   },
   {
-    "desc_id": 159,
+    "desc_id": "d159",
     "ref_id": 19,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -42135,11 +43012,16 @@
     ]
   },
   {
-    "desc_id": 160,
+    "desc_id": "d160",
     "ref_id": 19,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -42400,11 +43282,16 @@
     ]
   },
   {
-    "desc_id": 161,
+    "desc_id": "d161",
     "ref_id": 19,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin what-is",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -42665,11 +43552,16 @@
     ]
   },
   {
-    "desc_id": 162,
+    "desc_id": "d162",
     "ref_id": 19,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -42930,11 +43822,16 @@
     ]
   },
   {
-    "desc_id": 163,
+    "desc_id": "d163",
     "ref_id": 19,
     "kind": "summary",
     "lang": "en",
     "text": "What is the Journey Plugin covers what-is information for DM Plugin, Journey Plugin (narrative).",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -43195,11 +44092,16 @@
     ]
   },
   {
-    "desc_id": 164,
+    "desc_id": "d164",
     "ref_id": 19,
     "kind": "summary",
     "lang": "zh",
     "text": "What is the Journey Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.19245008972987526,
@@ -43460,11 +44362,16 @@
     ]
   },
   {
-    "desc_id": 165,
+    "desc_id": "d165",
     "ref_id": 20,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -43725,11 +44632,16 @@
     ]
   },
   {
-    "desc_id": 166,
+    "desc_id": "d166",
     "ref_id": 20,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin how-to",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -43990,11 +44902,16 @@
     ]
   },
   {
-    "desc_id": 167,
+    "desc_id": "d167",
     "ref_id": 20,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -44255,11 +45172,16 @@
     ]
   },
   {
-    "desc_id": 168,
+    "desc_id": "d168",
     "ref_id": 20,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -44520,11 +45442,16 @@
     ]
   },
   {
-    "desc_id": 169,
+    "desc_id": "d169",
     "ref_id": 20,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin how-to",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -44785,11 +45712,16 @@
     ]
   },
   {
-    "desc_id": 170,
+    "desc_id": "d170",
     "ref_id": 20,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -45050,11 +45982,16 @@
     ]
   },
   {
-    "desc_id": 171,
+    "desc_id": "d171",
     "ref_id": 20,
     "kind": "summary",
     "lang": "en",
     "text": "Receiving from DM covers how-to information for DM Plugin, Journey Plugin, Adaptor (narrative).",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -45315,11 +46252,16 @@
     ]
   },
   {
-    "desc_id": 172,
+    "desc_id": "d172",
     "ref_id": 20,
     "kind": "summary",
     "lang": "zh",
     "text": "Receiving from DM 说明 DM Plugin, Journey Plugin, Adaptor 的 how-to 信息(narrative)。",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.23570226039551587,
@@ -45580,11 +46522,16 @@
     ]
   },
   {
-    "desc_id": 173,
+    "desc_id": "d173",
     "ref_id": 21,
     "kind": "question",
     "lang": "en",
     "text": "What exact values are configured for Journey Plugin?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -45845,11 +46792,16 @@
     ]
   },
   {
-    "desc_id": 174,
+    "desc_id": "d174",
     "ref_id": 21,
     "kind": "question",
     "lang": "en",
     "text": "What is Journey Plugin?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -46110,11 +47062,16 @@
     ]
   },
   {
-    "desc_id": 175,
+    "desc_id": "d175",
     "ref_id": 21,
     "kind": "question",
     "lang": "en",
     "text": "max_concurrent_journeys config",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -46375,11 +47332,16 @@
     ]
   },
   {
-    "desc_id": 176,
+    "desc_id": "d176",
     "ref_id": 21,
     "kind": "question",
     "lang": "en",
     "text": "Where is Journey Plugin documented?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -46640,11 +47602,16 @@
     ]
   },
   {
-    "desc_id": 177,
+    "desc_id": "d177",
     "ref_id": 21,
     "kind": "question",
     "lang": "zh",
     "text": "Journey Plugin 的精确配置值是什么?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -46905,11 +47872,16 @@
     ]
   },
   {
-    "desc_id": 178,
+    "desc_id": "d178",
     "ref_id": 21,
     "kind": "question",
     "lang": "zh",
     "text": "Journey Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -47170,11 +48142,16 @@
     ]
   },
   {
-    "desc_id": 179,
+    "desc_id": "d179",
     "ref_id": 21,
     "kind": "question",
     "lang": "en",
     "text": "max_concurrent_journeys config",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -47435,11 +48412,16 @@
     ]
   },
   {
-    "desc_id": 180,
+    "desc_id": "d180",
     "ref_id": 21,
     "kind": "question",
     "lang": "zh",
     "text": "Journey Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -47700,11 +48682,16 @@
     ]
   },
   {
-    "desc_id": 181,
+    "desc_id": "d181",
     "ref_id": 21,
     "kind": "summary",
     "lang": "en",
     "text": "Configuration provides exact config values for Journey Plugin: max_concurrent_journeys: 50.",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -47965,11 +48952,16 @@
     ]
   },
   {
-    "desc_id": 182,
+    "desc_id": "d182",
     "ref_id": 21,
     "kind": "summary",
     "lang": "zh",
     "text": "Configuration 提供 Journey Plugin 的精确 config 信息:max_concurrent_journeys: 50。",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.30151134457776363,
@@ -48230,11 +49222,16 @@
     ]
   },
   {
-    "desc_id": 183,
+    "desc_id": "d183",
     "ref_id": 22,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -48495,11 +49492,16 @@
     ]
   },
   {
-    "desc_id": 184,
+    "desc_id": "d184",
     "ref_id": 22,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin decision",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -48760,11 +49762,16 @@
     ]
   },
   {
-    "desc_id": 185,
+    "desc_id": "d185",
     "ref_id": 22,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -49025,11 +50032,16 @@
     ]
   },
   {
-    "desc_id": 186,
+    "desc_id": "d186",
     "ref_id": 22,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -49290,11 +50302,16 @@
     ]
   },
   {
-    "desc_id": 187,
+    "desc_id": "d187",
     "ref_id": 22,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin decision",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -49555,11 +50572,16 @@
     ]
   },
   {
-    "desc_id": 188,
+    "desc_id": "d188",
     "ref_id": 22,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -49820,11 +50842,16 @@
     ]
   },
   {
-    "desc_id": 189,
+    "desc_id": "d189",
     "ref_id": 22,
     "kind": "summary",
     "lang": "en",
     "text": "Decision covers decision information for DM Plugin, Journey Plugin, Adaptor (narrative).",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -50085,11 +51112,16 @@
     ]
   },
   {
-    "desc_id": 190,
+    "desc_id": "d190",
     "ref_id": 22,
     "kind": "summary",
     "lang": "zh",
     "text": "Decision 说明 DM Plugin, Journey Plugin, Adaptor 的 decision 信息(narrative)。",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.2581988897471611,
@@ -50350,11 +51382,16 @@
     ]
   },
   {
-    "desc_id": 191,
+    "desc_id": "d191",
     "ref_id": 23,
     "kind": "question",
     "lang": "en",
     "text": "What is Adaptor?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -50615,11 +51652,16 @@
     ]
   },
   {
-    "desc_id": 192,
+    "desc_id": "d192",
     "ref_id": 23,
     "kind": "question",
     "lang": "en",
     "text": "adaptor decision",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -50880,11 +51922,16 @@
     ]
   },
   {
-    "desc_id": 193,
+    "desc_id": "d193",
     "ref_id": 23,
     "kind": "question",
     "lang": "en",
     "text": "Where is Adaptor documented?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -51145,11 +52192,16 @@
     ]
   },
   {
-    "desc_id": 194,
+    "desc_id": "d194",
     "ref_id": 23,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -51410,11 +52462,16 @@
     ]
   },
   {
-    "desc_id": 195,
+    "desc_id": "d195",
     "ref_id": 23,
     "kind": "question",
     "lang": "en",
     "text": "adaptor decision",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -51675,11 +52732,16 @@
     ]
   },
   {
-    "desc_id": 196,
+    "desc_id": "d196",
     "ref_id": 23,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -51940,11 +53002,16 @@
     ]
   },
   {
-    "desc_id": 197,
+    "desc_id": "d197",
     "ref_id": 23,
     "kind": "summary",
     "lang": "en",
     "text": "Rationale covers decision information for Adaptor, SFMC Migration (narrative).",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -52205,11 +53272,16 @@
     ]
   },
   {
-    "desc_id": 198,
+    "desc_id": "d198",
     "ref_id": 23,
     "kind": "summary",
     "lang": "zh",
     "text": "Rationale 说明 Adaptor, SFMC Migration 的 decision 信息(narrative)。",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.3333333333333333,
@@ -52470,11 +53542,16 @@
     ]
   },
   {
-    "desc_id": 199,
+    "desc_id": "d199",
     "ref_id": 24,
     "kind": "question",
     "lang": "en",
     "text": "Where should I look up the exact value for Adaptor?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -52735,11 +53812,16 @@
     ]
   },
   {
-    "desc_id": 200,
+    "desc_id": "d200",
     "ref_id": 24,
     "kind": "question",
     "lang": "en",
     "text": "What is Adaptor?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -53000,11 +54082,16 @@
     ]
   },
   {
-    "desc_id": 201,
+    "desc_id": "d201",
     "ref_id": 24,
     "kind": "question",
     "lang": "en",
     "text": "adaptor how-to",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -53265,11 +54352,16 @@
     ]
   },
   {
-    "desc_id": 202,
+    "desc_id": "d202",
     "ref_id": 24,
     "kind": "question",
     "lang": "en",
     "text": "Where is Adaptor documented?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -53530,11 +54622,16 @@
     ]
   },
   {
-    "desc_id": 203,
+    "desc_id": "d203",
     "ref_id": 24,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 的精确值应该去哪里查?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -53795,11 +54892,16 @@
     ]
   },
   {
-    "desc_id": 204,
+    "desc_id": "d204",
     "ref_id": 24,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 是什么?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -54060,11 +55162,16 @@
     ]
   },
   {
-    "desc_id": 205,
+    "desc_id": "d205",
     "ref_id": 24,
     "kind": "question",
     "lang": "en",
     "text": "adaptor how-to",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -54325,11 +55432,16 @@
     ]
   },
   {
-    "desc_id": 206,
+    "desc_id": "d206",
     "ref_id": 24,
     "kind": "question",
     "lang": "zh",
     "text": "Adaptor 在哪里说明?",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -54590,11 +55702,16 @@
     ]
   },
   {
-    "desc_id": 207,
+    "desc_id": "d207",
     "ref_id": 24,
     "kind": "summary",
     "lang": "en",
     "text": "Consequences covers how-to information for Adaptor (pointer-only).",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -54855,11 +55972,16 @@
     ]
   },
   {
-    "desc_id": 208,
+    "desc_id": "d208",
     "ref_id": 24,
     "kind": "summary",
     "lang": "zh",
     "text": "Consequences 说明 Adaptor 的 how-to 信息(pointer-only)。",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.3333333333333333,
@@ -55120,11 +56242,16 @@
     ]
   },
   {
-    "desc_id": 209,
+    "desc_id": "d209",
     "ref_id": 25,
     "kind": "question",
     "lang": "en",
     "text": "What is MDC OTP Service?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -55385,11 +56512,16 @@
     ]
   },
   {
-    "desc_id": 210,
+    "desc_id": "d210",
     "ref_id": 25,
     "kind": "question",
     "lang": "en",
     "text": "MDC OTP Service what-is",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -55650,11 +56782,16 @@
     ]
   },
   {
-    "desc_id": 211,
+    "desc_id": "d211",
     "ref_id": 25,
     "kind": "question",
     "lang": "en",
     "text": "Where is MDC OTP Service documented?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -55915,11 +57052,16 @@
     ]
   },
   {
-    "desc_id": 212,
+    "desc_id": "d212",
     "ref_id": 25,
     "kind": "question",
     "lang": "zh",
     "text": "MDC OTP Service 是什么?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -56180,11 +57322,16 @@
     ]
   },
   {
-    "desc_id": 213,
+    "desc_id": "d213",
     "ref_id": 25,
     "kind": "question",
     "lang": "en",
     "text": "MDC OTP Service what-is",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -56445,11 +57592,16 @@
     ]
   },
   {
-    "desc_id": 214,
+    "desc_id": "d214",
     "ref_id": 25,
     "kind": "question",
     "lang": "zh",
     "text": "MDC OTP Service 在哪里说明?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -56710,11 +57862,16 @@
     ]
   },
   {
-    "desc_id": 215,
+    "desc_id": "d215",
     "ref_id": 25,
     "kind": "summary",
     "lang": "en",
     "text": "What is the MDC OTP Service covers what-is information for MDC OTP Service (narrative).",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -56975,11 +58132,16 @@
     ]
   },
   {
-    "desc_id": 216,
+    "desc_id": "d216",
     "ref_id": 25,
     "kind": "summary",
     "lang": "zh",
     "text": "What is the MDC OTP Service 说明 MDC OTP Service 的 what-is 信息(narrative)。",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.2,
@@ -57240,11 +58402,16 @@
     ]
   },
   {
-    "desc_id": 217,
+    "desc_id": "d217",
     "ref_id": 26,
     "kind": "question",
     "lang": "en",
     "text": "What exact values are configured for MDC OTP Service?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -57505,11 +58672,16 @@
     ]
   },
   {
-    "desc_id": 218,
+    "desc_id": "d218",
     "ref_id": 26,
     "kind": "question",
     "lang": "en",
     "text": "What is MDC OTP Service?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -57770,11 +58942,16 @@
     ]
   },
   {
-    "desc_id": 219,
+    "desc_id": "d219",
     "ref_id": 26,
     "kind": "question",
     "lang": "en",
     "text": "OTP config",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -58035,11 +59212,16 @@
     ]
   },
   {
-    "desc_id": 220,
+    "desc_id": "d220",
     "ref_id": 26,
     "kind": "question",
     "lang": "en",
     "text": "Where is MDC OTP Service documented?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -58300,11 +59482,16 @@
     ]
   },
   {
-    "desc_id": 221,
+    "desc_id": "d221",
     "ref_id": 26,
     "kind": "question",
     "lang": "zh",
     "text": "MDC OTP Service 的精确配置值是什么?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -58565,11 +59752,16 @@
     ]
   },
   {
-    "desc_id": 222,
+    "desc_id": "d222",
     "ref_id": 26,
     "kind": "question",
     "lang": "zh",
     "text": "MDC OTP Service 是什么?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -58830,11 +60022,16 @@
     ]
   },
   {
-    "desc_id": 223,
+    "desc_id": "d223",
     "ref_id": 26,
     "kind": "question",
     "lang": "en",
     "text": "OTP config",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -59095,11 +60292,16 @@
     ]
   },
   {
-    "desc_id": 224,
+    "desc_id": "d224",
     "ref_id": 26,
     "kind": "question",
     "lang": "zh",
     "text": "MDC OTP Service 在哪里说明?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -59360,11 +60562,16 @@
     ]
   },
   {
-    "desc_id": 225,
+    "desc_id": "d225",
     "ref_id": 26,
     "kind": "summary",
     "lang": "en",
     "text": "OTP Generation Config provides exact config values for MDC OTP Service: otp_length: 6; otp_ttl: 300.",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -59625,11 +60832,16 @@
     ]
   },
   {
-    "desc_id": 226,
+    "desc_id": "d226",
     "ref_id": 26,
     "kind": "summary",
     "lang": "zh",
     "text": "OTP Generation Config 提供 MDC OTP Service 的精确 config 信息:otp_length: 6; otp_ttl: 300。",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.23570226039551587,
@@ -59890,11 +61102,16 @@
     ]
   },
   {
-    "desc_id": 227,
+    "desc_id": "d227",
     "ref_id": 27,
     "kind": "question",
     "lang": "en",
     "text": "What is MDC OTP Service?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -60155,11 +61372,16 @@
     ]
   },
   {
-    "desc_id": 228,
+    "desc_id": "d228",
     "ref_id": 27,
     "kind": "question",
     "lang": "en",
     "text": "OTP troubleshoot",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -60420,11 +61642,16 @@
     ]
   },
   {
-    "desc_id": 229,
+    "desc_id": "d229",
     "ref_id": 27,
     "kind": "question",
     "lang": "en",
     "text": "Where is MDC OTP Service documented?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -60685,11 +61912,16 @@
     ]
   },
   {
-    "desc_id": 230,
+    "desc_id": "d230",
     "ref_id": 27,
     "kind": "question",
     "lang": "zh",
     "text": "MDC OTP Service 是什么?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -60950,11 +62182,16 @@
     ]
   },
   {
-    "desc_id": 231,
+    "desc_id": "d231",
     "ref_id": 27,
     "kind": "question",
     "lang": "en",
     "text": "OTP troubleshoot",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -61215,11 +62452,16 @@
     ]
   },
   {
-    "desc_id": 232,
+    "desc_id": "d232",
     "ref_id": 27,
     "kind": "question",
     "lang": "zh",
     "text": "MDC OTP Service 在哪里说明?",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -61480,11 +62722,16 @@
     ]
   },
   {
-    "desc_id": 233,
+    "desc_id": "d233",
     "ref_id": 27,
     "kind": "summary",
     "lang": "en",
     "text": "Troubleshooting covers troubleshoot information for MDC OTP Service (narrative).",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -61745,11 +62992,16 @@
     ]
   },
   {
-    "desc_id": 234,
+    "desc_id": "d234",
     "ref_id": 27,
     "kind": "summary",
     "lang": "zh",
     "text": "Troubleshooting 说明 MDC OTP Service 的 troubleshoot 信息(narrative)。",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.3333333333333333,
@@ -62010,11 +63262,17 @@
     ]
   },
   {
-    "desc_id": 235,
+    "desc_id": "d235",
     "ref_id": 28,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -62275,11 +63533,17 @@
     ]
   },
   {
-    "desc_id": 236,
+    "desc_id": "d236",
     "ref_id": 28,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin config",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -62540,11 +63804,17 @@
     ]
   },
   {
-    "desc_id": 237,
+    "desc_id": "d237",
     "ref_id": 28,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -62805,11 +64075,17 @@
     ]
   },
   {
-    "desc_id": 238,
+    "desc_id": "d238",
     "ref_id": 28,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -63070,11 +64346,17 @@
     ]
   },
   {
-    "desc_id": 239,
+    "desc_id": "d239",
     "ref_id": 28,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin config",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -63335,11 +64617,17 @@
     ]
   },
   {
-    "desc_id": 240,
+    "desc_id": "d240",
     "ref_id": 28,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -63600,11 +64888,17 @@
     ]
   },
   {
-    "desc_id": 241,
+    "desc_id": "d241",
     "ref_id": 28,
     "kind": "summary",
     "lang": "en",
     "text": "Overview covers config information for DM Plugin, SFMC Migration (narrative).",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -63865,11 +65159,17 @@
     ]
   },
   {
-    "desc_id": 242,
+    "desc_id": "d242",
     "ref_id": 28,
     "kind": "summary",
     "lang": "zh",
     "text": "Overview 说明 DM Plugin, SFMC Migration 的 config 信息(narrative)。",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.31622776601683794,
@@ -64130,11 +65430,18 @@
     ]
   },
   {
-    "desc_id": 243,
+    "desc_id": "d243",
     "ref_id": 29,
     "kind": "question",
     "lang": "en",
     "text": "What exact values are configured for DM Plugin?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -64395,11 +65702,18 @@
     ]
   },
   {
-    "desc_id": 244,
+    "desc_id": "d244",
     "ref_id": 29,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -64660,11 +65974,18 @@
     ]
   },
   {
-    "desc_id": 245,
+    "desc_id": "d245",
     "ref_id": 29,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin config",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -64925,11 +66246,18 @@
     ]
   },
   {
-    "desc_id": 246,
+    "desc_id": "d246",
     "ref_id": 29,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -65190,11 +66518,18 @@
     ]
   },
   {
-    "desc_id": 247,
+    "desc_id": "d247",
     "ref_id": 29,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 的精确配置值是什么?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -65455,11 +66790,18 @@
     ]
   },
   {
-    "desc_id": 248,
+    "desc_id": "d248",
     "ref_id": 29,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -65720,11 +67062,18 @@
     ]
   },
   {
-    "desc_id": 249,
+    "desc_id": "d249",
     "ref_id": 29,
     "kind": "question",
     "lang": "en",
     "text": "DM plugin config",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -65985,11 +67334,18 @@
     ]
   },
   {
-    "desc_id": 250,
+    "desc_id": "d250",
     "ref_id": 29,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -66250,11 +67606,18 @@
     ]
   },
   {
-    "desc_id": 251,
+    "desc_id": "d251",
     "ref_id": 29,
     "kind": "summary",
     "lang": "en",
     "text": "DM Plugin Config (post-migration) provides exact config values for DM Plugin: batch_size: 1000.",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -66515,11 +67878,18 @@
     ]
   },
   {
-    "desc_id": 252,
+    "desc_id": "d252",
     "ref_id": 29,
     "kind": "summary",
     "lang": "zh",
     "text": "DM Plugin Config (post-migration) 提供 DM Plugin 的精确 config 信息:batch_size: 1000。",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.22941573387056174,
@@ -66780,11 +68150,17 @@
     ]
   },
   {
-    "desc_id": 253,
+    "desc_id": "d253",
     "ref_id": 30,
     "kind": "question",
     "lang": "en",
     "text": "What is DM Plugin?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -67045,11 +68421,17 @@
     ]
   },
   {
-    "desc_id": 254,
+    "desc_id": "d254",
     "ref_id": 30,
     "kind": "question",
     "lang": "en",
     "text": "batch_size config",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -67310,11 +68692,17 @@
     ]
   },
   {
-    "desc_id": 255,
+    "desc_id": "d255",
     "ref_id": 30,
     "kind": "question",
     "lang": "en",
     "text": "Where is DM Plugin documented?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -67575,11 +68963,17 @@
     ]
   },
   {
-    "desc_id": 256,
+    "desc_id": "d256",
     "ref_id": 30,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 是什么?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -67840,11 +69234,17 @@
     ]
   },
   {
-    "desc_id": 257,
+    "desc_id": "d257",
     "ref_id": 30,
     "kind": "question",
     "lang": "en",
     "text": "batch_size config",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -68105,11 +69505,17 @@
     ]
   },
   {
-    "desc_id": 258,
+    "desc_id": "d258",
     "ref_id": 30,
     "kind": "question",
     "lang": "zh",
     "text": "DM Plugin 在哪里说明?",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -68370,11 +69776,17 @@
     ]
   },
   {
-    "desc_id": 259,
+    "desc_id": "d259",
     "ref_id": 30,
     "kind": "summary",
     "lang": "en",
     "text": "Known Issues covers config information for DM Plugin (narrative).",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       0.0,
@@ -68635,11 +70047,17 @@
     ]
   },
   {
-    "desc_id": 260,
+    "desc_id": "d260",
     "ref_id": 30,
     "kind": "summary",
     "lang": "zh",
     "text": "Known Issues 说明 DM Plugin 的 config 信息(narrative)。",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "embedding": [
       0.0,
       -0.3333333333333333,

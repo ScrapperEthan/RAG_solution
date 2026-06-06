@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/DM-Plugin-Overview"
 owner: "alice"
 labels: ["plugin", "delivery"]
+module: ["Integration & API standard", "Delivery & tracking standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Plugins"]
 update_at: "2026-05-20T10:00:00Z"
 confluence_version: 7

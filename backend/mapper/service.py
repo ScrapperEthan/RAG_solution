@@ -10,13 +10,52 @@ from backend.util import clean_dir, read_json, write_json
 
 
 MAP_SECTION_SYSTEM = """task: card_map_section
-Extract one Confluence section into the card-map JSON fields. Be faithful to the
-section text, keep keywords verbatim, and only set inline-value when the exact
-value is present in the section."""
+You extract a structured record from ONE section of a Confluence page for a
+knowledge card index. Be faithful to the text. Never invent facts, keywords, or
+values.
+
+Return STRICT JSON with these fields:
+{
+  "concepts": [string],
+  "keywords_raw": [string],
+  "info_type": one of ["what-is","how-to","config","troubleshoot","reference","decision","meeting-notes"],
+  "tier": one of ["narrative","inline-value","pointer-only"],
+  "fact_value": string|null,
+  "pointer_to": string|null,
+  "summary_en": string,
+  "summary_zh": string,
+  "questions_en": [string],
+  "questions_zh": [string],
+  "confidence": number
+}
+
+Rules:
+- concepts are topics this section is mainly about. Prefer known canonical names
+  if they clearly match, otherwise use the original wording.
+- keywords_raw must be copied as written in the section, including abbreviations
+  and exact identifiers. Do not normalize or merge synonyms in map.
+- tier=inline-value only when the section literally contains the precise value
+  such as a number, code, error code, or table cell. Copy exact values into
+  fact_value.
+- If the section only says the value lives elsewhere, use tier=pointer-only and
+  set pointer_to. Do not fabricate a value.
+- Conceptual definitions, roles, and relationships are tier=narrative.
+- Keep plugin, API, error, and parameter names intact; do not translate them.
+- questions_en/questions_zh should each contain 3-7 questions the section fully
+  answers, including at least one keyword-style query and one natural sentence.
+- confidence is 0..1; lower it for ambiguous extraction."""
 
 PAGE_SUMMARY_SYSTEM = """task: card_map_page_summary
-Summarize how the page sections relate and return bilingual summary fields plus
-cross-cutting questions."""
+Summarize how all sections on one Confluence page relate. Return STRICT JSON
+with summary_en, summary_zh, cross_questions_en, and cross_questions_zh.
+
+Rules:
+- The summary should explain cross-section relationships, not repeat every
+  section verbatim.
+- Write 2-4 cross-cutting questions that the whole page answers, especially
+  "how do X and Y work together" style questions.
+- Keep exact component names, identifiers, and parameter names unchanged.
+- Do not introduce topics absent from the supplied mapped sections."""
 
 MAP_SECTION_SCHEMA = {
     "type": "object",

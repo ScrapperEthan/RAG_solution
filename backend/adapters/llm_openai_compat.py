@@ -27,16 +27,47 @@ class OpenAICompatLLM:
     ) -> Dict:
         if not self.base_url:
             raise ValueError("llm.base_url is required for OpenAICompatLLM")
+        content = self._chat_completion(
+            system,
+            user,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            response_format={"type": "json_object"},
+        )
+        return json.loads(content)
+
+    def complete_text(
+        self,
+        system: str,
+        user: str,
+        *,
+        temperature: float = 0.0,
+        max_tokens: int = 2048,
+    ) -> str:
+        if not self.base_url:
+            raise ValueError("llm.base_url is required for OpenAICompatLLM")
+        return self._chat_completion(system, user, temperature=temperature, max_tokens=max_tokens)
+
+    def _chat_completion(
+        self,
+        system: str,
+        user: str,
+        *,
+        temperature: float,
+        max_tokens: int,
+        response_format: Dict | None = None,
+    ) -> str:
         body = {
             "model": self.model,
             "temperature": temperature,
             "max_tokens": max_tokens,
-            "response_format": {"type": "json_object"},
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},
             ],
         }
+        if response_format:
+            body["response_format"] = response_format
         data = json.dumps(body).encode("utf-8")
         request = urllib.request.Request(
             f"{self.base_url}/chat/completions",
@@ -53,6 +84,4 @@ class OpenAICompatLLM:
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
             raise RuntimeError(f"LLM request failed: {exc.code} {detail}") from exc
-        content = payload["choices"][0]["message"]["content"]
-        return json.loads(content)
-
+        return payload["choices"][0]["message"]["content"]

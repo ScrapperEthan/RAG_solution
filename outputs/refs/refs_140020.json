@@ -23,6 +23,10 @@
     ],
     "content_type": "what-is",
     "component": "journey",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -55,6 +59,10 @@
     ],
     "content_type": "config",
     "component": "adaptor",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": true,
     "has_image": false,
@@ -87,6 +95,10 @@
     ],
     "content_type": "what-is",
     "component": "journey",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,

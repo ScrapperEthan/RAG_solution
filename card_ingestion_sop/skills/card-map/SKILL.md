@@ -43,7 +43,7 @@ owner, labels, captured_at, update_at, confluence_version
 
 注意:**`tree_path`(祖先路径,如 `06-Delivery/10. Planned Project/2026 Planned Project`)目前夹在标题和正文之间**,要在解析时抽到独立字段,不要留在 `body` 里。
 
-**可选输入:`canonical_keywords`(受控词表)。** 如果 `../../templates/canonical_keywords_受控词表.md` 已经有内容,把已审批的 `canonical_name + aliases` 读进来,**用于在 `concepts` 里尽量复用已有的规范名**。但即使读了词表,**`keywords_raw` 仍要按原文照抄**(见 §4 硬规则 R3)——归一化是 reduce 的活,map 只负责忠实记录。
+**可选输入:`canonical_keywords`(受控词表,由**同事的 topic/keyword 组件**产出、Business 审批的外部表)。** 如果 `../../templates/canonical_keywords_受控词表.md` 已经有内容,把已审批的 `canonical_name + aliases` 读进来,**用于在 `concepts` 里尽量复用已有的规范名**。但即使读了词表,**`keywords_raw` 仍要按原文照抄**(见 §4 硬规则 R3)——归一化是 reduce 的活,map 只负责忠实记录。
 
 ---
 

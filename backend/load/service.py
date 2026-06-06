@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 from backend.ports import Embedder, VectorStore
-from backend.util import read_json, write_json
+from backend.util import read_json, read_jsonl, write_json
 
 
 class LoadService:
@@ -16,8 +16,9 @@ class LoadService:
     def run(self) -> Dict[str, int]:
         refs = read_json(self.outputs_dir / "refs.json")
         refs = assign_ref_ids(refs)
+        refs = attach_modules(refs, self.outputs_dir / "inverted_index.jsonl")
         ref_by_section = {row["section_id"]: row for row in refs}
-        ref_by_page = first_ref_by_page(refs)
+        refs_by_page = refs_grouped_by_page(refs)
 
         ref_texts = [row["title"] + "\n" + " > ".join(row["heading_path"]) + "\n" + row["body_md"] for row in refs]
         ref_embeddings = self.embedder.embed(ref_texts, kind="passage")
@@ -29,7 +30,7 @@ class LoadService:
         for row, embedding in zip(descriptions, desc_embeddings):
             row["embedding"] = embedding
 
-        summaries = build_summaries(self.outputs_dir, ref_by_page)
+        summaries = build_summaries(self.outputs_dir, refs_by_page)
         summary_embeddings = self.embedder.embed([row["text"] for row in summaries], kind="passage") if summaries else []
         for row, embedding in zip(summaries, summary_embeddings):
             row["embedding"] = embedding
@@ -53,10 +54,10 @@ def assign_ref_ids(refs: List[Dict]) -> List[Dict]:
     return rows
 
 
-def first_ref_by_page(refs: List[Dict]) -> Dict[str, Dict]:
-    result: Dict[str, Dict] = {}
+def refs_grouped_by_page(refs: List[Dict]) -> Dict[str, List[Dict]]:
+    result: Dict[str, List[Dict]] = {}
     for ref in refs:
-        result.setdefault(ref["page_id"], ref)
+        result.setdefault(ref["page_id"], []).append(ref)
     return result
 
 
@@ -78,33 +79,38 @@ def build_descriptions(outputs_dir: Path, ref_by_section: Dict[str, Dict]) -> Li
             for kind, text in texts:
                 descriptions.append(
                     {
-                        "desc_id": desc_id,
+                        "desc_id": f"d{desc_id}",
                         "ref_id": ref["ref_id"],
                         "kind": kind,
                         "lang": "zh" if contains_cjk(text) else "en",
                         "text": text,
+                        "module": list(ref.get("module", [])),
+                        "card_worthy": bool(ref.get("card_worthy", False)),
                     }
                 )
                 desc_id += 1
     return descriptions
 
 
-def build_summaries(outputs_dir: Path, ref_by_page: Dict[str, Dict]) -> List[Dict]:
+def build_summaries(outputs_dir: Path, refs_by_page: Dict[str, List[Dict]]) -> List[Dict]:
     rows: List[Dict] = []
     sum_id = 1
     for path in sorted((outputs_dir / "map").glob("map_*.json")):
         page = read_json(path)
-        first_ref = ref_by_page.get(page["page_id"])
-        if not first_ref:
+        page_refs = refs_by_page.get(page["page_id"], [])
+        if not page_refs:
             continue
+        modules = dedupe(module for ref in page_refs for module in ref.get("module", []))
         for lang_key in ("summary_en", "summary_zh"):
             rows.append(
                 {
-                    "sum_id": sum_id,
-                    "ref_id": first_ref["ref_id"],
+                    "sum_id": f"s{sum_id}",
+                    "ref_ids": [ref["ref_id"] for ref in page_refs],
                     "page_id": page["page_id"],
                     "tree_path": page["tree_path"],
                     "text": page["page_summary"][lang_key],
+                    "module": modules,
+                    "card_worthy": any(ref.get("card_worthy", False) for ref in page_refs),
                 }
             )
             sum_id += 1
@@ -113,3 +119,29 @@ def build_summaries(outputs_dir: Path, ref_by_page: Dict[str, Dict]) -> List[Dic
 
 def contains_cjk(text: str) -> bool:
     return any("\u4e00" <= ch <= "\u9fff" for ch in text)
+
+
+def attach_modules(refs: List[Dict], inverted_path: Path) -> List[Dict]:
+    derived_by_section: Dict[str, List[str]] = {}
+    for row in read_jsonl(inverted_path):
+        derived_by_section.setdefault(row["section_id"], []).extend(row.get("module", []))
+
+    rows = []
+    for ref in refs:
+        row = dict(ref)
+        explicit = list(row.get("module", []))
+        derived = derived_by_section.get(row["section_id"], [])
+        row["module"] = dedupe([*explicit, *derived])
+        row["card_worthy"] = bool(row.get("card_worthy", bool(row["module"])))
+        rows.append(row)
+    return rows
+
+
+def dedupe(items) -> List[str]:
+    seen = set()
+    result = []
+    for item in items:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result

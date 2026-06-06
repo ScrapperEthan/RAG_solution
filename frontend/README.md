@@ -1,12 +1,7 @@
-# Evaluation Dashboard
+# RAG PoC Live Demo
 
-The dashboard is a static frontend. It reads:
-
-```text
-../outputs/eval_report.json
-```
-
-No Node/npm build step is required.
+This is a build-free frontend served by `backend.web`. It includes streaming
+Q&A, Golden Set comparison, retrieved evidence, and the evaluation dashboard.
 
 ## Run
 
@@ -14,13 +9,13 @@ From the repository root:
 
 ```powershell
 uv run python -m backend.pipeline demo
-uv run python -m http.server 8765
+uv run python -m backend.web --host 0.0.0.0 --port 8765
 ```
 
 Open:
 
 ```text
-http://localhost:8765/frontend/
+http://localhost:8765/
 ```
 
-Use the `Export` button to print or save the current view as PDF from the browser.
+Use `--config config.yaml` to run against the intranet adapters and providers.

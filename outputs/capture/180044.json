@@ -17,5 +17,9 @@
     "2026 Planned Project",
     "Way of Working"
   ],
+  "module": [
+    "Operations & release standard"
+  ],
+  "card_worthy": true,
   "body_md": "## Delivery Process\n\nThe delivery process has four stages: planning, build, test, and release. Each stage has\nan entry and exit checklist. Releases are cut on a two-week cadence.\n\n## Roles and Responsibilities\n\nThe DM plugin and the adaptor are owned by the Platform team; the Journey plugin is owned\nby the Engagement team. The MDC OTP Service is owned by the Security team. Cross-team\nchanges require sign-off from both owning teams.\n"
 }

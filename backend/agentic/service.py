@@ -6,14 +6,23 @@ from typing import Dict, List, Optional
 
 from backend.answer.service import AnswerService
 from backend.ports import LLM
-from backend.reducer.canonicals import CANONICALS
 from backend.retrieve.service import Retriever
 from backend.util import read_json
 
 
 INTENT_SYSTEM = """task: agentic_classify_intent
-Classify the user question as exact when it asks for a concrete value, code,
-identifier, default, limit, or count. Otherwise classify it as concept."""
+Classify a user question for a card + RAG agent. Return STRICT JSON:
+{"intent": "exact"|"concept"}.
+
+Decision rules:
+- exact: concrete values, configuration defaults, limits, counts, identifiers,
+  error codes, version-specific behavior, precise steps, parameters, or fields.
+- concept: definitions, overviews, responsibilities, relationships, rationale,
+  and "how do X and Y work together" questions.
+- If the user asks for more detail, expresses doubt, or asks for the original
+  source, treat it as exact because the agent should drill down to source text.
+- Exact questions require an inline value with anchor or a source drilldown;
+  pointer-only and missing fields are not enough for direct answers."""
 
 INTENT_SCHEMA = {"type": "object", "required": ["intent"]}
 
@@ -27,7 +36,7 @@ class AgenticService:
         self.cards = load_cards(outputs_dir)
         self.refs = load_refs(outputs_dir)
 
-    def answer(self, query: str, variant: Dict) -> Dict:
+    def answer(self, query: str, variant: Dict, filters: Optional[Dict] = None) -> Dict:
         source = variant.get("answer_source", "pure-rag")
         if source == "pure-rag":
             refs = self.retriever.retrieve(
@@ -35,26 +44,65 @@ class AgenticService:
                 index=variant.get("index", "body"),
                 search=variant.get("search", "vector"),
                 top_k=variant.get("top_k", 8),
+                rerank=bool(variant.get("rerank", False)),
+                filters=filters,
             )
             result = self.answerer.answer_from_refs(query, refs)
             result["drilled"] = None
-            return result
+            result["evidence_sections"] = refs
+            return with_execution(
+                result,
+                requested_mode=source,
+                path="rag-retrieval",
+                evidence_kind="retrieval",
+                steps=["Run configured vector/full-text retrieval", "Generate answer from retrieved sections"],
+            )
 
         card = self.find_card(query)
         if not card:
-            refs = self.retriever.retrieve(query, index="both", search="hybrid", top_k=8)
+            refs = self.retriever.retrieve(
+                query,
+                index="both",
+                search="hybrid",
+                top_k=8,
+                rerank=bool(variant.get("rerank", False)),
+                filters=filters,
+            )
             result = self.answerer.answer_from_refs(query, refs)
             result["drilled"] = True
-            return result
+            result["evidence_sections"] = refs
+            return with_execution(
+                result,
+                requested_mode=source,
+                path="agentic-rag-fallback" if source == "agentic" else "rag-fallback",
+                evidence_kind="retrieval",
+                steps=["No approved card matched the question", "Fallback to hybrid RAG retrieval"],
+            )
 
         if source == "card-direct":
-            return answer_from_card(query, card, drilled=False)
+            result = answer_from_card(query, card, drilled=False)
+            return with_execution(
+                result,
+                requested_mode=source,
+                path="card-direct",
+                evidence_kind="card",
+                card=card,
+                steps=["Match approved canonical card", "Answer from card fields without source drilldown"],
+            )
 
         if source == "card-grounding":
             refs = self.refs_for_card(card)
             result = self.answerer.answer_from_refs(query, refs)
             result["drilled"] = True
-            return result
+            result["evidence_sections"] = refs
+            return with_execution(
+                result,
+                requested_mode=source,
+                path="card-grounding",
+                evidence_kind="source",
+                card=card,
+                steps=["Match approved canonical card", "Follow card source anchors", "Generate answer from source sections"],
+            )
 
         if source == "agentic":
             intent = self.classify_intent(query)
@@ -62,13 +110,40 @@ class AgenticService:
                 refs = self.refs_for_card(card)
                 result = self.answerer.answer_from_refs(query, refs)
                 result["drilled"] = True
-                return result
+                result["evidence_sections"] = refs
+                return with_execution(
+                    result,
+                    requested_mode=source,
+                    path="agentic-source-drilldown",
+                    evidence_kind="source",
+                    card=card,
+                    intent=intent,
+                    steps=["Match approved canonical card", "Classify intent as exact", "Inline value missing", "Drill down to source anchors"],
+                )
             if has_relevant_pointer_field(card, query):
                 refs = self.refs_for_card(card)
                 result = self.answerer.answer_from_refs(query, refs)
                 result["drilled"] = True
-                return result
-            return answer_from_card(query, card, drilled=False, intent=intent)
+                result["evidence_sections"] = refs
+                return with_execution(
+                    result,
+                    requested_mode=source,
+                    path="agentic-source-drilldown",
+                    evidence_kind="source",
+                    card=card,
+                    intent=intent,
+                    steps=["Match approved canonical card", f"Classify intent as {intent}", "Relevant field is pointer-only", "Drill down to source anchors"],
+                )
+            result = answer_from_card(query, card, drilled=False, intent=intent)
+            return with_execution(
+                result,
+                requested_mode=source,
+                path="agentic-card-direct",
+                evidence_kind="card",
+                card=card,
+                intent=intent,
+                steps=["Match approved canonical card", f"Classify intent as {intent}", "Use answerable card fields directly"],
+            )
 
         raise ValueError(f"Unknown answer_source: {source}")
 
@@ -85,18 +160,20 @@ class AgenticService:
 
     def find_card(self, query: str) -> Optional[Dict]:
         lowered = query.lower()
-        for cid, canonical in CANONICALS.items():
-            names = [canonical["canonical_name"]] + canonical["aliases"]
+        for cid, card in self.cards.items():
+            names = [card["canonical_name"]] + card.get("aliases", [])
             if any(name.lower() in lowered for name in names):
                 return self.cards.get(cid)
-        if "retry" in lowered or "batch" in lowered or "dm " in lowered or "message batches" in lowered:
-            return self.cards.get("C-0007")
-        if "journey" in lowered:
-            return self.cards.get("C-0008")
-        if "adaptor" in lowered or "adapter" in lowered:
-            return self.cards.get("C-0009")
-        if "otp" in lowered:
-            return self.cards.get("C-0014")
+        for card in self.cards.values():
+            card_text = " ".join(
+                [
+                    card["canonical_name"],
+                    *card.get("aliases", []),
+                    " ".join(str(field.get("value") or "") for field in card.get("fields", [])),
+                ]
+            ).lower()
+            if any(token in card_text for token in lowered.split() if len(token) >= 4):
+                return card
         return None
 
     def refs_for_card(self, card: Dict) -> List[Dict]:
@@ -147,8 +224,49 @@ def answer_from_card(query: str, card: Dict, drilled: bool, intent: str = "conce
         "answer": answer,
         "citations": dedupe(citations)[:3],
         "retrieved_section_ids": dedupe(section_ids),
+        "contexts": snippets,
         "drilled": drilled,
+        "card_evidence": [
+            {
+                "field": field.get("field", ""),
+                "tier": field.get("tier", ""),
+                "value": field.get("value"),
+                "pointer_to": field.get("pointer_to"),
+                "sources": field.get("sources", []),
+            }
+            for field in selected_fields
+        ],
     }
+
+
+def with_execution(
+    result: Dict,
+    *,
+    requested_mode: str,
+    path: str,
+    evidence_kind: str,
+    steps: List[str],
+    card: Optional[Dict] = None,
+    intent: Optional[str] = None,
+) -> Dict:
+    result["execution"] = {
+        "requested_mode": requested_mode,
+        "path": path,
+        "evidence_kind": evidence_kind,
+        "steps": steps,
+        "intent": intent,
+        "drilled": result.get("drilled"),
+        "card": (
+            {
+                "canonical_id": card.get("canonical_id", ""),
+                "canonical_name": card.get("canonical_name", ""),
+                "module": card.get("module", []),
+            }
+            if card
+            else None
+        ),
+    }
+    return result
 
 
 def has_relevant_inline_value(card: Dict, query: str) -> bool:
@@ -219,7 +337,19 @@ def query_mentions_field(query: str, field_text: str) -> bool:
     ]
     if any(marker in query and marker in field_text for marker in exact_markers):
         return True
-    return any(token in field_text for token in query.split() if len(token) >= 4)
+    generic_tokens = {
+        "plugin",
+        "service",
+        "component",
+        "what",
+        "does",
+        "about",
+        "please",
+        "tell",
+        "干嘛的",
+        "是什么",
+    }
+    return any(token in field_text for token in query.split() if len(token) >= 4 and token not in generic_tokens)
 
 
 def dedupe(items: List[str]) -> List[str]:

@@ -87,6 +87,8 @@ def make_section(page: RawPage, heading_path: List[str], body: str) -> Dict:
         "labels": page["labels"],
         "content_type": infer_content_type(page["labels"], heading_path[-1], body),
         "component": infer_component(heading_path[-1] + "\n" + body),
+        "module": list(page.get("module", [])),
+        "card_worthy": bool(page.get("card_worthy", True)),
         "status": "",
         "has_table": has_markdown_table(body),
         "has_image": "![" in body,

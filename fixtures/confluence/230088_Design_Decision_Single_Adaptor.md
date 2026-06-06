@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/ADR-Single-Adaptor"
 owner: "carol"
 labels: ["design", "decision", "adr"]
+module: ["Integration & API standard", "Operations & release standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Design"]
 update_at: "2026-05-12T10:00:00Z"
 confluence_version: 2

@@ -16,7 +16,7 @@
 | 1 | `ConfluenceSource` | `adapters/confluence_mcp.py` | 用内网 Confluence **MCP** 实现 `list_pages(slice_root)`(按页树枚举切片子树)+ `get_page(page_id)`(返回 `RawPage`:metadata + Markdown 正文;**把夹在标题/正文间的 `tree_path` 解析进字段**)。图片按本地路径处理(spec §5)。 | 抓 `2026 Planned Project` 子树,页数与 Confluence 一致;`tree_path` 解析正确 |
 | 2 | `LLM` | `adapters/llm_gpt55.py` | 指向内网 **gpt-5.5**。大概率是 OpenAI 兼容协议——优先复用 codex 写的 `OpenAICompatLLM`,只配 `base_url/model/api_key`;若协议不同再实现 `complete_json`(注意**强制返回严格 JSON**、失败重试、`temperature=0`)。 | 用 map prompt 抽一页,JSON 校验通过 |
 | 3 | `Embedder` | `adapters/embedder_intranet.py` | 接内网可用的 embedding 服务/模型。若暂时没有,可先用 `providers.embedder: hash` 做 dry run。**关键:`dim` 必须与 store 中向量维度一致**;超 2000 维改 `halfvec`(spec §7 注)。查询语言多语种(spec §8)。 | embed 一批文本,维度正确;跨语种检索可用 |
-| 4 | `VectorStore` | `adapters/store_chroma.py` / `adapters/store_pgvector.py` / `adapters/store_json.py` | 内网**没有 Docker**。优先用 Chroma 快速验证;若已有 pgvector/数据库服务,再实现/配置 `store_pgvector.py` + DSN;若依赖受限,先用 `JsonVectorStore` 跑通业务链路和 eval。 | `load` 成功;retrieve/answer 可读回 refs |
+| 4 | `VectorStore` | `adapters/store_chroma.py` / `adapters/store_pgvector.py` / `adapters/store_json.py` | 内网**没有 Docker**。优先用 Chroma 快速验证;若已有 pgvector/数据库服务,配置已实现的 `store_pgvector.py` + DSN(`module text[] + GIN`);若依赖受限,先用 `JsonVectorStore` 跑通业务链路和 eval。 | `load` 成功;retrieve/answer 可读回 refs |
 
 > **依赖注入:** 改 `config.yaml → providers`:`confluence: mcp`、`llm: gpt55`(或 `openai_compat`)、`embedder: intranet`(或先 `hash`)、`store: chroma`(或 `pgvector` / `json`)。`factory.py` 自动装配。
 
@@ -32,8 +32,11 @@ providers: {confluence: mcp, llm: gpt55, embedder: intranet, store: chroma}   # 
 slice:
   root: "06-Delivery/10. Planned Project/2026 Planned Project"
 
+paths:
+  keyword_table: "inputs/keyword_table.jsonl"  # 同事产出、Business 审批;只读
+
 confluence_mcp: {endpoint: "<内网 MCP>", space: "<DEPT>", auth: "<...>"}
-llm:            {base_url: "<内网 gpt-5.5>", model: "gpt-5.5", api_key: "<...>", temperature: 0}
+llm:            {base_url: "<内网 gpt-5.5>", model: "gpt-5.5", api_key_env: GPT55_API_KEY, temperature: 0}
 embedder:       {model: "<内网 embedding 或 bge-m3>", dim: 1024}
 store:          {path: "outputs/store/store.json", chroma_path: "outputs/chroma", dsn: "postgresql://<内网 pgvector 如可用>"}
 retrieval:      {index: both, search: hybrid, top_k: 8, rrf_k: 60, rerank: true, reranker: bge-reranker-v2-m3}
@@ -45,6 +48,7 @@ eval:           {golden_size: 50, judge: gpt-5.5, framework: ragas}
 
 ```powershell
 uv sync
+# 使用已有 pgvector 服务时额外运行: uv sync --extra pgvector
 uv run python -m backend.pipeline demo
 uv run python -m backend.pipeline ingest
 uv run python -m backend.pipeline map
@@ -66,6 +70,8 @@ uv run python -m backend.pipeline eval
 6) eval     生成冻结 golden → 跑变体矩阵 → outputs/eval_report.json
 7) 前端看板  读 eval_report.json 展示(给领导)
 ```
+
+> 真实切片如果把 `chunk.min_merge_tokens` 从 demo 的 `0` 调高,大段二次切分会给 heading 加 `(part N)` 并改变 `section_id`;调参后必须重新生成 golden 的 section id。
 
 ---
 
@@ -92,5 +98,5 @@ uv run python -m backend.pipeline eval
 ## 6. 边界提醒
 
 - **只填端口 + 配置,不改业务逻辑。** 若发现业务代码有 bug,记一条 issue 回传,而不是绕过端口私改(否则内网外的可重复性就废了)。
-- 内网密钥/地址只进 `config.yaml`(或环境变量),**不要硬编码进代码**。
+- 内网密钥只进环境变量,`config.yaml` 只写 `api_key_env`;内网地址只进本地 `config.yaml`,**不要硬编码进代码或提交到 git**。
 - embedding 维度一旦定下,与 pgvector 建表维度必须一致;中途换模型要重建向量列并重嵌。

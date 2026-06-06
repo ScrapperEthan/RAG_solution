@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/Journey-Plugin-Overview"
 owner: "alice"
 labels: ["plugin", "journey"]
+module: ["Channel standard", "Delivery & tracking standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Plugins"]
 update_at: "2026-05-15T11:00:00Z"
 confluence_version: 4

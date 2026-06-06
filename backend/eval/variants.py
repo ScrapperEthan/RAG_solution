@@ -12,6 +12,8 @@ def variants() -> List[Dict]:
             "search": "vector",
             "rerank": False,
             "answer_source": "pure-rag",
+            "family": "rag",
+            "family_label": "RAG",
         },
         {
             "id": "V2",
@@ -20,6 +22,8 @@ def variants() -> List[Dict]:
             "search": "hybrid",
             "rerank": False,
             "answer_source": "pure-rag",
+            "family": "rag",
+            "family_label": "RAG",
         },
         {
             "id": "V3",
@@ -28,6 +32,8 @@ def variants() -> List[Dict]:
             "search": "vector",
             "rerank": False,
             "answer_source": "pure-rag",
+            "family": "rag",
+            "family_label": "RAG",
         },
         {
             "id": "V4",
@@ -36,6 +42,8 @@ def variants() -> List[Dict]:
             "search": "hybrid",
             "rerank": False,
             "answer_source": "pure-rag",
+            "family": "rag",
+            "family_label": "RAG",
         },
         {
             "id": "V5",
@@ -44,14 +52,18 @@ def variants() -> List[Dict]:
             "search": "hybrid",
             "rerank": False,
             "answer_source": "pure-rag",
+            "family": "rag",
+            "family_label": "RAG",
         },
         {
             "id": "V6",
-            "label": "both · hybrid · rerank placeholder",
+            "label": "both · hybrid · rerank",
             "index": "both",
             "search": "hybrid",
             "rerank": True,
             "answer_source": "pure-rag",
+            "family": "rag",
+            "family_label": "RAG",
         },
         {
             "id": "C1",
@@ -60,6 +72,8 @@ def variants() -> List[Dict]:
             "search": "card",
             "rerank": False,
             "answer_source": "card-direct",
+            "family": "llm-wiki",
+            "family_label": "LLM + Wiki (Card)",
         },
         {
             "id": "C2",
@@ -68,6 +82,8 @@ def variants() -> List[Dict]:
             "search": "card",
             "rerank": False,
             "answer_source": "card-grounding",
+            "family": "llm-wiki",
+            "family_label": "LLM + Wiki (Card)",
         },
         {
             "id": "A1",
@@ -76,6 +92,7 @@ def variants() -> List[Dict]:
             "search": "hybrid",
             "rerank": False,
             "answer_source": "agentic",
+            "family": "agentic",
+            "family_label": "Agentic",
         },
     ]
-

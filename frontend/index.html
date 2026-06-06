@@ -1,70 +1,216 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Confluence RAG PoC Eval Dashboard</title>
+    <title>Confluence Intelligence · RAG PoC</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <header class="topbar">
-      <div>
-        <div class="eyebrow">Confluence Card + RAG PoC</div>
-        <h1>Evaluation Dashboard</h1>
-      </div>
-      <div class="actions">
-        <button id="reloadBtn" type="button">Reload</button>
-        <button id="printBtn" type="button">Export</button>
-      </div>
+      <a class="brand" href="#">
+        <span class="brand-mark">CI</span>
+        <span>
+          <strong>Confluence Intelligence</strong>
+          <small>RAG PoC · Live Demo</small>
+        </span>
+      </a>
+      <nav class="tabs" aria-label="Main navigation">
+        <button class="tab is-active" type="button" data-view="chat">实时问答</button>
+        <button class="tab" type="button" data-view="evaluation">评估看板</button>
+      </nav>
+      <div id="systemStatus" class="system-status"><span></span>正在连接</div>
     </header>
 
+    <div id="demoBanner" class="demo-banner" hidden></div>
+
     <main>
-      <section class="overview" id="overview"></section>
-
-      <section class="band">
-        <div class="section-header">
-          <h2>Variant Ladder</h2>
-          <p>Same frozen golden set, one comparable result table.</p>
-        </div>
-        <div id="variantChart" class="chart"></div>
-        <div id="variantTable" class="table-wrap"></div>
-      </section>
-
-      <section class="band split">
-        <div>
-          <div class="section-header">
-            <h2>Card Value</h2>
-            <p>Association recall shows page coverage; drill miss rate shows exact-answer risk.</p>
-          </div>
-          <div id="cardMetrics" class="metric-list"></div>
-        </div>
-        <div>
-          <div class="section-header">
-            <h2>Golden Types</h2>
-            <p>Coverage across single, multihop, exact lookup, pointer drill, and no-answer questions.</p>
-          </div>
-          <div id="typeDistribution" class="donut-wrap"></div>
-        </div>
-      </section>
-
-      <section class="band">
-        <div class="section-header with-controls">
+      <section id="chatView" class="view">
+        <div class="hero">
           <div>
-            <h2>Question Drilldown</h2>
-            <p>Inspect retrieved sections, answers, citations, and grounding behavior by variant.</p>
+            <div class="eyebrow">Grounded answers from Confluence</div>
+            <h1>从企业知识中，得到可追溯的回答</h1>
+            <p>使用 Golden Set 对比标准答案，或直接提出业务问题。系统会按实际回答路径展示可用的执行轨迹与证据。</p>
           </div>
-          <div class="filters">
-            <select id="variantSelect"></select>
-            <select id="typeSelect">
-              <option value="all">All types</option>
-            </select>
+          <div class="hero-stat">
+            <span id="goldenCount">—</span>
+            <small>Golden questions ready</small>
           </div>
         </div>
-        <div id="items" class="items"></div>
+
+        <div class="demo-layout">
+          <aside class="control-panel">
+            <div class="panel-title">
+              <span>01</span>
+              <div><strong>选择提问方式</strong><small>Configure your demo</small></div>
+            </div>
+
+            <div class="mode-switch" role="group" aria-label="Question mode">
+              <button id="goldenModeBtn" class="is-active" type="button">Golden Set</button>
+              <button id="freeModeBtn" type="button">自由提问</button>
+            </div>
+
+            <label class="field golden-only">
+              <span>Golden 问题</span>
+              <select id="goldenSelect"></select>
+            </label>
+
+            <div class="field">
+              <span>回答方式（三族）</span>
+              <div id="answerFamilyControl" class="answer-family-control" role="group" aria-label="Answer family">
+                <button class="answer-family is-active" type="button" data-answer-family="agentic">
+                  <strong>Agentic</strong><small>自动路由 · 推荐</small>
+                </button>
+                <button class="answer-family" type="button" data-answer-family="rag">
+                  <strong>RAG</strong><small>检索原文生成</small>
+                </button>
+                <button class="answer-family" type="button" data-answer-family="llm-wiki">
+                  <strong>LLM + Wiki</strong><small>使用审批卡片</small>
+                </button>
+              </div>
+              <small id="answerModeHint" class="field-hint"></small>
+            </div>
+
+            <label id="cardModeField" class="field is-hidden">
+              <span>LLM + Wiki 子模式</span>
+              <select id="cardModeSelect">
+                <option value="card-direct">卡片直答</option>
+                <option value="card-grounding">卡片 + 回原文取证</option>
+              </select>
+            </label>
+
+            <button id="directBaselineBtn" class="baseline-button" type="button" data-answer-family="llm-direct">
+              <span>对照基线</span><strong>模型直答 · 无 grounding</strong><small>仅实时问答，不属于三族评估变体</small>
+            </button>
+
+            <div class="field-row">
+              <label class="field golden-only">
+                <span>问题语言</span>
+                <select id="languageSelect">
+                  <option value="zh">中文</option>
+                  <option value="en">English</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>模块筛选 <em>可选</em></span>
+                <select id="moduleSelect">
+                  <option value="">全部模块</option>
+                </select>
+              </label>
+            </div>
+
+            <form id="questionForm">
+              <label class="field">
+                <span>当前问题</span>
+                <textarea id="queryInput" rows="5" placeholder="输入一个关于 Confluence 内容的问题"></textarea>
+              </label>
+              <button id="askBtn" class="primary-button" type="submit">
+                <span>开始回答</span><span aria-hidden="true">→</span>
+              </button>
+            </form>
+
+            <div class="tip">
+              <strong>演示建议</strong>
+              <span>先选 Golden Set 展示答案对比，再切换自由提问展示真实业务交互。</span>
+            </div>
+          </aside>
+
+          <section class="answer-panel">
+            <div class="answer-topline">
+              <div class="panel-title">
+                <span>02</span>
+                <div><strong>回答与执行轨迹</strong><small>Streamed and path-aware</small></div>
+              </div>
+              <div id="answerStatus" class="answer-status is-idle"><i></i><span>等待提问</span></div>
+            </div>
+
+            <div id="activeQuestion" class="active-question">
+              <small>QUESTION</small>
+              <strong>从左侧选择一个问题，开始演示。</strong>
+            </div>
+
+            <div id="comparisonGrid" class="comparison-grid">
+              <article id="goldAnswerCard" class="answer-card gold-card">
+                <header><span>GOLD ANSWER</span><small>人工核验标准答案</small></header>
+                <div id="goldAnswer" class="answer-copy is-empty">选择 Golden 问题后显示</div>
+                <footer id="goldMeta"></footer>
+              </article>
+              <article class="answer-card llm-card">
+                <header><span>LLM ANSWER</span><small id="answerSourceLabel">由 Agentic Router 决定回答路径</small></header>
+                <div id="llmAnswer" class="answer-copy is-empty">回答将在这里流式显示</div>
+                <footer id="llmMeta"></footer>
+              </article>
+            </div>
+
+            <div class="evidence-section">
+              <div class="evidence-heading">
+                <div><strong id="evidenceTitle">执行轨迹</strong><span id="evidenceSubtitle">Actual answer path and available evidence</span></div>
+                <span id="evidenceCount" class="count-chip">等待执行</span>
+              </div>
+              <div id="executionTrace" class="execution-trace"></div>
+              <div id="evidenceList" class="evidence-list">
+                <div class="empty-state">提交问题后，将按实际路径展示检索章节、卡片字段、下钻原文，或说明没有可验证证据。</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="evaluationView" class="view evaluation-dashboard" hidden>
+        <div class="eval-heading">
+          <div><div class="eyebrow">Offline evaluation</div><h1>评估看板</h1><p>同一冻结 Golden Set 下的方案横向对比。</p></div>
+          <div class="eval-actions">
+            <button id="reloadEvalBtn" type="button">刷新报告</button>
+            <button id="printEvalBtn" type="button">导出 / 打印</button>
+          </div>
+        </div>
+        <div id="evalNotice" class="eval-notice" hidden></div>
+        <div id="evalReportContent" hidden>
+          <section id="overview" class="overview"></section>
+          <section class="eval-band">
+            <div class="section-header"><h2>三族横向对比</h2><p>每族选择 recall@8 最好的评估变体，对比召回、忠实度、卡片覆盖和下钻风险。</p></div>
+            <div id="familyComparison" class="family-comparison"></div>
+          </section>
+          <section class="eval-band">
+            <div class="section-header"><h2>Variant Ladder</h2><p>查看各技术变体的 recall@8 分布；方案结论需结合三族横向指标与真实评估数据。</p></div>
+            <div id="variantChart" class="chart"></div>
+            <div id="variantTable" class="table-wrap"></div>
+          </section>
+
+          <section class="eval-band eval-split">
+            <div>
+              <div class="section-header">
+                <h2>Card Value</h2>
+                <p>Association recall 展示页面覆盖率；drill miss rate 展示精确答案风险。</p>
+              </div>
+              <div id="cardMetrics" class="metric-list"></div>
+            </div>
+            <div>
+              <div class="section-header">
+                <h2>Golden Types</h2>
+                <p>覆盖单跳、多跳、精确查找、指针下钻和无答案问题。</p>
+              </div>
+              <div id="typeDistribution" class="type-list"></div>
+            </div>
+          </section>
+
+          <section class="eval-band">
+            <div class="section-header eval-controls-header">
+              <div>
+                <h2>Question Drilldown</h2>
+                <p>按方案与问题类型检查召回章节、答案和 grounding 行为。</p>
+              </div>
+              <div class="eval-filters">
+                <select id="variantSelect"></select>
+                <select id="typeSelect"><option value="all">全部类型</option></select>
+              </div>
+            </div>
+            <div id="items" class="eval-items"></div>
+          </section>
+        </div>
       </section>
     </main>
 
     <script src="./app.js"></script>
   </body>
 </html>
-

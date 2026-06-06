@@ -3,17 +3,22 @@
     "canonical_id": "C-0007",
     "canonical_name": "DM Plugin",
     "aliases": [
-      "Data Management plugin",
       "DM plugin",
+      "Data Management plugin",
       "DMP"
     ],
-    "component": "DM",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "boundary": "消息投递、批处理、重试和下游渠道交付；不含 Journey 编排或 Adaptor 转换。",
+    "topic_type": "component",
     "status": "approved",
     "fields": [
       {
         "field": "definition",
         "tier": "narrative",
-        "value": "DM Plugin: What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。 Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+        "value": "DM Plugin: What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 FAQ 说明 DM Plugin 的 troubleshoot 信息(narrative)。",
         "sources": [
           {
             "page_id": "123456",
@@ -22,70 +27,10 @@
             "confluence_version": 7
           },
           {
-            "page_id": "140020",
-            "anchor": "Adaptor > What is the Adaptor",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Introduction",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Component Index",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
             "page_id": "200066",
             "anchor": "DM Plugin Troubleshooting > FAQ",
             "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
             "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > What is the Journey Plugin",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Receiving from DM",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Decision",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          },
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > Overview",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          },
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > Known Issues",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
           }
         ]
       },
@@ -139,20 +84,6 @@
         ]
       },
       {
-        "field": "pointer",
-        "tier": "pointer-only",
-        "value": null,
-        "pointer_to": "source page referenced by this section",
-        "sources": [
-          {
-            "page_id": "160033",
-            "anchor": "Message Inventory > Batch Processing Notes",
-            "source_url": "https://confluence.local/x/Message-Inventory",
-            "confluence_version": 3
-          }
-        ]
-      },
-      {
         "field": "config_pointer",
         "tier": "pointer-only",
         "value": null,
@@ -169,14 +100,21 @@
       {
         "field": "troubleshoot",
         "tier": "inline-value",
-        "value": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued; FAQ covers troubleshoot information for DM Plugin (narrative).",
+        "value": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued",
         "sources": [
           {
             "page_id": "200066",
             "anchor": "DM Plugin Troubleshooting > Common Errors",
             "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
             "confluence_version": 4
-          },
+          }
+        ]
+      },
+      {
+        "field": "troubleshoot_notes",
+        "tier": "narrative",
+        "value": "FAQ covers troubleshoot information for DM Plugin (narrative).",
+        "sources": [
           {
             "page_id": "200066",
             "anchor": "DM Plugin Troubleshooting > FAQ",
@@ -188,10 +126,11 @@
       {
         "field": "related_components",
         "tier": "narrative",
-        "value": "Related to Journey Plugin, Adaptor.",
+        "value": "Related to Journey Plugin, Adaptor, SFMC Migration.",
         "soft_links": [
           "C-0008",
-          "C-0009"
+          "C-0009",
+          "C-0100"
         ],
         "sources": [
           {
@@ -213,42 +152,6 @@
             "confluence_version": 7
           },
           {
-            "page_id": "140020",
-            "anchor": "Adaptor > What is the Adaptor",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "160033",
-            "anchor": "Message Inventory > Batch Processing Notes",
-            "source_url": "https://confluence.local/x/Message-Inventory",
-            "confluence_version": 3
-          },
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Introduction",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Component Index",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
             "page_id": "200066",
             "anchor": "DM Plugin Troubleshooting > Common Errors",
             "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
@@ -267,38 +170,8 @@
             "confluence_version": 4
           },
           {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > What is the Journey Plugin",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Receiving from DM",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Decision",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          },
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > Overview",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          },
-          {
             "page_id": "777001",
             "anchor": "SFMC Migration > DM Plugin Config (post-migration)",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          },
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > Known Issues",
             "source_url": "https://confluence.local/x/SFMC-Migration",
             "confluence_version": 3
           }
@@ -311,201 +184,24 @@
     ]
   },
   {
-    "canonical_id": "C-0008",
-    "canonical_name": "Journey Plugin",
+    "canonical_id": "C-0009",
+    "canonical_name": "Adaptor",
     "aliases": [
-      "journey plugin"
+      "adaptor",
+      "adapter",
+      "single adaptor"
     ],
-    "component": "journey",
+    "module": [
+      "Integration & API standard"
+    ],
+    "boundary": "DM 与 Journey 之间的格式转换和单一适配层决策。",
+    "topic_type": "component",
     "status": "approved",
     "fields": [
       {
         "field": "definition",
         "tier": "narrative",
-        "value": "Journey Plugin: What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。 Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > What is the DM Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          },
-          {
-            "page_id": "140020",
-            "anchor": "Adaptor > What is the Adaptor",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Introduction",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Component Index",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > What is the Journey Plugin",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Receiving from DM",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Decision",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          }
-        ]
-      },
-      {
-        "field": "config",
-        "tier": "inline-value",
-        "value": "max_concurrent_journeys: 50",
-        "authoritative": true,
-        "conflict": false,
-        "conflict_detail": [],
-        "sources": [
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Configuration",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          }
-        ]
-      },
-      {
-        "field": "pointer",
-        "tier": "pointer-only",
-        "value": null,
-        "pointer_to": "Journey Plugin page > Integration",
-        "sources": [
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          }
-        ]
-      },
-      {
-        "field": "related_components",
-        "tier": "narrative",
-        "value": "Related to DM Plugin, Adaptor.",
-        "soft_links": [
-          "C-0007",
-          "C-0009"
-        ],
-        "sources": [
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > What is the DM Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          },
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          },
-          {
-            "page_id": "140020",
-            "anchor": "Adaptor > What is the Adaptor",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Introduction",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Component Index",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > What is the Journey Plugin",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Receiving from DM",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Configuration",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Decision",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          }
-        ]
-      }
-    ],
-    "flags": [
-      "alias 'DMP' should remain auditable in Business review"
-    ]
-  },
-  {
-    "canonical_id": "C-0009",
-    "canonical_name": "Adaptor",
-    "aliases": [
-      "adaptor",
-      "adapter"
-    ],
-    "component": "adaptor",
-    "status": "proposed",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "Adaptor: What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。 Payload Mapping 说明 Adaptor 的 how-to 信息(narrative)。 Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+        "value": "Adaptor: What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。 Payload Mapping 说明 Adaptor 的 how-to 信息(narrative)。 Decision 说明 DM Plugin, Journey Plugin, Adaptor 的 decision 信息(narrative)。 Rationale 说明 Adaptor, SFMC Migration 的 decision 信息(narrative)。",
         "sources": [
           {
             "page_id": "140020",
@@ -518,36 +214,6 @@
             "anchor": "Adaptor > Payload Mapping",
             "source_url": "https://confluence.local/x/Adaptor",
             "confluence_version": 5
-          },
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Introduction",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Component Index",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Receiving from DM",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
           },
           {
             "page_id": "230088",
@@ -583,20 +249,6 @@
         "field": "pointer",
         "tier": "pointer-only",
         "value": null,
-        "pointer_to": "Journey Plugin page > Integration",
-        "sources": [
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          }
-        ]
-      },
-      {
-        "field": "pointer",
-        "tier": "pointer-only",
-        "value": null,
         "pointer_to": "source page referenced by this section",
         "sources": [
           {
@@ -610,18 +262,13 @@
       {
         "field": "related_components",
         "tier": "narrative",
-        "value": "Related to DM Plugin, Journey Plugin.",
+        "value": "Related to DM Plugin, Journey Plugin, SFMC Migration.",
         "soft_links": [
           "C-0007",
-          "C-0008"
+          "C-0008",
+          "C-0100"
         ],
         "sources": [
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          },
           {
             "page_id": "140020",
             "anchor": "Adaptor > What is the Adaptor",
@@ -639,36 +286,6 @@
             "anchor": "Adaptor > Payload Mapping",
             "source_url": "https://confluence.local/x/Adaptor",
             "confluence_version": 5
-          },
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Introduction",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Component Index",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Receiving from DM",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
           },
           {
             "page_id": "230088",
@@ -697,10 +314,15 @@
     "canonical_id": "C-0101",
     "canonical_name": "Message Inventory",
     "aliases": [
-      "Message Inventory"
+      "message inventory"
     ],
-    "component": "common",
-    "status": "proposed",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "boundary": "消息类型清单、生产者和消费者关系。",
+    "topic_type": "inventory",
+    "status": "approved",
     "fields": [
       {
         "field": "definition",
@@ -755,44 +377,203 @@
     "flags": []
   },
   {
-    "canonical_id": "C-0014",
-    "canonical_name": "MDC OTP Service",
+    "canonical_id": "C-0103",
+    "canonical_name": "Delivery Process",
     "aliases": [
-      "OTP service",
-      "MDC OTP"
+      "delivery way of working"
     ],
-    "component": "OTP",
-    "status": "proposed",
+    "module": [
+      "Operations & release standard"
+    ],
+    "boundary": "planning、build、test、release 阶段和职责分工。",
+    "topic_type": "process",
+    "status": "approved",
     "fields": [
       {
         "field": "definition",
         "tier": "narrative",
-        "value": "MDC OTP Service: Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Introduction 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Architecture at a Glance 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。 Component Index 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
+        "value": "Delivery Process: Delivery Process 说明 Delivery Process 的 what-is 信息(narrative)。 Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
         "sources": [
+          {
+            "page_id": "180044",
+            "anchor": "Delivery Way of Working > Delivery Process",
+            "source_url": "https://confluence.local/x/Delivery-WoW",
+            "confluence_version": 6
+          },
           {
             "page_id": "180044",
             "anchor": "Delivery Way of Working > Roles and Responsibilities",
             "source_url": "https://confluence.local/x/Delivery-WoW",
             "confluence_version": 6
+          }
+        ]
+      },
+      {
+        "field": "related_components",
+        "tier": "narrative",
+        "value": "Related to DM Plugin, Journey Plugin, Adaptor, MDC OTP Service.",
+        "soft_links": [
+          "C-0007",
+          "C-0008",
+          "C-0009",
+          "C-0014"
+        ],
+        "sources": [
+          {
+            "page_id": "180044",
+            "anchor": "Delivery Way of Working > Delivery Process",
+            "source_url": "https://confluence.local/x/Delivery-WoW",
+            "confluence_version": 6
           },
           {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Introduction",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
+            "page_id": "180044",
+            "anchor": "Delivery Way of Working > Roles and Responsibilities",
+            "source_url": "https://confluence.local/x/Delivery-WoW",
+            "confluence_version": 6
+          }
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0102",
+    "canonical_name": "Supply and Demand",
+    "aliases": [
+      "capacity planning",
+      "peak handling"
+    ],
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "boundary": "容量预测、供需和峰值处理，不包含具体插件配置。",
+    "topic_type": "planning",
+    "status": "approved",
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "Supply and Demand: Capacity Planning 说明 Capacity Planning 的 config 信息(narrative)。 Peak Handling 说明 Peak Handling 的 what-is 信息(narrative)。",
+        "sources": [
+          {
+            "page_id": "210077",
+            "anchor": "Supply and Demand (Capacity Planning) > Capacity Planning",
+            "source_url": "https://confluence.local/x/Supply-and-Demand",
+            "confluence_version": 1
           },
           {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
+            "page_id": "210077",
+            "anchor": "Supply and Demand (Capacity Planning) > Peak Handling",
+            "source_url": "https://confluence.local/x/Supply-and-Demand",
+            "confluence_version": 1
+          }
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0008",
+    "canonical_name": "Journey Plugin",
+    "aliases": [
+      "Journey plugin"
+    ],
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "boundary": "用户旅程编排与并发 Journey 配置；不含 DM 投递和 Adaptor 转换。",
+    "topic_type": "component",
+    "status": "approved",
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "Journey Plugin: What is the Journey Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 Receiving from DM 说明 DM Plugin, Journey Plugin, Adaptor 的 how-to 信息(narrative)。",
+        "sources": [
+          {
+            "page_id": "220110",
+            "anchor": "Journey Plugin Overview > What is the Journey Plugin",
+            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
+            "confluence_version": 4
           },
           {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Component Index",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
+            "page_id": "220110",
+            "anchor": "Journey Plugin Overview > Receiving from DM",
+            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
+            "confluence_version": 4
+          }
+        ]
+      },
+      {
+        "field": "config",
+        "tier": "inline-value",
+        "value": "max_concurrent_journeys: 50",
+        "authoritative": true,
+        "conflict": false,
+        "conflict_detail": [],
+        "sources": [
+          {
+            "page_id": "220110",
+            "anchor": "Journey Plugin Overview > Configuration",
+            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
+            "confluence_version": 4
+          }
+        ]
+      },
+      {
+        "field": "related_components",
+        "tier": "narrative",
+        "value": "Related to DM Plugin, Adaptor.",
+        "soft_links": [
+          "C-0007",
+          "C-0009"
+        ],
+        "sources": [
+          {
+            "page_id": "220110",
+            "anchor": "Journey Plugin Overview > What is the Journey Plugin",
+            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
+            "confluence_version": 4
           },
+          {
+            "page_id": "220110",
+            "anchor": "Journey Plugin Overview > Receiving from DM",
+            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "220110",
+            "anchor": "Journey Plugin Overview > Configuration",
+            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
+            "confluence_version": 4
+          }
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0014",
+    "canonical_name": "MDC OTP Service",
+    "aliases": [
+      "MDC OTP",
+      "OTP service"
+    ],
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "boundary": "MDC 流程的一次性密码生成、校验和配置；泛指 OTP 需人工确认。",
+    "topic_type": "service",
+    "status": "approved",
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "MDC OTP Service: What is the MDC OTP Service 说明 MDC OTP Service 的 what-is 信息(narrative)。 Troubleshooting 说明 MDC OTP Service 的 troubleshoot 信息(narrative)。",
+        "sources": [
           {
             "page_id": "305001",
             "anchor": "MDC OTP Service > What is the MDC OTP Service",
@@ -835,60 +616,6 @@
             "confluence_version": 2
           }
         ]
-      },
-      {
-        "field": "related_components",
-        "tier": "narrative",
-        "value": "Related to DM Plugin, Journey Plugin, Adaptor.",
-        "soft_links": [
-          "C-0007",
-          "C-0008",
-          "C-0009"
-        ],
-        "sources": [
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Introduction",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Architecture at a Glance",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "190055",
-            "anchor": "2026 Planned Project Overview > Component Index",
-            "source_url": "https://confluence.local/x/2026-Planned-Project",
-            "confluence_version": 8
-          },
-          {
-            "page_id": "305001",
-            "anchor": "MDC OTP Service > What is the MDC OTP Service",
-            "source_url": "https://confluence.local/x/MDC-OTP-Service",
-            "confluence_version": 2
-          },
-          {
-            "page_id": "305001",
-            "anchor": "MDC OTP Service > OTP Generation Config",
-            "source_url": "https://confluence.local/x/MDC-OTP-Service",
-            "confluence_version": 2
-          },
-          {
-            "page_id": "305001",
-            "anchor": "MDC OTP Service > Troubleshooting",
-            "source_url": "https://confluence.local/x/MDC-OTP-Service",
-            "confluence_version": 2
-          }
-        ]
       }
     ],
     "flags": [
@@ -896,56 +623,24 @@
     ]
   },
   {
-    "canonical_id": "C-0102",
-    "canonical_name": "Supply and Demand",
-    "aliases": [
-      "Supply and Demand"
-    ],
-    "component": "common",
-    "status": "proposed",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "Supply and Demand: Capacity Planning 说明 Capacity Planning 的 config 信息(narrative)。 Peak Handling 说明 Peak Handling 的 what-is 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "210077",
-            "anchor": "Supply and Demand (Capacity Planning) > Capacity Planning",
-            "source_url": "https://confluence.local/x/Supply-and-Demand",
-            "confluence_version": 1
-          },
-          {
-            "page_id": "210077",
-            "anchor": "Supply and Demand (Capacity Planning) > Peak Handling",
-            "source_url": "https://confluence.local/x/Supply-and-Demand",
-            "confluence_version": 1
-          }
-        ]
-      }
-    ],
-    "flags": []
-  },
-  {
     "canonical_id": "C-0100",
     "canonical_name": "SFMC Migration",
     "aliases": [
       "SFMC"
     ],
-    "component": "SFMC",
-    "status": "proposed",
+    "module": [
+      "Channel standard",
+      "Operations & release standard"
+    ],
+    "boundary": "迁移到 SFMC 的范围、决策和迁移后变化。",
+    "topic_type": "initiative",
+    "status": "approved",
     "fields": [
       {
         "field": "definition",
         "tier": "narrative",
-        "value": "SFMC Migration: Rationale 说明 Adaptor, SFMC Migration 的 decision 信息(narrative)。 Overview 说明 DM Plugin, SFMC Migration 的 config 信息(narrative)。 Known Issues 说明 DM Plugin 的 config 信息(narrative)。",
+        "value": "SFMC Migration: Overview 说明 DM Plugin, SFMC Migration 的 config 信息(narrative)。 Known Issues 说明 DM Plugin 的 config 信息(narrative)。",
         "sources": [
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Rationale",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          },
           {
             "page_id": "777001",
             "anchor": "SFMC Migration > Overview",
@@ -961,45 +656,16 @@
         ]
       },
       {
-        "field": "config",
-        "tier": "inline-value",
-        "value": "batch_size: 1000",
-        "authoritative": true,
-        "conflict": false,
-        "conflict_detail": [],
-        "sources": [
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > DM Plugin Config (post-migration)",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          }
-        ]
-      },
-      {
         "field": "related_components",
         "tier": "narrative",
-        "value": "Related to DM Plugin, Adaptor.",
+        "value": "Related to DM Plugin.",
         "soft_links": [
-          "C-0007",
-          "C-0009"
+          "C-0007"
         ],
         "sources": [
           {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Rationale",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          },
-          {
             "page_id": "777001",
             "anchor": "SFMC Migration > Overview",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          },
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > DM Plugin Config (post-migration)",
             "source_url": "https://confluence.local/x/SFMC-Migration",
             "confluence_version": 3
           },

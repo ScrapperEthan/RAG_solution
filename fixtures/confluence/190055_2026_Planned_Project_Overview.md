@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/2026-Planned-Project"
 owner: "alice"
 labels: ["overview", "index"]
+module: ["Channel standard", "MDC development guideline", "Template & content standard", "Integration & API standard", "Delivery & tracking standard", "Operations & release standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project"]
 update_at: "2026-05-25T10:00:00Z"
 confluence_version: 8

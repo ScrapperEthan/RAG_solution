@@ -36,7 +36,7 @@ REQUIRED_MAP_SECTION = [
     "confidence",
 ]
 
-REQUIRED_CARD = ["canonical_id", "canonical_name", "aliases", "status", "fields", "flags"]
+REQUIRED_CARD = ["canonical_id", "canonical_name", "aliases", "module", "status", "fields", "flags"]
 INFO_TYPES = {"what-is", "how-to", "config", "troubleshoot", "reference", "decision", "meeting-notes"}
 TIERS = {"narrative", "inline-value", "pointer-only"}
 GOLDEN_TYPES = {"single", "multihop", "identifier-lookup", "pointer-drill", "out-of-scope"}
@@ -86,6 +86,7 @@ def validate_card(card: Dict) -> None:
     require_type(card["canonical_id"], str, "card.canonical_id")
     require_type(card["canonical_name"], str, "card.canonical_name")
     require_type(card["aliases"], list, "card.aliases")
+    require_string_list(card["module"], "card.module")
     require_type(card["fields"], list, "card.fields")
     for field in card["fields"]:
         require_keys(field, ["field", "tier", "value", "sources"], "card field")
@@ -102,9 +103,10 @@ def validate_card(card: Dict) -> None:
 def validate_inverted_row(row: Dict) -> None:
     require_keys(
         row,
-        ["canonical_id", "canonical_name", "page_id", "anchor", "section_id", "info_type", "tier", "confidence", "confluence_version"],
+        ["canonical_id", "canonical_name", "module", "page_id", "anchor", "section_id", "info_type", "tier", "confidence", "confluence_version"],
         "inverted row",
     )
+    require_string_list(row["module"], "inverted row.module")
     require_enum(row["info_type"], INFO_TYPES, "inverted row.info_type")
     require_enum(row["tier"], TIERS, "inverted row.tier")
     require_range(row["confidence"], 0.0, 1.0, "inverted row.confidence")
@@ -137,6 +139,12 @@ def require_non_empty_list(value, label: str) -> None:
     require_type(value, list, label)
     if not value:
         raise ValueError(f"{label} must not be empty")
+
+
+def require_string_list(value, label: str) -> None:
+    require_type(value, list, label)
+    if any(not isinstance(item, str) for item in value):
+        raise ValueError(f"{label} must contain only strings")
 
 
 def require_range(value, low: float, high: float, label: str) -> None:

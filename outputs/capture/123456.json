@@ -17,5 +17,10 @@
     "2026 Planned Project",
     "Plugins"
   ],
+  "module": [
+    "Integration & API standard",
+    "Delivery & tracking standard"
+  ],
+  "card_worthy": true,
   "body_md": "## What is the DM Plugin\n\nThe Data Management plugin (**DM plugin**, sometimes abbreviated **DMP**) delivers\nmessages to downstream channels. It is the core component of the delivery pipeline and\nis responsible for batching, retrying, and handing messages off to the Journey plugin.\n\n## Configuration\n\n| Param        | Default | Notes                         |\n|--------------|---------|-------------------------------|\n| `batch_size` | 500     | maximum allowed value is 1000 |\n| `max_retry`  | 3       | per-message retry attempts    |\n\n## How it connects to the Journey Plugin\n\nAfter processing, the DM plugin hands messages to the **Journey plugin** through the\n**adaptor**. The handshake payload includes `campaign_id` and `user_id`. See the\nJourney Plugin page for the full handshake details.\n"
 }

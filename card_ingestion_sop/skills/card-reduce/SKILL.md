@@ -29,14 +29,14 @@ description: >
 2. **合并成卡片(merge)**:把指向同一概念的所有 section,按"卡片模板"汇总成一张卡片;每个字段标好三档(narrative/inline-value/pointer-only)和锚点。
 3. **挑出存疑项(flag)**:拿不准的合并、冲突的数值、低置信度、新冒出来的 topic —— 全部进 `review_queue`,**不偷偷替人做决定**,交给 Business。
 
-> **关键背景:词表是产物,不是输入。** 原方案设想 Business 给受控词表;既然给不了,**词表由 map 自报关键词 → reduce 归一化自底向上长出来,Business 只审批**。所以词表里的新词初始 `status=proposed`,审批后才 `approved`(见 SOP 主文档"角色分工")。
+> **关键背景:词表是 reduce 的输入,由外部产出。** 受控词表/主题表由**同事的 topic/keyword 组件**产出、Business 审批;**reduce 消费这张已审批的表,只负责"把 section 归到这些概念 + 建卡"**,不自己做主题发现。个别漏网叫法记进 `review_queue` 回报给同事补,不在 reduce 里造词表(见 SOP §3、§11 合并)。
 
 ---
 
 ## 1. 输入
 
 - `outputs/map/map_*.json`:切片内**所有页**的 map 产物(全量,别只取业务点名的页)。
-- `../../templates/canonical_keywords_受控词表.md`:**当前**受控词表(可能为空;第一次跑就是从空开始长)。
+- `../../templates/canonical_keywords_受控词表.md`:**同事的 topic/keyword 组件产出、Business 审批后的**受控词表/主题表(reduce 按它做分组键;词表发现不在这里做)。
 - `../../templates/card_template`(卡片模板):见 §4。第一版用本 skill 自带的默认模板,Business 可调整。
 - 既有冲突/锚点规范对齐 `Confluence_QA_PoC_方案讨论稿.md` §5.2、§5.6、§6.2。
 
@@ -44,7 +44,9 @@ description: >
 
 ## 2. 步骤
 
-### Step 1 — 归一化关键词,更新受控词表(最关键)
+### Step 1 — 把 section 归到(已审批的)规范概念
+
+> **主题/关键词发现由同事的组件负责(外部)。** 本步默认词表已审批,reduce 只做"归类"、不做发现;漏网的记 `review_queue` 回报给同事,不自己造词表。
 
 1. 收集所有 map JSON 里的 `keywords_raw` 和 `concepts`,得到一个"原始叫法"的大清单。
 2. **先用现有词表对齐**:能匹配到已审批 `canonical_name`/`aliases` 的,直接归到那个 `canonical_id`。**不要给已有概念另起新规范名**(幂等的关键)。

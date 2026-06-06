@@ -2,10 +2,16 @@
   "canonical_id": "C-0102",
   "canonical_name": "Supply and Demand",
   "aliases": [
-    "Supply and Demand"
+    "capacity planning",
+    "peak handling"
   ],
-  "component": "common",
-  "status": "proposed",
+  "module": [
+    "Delivery & tracking standard",
+    "Operations & release standard"
+  ],
+  "boundary": "容量预测、供需和峰值处理，不包含具体插件配置。",
+  "topic_type": "planning",
+  "status": "approved",
   "fields": [
     {
       "field": "definition",

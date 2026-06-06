@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/Adaptor"
 owner: "bob"
 labels: ["plugin", "integration"]
+module: ["Integration & API standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Plugins"]
 update_at: "2026-05-18T14:00:00Z"
 confluence_version: 5

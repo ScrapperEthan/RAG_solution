@@ -1,2 +1,3 @@
 [console_scripts]
 rag-poc = backend.pipeline:main
+rag-poc-web = backend.web:main

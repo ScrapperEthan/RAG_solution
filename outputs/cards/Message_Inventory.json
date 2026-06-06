@@ -2,10 +2,15 @@
   "canonical_id": "C-0101",
   "canonical_name": "Message Inventory",
   "aliases": [
-    "Message Inventory"
+    "message inventory"
   ],
-  "component": "common",
-  "status": "proposed",
+  "module": [
+    "Template & content standard",
+    "Delivery & tracking standard"
+  ],
+  "boundary": "消息类型清单、生产者和消费者关系。",
+  "topic_type": "inventory",
+  "status": "approved",
   "fields": [
     {
       "field": "definition",

@@ -22,7 +22,7 @@
 |----|--------|--------|--------|
 | CR-1 | 🔴 | 外网(主)+ 内网 | demo 数字是"管道自检"不是效果证据:加 DEMO 横幅、`local` 改真 BGE-m3、接真 RAGAS 代码路径 |
 | CR-2 | 🔴 | 外网 | 真实 LLM prompt 没接,智能写在 MockLLM 启发式里;把 skill 完整 prompt 写进各 system |
-| CR-3 | 🟡 | 外网建机制 / 内网验质量 | reduce 不发现新概念,词表硬编码 7 条种子;实现聚类+proposed+漏列发现 |
+| CR-3 | 🟡 | 外网(改向) | 词表别再硬编码——改成**加载同事的外部审批表**(见 `05_合并对接_module_facet.md`);未命中项记 review_queue 回报,不静默丢、不自己发现 |
 | CR-4 | 🟡 | 外网 | 概念过度关联污染卡片;归类改"本段主旨"而非"提及即归" |
 | CR-5 | 🟡 | 外网 | rerank 是 no-op,V6=V5;用开源 reranker 真正实现 |
 | CR-6 | 🟢 | 外网 | summary 节点复用 ref_id 会撞;独立 id 空间 |
@@ -65,14 +65,15 @@
 
 ---
 
-### CR-3 🟡 reduce 不发现新概念(真实数据会塌)
-**问题**:`reducer/canonicals.py:CANONICALS` 硬编码 7 条;`canonical_ids_for` 关键词规则映射;`reducer/service.py` 里 `if not cids: continue` 把未命中的 section **静默丢弃**。真实数据里新概念进不了卡片,也不进 review_queue(漏列 topic 发现没实现),违背"词表自底向上生长"。
+### CR-3 🟡 reduce 词表改为"加载同事的外部审批表"(已改向)
+**问题**:`reducer/canonicals.py:CANONICALS` 硬编码 7 条;`reducer/service.py` 里 `if not cids: continue` 把未命中的 section **静默丢弃**。
 
-**外网改(建机制):** 实现 `card-reduce/SKILL.md` §2 step1.3:未命中现有 canonical 的关键词 → 聚类成 `status=proposed` 新概念 + `needs_review`;高频未归类词进 review_queue(漏列发现)。用 MockLLM 对 fixtures 返回确定性聚类。删掉静默丢弃。
+**改向(重要):** 主题/关键词/module **发现现在由同事的组件负责**,不在我们这边做 discovery。所以本条改成:
+- 删掉硬编码 `CANONICALS`,改成 `load_vocabulary(paths.keyword_table)` **读同事审批过的表**(字段含 `aliases/module/boundary/related_pages`),`canonical_ids_for` 用加载来的 aliases 匹配。详见 `05_合并对接_module_facet.md` §1、§3.1。
+- 未命中的 section **别静默丢**:记进 `review_queue`(回报给同事补词表);页本身照常进 RAG(**不删页**)。
+- 同时把 `module`(多标签)贯穿 card/inverted/refs + retrieve 过滤(05 文档 §2、§3)。
 
-**内网改:** 真 gpt-5.5 跑聚类质量。
-
-**验收:** 在 fixtures 里放一个不在 CANONICALS 的伪概念,reduce 能产出 proposed 词条 + review_queue 项,不再静默丢。
+**验收:** 词表从文件加载、无硬编码种子;`DMP/Data Management` 能归进 `DM Plugin`;未命中项进 review_queue 而非被丢;`module` 多标签可过滤;零删页。
 
 ---
 

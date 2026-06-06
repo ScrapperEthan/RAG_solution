@@ -22,11 +22,17 @@ class RawPage(TypedDict):
     update_at: str
     confluence_version: int
     tree_path: List[str]
+    module: List[str]
+    card_worthy: bool
     body_md: str
 
 
-class Hit(TypedDict):
+class Hit(TypedDict, total=False):
+    table: str
+    hit_id: str
     ref_id: int
+    ref_ids: List[int]
+    page_id: str
     score: float
     source: Literal["vector", "fts", "card"]
 
@@ -51,6 +57,16 @@ class LLM(Protocol):
     ) -> Dict:
         ...
 
+    def complete_text(
+        self,
+        system: str,
+        user: str,
+        *,
+        temperature: float = 0.0,
+        max_tokens: int = 2048,
+    ) -> str:
+        ...
+
 
 class Embedder(Protocol):
     def embed(self, texts: List[str], *, kind: Literal["query", "passage"]) -> List[List[float]]:
@@ -58,6 +74,14 @@ class Embedder(Protocol):
 
     @property
     def dim(self) -> int:
+        ...
+
+
+class Reranker(Protocol):
+    status: str
+    placeholder: bool
+
+    def rerank(self, query: str, refs: List[Dict]) -> List[Dict]:
         ...
 
 
@@ -86,4 +110,3 @@ class VectorStore(Protocol):
 
     def get_refs(self, ref_ids: List[int]) -> List[Dict]:
         ...
-

@@ -49,8 +49,7 @@ class JsonVectorStore:
             if not self._matches(row, filters):
                 continue
             score = cosine(query_vec, row.get("embedding") or row.get("body_embedding") or [])
-            ref_id = int(row["ref_id"])
-            hits.append({"ref_id": ref_id, "score": score, "source": "vector"})
+            hits.append(hit_for_row(table, row, score, "vector"))
         hits.sort(key=lambda item: item["score"], reverse=True)
         return hits[:k]
 
@@ -67,7 +66,7 @@ class JsonVectorStore:
             if overlap == 0:
                 continue
             score = overlap / max(1, len(set(row_tokens)))
-            hits.append({"ref_id": int(row["ref_id"]), "score": score, "source": "fts"})
+            hits.append(hit_for_row(table, row, score, "fts"))
         hits.sort(key=lambda item: item["score"], reverse=True)
         return hits[:k]
 
@@ -89,7 +88,11 @@ class JsonVectorStore:
         if not filters:
             return True
         for key, value in filters.items():
-            if row.get(key) != value:
+            row_value = row.get(key)
+            if isinstance(row_value, list):
+                if value not in row_value:
+                    return False
+            elif row_value != value:
                 return False
         return True
 
@@ -129,3 +132,32 @@ def cosine(a: List[float], b: List[float]) -> float:
     na = math.sqrt(sum(x * x for x in a)) or 1.0
     nb = math.sqrt(sum(y * y for y in b)) or 1.0
     return dot / (na * nb)
+
+
+def hit_for_row(table: str, row: Dict, score: float, source: str) -> Hit:
+    if table == "refs":
+        return {
+            "table": table,
+            "hit_id": str(row["ref_id"]),
+            "ref_id": int(row["ref_id"]),
+            "score": score,
+            "source": source,
+        }
+    if table == "descriptions":
+        return {
+            "table": table,
+            "hit_id": str(row["desc_id"]),
+            "ref_id": int(row["ref_id"]),
+            "score": score,
+            "source": source,
+        }
+    if table == "summaries":
+        return {
+            "table": table,
+            "hit_id": str(row["sum_id"]),
+            "ref_ids": [int(ref_id) for ref_id in row.get("ref_ids", [])],
+            "page_id": str(row.get("page_id", "")),
+            "score": score,
+            "source": source,
+        }
+    raise ValueError(f"Unknown table: {table}")

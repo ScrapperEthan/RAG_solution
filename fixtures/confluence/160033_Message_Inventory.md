@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/Message-Inventory"
 owner: "dan"
 labels: ["inventory", "messages"]
+module: ["Template & content standard", "Delivery & tracking standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Message Inventory"]
 update_at: "2026-05-10T10:00:00Z"
 confluence_version: 3

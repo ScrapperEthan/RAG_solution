@@ -6,14 +6,16 @@ from backend.adapters.confluence_file import FileConfluenceSource
 from backend.adapters.confluence_mcp import McpConfluenceSource
 from backend.adapters.embedder_hash import HashEmbedder
 from backend.adapters.embedder_intranet import IntranetEmbedder
+from backend.adapters.embedder_local import LocalBgeM3Embedder
 from backend.adapters.llm_gpt55 import Gpt55LLM
 from backend.adapters.llm_mock import MockLLM
 from backend.adapters.llm_openai_compat import OpenAICompatLLM
+from backend.adapters.reranker_bge import BgeReranker
 from backend.adapters.store_chroma import ChromaVectorStore
 from backend.adapters.store_json import JsonVectorStore
 from backend.adapters.store_pgvector import PgVectorStore
 from backend.config import resolve_path
-from backend.ports import ConfluenceSource, Embedder, LLM, VectorStore
+from backend.ports import ConfluenceSource, Embedder, LLM, Reranker, VectorStore
 
 
 def build_confluence_source(config: Dict[str, Any]) -> ConfluenceSource:
@@ -38,11 +40,17 @@ def build_llm(config: Dict[str, Any]) -> LLM:
 
 def build_embedder(config: Dict[str, Any]) -> Embedder:
     provider = config["providers"]["embedder"]
-    if provider in {"hash", "local"}:
+    if provider == "hash":
         return HashEmbedder(dim=int(config["embedder"]["dim"]))
+    if provider == "local":
+        return LocalBgeM3Embedder(config["embedder"])
     if provider == "intranet":
         return IntranetEmbedder(config["embedder"])
     raise ValueError(f"Unknown embedder provider: {provider}")
+
+
+def build_reranker(config: Dict[str, Any]) -> Reranker:
+    return BgeReranker(config.get("reranker", {}))
 
 
 def build_store(config: Dict[str, Any], embedder: Embedder) -> VectorStore:

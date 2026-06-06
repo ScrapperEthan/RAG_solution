@@ -24,6 +24,11 @@
     ],
     "content_type": "decision",
     "component": "journey",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -57,6 +62,11 @@
     ],
     "content_type": "decision",
     "component": "journey",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -90,6 +100,11 @@
     ],
     "content_type": "decision",
     "component": "adaptor",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,

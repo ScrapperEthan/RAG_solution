@@ -5,6 +5,7 @@ space: "DEPT"
 source_url: "https://confluence.local/x/Delivery-WoW"
 owner: "erin"
 labels: ["process", "way-of-working"]
+module: ["Operations & release standard"]
 tree_path: ["06-Delivery", "10. Planned Project", "2026 Planned Project", "Way of Working"]
 update_at: "2026-05-22T10:00:00Z"
 confluence_version: 6

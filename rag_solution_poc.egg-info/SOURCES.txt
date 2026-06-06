@@ -6,14 +6,17 @@ backend/factory.py
 backend/pipeline.py
 backend/ports.py
 backend/util.py
+backend/web.py
 backend/adapters/__init__.py
 backend/adapters/confluence_file.py
 backend/adapters/confluence_mcp.py
 backend/adapters/embedder_hash.py
 backend/adapters/embedder_intranet.py
+backend/adapters/embedder_local.py
 backend/adapters/llm_gpt55.py
 backend/adapters/llm_mock.py
 backend/adapters/llm_openai_compat.py
+backend/adapters/reranker_bge.py
 backend/adapters/store_chroma.py
 backend/adapters/store_json.py
 backend/adapters/store_pgvector.py
@@ -23,6 +26,7 @@ backend/answer/__init__.py
 backend/answer/service.py
 backend/eval/__init__.py
 backend/eval/metrics.py
+backend/eval/ragas_judge.py
 backend/eval/service.py
 backend/eval/variants.py
 backend/ingest/__init__.py
@@ -41,6 +45,7 @@ backend/retrieve/service.py
 backend/schemas/__init__.py
 backend/schemas/validation.py
 backend/tests/test_pipeline.py
+backend/tests/test_web.py
 rag_solution_poc.egg-info/PKG-INFO
 rag_solution_poc.egg-info/SOURCES.txt
 rag_solution_poc.egg-info/dependency_links.txt

@@ -23,6 +23,11 @@
     ],
     "content_type": "what-is",
     "component": "journey",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -313,6 +318,11 @@
     ],
     "content_type": "config",
     "component": "DM",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": true,
     "has_image": false,
@@ -603,6 +613,11 @@
     ],
     "content_type": "how-to",
     "component": "journey",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -893,6 +908,10 @@
     ],
     "content_type": "what-is",
     "component": "journey",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -1183,6 +1202,10 @@
     ],
     "content_type": "config",
     "component": "adaptor",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": true,
     "has_image": false,
@@ -1473,6 +1496,10 @@
     ],
     "content_type": "what-is",
     "component": "journey",
+    "module": [
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -1763,6 +1790,11 @@
     ],
     "content_type": "what-is",
     "component": "common",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -2053,6 +2085,11 @@
     ],
     "content_type": "config",
     "component": "DM",
+    "module": [
+      "Template & content standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -2343,6 +2380,10 @@
     ],
     "content_type": "what-is",
     "component": "common",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -2633,6 +2674,10 @@
     ],
     "content_type": "what-is",
     "component": "OTP",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -2922,6 +2967,15 @@
     ],
     "content_type": "what-is",
     "component": "OTP",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -3211,6 +3265,15 @@
     ],
     "content_type": "what-is",
     "component": "OTP",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -3500,6 +3563,15 @@
     ],
     "content_type": "what-is",
     "component": "OTP",
+    "module": [
+      "Channel standard",
+      "MDC development guideline",
+      "Template & content standard",
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -3791,6 +3863,12 @@
     ],
     "content_type": "troubleshoot",
     "component": "DM",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -4082,6 +4160,12 @@
     ],
     "content_type": "troubleshoot",
     "component": "DM",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -4373,6 +4457,12 @@
     ],
     "content_type": "troubleshoot",
     "component": "common",
+    "module": [
+      "Integration & API standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -4663,6 +4753,11 @@
     ],
     "content_type": "config",
     "component": "common",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -4953,6 +5048,11 @@
     ],
     "content_type": "what-is",
     "component": "common",
+    "module": [
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -5243,6 +5343,11 @@
     ],
     "content_type": "what-is",
     "component": "journey",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -5533,6 +5638,11 @@
     ],
     "content_type": "what-is",
     "component": "journey",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -5823,6 +5933,11 @@
     ],
     "content_type": "config",
     "component": "journey",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": true,
     "has_image": false,
@@ -6114,6 +6229,11 @@
     ],
     "content_type": "decision",
     "component": "journey",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -6405,6 +6525,11 @@
     ],
     "content_type": "decision",
     "component": "journey",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -6696,6 +6821,11 @@
     ],
     "content_type": "decision",
     "component": "adaptor",
+    "module": [
+      "Integration & API standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -6987,6 +7117,11 @@
     ],
     "content_type": "what-is",
     "component": "OTP",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -7278,6 +7413,11 @@
     ],
     "content_type": "config",
     "component": "OTP",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": true,
     "has_image": false,
@@ -7569,6 +7709,11 @@
     ],
     "content_type": "troubleshoot",
     "component": "OTP",
+    "module": [
+      "MDC development guideline",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -7859,6 +8004,12 @@
     ],
     "content_type": "config",
     "component": "DM",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -8149,6 +8300,13 @@
     ],
     "content_type": "config",
     "component": "DM",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard",
+      "Integration & API standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -8439,6 +8597,12 @@
     ],
     "content_type": "config",
     "component": "DM",
+    "module": [
+      "Channel standard",
+      "Delivery & tracking standard",
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,

@@ -1,7 +1,7 @@
 providers:
   confluence: file
-  llm: mock
-  embedder: hash
+  llm: openai_compat
+  embedder: local
   store: json
 
 slice:
@@ -11,7 +11,20 @@ paths:
   fixtures_dir: fixtures/confluence
   golden_seed: fixtures/golden_seed/golden_seed.jsonl
   outputs_dir: outputs
-  keyword_registry: card_ingestion_sop/templates/canonical_keywords_受控词表.md
+  keyword_table: inputs/keyword_table.jsonl
+
+llm:
+  base_url: "https://openai-compatible.example/v1"
+  model: "gpt-5.5"
+  api_key_env: GPT55_API_KEY
+  temperature: 0.0
+
+embedder:
+  model: BAAI/bge-m3
+  dim: 1024
+
+reranker:
+  model: BAAI/bge-reranker-v2-m3
 
 store:
   path: outputs/store/store.json
@@ -23,11 +36,10 @@ retrieval:
   search: hybrid
   top_k: 8
   rrf_k: 60
-  rerank: false
+  rerank: true
 
-chunk:
-  # Keep fixture section ids stable. For real Confluence slices, raise this
-  # toward 100 after checking that golden section ids are regenerated.
-  min_merge_tokens: 0
-  max_tokens: 1000
-  overlap_tokens: 50
+reduce:
+  resolve_aliases: false
+
+eval:
+  judge: gpt-5.5

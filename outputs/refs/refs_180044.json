@@ -23,6 +23,10 @@
     ],
     "content_type": "what-is",
     "component": "common",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,
@@ -55,6 +59,10 @@
     ],
     "content_type": "what-is",
     "component": "OTP",
+    "module": [
+      "Operations & release standard"
+    ],
+    "card_worthy": true,
     "status": "",
     "has_table": false,
     "has_image": false,

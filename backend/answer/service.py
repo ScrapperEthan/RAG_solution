@@ -7,8 +7,22 @@ from backend.ports import LLM
 
 
 ANSWER_SYSTEM = """task: answer_from_context
-Answer the user question using only the supplied Confluence references. If the
-references do not support an answer, return an answer that starts with NO_ANSWER."""
+Answer the user question using only the supplied Confluence references.
+
+Return STRICT JSON: {"answer": string}.
+
+Rules:
+- Use only facts directly supported by supplied refs. Do not use outside
+  knowledge and do not fabricate missing values.
+- Every factual claim must be grounded in the refs. Prefer exact wording for
+  config values, error codes, parameter names, API names, versions, and limits.
+- If the refs do not contain supporting context, the answer must start with
+  "NO_ANSWER" and briefly say no answer was found in the supplied Confluence
+  context.
+- If refs disagree, state the conflict and prefer the newest source only when
+  update/version evidence is present.
+- Keep citations possible by making the answer traceable to the supplied
+  section_ids/source URLs; do not cite sources not provided."""
 
 ANSWER_SCHEMA = {"type": "object", "required": ["answer"]}
 
@@ -24,6 +38,7 @@ class AnswerService:
                 "answer": "NO_ANSWER — no answer found in the supplied Confluence context.",
                 "citations": [],
                 "retrieved_section_ids": section_ids,
+                "contexts": [],
                 "drilled": None,
             }
         response = self.llm.complete_json(
@@ -53,6 +68,7 @@ class AnswerService:
             "answer": answer,
             "citations": citations,
             "retrieved_section_ids": section_ids,
+            "contexts": [ref.get("body_md", "") for ref in refs],
             "drilled": None,
         }
 

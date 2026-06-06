@@ -31,7 +31,10 @@ class MockLLM:
             from backend.reducer.canonicals import canonical_ids_for
 
             payload = json.loads(user)
-            return {"canonical_ids": canonical_ids_for(payload["section"])}
+            canonicals = {item["canonical_id"]: item for item in payload["approved_canonicals"]}
+            return {"canonical_ids": canonical_ids_for(payload["section"], canonicals), "needs_review": []}
+        if "card_reduce_resolve_aliases" in system:
+            return {"aliases": []}
         if "answer_from_context" in system:
             from backend.answer.service import synthesize_answer
 
@@ -44,6 +47,20 @@ class MockLLM:
         if "judge_faithfulness" in system:
             return {"score": 1.0 if "NO_ANSWER" not in user else 0.8}
         return {}
+
+    def complete_text(
+        self,
+        system: str,
+        user: str,
+        *,
+        temperature: float = 0.0,
+        max_tokens: int = 2048,
+    ) -> str:
+        if "llm_direct_answer" in system:
+            return f"MOCK_DIRECT — ungrounded model answer for: {user}"
+        if "NO_ANSWER" in user:
+            return '{"score": 0.8, "reason": "mock no-answer path"}'
+        return '{"score": 1.0, "reason": "mock deterministic path"}'
 
 
 def parse_json_or_text(text: str):

@@ -11,7 +11,7 @@ paths:
   fixtures_dir: fixtures/confluence
   golden_seed: fixtures/golden_seed/golden_seed.jsonl
   outputs_dir: outputs
-  keyword_registry: card_ingestion_sop/templates/canonical_keywords_受控词表.md
+  keyword_table: fixtures/keyword_table.jsonl
 
 store:
   path: outputs/store/store.json
@@ -24,4 +24,3 @@ retrieval:
   top_k: 8
   rrf_k: 60
   rerank: false
-
