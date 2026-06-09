@@ -103,7 +103,9 @@ ingest → map → [discover: 只产候选词表, 不建卡] → 〈人工冻结
 
 ## 3. 数据契约(schema)
 
-### 4.1 `outputs/proposed_keywords.jsonl`(discover 产出,每行一个候选 topic)
+### 4.1 `outputs/proposed_keywords.json`(discover 产出,审批工具 `frontend/approve.html` 读)
+
+> 整体为 `{"candidates":[...], "modules":[...]}`(或直接候选数组)。下面是 `candidates` 里一项的 schema:
 
 ```json
 {
@@ -139,8 +141,34 @@ ingest → map → [discover: 只产候选词表, 不建卡] → 〈人工冻结
 
 ### 4.3 card(保留你现在的结构,只强调约束)
 
-- 顶层与 fields 结构沿用你 08 文档 §8.2–§8.4 的现状。
+- 顶层与 fields 结构沿用你 08 文档 §8.2–§8.4 的现状,**保留顶层 `subsections[]`**(本切片要二级结构,见 §4.4)。
 - **强约束**:`canonical_id` ∈ 冻结词表;每个 field 必须有 `tier` ∈ {narrative,inline-value,pointer-only} 且带 `sources[]`(`page_id`/`anchor`/`source_url`/`confluence_version`);inline-value 必有逐字 `value`;pointer-only 必有 `pointer_to` 且 `value=null`。
+
+### 4.4 subsection 字段契约(本切片保留两级结构,opencode 必须接通)
+
+> **subsection 与 field 不是一回事:**
+> - **field** = 这个 topic 的一类信息(definition/config/troubleshoot…),是**属性**,扁平一条;
+> - **subsection** = 这个 topic 旗下的一个**更小的成员**(如 Channel Support 下的 SMS、Testing 下的 WPB(O63)),本身是一小块知识、有自己的内容。
+>
+> **层级由人工在 `approve.html` 冻结词表时决定**(谁是一级 topic、谁降级为某 topic 的 subsection)。discover 只给 `suggested_subsections` 当建议;reduce **不自己决定层级**,只按冻结名单填内容。
+
+**要让 subsection 真正出现在卡片上,你(opencode)必须接通下面三处,缺一不可:**
+
+1. **读**:`normalize_concept` 增加读取 `subsections`(字符串数组)与 `topic_class` 两列(缺列默认 `[]` / `""`,向后兼容,不破坏旧词表)。
+2. **填**:card builder 对每个 canonical,按词表给的 subsection 名单,把"归到该 canonical 且属于该子成员"的 section 内容填进对应子块。子块 schema:
+```json
+{"name":"SMS","summary":"...","key_points":["..."],
+ "evidence_keywords":["..."],"source_section_ids":["..."],
+ "sources":[{"page_id":"...","anchor":"...","source_url":"...","confluence_version":1}]}
+```
+   - subsection 内的精确值**同样守三档 tier**(精确值逐字搬或留指针,不二次总结);
+   - section 归哪个 subsection:用 section 的 `heading_path`/名称与 subsection 名匹配;匹配不到的留在 topic 顶层 fields,**不要硬塞进某个 subsection**。
+3. **校验**:`validate_card` 放行顶层 `subsections`(数组,可空 `[]`),每个子块至少要有 `name` 与 `sources`。
+
+**"该当一级 topic 还是 subsection"的判定**(治集成版 §7.3"该挂 subsection 却被升成一级"):
+- 能独立被问"它是什么/怎么配"、多页反复出现、support 高 → **一级 topic**;
+- 只在某父 topic 语境下成立、单独拎出来没意义、support 低 → **subsection**;
+- 拿不准 → **先当 subsection**(宁可挂低不可炸开),或进 `needs_review` 让人定。
 
 ---
 
