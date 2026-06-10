@@ -34,13 +34,13 @@ main{width:min(1100px,calc(100% - 34px));margin:20px auto 60px}
 .node{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:#fff;box-shadow:var(--shadow)}
 .node:hover{border-color:#b9c6be}.node.on{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .node .num{flex:0 0 auto;display:grid;place-items:center;width:25px;height:25px;border-radius:50%;color:#fff;background:var(--green);font-size:12px;font-weight:800}
-.node.flag .num{background:var(--red)}.node.human .num{background:var(--gold)}.node.opt .num{background:#9aa39d}
+.node.flag .num{background:#9aa39d}.node.human .num{background:var(--gold)}.node.opt .num{background:#9aa39d}
 .node .nt{display:block;font-size:12.5px;font-weight:800}.node .nd{display:block;margin-top:1px;color:var(--muted);font-size:10px}
-.node .wf{margin-left:auto;color:var(--red)}
+.node .wf{margin-left:auto;color:#9aa39d;font-size:9px}
 .detail{border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
 .dh{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:#f8faf8;flex-wrap:wrap}
 .dh .num{display:grid;place-items:center;width:29px;height:29px;border-radius:50%;color:#fff;background:var(--green);font-weight:800}
-.detail.flag .dh .num{background:var(--red)}.detail.human .dh .num{background:var(--gold)}.detail.opt .dh .num{background:#9aa39d}
+.detail.flag .dh .num{background:#9aa39d}.detail.human .dh .num{background:var(--gold)}.detail.opt .dh .num{background:#9aa39d}
 .dh h2{margin:0;font-size:16px}
 .tag{padding:3px 9px;border-radius:999px;font-size:10px;font-weight:800;text-transform:uppercase}
 .tag.page{color:var(--green);background:var(--green-soft)}.tag.global{color:var(--blue);background:var(--blue-soft)}
@@ -71,6 +71,10 @@ pre{margin:0;padding:12px 14px;border-radius:10px;background:#0f1714;color:#cfe7
 .warn{padding:11px 13px;border-radius:10px;background:var(--red-soft);border:1px solid #e6c1bb}
 .warn h3{color:#8a2f25}.warn p{color:#7a2a21}
 .ok{padding:9px 13px;border-radius:10px;background:var(--green-soft);color:#155e44;font-size:12px}
+.hist{padding:11px 13px;border-radius:10px;background:#f1f5f2;border:1px solid var(--line)}
+.hist h3{margin:0 0 4px;font-size:11px;font-weight:800;letter-spacing:.04em;color:#566159}
+.hist p{margin:0;color:#4f5953;font-size:12.5px;line-height:1.65}
+.hist .done{display:inline-block;margin-right:6px;padding:1px 7px;border-radius:6px;font-size:10px;font-weight:800;color:#155e44;background:var(--green-soft)}
 .excap{padding:8px 11px;border-radius:8px;background:var(--gold-soft);color:#6e4b16;font-size:11.5px;line-height:1.55}
 .take{padding:10px 12px;border-radius:9px;background:var(--green-soft);color:#155e44;font-size:13px;line-height:1.6}
 .nav{display:flex;justify-content:space-between;gap:10px;padding:13px 18px;border-top:1px solid var(--line);background:#fbfcfb}
@@ -101,7 +105,7 @@ pre{margin:0;padding:12px 14px;border-radius:10px;background:#0f1714;color:#cfe7
         <span><i class="dot" style="background:var(--blue)"></i>全局/跨页</span>
         <span><i class="dot" style="background:var(--gold)"></i>人工</span>
         <span><i class="dot" style="background:#9aa39d"></i>可选</span>
-        <span><i class="dot" style="background:var(--red)"></i>opencode 现状有问题</span>
+        <span><i class="dot" style="background:#9aa39d"></i>踩坑记录(已解决)</span>
       </div>
     </div>
   </div>
@@ -149,7 +153,7 @@ build: {
     {f:"has_table",t:"boolean",enums:["true","false"],m:"这块里还含不含表格。",ex:"false"},
     {f:"has_image",t:"boolean",enums:["true","false"],m:"这块里含不含图片。",ex:"false"}
    ],
-   problem:"opencode 现状把整页按大小硬切成 3 大块（part 1/2/3），矩阵和子表全被压成散文坨。<b>这是头号 bug</b>，对应验收闸 G0 / handoff12。重跑必须从这一步开始。",
+   problem:"早期把整页按大小硬切成 3 大块（part 1/2/3），矩阵和子表全被压成散文坨。<b>已重写为结构感知切分</b>（cell 级、通用），并修掉「编号流程被拍平成 21 个 step、链接/锁占位变假 step」。对应闸 G0 / handoff 12、16。",
    ex:{scenario:"page B 的『Portal Access Setup』这一块，被按结构切成 3 个小 section：一段说明、一条 UAT 登录 URL、一条 MFA 要求。",
        code:`B1  body="如何申请并登录 MDC 管理门户"           metadata={block:"qa"}
 B2  body="https://sapp-cmg-v2.hk.hsbc:8004/login"  metadata={row_key:"UAT login"}
@@ -171,7 +175,7 @@ B3  body="MFA required since 2026-06, via HSBC Authenticator"`,
     {f:"questions_en / questions_zh",t:"array<string>",m:"这块能完整回答的问题（3–7 条）。无 embedding 时用来匹配用户问题。",ex:'["What is whatsApp delivery mode?"]'},
     {f:"confidence",t:"number",range:"0.0 – 1.0",m:"抽取置信度，越低越要人复核（默认 <0.6 进复核队列）。",ex:"0.9"}
    ],
-   problem:"因为上游切成了大块，map 把确切值（UAT/PROD 登录 URL 等）全抽成了 narrative 总结，inline-value 计数 = 0。对应闸 G1。",
+   problem:"因上游切大块，确切值（UAT/PROD 登录 URL 等）曾被抽成 narrative，inline-value=0；page-summary 还写死了「channels/Q&amp;A/engagement」字样。<b>已修</b>：结构化确定性抽取（URL/contact 逐字留 inline-value）、page-summary 通用派生、修掉邮箱被误判成 http://hsbc.com。对应闸 G1。",
    ex:{scenario:"对 B2/B3 抽取时，确切值被正确标成 inline-value 并逐字留下；B1 这种说明则是 narrative。",
        code:`B2 → {tier:"inline-value", fact_value:"https://sapp-cmg-v2.hk.hsbc:8004/login", info_type:"reference"}
 B3 → {tier:"inline-value", fact_value:"MFA required since 2026-06, via HSBC Authenticator"}
@@ -192,7 +196,7 @@ B1 → {tier:"narrative",    summary_zh:"如何申请并登录 MDC 门户"}`,
     {f:"dup_warning",t:"array<object>",m:"D2：确定性字符串相似度(0–1，可复现，max(token_jaccard, char_trigram_dice))报出的疑似重复。",ex:'[{"canonical_id":"C-0002","score":0.44}]'},
     {f:"status",t:"enum",enums:["proposed","needs_review"],m:"proposed=正常待审；needs_review=连模型都拿不准、点名让人看。",ex:'"proposed"'}
    ],
-   problem:"之前 opencode 把“发现”揉进 reduce“边发现边建卡”，导致主题粒度漂移。现在已解耦到这一步：只提案、不建卡。",
+   problem:"reduce 曾把“发现”揉进“边发现边建卡”，导致主题粒度漂移、卡片偏乱。<b>已解耦</b>：discover 单独成步只提案、不建卡，并加 D1/D2 防碎片化（去掉离线兜底里写死的渠道/属性词）。",
    ex:{scenario:"全局聚类把 B 的几个小块归成一个候选主题『Portal Access Setup』，并自动报出“疑似 = 已有的 C-0002 (MDC Management Portal)”。",
        code:`{ "canonical_name":"Portal Access Setup",
   "nearest_existing":{"canonical_id":"C-0002","name":"MDC Management Portal","similarity":0.79},  // D1
@@ -215,7 +219,7 @@ B1 → {tier:"narrative",    summary_zh:"如何申请并登录 MDC 门户"}`,
     {f:"subsections",t:"array<string>",m:"二级子条目名单（层级由人定）。reduce 按这个名单把内容填进去。",ex:'["Portal links","UAT Access Right","PROD Access Right","permNetID"]'},
     {f:"status",t:"enum",enums:["proposed","approved"],m:"只有 approved 才进正式建卡流程。",ex:'"approved"'}
    ],
-   problem:"上次这步被跳过：opencode 自己冻了张词表跑通，主题是 AI 选的、scope 没人 review。这次必须你真审（闸 G3）。",
+   problem:"把“人工冻结”设为<b>强制闸（G3）</b>。上次曾被跳过（opencode 自己冻词表、scope 没人 review），这次务必由你在 approve.html 真审冻结——这是整条链路唯一需要人判断的地方。",
    ex:{scenario:"你在 approve.html 里看到 ⚠『Portal Access Setup ~ C-0002 (相似 0.79)』，判断确实是同一个东西，点『合并到 C-0002』。",
        code:`// 词表里仍然只有一行 C-0002，没有新建 C-B；
 // 只是 B 的名字+别名被“回填”进了 C-0002 的 aliases（这就是 D4）
@@ -239,7 +243,7 @@ B1 → {tier:"narrative",    summary_zh:"如何申请并登录 MDC 门户"}`,
     {f:"fields[].sources",t:"array<object>",m:"原文出处：page_id / anchor / source_url / confluence_version。每条 claim 都要能回原文。",ex:'[{"page_id":"4400100","anchor":"...","confluence_version":5}]'},
     {f:"flags",t:"array<string>",m:"给人看的提示（有冲突 / 缩写待确认 等）。",ex:'["config field has version/update conflict"]'}
    ],
-   problem:"opencode 现状：subsection 是占位 stub（summary=“Captured subsection evidence for X.”、无 inline-value），definition 是整页元描述 + 拼接病句。对应闸 G4 / handoff12 §3-C。",
+   problem:"subsection 曾是占位 stub（summary=“Captured subsection evidence for X.”、无 inline-value），definition 是整页元描述+拼接病句，字段还用了不符 schema 的键、写死 DMP/OTP flag 与 portal/contact 路由特例、字段爆炸。<b>已重写</b>：metadata 路由真填 subsection、tier 对齐 schema、清 echo/stub/junk、去写死、收敛核心字段。对应闸 G4。",
    ex:{scenario:"重跑 reduce（吃 A+B 两页的 map）。因为 B 现在是 C-0002 的别名，B 的小块命中 C-0002 → 和 A 的小块一起，建成同一张 card A。",
        code:`// card A (C-0002) 被用 A+B 的小块重新建出来：
 UAT URL : 取新(B 的 v2) + conflict! 列两值(A:v31 旧 / B:v5 新) + 进 review_queue
@@ -359,7 +363,7 @@ function renderRail(){
     <button class="node ${s.cls} ${idx===cur.i?'on':''}" data-i="${idx}" type="button">
       <span class="num">${s.n}</span>
       <span><span class="nt">${s.title}</span><span class="nd">${s.prod}</span></span>
-      ${s.problem?`<span class="wf">⚠</span>`:''}
+      ${s.problem?`<span class="wf" title="踩坑记录(已解决)">●</span>`:''}
     </button>`).join("");
 }
 function fieldHtml(fl){
@@ -382,7 +386,7 @@ function renderDetail(){
     body=`<div class="sec"><h3>这步做什么</h3><p>${s.doIt}</p></div>
           <div class="sec"><h3>为什么重要</h3><p>${s.why}</p></div>
           ${s.analogy?`<div class="sec"><h3>打个比方</h3><p>${s.analogy}</p></div>`:''}
-          ${s.problem?`<div class="warn"><h3>⚠ opencode 现状问题</h3><p>${s.problem}</p></div>`:`<div class="ok">✓ 这步目前没问题</div>`}`;
+          ${s.problem?`<div class="hist"><h3>🗂 踩坑记录</h3><p><span class="done">已解决</span>${s.problem}</p></div>`:`<div class="ok">✓ 这步无历史问题</div>`}`;
   }else if(cur.view==="struct"){
     body=`<div class="prodline">产物文件：<code>${esc(s.prod)}</code></div>
           <div class="hint">👇 点任意字段展开，看它的含义 / 类型 / 取值枚举或范围 / 例子</div>
