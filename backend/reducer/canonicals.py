@@ -136,17 +136,21 @@ def stable_external_id(name: str) -> str:
 
 def canonical_ids_for(section: Dict, canonicals: Dict[str, Dict]) -> List[str]:
     """按段落主旨匹配 topic，交叉引用不产生归属。"""
-
     heading_path = [str(item) for item in section.get("heading_path", [])]
     page_title = str(section.get("title") or (heading_path[0] if heading_path else ""))
     leaf_heading = str(heading_path[-1] if heading_path else "")
+    heading_ids = dedupe(cid for text in heading_path for cid in canonical_ids_in_text(text, canonicals))
     page_ids = canonical_ids_in_text(page_title, canonicals)
     leaf_ids = canonical_ids_in_text(leaf_heading, canonicals)
 
+    if heading_ids and not is_cross_reference_heading(leaf_heading):
+        return heading_ids
     if leaf_ids and not is_cross_reference_heading(leaf_heading):
         return leaf_ids
     if page_ids:
         return page_ids
+    if heading_ids:
+        return heading_ids
     if leaf_ids:
         return leaf_ids
 

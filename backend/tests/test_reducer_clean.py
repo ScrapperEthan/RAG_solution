@@ -1,0 +1,114 @@
+"""Standalone regression for the match-only reducer (no LLM, no yaml needed).
+
+Covers the properties that matter: match-only (no C-AUTO), metadata-routed
+subsections filled with real inline-value facts, de-hardcoded flags, unmatched
+-> review queue, echo/junk cleaning, and validate_card acceptance.
+"""
+
+from __future__ import annotations
+
+import unittest
+
+from backend.reducer.service import (
+    build_card,
+    clean_narrative_text,
+    is_junk_value,
+    match_section,
+)
+from backend.schemas.validation import validate_card
+
+
+CANON = {
+    "C-0001": {
+        "canonical_id": "C-0001",
+        "canonical_name": "MDC supported notification channels",
+        "aliases": ["notification channels"],
+        "module": ["Channel standard"],
+        "topic_type": "inventory",
+        "topic_class": "catalog",
+        "boundary": "MDC 支持的渠道及各渠道属性。",
+        "subsections": ["PN", "whatsApp"],
+        "status": "approved",
+    }
+}
+
+
+def _section(heading_path, metadata, *, tier="narrative", fact_values=None, info_type="reference", summary="s"):
+    return {
+        "section_id": "3725#" + "_".join(heading_path),
+        "page_id": "3725",
+        "title": heading_path[0],
+        "source_url": "https://wpb/x",
+        "confluence_version": 31,
+        "update_at": "2026-06-10T00:00:00Z",
+        "anchor": " > ".join(heading_path),
+        "heading_path": heading_path,
+        "metadata": metadata,
+        "tier": tier,
+        "fact_value": "; ".join(fact_values) if fact_values else None,
+        "fact_values": fact_values or [],
+        "info_type": info_type,
+        "confidence": 0.9,
+        "keywords_raw": [metadata.get("row_key", ""), metadata.get("attribute", "")],
+        "concepts": [metadata.get("row_key", "")],
+        "questions_en": ["q?"],
+        "questions_zh": ["q？"],
+        "summary_en": summary,
+        "summary_zh": summary,
+        "body_md": summary,
+    }
+
+
+WHATSAPP_CELL = _section(
+    ["MDC Check List", "Channel Matrix", "whatsApp", "Delivery Mode"],
+    {"table_kind": "matrix", "channel": "whatsApp", "row_key": "whatsApp", "attribute": "Delivery Mode"},
+    tier="inline-value",
+    fact_values=["https://sapp-cmg.hk.hsbc:8004/login"],
+)
+
+
+class ReducerCleanTest(unittest.TestCase):
+    def test_match_is_table_only_no_c_auto(self) -> None:
+        self.assertEqual(match_section(WHATSAPP_CELL, CANON), ["C-0001"])
+        card, _ = build_card("C-0001", [WHATSAPP_CELL], CANON)
+        self.assertEqual(card["canonical_id"], "C-0001")
+        self.assertFalse(card["canonical_id"].startswith("C-AUTO"))
+
+    def test_unmatched_section(self) -> None:
+        stray = _section(["Other Page", "Misc"], {"table_kind": "matrix", "row_key": "Telex", "channel": "Telex", "attribute": "x"})
+        self.assertEqual(match_section(stray, CANON), [])
+
+    def test_subsection_filled_with_inline_value(self) -> None:
+        card, _ = build_card("C-0001", [WHATSAPP_CELL], CANON)
+        subs = {s["name"]: s for s in card["subsections"]}
+        self.assertIn("whatsApp", subs)
+        facts = subs["whatsApp"]["facts"]
+        self.assertTrue(any(f["tier"] == "inline-value" and "sapp-cmg" in (f["value"] or "") for f in facts), facts)
+        # an empty subsection still renders gracefully (no stub echo)
+        self.assertIn("PN", subs)
+        self.assertNotIn(": Q:", subs["whatsApp"]["summary"])
+
+    def test_no_hardcoded_dmp_or_otp_flags(self) -> None:
+        cell = _section(
+            ["MDC Check List", "Matrix", "whatsApp", "Info"],
+            {"table_kind": "matrix", "channel": "whatsApp", "row_key": "whatsApp", "attribute": "Info"},
+            tier="inline-value", fact_values=["DMP"],
+        )
+        card, _ = build_card("C-0001", [cell], CANON)
+        joined = " ".join(card["flags"])
+        self.assertNotIn("DMP", joined)
+        self.assertNotIn("OTP", joined)
+
+    def test_card_passes_validation(self) -> None:
+        card, _ = build_card("C-0001", [WHATSAPP_CELL], CANON)
+        validate_card(card)  # raises on failure
+
+    def test_cleaning_kills_echo_and_junk(self) -> None:
+        self.assertNotIn("Q:", clean_narrative_text("Q: portal access right Q: portal access right"))
+        self.assertTrue(is_junk_value("-."))
+        self.assertTrue(is_junk_value("Getting issue details..."))
+        self.assertFalse(is_junk_value("https://x.y/z"))
+
+
+if __name__ == "__main__":
+    unittest.main()

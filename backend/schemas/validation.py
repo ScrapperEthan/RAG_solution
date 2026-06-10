@@ -88,6 +88,13 @@ def validate_card(card: Dict) -> None:
     require_type(card["aliases"], list, "card.aliases")
     require_string_list(card["module"], "card.module")
     require_type(card["fields"], list, "card.fields")
+    require_type(card["subsections"], list, "card.subsections")
+    for subsection in card["subsections"]:
+        require_keys(subsection, ["name", "sources"], "card subsection")
+        require_type(subsection["name"], str, "card subsection.name")
+        require_type(subsection["sources"], list, "card subsection.sources")
+        for source in subsection["sources"]:
+            require_keys(source, ["page_id", "anchor", "source_url", "confluence_version"], "card subsection source")
     for field in card["fields"]:
         require_keys(field, ["field", "tier", "value", "sources"], "card field")
         require_enum(field["tier"], TIERS, "card field.tier")

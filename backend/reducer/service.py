@@ -1,58 +1,34 @@
 from __future__ import annotations
 
-import json
-import re
 import hashlib
+import re
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 from backend.ports import LLM
-from backend.reducer.canonicals import canonical_id_in_text, load_vocabulary, render_registry_markdown
+from backend.reducer.canonicals import (
+    canonical_id_in_text,
+    canonical_ids_for,
+    canonical_terms,
+    load_vocabulary,
+    normalize_term,
+    render_registry_markdown,
+)
 from backend.schemas.validation import validate_card, validate_inverted_row, validate_review_item
 from backend.util import clean_dir, read_json, write_json, write_jsonl
 
 
-REDUCE_NORMALIZE_SYSTEM = """task: card_reduce_normalize_section
-You are normalizing keyword variants into canonical concepts for a knowledge
-base. Given one extracted section and already-approved canonical concepts,
-return STRICT JSON.
-
-Return:
-{
-  "canonical_ids": [string],
-  "needs_review": [{"raw": string, "reason": string}]
-}
-
-Rules:
-- Only use the supplied approved canonical concepts. Do not discover or create
-  new topics; unmatched content must go to needs_review for the upstream owner.
-- Map the section only to existing canonical_id values when the concept is the
-  section's main subject, not a passing mention.
-- If a term appears only as a cross-reference such as "see X" or "refer to X",
-  do not assign ownership to X; leave it for soft_links.
-- Match using heading_path, concepts, and the section's primary keywords. Do not
-  use "mentioned anywhere" as sufficient evidence.
-- Use each topic's boundary to reject ambiguous or out-of-scope matches.
-- Ambiguous keywords must go to needs_review instead of being forced into a
-  canonical.
-- Do not invent concepts absent from the supplied section."""
-
-REDUCE_NORMALIZE_SCHEMA = {"type": "object", "required": ["canonical_ids"]}
-
-ALIAS_RESOLVE_SYSTEM = """task: card_reduce_resolve_aliases
-Generate candidate aliases for ONE approved topic that currently has no aliases.
-Return STRICT JSON: {"aliases": [string]}.
-
-Rules:
-- Candidates are for human review only; do not change the approved keyword table.
-- Include common abbreviations, spelling variants, and established full forms.
-- Do not include broader, narrower, or merely related concepts."""
-
-ALIAS_RESOLVE_SCHEMA = {"type": "object", "required": ["aliases"]}
+TIERS = {"narrative", "inline-value", "pointer-only"}
 
 
 class ReducerService:
+    """Match-only reducer: section -> approved canonical (no discovery, no C-AUTO).
+
+    Builds one card per matched canonical with metadata-routed subsections and
+    grounded fields. Unmatched sections go to the review queue.
+    """
+
     def __init__(self, outputs_dir: Path, llm: LLM, keyword_table: Path, resolve_aliases: bool = False):
         self.outputs_dir = outputs_dir
         self.llm = llm
@@ -60,18 +36,21 @@ class ReducerService:
         self.resolve_aliases = resolve_aliases
 
     def run(self) -> Dict[str, int]:
+        if not self.keyword_table.exists():
+            raise FileNotFoundError(
+                f"Approved keyword table not found: {self.keyword_table}. "
+                "Please run discover and freeze the keyword table first."
+            )
         cards_dir = clean_dir(self.outputs_dir / "cards")
-        map_files = sorted((self.outputs_dir / "map").glob("map_*.json"))
-        sections = self._load_sections(map_files)
+        sections = self._load_sections(sorted((self.outputs_dir / "map").glob("map_*.json")))
         canonicals = load_vocabulary(self.keyword_table)
+
         grouped: Dict[str, List[Dict]] = {}
         inverted_rows: List[Dict] = []
-        review_queue: List[Dict] = self._alias_review_items(canonicals) if self.resolve_aliases else []
+        review_queue: List[Dict] = []
 
         for section in sections:
-            cids, needs_review = self._normalize_section(section, canonicals)
-            for item in needs_review:
-                review_queue.append(needs_review_item(item, section))
+            cids = match_section(section, canonicals)
             if not cids:
                 review_queue.append(unmatched_review_item(section))
                 continue
@@ -81,24 +60,23 @@ class ReducerService:
 
         cards: List[Dict] = []
         for cid, group in grouped.items():
-            card, queue_items = build_card(cid, group, canonicals)
+            card, conflicts = build_card(cid, group, canonicals)
             validate_card(card)
             cards.append(card)
-            review_queue.extend(queue_items)
-            filename = safe_filename(card["canonical_name"]) + ".json"
-            write_json(cards_dir / filename, card)
+            review_queue.extend(conflicts)
+            write_json(cards_dir / f"{safe_filename(card['canonical_name'])}.json", card)
 
-        review_queue.extend(global_review_items(sections, canonicals))
-        deduped_inverted = dedupe_inverted(inverted_rows)
-        for row in deduped_inverted:
+        review_queue.extend(low_confidence_items(sections))
+        deduped = dedupe_inverted(inverted_rows)
+        for row in deduped:
             validate_inverted_row(row)
         for item in review_queue:
             validate_review_item(item)
-        write_jsonl(self.outputs_dir / "inverted_index.jsonl", deduped_inverted)
+        write_jsonl(self.outputs_dir / "inverted_index.jsonl", deduped)
         write_jsonl(self.outputs_dir / "review_queue.jsonl", review_queue)
         (self.outputs_dir / "canonical_keywords.md").write_text(render_registry_markdown(canonicals), encoding="utf-8")
         write_json(self.outputs_dir / "cards_index.json", cards)
-        return {"cards": len(cards), "inverted_rows": len(inverted_rows), "review_queue": len(review_queue)}
+        return {"cards": len(cards), "inverted_rows": len(deduped), "review_queue": len(review_queue)}
 
     def _load_sections(self, map_files: List[Path]) -> List[Dict]:
         sections: List[Dict] = []
@@ -113,247 +91,487 @@ class ReducerService:
                         "source_url": page["source_url"],
                         "confluence_version": page["confluence_version"],
                         "update_at": page["update_at"],
+                        "metadata": dict(section.get("metadata") or {}),
+                        "fact_values": list(section.get("fact_values") or []),
                     }
                 )
                 sections.append(enriched)
         return sections
 
-    def _normalize_section(self, section: Dict, canonicals: Dict[str, Dict]) -> Tuple[List[str], List[Dict]]:
-        response = self.llm.complete_json(
-            REDUCE_NORMALIZE_SYSTEM,
-            json.dumps(
-                {
-                    "approved_canonicals": list(canonicals.values()),
-                    "section": section,
-                },
-                ensure_ascii=False,
-            ),
-            schema=REDUCE_NORMALIZE_SCHEMA,
-        )
-        ids = response.get("canonical_ids", [])
-        if not isinstance(ids, list):
-            raise ValueError("card_reduce_normalize_section must return canonical_ids as a list")
-        unknown = [cid for cid in ids if cid not in canonicals]
-        if unknown:
-            raise ValueError(f"Unknown canonical_ids returned by LLM: {unknown}")
-        needs_review = response.get("needs_review") or []
-        return dedupe_strings(ids), needs_review
 
-    def _alias_review_items(self, canonicals: Dict[str, Dict]) -> List[Dict]:
-        items = []
-        for cid, canonical in canonicals.items():
-            if canonical.get("aliases"):
-                continue
-            response = self.llm.complete_json(
-                ALIAS_RESOLVE_SYSTEM,
-                json.dumps(canonical, ensure_ascii=False),
-                schema=ALIAS_RESOLVE_SCHEMA,
-            )
-            aliases = response.get("aliases") or []
-            if not isinstance(aliases, list):
-                aliases = []
-            items.append(alias_review_item(cid, canonical, dedupe_strings([str(alias) for alias in aliases])))
-        return items
+# ---------------------------------------------------------------------------
+# Matching: deterministic metadata routing, then heading-path fallback
+# ---------------------------------------------------------------------------
 
+def match_section(section: Dict, canonicals: Dict[str, Dict]) -> List[str]:
+    deterministic = canonical_ids_from_metadata(section, canonicals)
+    if deterministic:
+        return deterministic
+    return dedupe_strings(canonical_ids_for(section, canonicals))
+
+
+def canonical_ids_from_metadata(section: Dict, canonicals: Dict[str, Dict]) -> List[str]:
+    metadata = section.get("metadata") or {}
+    signals = [
+        " > ".join(str(item) for item in section.get("heading_path", []) if str(item).strip()),
+        str(metadata.get("question") or ""),
+        str(metadata.get("row_key") or ""),
+        str(metadata.get("attribute") or ""),
+        str(metadata.get("channel") or ""),
+        " ".join(str(item) for item in section.get("concepts", [])),
+        " ".join(str(item) for item in section.get("keywords_raw", [])),
+    ]
+    signal_text = " > ".join(s for s in signals if s)
+    row_terms = [normalize_term(str(metadata.get(k) or "")) for k in ("channel", "row_key")]
+    row_terms = [t for t in row_terms if t]
+
+    scored: List[Tuple[int, str]] = []
+    for cid, canonical in canonicals.items():
+        score = 0
+        if canonical_id_in_text(signal_text, {cid: canonical}):
+            score += 3
+        sub_terms = [normalize_term(item) for item in canonical.get("subsections", []) if str(item).strip()]
+        if any(term in sub_terms for term in row_terms):
+            score += 4
+        if score > 0:
+            scored.append((score, cid))
+    if not scored:
+        return []
+    top = max(score for score, _ in scored)
+    return [cid for score, cid in scored if score == top]
+
+
+# ---------------------------------------------------------------------------
+# Card assembly
+# ---------------------------------------------------------------------------
 
 def build_card(cid: str, sections: List[Dict], canonicals: Dict[str, Dict]) -> Tuple[Dict, List[Dict]]:
     canonical = canonicals[cid]
+    topic_class = canonical.get("topic_class") or infer_topic_class(canonical)
+    evidence = aggregate_evidence(sections)
+    subsections = build_subsections(canonical, sections)
+
     fields: List[Dict] = []
     queue: List[Dict] = []
 
-    narrative_sections = [s for s in sections if s["tier"] == "narrative"]
-    config_sections = [s for s in sections if s["info_type"] == "config" and s["fact_value"]]
-    troubleshoot_sections = [s for s in sections if s["info_type"] == "troubleshoot"]
-    pointer_sections = [s for s in sections if s["tier"] == "pointer-only"]
+    definition = synthesize_definition(canonical, subsections)
+    if definition:
+        fields.append(narrative_field("definition", definition, sections, evidence))
 
-    if narrative_sections:
-        fields.append(
-            {
-                "field": "definition",
-                "tier": "narrative",
-                "value": synthesize_narrative(canonical["canonical_name"], narrative_sections),
-                "sources": sources(narrative_sections),
-            }
-        )
+    overview = synthesize_overview(canonical, subsections)
+    if overview and overview != definition:
+        fields.append(narrative_field("overview", overview, sections, evidence))
 
+    config_sections = [s for s in sections if s.get("info_type") == "config" and s.get("fact_values")]
     if config_sections:
-        field, conflicts = merge_config_field(config_sections)
-        fields.append(field)
+        config_field, conflicts = merge_config_field(config_sections, evidence)
+        fields.append(config_field)
         for conflict in conflicts:
-            queue.append(
-                {
-                    "queue_id": f"RQ-conflict-{cid}-{len(queue)+1:03d}",
-                    "type": "conflict",
-                    "canonical_id": cid,
-                    "field": "config",
-                    "detail": conflict["detail"],
-                    "options": conflict["options"],
-                    "status": "open",
-                }
-            )
+            queue.append(conflict_item(cid, conflict, len(queue) + 1))
 
-    if pointer_sections:
-        for item in pointer_sections:
-            fields.append(
-                {
-                    "field": pointer_field_name(item),
-                    "tier": "pointer-only",
-                    "value": None,
-                    "pointer_to": item["pointer_to"],
-                    "sources": sources([item]),
-                }
-            )
+    troubleshoot = build_troubleshoot_field(sections, evidence)
+    if troubleshoot:
+        fields.append(troubleshoot)
 
-    if troubleshoot_sections:
-        exact_values = [s["fact_value"] for s in troubleshoot_sections if s["fact_value"]]
-        narrative_values = [s["summary_en"] for s in troubleshoot_sections if not s["fact_value"] and s.get("summary_en")]
-        if exact_values:
-            exact_sections = [s for s in troubleshoot_sections if s["fact_value"]]
-            fields.append(
-                {
-                    "field": "troubleshoot",
-                    "tier": "inline-value",
-                    "value": "; ".join(exact_values),
-                    "sources": sources(exact_sections),
-                }
-            )
-        if narrative_values:
-            narrative_sections = [s for s in troubleshoot_sections if not s["fact_value"]]
-            fields.append(
-                {
-                    "field": "troubleshoot_notes" if exact_values else "troubleshoot",
-                    "tier": "narrative",
-                    "value": " ".join(narrative_values),
-                    "sources": sources(narrative_sections),
-                }
-            )
+    for pointer in pointer_fields(sections):
+        fields.append(pointer)
 
-    related = related_components(cid, sections, canonicals)
+    related = related_components_field(cid, sections, canonicals, evidence)
     if related:
-        fields.append(
-            {
-                "field": "related_components",
-                "tier": "narrative",
-                "value": related["value"],
-                "soft_links": related["soft_links"],
-                "sources": sources(related["sections"]),
-            }
-        )
+        fields.append(related)
+
+    fields = [f for f in fields if _has_content(f)]
 
     flags: List[str] = []
-    if "DMP" in " ".join(k for s in sections for k in s.get("keywords_raw", [])):
-        flags.append("alias 'DMP' should remain auditable in Business review")
     if any(item["type"] == "conflict" for item in queue):
-        flags.append("config field has version/update conflict")
-    if "otp" in canonical["canonical_name"].lower():
-        flags.append("OTP may be ambiguous outside MDC OTP context")
+        flags.append("config field has a version/date conflict")
 
-    if not fields:
-        fields.append(
+    card = {
+        "canonical_id": cid,
+        "canonical_name": canonical["canonical_name"],
+        "topic_class": topic_class,
+        "aliases": canonical.get("aliases", []),
+        "module": canonical.get("module", []),
+        "boundary": canonical.get("boundary", ""),
+        "topic_type": canonical.get("topic_type", ""),
+        "status": canonical.get("status", "approved"),
+        "keywords_raw_agg": evidence["keywords_raw_agg"],
+        "concepts_agg": evidence["concepts_agg"],
+        "questions_agg_en": evidence["questions_en_agg"],
+        "questions_agg_zh": evidence["questions_zh_agg"],
+        "source_section_ids": evidence["source_section_ids"],
+        "subsections": subsections,
+        "fields": fields,
+        "flags": flags,
+    }
+    return card, queue
+
+
+def _has_content(field: Dict) -> bool:
+    if field["tier"] == "pointer-only":
+        return bool(field.get("pointer_to"))
+    return bool(str(field.get("value") or "").strip())
+
+
+def aggregate_evidence(sections: List[Dict]) -> Dict[str, List[str]]:
+    return {
+        "keywords_raw_agg": dedupe_strings(k for s in sections for k in s.get("keywords_raw", [])),
+        "concepts_agg": dedupe_strings(c for s in sections for c in s.get("concepts", [])),
+        "questions_en_agg": dedupe_strings(q for s in sections for q in s.get("questions_en", [])),
+        "questions_zh_agg": dedupe_strings(q for s in sections for q in s.get("questions_zh", [])),
+        "source_section_ids": dedupe_strings(section_id(s) for s in sections),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Subsections: route by metadata, fill with real (cleaned) facts
+# ---------------------------------------------------------------------------
+
+def build_subsections(canonical: Dict, sections: List[Dict]) -> List[Dict]:
+    names = [str(name).strip() for name in canonical.get("subsections", []) if str(name).strip()]
+    rows: List[Dict] = []
+    for name in names:
+        matched = route_subsection_sections(name, sections)
+        facts = build_subsection_facts(matched)
+        rows.append(
             {
-                "field": "catch_all",
-                "tier": "narrative",
-                "value": f"Collected references for {canonical['canonical_name']}.",
-                "sources": sources(sections),
+                "name": name,
+                "summary": synthesize_subsection(name, facts),
+                "key_points": subsection_key_points(facts),
+                "facts": facts,
+                "evidence_keywords": dedupe_strings(k for s in matched for k in s.get("keywords_raw", [])),
+                "source_section_ids": dedupe_strings(section_id(s) for s in matched),
+                "sources": sources(matched),
             }
         )
-
-    return (
-        {
-            "canonical_id": cid,
-            "canonical_name": canonical["canonical_name"],
-            "aliases": canonical["aliases"],
-            "module": canonical["module"],
-            "boundary": canonical.get("boundary", ""),
-            "topic_type": canonical.get("topic_type", ""),
-            "status": canonical["status"],
-            "fields": fields,
-            "flags": flags,
-        },
-        queue,
-    )
+    return rows
 
 
-def merge_config_field(sections: List[Dict]) -> Tuple[Dict, List[Dict]]:
+def route_subsection_sections(name: str, sections: List[Dict]) -> List[Dict]:
+    target = normalize_term(name)
+    matched: List[Dict] = []
+    for section in sections:
+        metadata = section.get("metadata") or {}
+        candidates = [
+            normalize_term(str(metadata.get(key) or ""))
+            for key in ("channel", "row_key", "attribute", "question", "environment")
+        ]
+        candidates.append(normalize_term(str(section.get("anchor") or "")))
+        candidates = [c for c in candidates if c]
+        if any(c == target or c in target or target in c for c in candidates):
+            matched.append(section)
+    return matched
+
+
+def build_subsection_facts(sections: List[Dict]) -> List[Dict]:
+    facts: List[Dict] = []
+    for section in sections:
+        if is_heading_only_section(section):
+            continue
+        metadata = section.get("metadata") or {}
+        label = fact_label(section)
+        values = list(section.get("fact_values") or [])
+        if values:
+            for value in values:
+                cleaned = clean_inline_value(value)
+                if cleaned and not is_junk_value(cleaned):
+                    facts.append(make_fact(label, "inline-value", cleaned, section))
+            continue
+        if section.get("tier") == "pointer-only" and section.get("pointer_to"):
+            facts.append(make_fact(label, "pointer-only", "", section, pointer_to=section["pointer_to"]))
+            continue
+        summary = narrative_fact_value(section)
+        if summary and not is_junk_value(summary):
+            facts.append(make_fact(label, "narrative", summary, section))
+    return dedupe_facts(facts)
+
+
+def make_fact(label: str, tier: str, value: str, section: Dict, pointer_to: Optional[str] = None) -> Dict:
+    return {
+        "label": label,
+        "tier": tier,
+        "value": value if tier != "pointer-only" else None,
+        "pointer_to": pointer_to,
+        "sources": sources([section]),
+        "source_section_ids": [section_id(section)],
+    }
+
+
+def fact_label(section: Dict) -> str:
+    metadata = section.get("metadata") or {}
+    return str(
+        metadata.get("attribute")
+        or metadata.get("environment")
+        or metadata.get("row_key")
+        or metadata.get("question")
+        or (f"Step {metadata.get('step')}" if metadata.get("step") else "")
+        or (section.get("heading_path") or ["detail"])[-1]
+    ).strip() or "detail"
+
+
+def synthesize_subsection(name: str, facts: List[Dict]) -> str:
+    parts = [f"{f['label']}: {f['value']}" for f in facts if f.get("value")]
+    parts = dedupe_strings(parts)
+    return f"{name}: " + "; ".join(parts[:6]) if parts else f"{name} (no extracted facts)."
+
+
+def subsection_key_points(facts: List[Dict]) -> List[str]:
+    points = [f"{f['label']}: {f['value']}" for f in facts if f.get("value")]
+    return dedupe_strings(points)[:8]
+
+
+# ---------------------------------------------------------------------------
+# Card-level fields
+# ---------------------------------------------------------------------------
+
+def synthesize_definition(canonical: Dict, subsections: List[Dict]) -> str:
+    boundary = clean_narrative_text(canonical.get("boundary", ""))
+    if boundary:
+        return boundary
+    names = [s["name"] for s in subsections]
+    if names:
+        return f"{canonical['canonical_name']}：涵盖 " + "、".join(names) + "。"
+    return ""
+
+
+def synthesize_overview(canonical: Dict, subsections: List[Dict]) -> str:
+    lines: List[str] = []
+    for sub in subsections:
+        values = [f"{f['label']}: {f['value']}" for f in sub.get("facts", []) if f.get("value")]
+        if values:
+            lines.append(f"{sub['name']} — " + "; ".join(dedupe_strings(values)[:3]))
+    return "\n".join(lines)
+
+
+def merge_config_field(sections: List[Dict], evidence: Dict) -> Tuple[Dict, List[Dict]]:
     facts: Dict[str, List[Dict]] = {}
     for section in sections:
-        for part in (section["fact_value"] or "").split(";"):
-            if ":" not in part:
+        for value in section.get("fact_values") or []:
+            if ":" not in value:
                 continue
-            name, value = part.split(":", 1)
-            facts.setdefault(name.strip(), []).append({"value": value.strip(), "section": section})
+            name, raw = value.split(":", 1)
+            facts.setdefault(name.strip(), []).append({"value": clean_inline_value(raw), "section": section})
 
     chosen_parts: List[str] = []
     chosen_sources: List[Dict] = []
-    conflict_details: List[Dict] = []
-    queue_conflicts: List[Dict] = []
+    conflicts: List[Dict] = []
+    detail_rows: List[Dict] = []
     for name, candidates in facts.items():
         candidates.sort(
-            key=lambda c: (
-                parse_update_at(c["section"].get("update_at", "")),
-                int(c["section"].get("confluence_version") or 0),
-            ),
+            key=lambda c: (parse_update_at(c["section"].get("update_at", "")), int(c["section"].get("confluence_version") or 0)),
             reverse=True,
         )
         chosen = candidates[0]
         chosen_parts.append(f"{name}: {chosen['value']}")
         chosen_sources.append(chosen["section"])
-        unique_values = sorted({candidate["value"] for candidate in candidates})
-        if len(unique_values) > 1:
-            conflict_detail = [
-                {
-                    "value": f"{name}: {candidate['value']}",
-                    "page_id": candidate["section"]["page_id"],
-                    "confluence_version": candidate["section"]["confluence_version"],
-                    "update_at": candidate["section"]["update_at"],
-                }
-                for candidate in candidates
+        unique = sorted({c["value"] for c in candidates})
+        if len(unique) > 1:
+            rows = [
+                {"value": f"{name}: {c['value']}", "page_id": c["section"]["page_id"], "confluence_version": c["section"]["confluence_version"], "update_at": c["section"]["update_at"]}
+                for c in candidates
             ]
-            conflict_details.extend(conflict_detail)
-            queue_conflicts.append(
-                {
-                    "detail": f"{name} conflict; temporarily chose newest value {chosen['value']}.",
-                    "options": [entry["value"] + f" ({entry['page_id']})" for entry in conflict_detail],
-                }
-            )
+            detail_rows.extend(rows)
+            conflicts.append({"detail": f"{name} conflict; temporarily chose newest value {chosen['value']}.", "options": [r["value"] + f" ({r['page_id']})" for r in rows]})
 
     field = {
         "field": "config",
         "tier": "inline-value",
         "value": "; ".join(chosen_parts),
         "authoritative": True,
-        "conflict": bool(conflict_details),
-        "conflict_detail": conflict_details,
+        "conflict": bool(detail_rows),
+        "conflict_detail": detail_rows,
         "sources": sources(chosen_sources),
+        "evidence_keywords": evidence["keywords_raw_agg"],
+        "source_section_ids": dedupe_strings(section_id(s) for s in chosen_sources),
     }
-    return field, queue_conflicts
+    return field, conflicts
 
 
-def synthesize_narrative(name: str, sections: List[Dict]) -> str:
-    selected = []
-    for section in sections[:4]:
-        selected.append(section["summary_zh"])
-    return f"{name}: " + " ".join(selected)
+def build_troubleshoot_field(sections: List[Dict], evidence: Dict) -> Optional[Dict]:
+    ts = [s for s in sections if s.get("info_type") == "troubleshoot"]
+    exact = dedupe_strings(clean_inline_value(s["fact_value"]) for s in ts if s.get("fact_value"))
+    if exact:
+        owners = [s for s in ts if s.get("fact_value")]
+        return {
+            "field": "troubleshoot",
+            "tier": "inline-value",
+            "value": "; ".join(exact),
+            "sources": sources(owners),
+            "evidence_keywords": evidence["keywords_raw_agg"],
+            "source_section_ids": dedupe_strings(section_id(s) for s in owners),
+        }
+    notes = dedupe_strings(clean_narrative_text(s.get("summary_en", "")) for s in ts if not s.get("fact_value"))
+    notes = [n for n in notes if n]
+    if notes:
+        owners = [s for s in ts if not s.get("fact_value")]
+        return narrative_field("troubleshoot", "\n".join(f"- {n}" for n in notes), owners, evidence)
+    return None
 
 
-def related_components(cid: str, sections: List[Dict], canonicals: Dict[str, Dict]) -> Dict:
-    text = " ".join(s["anchor"] + " " + " ".join(s.get("keywords_raw", [])) for s in sections).lower()
+def pointer_fields(sections: List[Dict]) -> List[Dict]:
+    out: List[Dict] = []
+    for section in sections:
+        if section.get("tier") == "pointer-only" and section.get("pointer_to"):
+            out.append(
+                {
+                    "field": "pointer",
+                    "tier": "pointer-only",
+                    "value": None,
+                    "pointer_to": section["pointer_to"],
+                    "sources": sources([section]),
+                    "source_section_ids": [section_id(section)],
+                }
+            )
+    return out
+
+
+def related_components_field(cid: str, sections: List[Dict], canonicals: Dict[str, Dict], evidence: Dict) -> Optional[Dict]:
+    text = " ".join(
+        (str(s.get("anchor") or "") + " " + " ".join(s.get("keywords_raw", []))) for s in sections
+    ).lower()
     links = [
-        other_cid
-        for other_cid in canonicals
-        if other_cid != cid and canonical_id_in_text(text, {other_cid: canonicals[other_cid]})
+        other
+        for other in canonicals
+        if other != cid and canonical_id_in_text(text, {other: canonicals[other]})
     ]
     if not links:
-        return {}
-    names = [canonicals[link]["canonical_name"] for link in links if link in canonicals]
-    return {"value": "Related to " + ", ".join(names) + ".", "soft_links": links, "sections": sections}
+        return None
+    names = [canonicals[link]["canonical_name"] for link in links]
+    return {
+        "field": "related_components",
+        "tier": "narrative",
+        "value": "Related to " + ", ".join(names) + ".",
+        "soft_links": links,
+        "sources": sources(sections),
+        "evidence_keywords": evidence["keywords_raw_agg"],
+        "source_section_ids": evidence["source_section_ids"],
+    }
 
 
-def pointer_field_name(section: Dict) -> str:
-    pointer = (section.get("pointer_to") or "").lower()
-    if "configuration" in pointer:
-        return "config_pointer"
-    return "pointer"
+def narrative_field(field_name: str, value: str, sections: List[Dict], evidence: Dict) -> Dict:
+    return {
+        "field": field_name,
+        "tier": "narrative",
+        "value": clean_narrative_text(value),
+        "sources": sources(sections),
+        "evidence_keywords": evidence["keywords_raw_agg"],
+        "source_section_ids": evidence["source_section_ids"],
+    }
+
+
+# ---------------------------------------------------------------------------
+# Cleaning (kills the B1/B2 echo + stub + junk noise)
+# ---------------------------------------------------------------------------
+
+ECHO_RE = re.compile(r"\bQ\s*[:：]\s*", re.IGNORECASE)
+
+
+def clean_narrative_text(text: str) -> str:
+    cleaned = str(text or "").strip()
+    if not cleaned:
+        return ""
+    cleaned = ECHO_RE.sub("", cleaned)
+    # collapse "X: X" / "X X" immediate repeats
+    cleaned = re.sub(r"(.{6,80}?)(?:\s*[:：]?\s*\1)+", r"\1", cleaned).strip()
+    cleaned = re.sub(r"\s{2,}", " ", cleaned)
+    return cleaned.strip(" :：-")
+
+
+def clean_inline_value(text: str) -> str:
+    value = str(text or "").strip().strip("`\"'")
+    dup = re.fullmatch(r"(https?://\S+?)\s*\((https?://\S+)\)", value)
+    if dup and dup.group(1).rstrip("/") == dup.group(2).rstrip("/"):
+        value = dup.group(1)
+    return value.strip()
+
+
+def is_junk_value(value: str) -> bool:
+    cleaned = str(value or "").strip(" .-:：")
+    if not cleaned:
+        return True
+    if re.fullmatch(r"[-.\s]+", str(value or "")):
+        return True
+    if "authenticate to see" in cleaned.lower() or "getting issue details" in cleaned.lower():
+        return True
+    return False
+
+
+def is_heading_only_section(section: Dict) -> bool:
+    body = clean_narrative_text(str(section.get("body_md") or ""))
+    heading = normalize_term((section.get("heading_path") or [""])[-1])
+    if not body:
+        return True
+    return normalize_term(body) == heading and not section.get("fact_values")
+
+
+def narrative_fact_value(section: Dict) -> str:
+    summary = clean_narrative_text(section.get("summary_en") or section.get("summary_zh") or "")
+    if summary:
+        return summary
+    return clean_narrative_text(str(section.get("body_md") or "").splitlines()[0] if section.get("body_md") else "")
+
+
+# ---------------------------------------------------------------------------
+# Review queue / inverted index / helpers
+# ---------------------------------------------------------------------------
+
+def conflict_item(cid: str, conflict: Dict, n: int) -> Dict:
+    return {"queue_id": f"RQ-conflict-{cid}-{n:03d}", "type": "conflict", "canonical_id": cid, "field": "config", "detail": conflict["detail"], "options": conflict["options"], "status": "open"}
+
+
+def unmatched_review_item(section: Dict) -> Dict:
+    anchor = str(section.get("anchor") or section_id(section))
+    return {
+        "queue_id": f"RQ-unmatched-{stable_short(anchor)}",
+        "type": "unmatched-section",
+        "canonical_id": "",
+        "field": "association",
+        "detail": f"No approved canonical could be assigned to {anchor}; report it to the keyword-table owner.",
+        "options": section.get("keywords_raw", []),
+        "status": "open",
+    }
+
+
+def low_confidence_items(sections: List[Dict]) -> List[Dict]:
+    items: List[Dict] = []
+    for section in sections:
+        try:
+            confidence = float(section.get("confidence", 1.0))
+        except (TypeError, ValueError):
+            confidence = 1.0
+        if confidence < 0.6:
+            items.append(
+                {
+                    "queue_id": f"RQ-lowconf-{stable_short(section_id(section))}",
+                    "type": "low-confidence",
+                    "canonical_id": "",
+                    "field": "",
+                    "detail": f"Low confidence extraction at {section.get('anchor') or section_id(section)}",
+                    "options": [],
+                    "status": "open",
+                }
+            )
+    return items
+
+
+def alias_review_item(cid: str, canonical: Dict, aliases: List[str]) -> Dict:
+    return {"queue_id": f"RQ-aliases-{cid}", "type": "alias-resolution-request", "canonical_id": cid, "field": "aliases", "detail": f"Review candidate aliases for '{canonical['canonical_name']}'.", "options": aliases, "status": "open"}
+
+
+def inverted_row(cid: str, section: Dict, canonicals: Dict[str, Dict]) -> Dict:
+    canonical = canonicals[cid]
+    return {
+        "canonical_id": cid,
+        "canonical_name": canonical["canonical_name"],
+        "module": canonical.get("module", []),
+        "page_id": section["page_id"],
+        "anchor": str(section.get("anchor") or section_id(section)),
+        "section_id": section_id(section),
+        "info_type": section.get("info_type", "what-is"),
+        "tier": section.get("tier", "narrative"),
+        "confidence": float(section.get("confidence", 0.8) or 0.8),
+        "confluence_version": section["confluence_version"],
+    }
 
 
 def sources(sections: List[Dict]) -> List[Dict]:
@@ -362,153 +580,73 @@ def sources(sections: List[Dict]) -> List[Dict]:
         rows.append(
             {
                 "page_id": section["page_id"],
-                "anchor": section["anchor"],
+                "anchor": str(section.get("anchor") or section_id(section)),
                 "source_url": section["source_url"],
                 "confluence_version": section["confluence_version"],
             }
         )
-    return dedupe_sources(rows)
-
-
-def inverted_row(cid: str, section: Dict, canonicals: Dict[str, Dict]) -> Dict:
-    canonical = canonicals[cid]
-    return {
-        "canonical_id": cid,
-        "canonical_name": canonical["canonical_name"],
-        "module": canonical["module"],
-        "page_id": section["page_id"],
-        "anchor": section["anchor"],
-        "section_id": f"{section['page_id']}#{section['heading_path'][-1]}",
-        "info_type": section["info_type"],
-        "tier": section["tier"],
-        "confidence": section["confidence"],
-        "confluence_version": section["confluence_version"],
-    }
-
-
-def global_review_items(sections: List[Dict], canonicals: Dict[str, Dict]) -> List[Dict]:
-    items: List[Dict] = []
-    all_keywords = " ".join(k for section in sections for k in section.get("keywords_raw", []))
-    if "DMP" in all_keywords:
-        cid = canonical_id_in_text("DMP", canonicals) or ""
-        items.append(
-            {
-                "queue_id": "RQ-0011",
-                "type": "alias-confirmation",
-                "canonical_id": cid,
-                "field": "aliases",
-                "detail": "Confirm whether DMP should be treated as an alias of DM Plugin in this slice.",
-                "options": ["yes", "no"],
-                "status": "open",
-            }
-        )
-    if re.search(r"\bOTP\b", all_keywords) or "otp_length" in all_keywords:
-        cid = canonical_id_in_text("MDC OTP Service", canonicals) or canonical_id_in_text("OTP", canonicals) or ""
-        items.append(
-            {
-                "queue_id": "RQ-0019",
-                "type": "ambiguity",
-                "canonical_id": cid,
-                "field": "aliases",
-                "detail": "OTP may mean MDC OTP Service or generic one-time password; confirm usage.",
-                "options": ["MDC OTP Service", "generic OTP / split"],
-                "status": "open",
-            }
-        )
-    for section in sections:
-        if section["confidence"] < 0.6:
-            items.append(
-                {
-                    "queue_id": f"RQ-lowconf-{section['page_id']}",
-                    "type": "low-confidence",
-                    "canonical_id": "",
-                    "field": "",
-                    "detail": f"Low confidence extraction at {section['anchor']}",
-                    "options": [],
-                    "status": "open",
-                }
-            )
-    return items
-
-
-def dedupe_inverted(rows: List[Dict]) -> List[Dict]:
     seen = set()
-    result = []
-    for row in rows:
-        key = (row["canonical_id"], row["page_id"], row["anchor"])
-        if key not in seen:
-            seen.add(key)
-            result.append(row)
-    return result
-
-
-def dedupe_sources(rows: List[Dict]) -> List[Dict]:
-    seen = set()
-    result = []
+    out: List[Dict] = []
     for row in rows:
         key = (row["page_id"], row["anchor"])
         if key not in seen:
             seen.add(key)
-            result.append(row)
-    return result
+            out.append(row)
+    return out
 
 
-def dedupe_strings(items: List[str]) -> List[str]:
+def section_id(section: Dict) -> str:
+    return str(section.get("section_id") or f"{section.get('page_id','')}#{(section.get('heading_path') or [''])[-1]}")
+
+
+def infer_topic_class(canonical: Dict) -> str:
+    topic_type = str(canonical.get("topic_type") or "").lower()
+    mapping = {"process": "workflow", "service": "system_component", "component": "system_component", "inventory": "catalog", "planning": "catalog"}
+    return mapping.get(topic_type, "")
+
+
+def dedupe_facts(facts: List[Dict]) -> List[Dict]:
     seen = set()
-    result = []
+    out: List[Dict] = []
+    for fact in facts:
+        key = (fact.get("label"), fact.get("tier"), str(fact.get("value")), fact.get("pointer_to"))
+        if key not in seen:
+            seen.add(key)
+            out.append(fact)
+    return out
+
+
+def dedupe_inverted(rows: List[Dict]) -> List[Dict]:
+    seen = set()
+    out: List[Dict] = []
+    for row in rows:
+        key = (row["canonical_id"], row["page_id"], row["anchor"])
+        if key not in seen:
+            seen.add(key)
+            out.append(row)
+    return out
+
+
+def dedupe_strings(items: Iterable[str]) -> List[str]:
+    seen = set()
+    out: List[str] = []
     for item in items:
-        if item not in seen:
-            seen.add(item)
-            result.append(item)
-    return result
-
-
-def needs_review_item(item: Dict, section: Dict) -> Dict:
-    raw = str(item.get("raw") or section.get("anchor", ""))
-    reason = str(item.get("reason") or "LLM marked this normalization as ambiguous.")
-    return {
-        "queue_id": f"RQ-normalize-{stable_short(raw + section['anchor'])}",
-        "type": "normalization-review",
-        "canonical_id": "",
-        "field": "canonical_keywords",
-        "detail": f"{raw}: {reason}",
-        "options": [],
-        "status": "open",
-    }
-
-
-def unmatched_review_item(section: Dict) -> Dict:
-    return {
-        "queue_id": f"RQ-unmatched-{stable_short(section['anchor'])}",
-        "type": "unmatched-section",
-        "canonical_id": "",
-        "field": "association",
-        "detail": f"No approved canonical could be assigned to {section['anchor']}; report it to the upstream keyword-table owner.",
-        "options": section.get("keywords_raw", []),
-        "status": "open",
-    }
+        text = str(item).strip()
+        if not text or text.lower() in seen:
+            continue
+        seen.add(text.lower())
+        out.append(text)
+    return out
 
 
 def stable_short(text: str) -> str:
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:8]
-
-
-def alias_review_item(cid: str, canonical: Dict, aliases: List[str]) -> Dict:
-    return {
-        "queue_id": f"RQ-aliases-{cid}",
-        "type": "alias-resolution-request",
-        "canonical_id": cid,
-        "field": "aliases",
-        "detail": f"Review candidate aliases for approved topic '{canonical['canonical_name']}' before updating the upstream keyword table.",
-        "options": aliases,
-        "status": "open",
-    }
+    return hashlib.sha1(str(text).encode("utf-8")).hexdigest()[:8]
 
 
 def parse_update_at(value: str) -> datetime:
-    if not value:
+    text = str(value or "").strip()
+    if not text:
         return datetime.min.replace(tzinfo=timezone.utc)
-    text = str(value).strip()
     candidates = [text]
     if text.endswith("Z"):
         candidates.append(text[:-1] + "+00:00")
@@ -517,9 +655,7 @@ def parse_update_at(value: str) -> datetime:
     for candidate in candidates:
         try:
             parsed = datetime.fromisoformat(candidate)
-            if parsed.tzinfo is None:
-                parsed = parsed.replace(tzinfo=timezone.utc)
-            return parsed.astimezone(timezone.utc)
+            return parsed.replace(tzinfo=parsed.tzinfo or timezone.utc).astimezone(timezone.utc)
         except ValueError:
             continue
     for fmt in ("%Y/%m/%d %H:%M:%S", "%Y/%m/%d", "%Y-%m-%d"):
@@ -531,4 +667,4 @@ def parse_update_at(value: str) -> datetime:
 
 
 def safe_filename(name: str) -> str:
-    return re.sub(r"[^A-Za-z0-9_-]+", "_", name).strip("_")
+    return re.sub(r"[^A-Za-z0-9_-]+", "_", str(name)).strip("_") or "card"
