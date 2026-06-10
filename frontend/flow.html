@@ -9,73 +9,67 @@
   --bg:#f2f4f1;--panel:#fff;--ink:#18211d;--muted:#6c756f;--line:#dfe5e0;
   --green:#165f46;--green-bright:#20a474;--green-soft:#e8f5ef;
   --gold:#a56e18;--gold-soft:#fbf4e5;--red:#b5473c;--red-soft:#faece9;
-  --blue:#176b87;--blue-soft:#e4f2f5;--purple:#6f4bb2;--purple-soft:#f0eafa;
-  --shadow:0 18px 50px rgba(31,48,39,.09);
+  --blue:#176b87;--blue-soft:#e4f2f5;--shadow:0 18px 50px rgba(31,48,39,.09);
 }
 *{box-sizing:border-box}
 body{margin:0;color:var(--ink);background:radial-gradient(circle at 15% 0%,#e3efe9 0,transparent 30%),var(--bg);
   font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;font-size:13.5px;line-height:1.55}
 button{font:inherit;cursor:pointer}
 code,pre{font-family:Consolas,"SF Mono",monospace}
-.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;min-height:62px;padding:0 26px;
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;min-height:60px;padding:0 24px;
   border-bottom:1px solid rgba(223,229,224,.85);background:rgba(249,250,248,.92);backdrop-filter:blur(14px);flex-wrap:wrap}
 .brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;color:#fff;background:var(--green);font-size:11px;font-weight:800}
 .brand strong{display:block;font-size:14px}.brand small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}
 .tabs{margin-left:auto;display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:11px;background:#eef1ee}
-.tab{padding:8px 16px;border:0;border-radius:8px;color:var(--muted);background:transparent;font-weight:700}
+.tab{padding:8px 15px;border:0;border-radius:8px;color:var(--muted);background:transparent;font-weight:700}
 .tab.on{color:var(--ink);background:#fff;box-shadow:0 3px 10px rgba(25,45,34,.08)}
-main{width:min(1120px,calc(100% - 36px));margin:22px auto 60px}
-.intro{padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:var(--shadow);margin-bottom:8px}
-.intro h1{margin:0 0 6px;font-size:21px;letter-spacing:-.02em}
+main{width:min(1100px,calc(100% - 34px));margin:20px auto 60px}
+.intro{padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:var(--shadow)}
+.intro h1{margin:0 0 5px;font-size:20px;letter-spacing:-.02em}
 .intro p{margin:0;color:#46514a;font-size:12.5px;line-height:1.6}
-.callout{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:12px;line-height:1.6}
-.callout.blue{background:var(--blue-soft);color:#0f4d61}
-.callout.gold{background:var(--gold-soft);color:#6e4b16}
-.layout{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:14px;align-items:start}
-.rail{display:grid;gap:8px;position:sticky;top:78px}
-.node{display:flex;gap:11px;align-items:flex-start;width:100%;text-align:left;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:#fff;box-shadow:var(--shadow)}
-.node:hover{border-color:#b9c6be}
-.node.on{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
-.node .num{flex:0 0 auto;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:#fff;background:var(--green);font-size:12px;font-weight:800}
-.node.flag .num{background:var(--red)}
-.node.human .num{background:var(--gold)}
-.node.opt .num{background:#9aa39d}
-.node .nt{display:block;font-size:13px;font-weight:800}
-.node .nd{display:block;margin-top:2px;color:var(--muted);font-size:10.5px}
-.node .warnflag{margin-left:auto;color:var(--red);font-size:13px}
+.callout{margin-top:9px;padding:9px 12px;border-radius:9px;font-size:11.5px;line-height:1.55}
+.callout.blue{background:var(--blue-soft);color:#0f4d61}.callout.gold{background:var(--gold-soft);color:#6e4b16}
+.layout{display:grid;grid-template-columns:290px 1fr;gap:15px;margin-top:13px;align-items:start}
+.rail{display:grid;gap:7px;position:sticky;top:74px}
+.node{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:#fff;box-shadow:var(--shadow)}
+.node:hover{border-color:#b9c6be}.node.on{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.node .num{flex:0 0 auto;display:grid;place-items:center;width:25px;height:25px;border-radius:50%;color:#fff;background:var(--green);font-size:12px;font-weight:800}
+.node.flag .num{background:var(--red)}.node.human .num{background:var(--gold)}.node.opt .num{background:#9aa39d}
+.node .nt{display:block;font-size:12.5px;font-weight:800}.node .nd{display:block;margin-top:1px;color:var(--muted);font-size:10px}
+.node .wf{margin-left:auto;color:var(--red)}
 .detail{border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
-.detail .dh{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line);background:#f8faf8;flex-wrap:wrap}
-.detail .dh .num{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff;background:var(--green);font-weight:800}
-.detail.flag .dh .num{background:var(--red)} .detail.human .dh .num{background:var(--gold)} .detail.opt .dh .num{background:#9aa39d}
-.detail .dh h2{margin:0;font-size:17px}
-.tag{padding:4px 9px;border-radius:999px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
-.tag.page{color:var(--green);background:var(--green-soft)}
-.tag.global{color:var(--blue);background:var(--blue-soft)}
-.tag.human{color:var(--gold);background:var(--gold-soft)}
-.tag.opt{color:var(--muted);background:#edf2ef}
-.db{padding:18px 20px;display:grid;gap:16px}
-.sec h3{margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#4f5953}
+.dh{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:#f8faf8;flex-wrap:wrap}
+.dh .num{display:grid;place-items:center;width:29px;height:29px;border-radius:50%;color:#fff;background:var(--green);font-weight:800}
+.detail.flag .dh .num{background:var(--red)}.detail.human .dh .num{background:var(--gold)}.detail.opt .dh .num{background:#9aa39d}
+.dh h2{margin:0;font-size:16px}
+.tag{padding:3px 9px;border-radius:999px;font-size:10px;font-weight:800;text-transform:uppercase}
+.tag.page{color:var(--green);background:var(--green-soft)}.tag.global{color:var(--blue);background:var(--blue-soft)}
+.tag.human{color:var(--gold);background:var(--gold-soft)}.tag.opt{color:var(--muted);background:#edf2ef}
+.subtabs{display:flex;gap:5px;padding:11px 18px 0}
+.subtabs button{padding:7px 13px;border:1px solid var(--line);border-radius:8px 8px 0 0;background:#f4f7f5;color:var(--muted);font-weight:700;font-size:12px;border-bottom:0}
+.subtabs button.on{color:var(--ink);background:#fff;box-shadow:0 -2px 8px rgba(25,45,34,.05)}
+.db{padding:8px 18px 16px;display:grid;gap:14px;border-top:1px solid var(--line);margin-top:-1px}
+.sec h3{margin:0 0 5px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#4f5953}
 .sec p{margin:0;color:#39433d;font-size:13px;line-height:1.65}
 .prod{display:inline-block;padding:3px 8px;border-radius:6px;background:#eef2ef;color:#2f4a3d;font-size:11.5px;font-weight:700}
-pre{margin:0;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:#0f1714;color:#cfe7da;font-size:11.5px;line-height:1.6;overflow:auto;white-space:pre}
-pre .k{color:#7fd1a8}.pre .s{color:#e6c07b}
-.warn{padding:12px 14px;border-radius:10px;background:var(--red-soft);border:1px solid #e6c1bb}
+pre{margin:0;padding:12px 14px;border-radius:10px;background:#0f1714;color:#cfe7da;font-size:11.5px;line-height:1.6;overflow:auto;white-space:pre}
+.warn{padding:11px 13px;border-radius:10px;background:var(--red-soft);border:1px solid #e6c1bb}
 .warn h3{color:#8a2f25}.warn p{color:#7a2a21}
-.ok{padding:10px 14px;border-radius:10px;background:var(--green-soft);color:#155e44;font-size:12px}
-.nav{display:flex;justify-content:space-between;gap:10px;padding:14px 20px;border-top:1px solid var(--line);background:#fbfcfb}
-.nav button{min-height:38px;padding:0 16px;border:1px solid var(--line);border-radius:9px;background:#fff;font-weight:700}
-.nav button.go{border:0;color:#fff;background:var(--green)}
-.nav button:disabled{opacity:.4;cursor:default}
-.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;color:var(--muted);font-size:11px}
-.legend span{display:inline-flex;align-items:center;gap:5px}
-.dot{width:10px;height:10px;border-radius:50%}
+.ok{padding:9px 13px;border-radius:10px;background:var(--green-soft);color:#155e44;font-size:12px}
+.excap{padding:8px 11px;border-radius:8px;background:var(--gold-soft);color:#6e4b16;font-size:11.5px;line-height:1.5}
+.take{padding:9px 12px;border-radius:9px;background:var(--green-soft);color:#155e44;font-size:12.5px;line-height:1.55}
+.nav{display:flex;justify-content:space-between;gap:10px;padding:13px 18px;border-top:1px solid var(--line);background:#fbfcfb}
+.nav button{min-height:36px;padding:0 15px;border:1px solid var(--line);border-radius:9px;background:#fff;font-weight:700}
+.nav button.go{border:0;color:#fff;background:var(--green)}.nav button:disabled{opacity:.4;cursor:default}
+.legend{display:flex;flex-wrap:wrap;gap:9px;margin-top:11px;color:var(--muted);font-size:11px}
+.legend span{display:inline-flex;align-items:center;gap:5px}.dot{width:9px;height:9px;border-radius:50%}
 @media(max-width:840px){.layout{grid-template-columns:1fr}.rail{position:static}}
 </style>
 </head>
 <body>
 <header class="topbar">
   <span class="brand-mark">CF</span>
-  <span class="brand"><strong>Cards 流程图解</strong><small>build time · query time</small></span>
+  <span class="brand"><strong>Cards 流程图解</strong><small>build · query · 含贯穿例子</small></span>
   <div class="tabs">
     <button class="tab on" data-flow="build" type="button">① 生成 cards</button>
     <button class="tab" data-flow="query" type="button">② 用 cards 问答</button>
@@ -89,10 +83,10 @@ pre .k{color:#7fd1a8}.pre .s{color:#e6c07b}
     <div>
       <div class="detail" id="detail"></div>
       <div class="legend">
-        <span><i class="dot" style="background:var(--green)"></i>逐页/常规步</span>
-        <span><i class="dot" style="background:var(--blue)"></i>全局/跨页步</span>
-        <span><i class="dot" style="background:var(--gold)"></i>人工步</span>
-        <span><i class="dot" style="background:#9aa39d"></i>可选(无 embedding 可跳)</span>
+        <span><i class="dot" style="background:var(--green)"></i>常规/逐页</span>
+        <span><i class="dot" style="background:var(--blue)"></i>全局/跨页</span>
+        <span><i class="dot" style="background:var(--gold)"></i>人工</span>
+        <span><i class="dot" style="background:#9aa39d"></i>可选</span>
         <span><i class="dot" style="background:var(--red)"></i>opencode 现状有问题</span>
       </div>
     </div>
@@ -103,206 +97,213 @@ pre .k{color:#7fd1a8}.pre .s{color:#e6c07b}
 const FLOWS = {
 build: {
   title: "生成 cards（build time）",
-  intro: "处理单位是<b>一个 slice = 一批 Confluence 页一起进</b>（不是一页一页）。逐页做 capture/chunk/map → 全局 discover 跨页发现 topic → 你人工冻结词表 → 全局 reduce 跨页合并出卡。一张卡天生融合多页。",
-  callout: {cls:"gold", html:"⚠ 现在只跑一页 = config 把范围设成了 MDC 种子页，<b>不是流程限制</b>。扩页 = 把更多页放进 slice 再跑一遍，已有 topic 自动并卡。"},
+  intro: "处理单位是<b>一个 slice = 一批 Confluence 页一起进</b>。逐页 capture/chunk/map → 全局 discover → 人工冻结 → 全局 reduce 跨页合并出卡。一张卡天生融合多页。",
+  callout: {cls:"gold", html:"⚠ 现在只跑一页 = config 把范围设成 MDC 种子页，<b>不是流程限制</b>。扩页 = 把更多页放进 slice 再跑，已有 topic 自动并卡。"},
+  exTitle: "📌 贯穿例子：新页 B『MDC Onboarding Guide』里的 topic『Portal Access Setup』，人工审后合并进已有 card A『MDC Management Portal』(C-0002)。",
   steps: [
     {n:"①",cls:"",tag:["page","逐页"],title:"capture 抓原文",
-     what:"用 Confluence MCP 抓每一页的原始内容，逐字落盘。不加工。",
+     what:"用 MCP 抓每页原始内容，逐字落盘，不加工。",
+     meaning:"系统的“标准输入”=原文真相来源；后面一切都能顺 anchor 回到这里取证。",
      prod:"outputs/capture/{page_id}.json",
-     code:`{
-  "page_id": "3725660167",
-  "title": "MDC Project Check List",
-  "source_url": "https://wpb-confluence.../pages/3725660167",
-  "confluence_version": 31,
-  "body_md": "## General Information ...（整页 markdown）",
-  "owner": "...", "labels": [...], "update_at": "..."
-}`,
-     meaning:"系统的“标准输入”=原文真相来源。后面一切都能顺 anchor 回到这里取证。",
-     problem:null},
+     code:`{ "page_id":"...", "title":"...", "confluence_version":31,
+  "body_md":"## ...整页 markdown...", "source_url":"...", "owner":"..." }`,
+     problem:null,
+     ex:{scenario:"新页 B = MDC Onboarding Guide（pageId 4400100，v5，比 A 新）被抓下来。",
+         code:`capture/4400100.json
+{ "page_id":"4400100", "title":"MDC Onboarding Guide", "confluence_version":5,
+  "body_md":"## Portal Access Setup\\nUAT: https://sapp-cmg-v2.hk.hsbc:8004/login\\nMFA: required since 2026-06 ..." }`,
+         take:"原文照搬，还没切、还没归到任何 topic。"}},
     {n:"②",cls:"flag",tag:["page","逐页"],title:"chunk 结构感知切分",
-     what:"把页按结构切成 section：矩阵→每个(channel,attribute)单元格、表→行、Q&A→问、流程→步；每段带 metadata。",
-     prod:"outputs/refs/refs_{page_id}.json（一组 section）",
-     code:`{
-  "section_id": "3725660167#Channel Matrix > whatsApp > Delivery Mode",
-  "heading_path": ["MDC Project Check List","Channel Matrix","whatsApp","Delivery Mode / SLO / RTB Cost"],
-  "metadata": { "table":"channel_matrix", "channel":"whatsApp",
-                "attribute":"Delivery Mode / SLO / RTB Cost" },
-  "body_md": "real-time mode only, now only support WPB",
-  "has_table": false
-}`,
-     meaning:"切得对不对决定一切。单元格级切分，才能让“whatsApp 的 SLO”这种精确事实成为<b>独立可检索单元</b>。",
-     problem:"opencode 现状把整页按大小切成 3 大块（part 1/2/3）→ 矩阵/表全压成散文坨。这是<b>头号 bug</b>，对应 handoff/12 + 闸 G0。重跑必须从这步开始。"},
+     what:"把页按结构切 section：矩阵→单元格、表→行、Q&A→问、流程→步；每段带 metadata。",
+     meaning:"切得对不对决定一切——单元格级切分，精确事实才能成为<b>独立可检索单元</b>。",
+     prod:"outputs/refs/refs_{page_id}.json",
+     code:`{ "section_id":"...#whatsApp > Delivery Mode",
+  "metadata":{"channel":"whatsApp","attribute":"Delivery Mode"},
+  "body_md":"real-time mode only, now only support WPB" }`,
+     problem:"opencode 现状把整页切成 3 大块（part 1/2/3）→ 矩阵/表全压成散文。<b>头号 bug</b>，对应 G0 / handoff12。重跑从这步起。",
+     ex:{scenario:"page B 的『Portal Access Setup』块被切成几个 section。",
+         code:`B1  narrative   "如何申请并登录管理门户"
+B2  inline值    attr=UAT login → "https://sapp-cmg-v2.hk.hsbc:8004/login"
+B3  inline值    "MFA required since 2026-06, via HSBC Authenticator"`,
+         take:"URL/MFA 各成独立单元；能不能合并、能不能精确答，全靠这步切对。"}},
     {n:"③",cls:"flag",tag:["page","逐段"],title:"map 结构化抽取",
-     what:"每个 section 调 LLM 抽：concepts、tier、fact_value、summary、questions、confidence。",
+     what:"每个 section 调 LLM 抽：concepts / tier / fact_value / summary / questions / confidence。",
+     meaning:"<b>tier</b> 决定能不能直接答（narrative 可转述 / inline-value 原值 / pointer-only 下钻）；<b>questions</b> 是无 embedding 时的检索钩子。",
      prod:"outputs/map/map_{page_id}.json",
-     code:`{
-  "sections": [{
-    "concepts": ["whatsApp delivery"],
-    "keywords_raw": ["whatsApp","real-time","WPB"],
-    "info_type": "config",
-    "tier": "inline-value",           // 三档之一
-    "fact_value": "real-time mode only, now only support WPB",
-    "summary_en": "...", "questions_en": ["What is whatsApp delivery mode?"],
-    "confidence": 0.9
-  }],
-  "page_summary": {...}
-}`,
-     meaning:"<b>tier</b> 决定“能不能直接答”：narrative=可转述 / inline-value=原值逐字 / pointer-only=只给指针。<b>questions</b> 在无 embedding 时是关键检索钩子。",
-     problem:"因为上游切成大块，map 把确切值（UAT/PROD 登录 URL 等）抽成了 narrative 总结，inline-value 计数=0。对应闸 G1。"},
+     code:`{ "tier":"inline-value", "fact_value":"real-time mode only ...",
+  "concepts":["whatsApp delivery"], "questions_en":["..."], "confidence":0.9 }`,
+     problem:"因为上游切成大块，map 把确切值（UAT URL 等）抽成了 narrative，inline-value 计数=0。对应 G1。",
+     ex:{scenario:"对 B2/B3 抽取，确切值标 inline-value 逐字留。",
+         code:`B2 → {tier:"inline-value", fact_value:"https://sapp-cmg-v2.hk.hsbc:8004/login"}
+B3 → {tier:"inline-value", fact_value:"MFA required since 2026-06 ..."}
+B1 → {tier:"narrative",    summary:"申请并登录 MDC 门户"}`,
+         take:"此时它们还叫『Portal Access Setup』，还没和 A 发生关系。"}},
     {n:"④",cls:"",tag:["global","全局"],title:"discover 全局发现 topic",
-     what:"把所有页的 keywords/concepts 汇到一起做<b>全局聚类</b> → 候选 topic 词表；带 D1(nearest_existing) + D2(dup_warning) 防碎片化。只提案，不建卡。",
+     what:"所有页关键词汇到一起全局聚类 → 候选 topic；带 D1(nearest_existing)+D2(dup_warning)。只提案，不建卡。",
+     meaning:"跨页发现 topic 在这完成；<b>解耦关键</b>：只产候选，topic 集合交给人冻。",
      prod:"outputs/proposed_keywords.json",
-     code:`{
-  "candidates": [{
-    "canonical_id": "C-PROP-0002",
-    "canonical_name": "MDC Management Portal",
-    "aliases": ["MDC Portal access"],
-    "evidence_keywords": ["portal","access right"],
-    "suggested_subsections": ["UAT Access Right","PROD Access Right"],
-    "nearest_existing": {"canonical_id":"C-0002","similarity":0.82,"reason":"..."},  // D1
-    "dup_warning": [{"canonical_id":"C-0002","score":0.41}],                          // D2
-    "status": "proposed"
-  }],
-  "modules": [...]
-}`,
-     meaning:"跨页发现 topic 在这里完成。<b>解耦的关键</b>：发现只产候选，绝不直接建卡（topic 集合交给人冻）。",
-     problem:"之前 opencode 把发现揉进 reduce“边发现边建卡”→ 粒度漂移。现已解耦到这步。"},
-    {n:"⑤",cls:"human",tag:["human","人工"],title:"人工闸：审 + 冻结词表",
-     what:"你用 approve.html 载入候选 + 现有冻结词表 → 处理 ⚠ 疑似重复（D3 合并到已有 / D4 别名回填）→ 真新的才批准 → 导出。",
-     prod:"keyword_table.jsonl（approved，→ paths.keyword_table）",
+     code:`{ "candidates":[{ "canonical_name":"...", "aliases":[...],
+   "nearest_existing":{"canonical_id":"...","similarity":0.82},
+   "dup_warning":[{"canonical_id":"...","score":0.41}], "status":"proposed" }] }`,
+     problem:"之前揉在 reduce“边发现边建卡”→ 粒度漂移。现已解耦到这步。",
+     ex:{scenario:"全局聚类把 B 的 section 归成候选『Portal Access Setup』，并自动报『疑似=已有 C-0002』。",
+         code:`{ "canonical_name":"Portal Access Setup",
+  "nearest_existing":{"canonical_id":"C-0002","name":"MDC Management Portal","similarity":0.79},
+  "dup_warning":[{"canonical_id":"C-0002","score":0.44}], "status":"proposed" }`,
+         take:"D1/D2 把『其实是老 A』这个疑点摆到你面前——但不替你决定。"}},
+    {n:"⑤",cls:"human",tag:["human","人工"],title:"人工闸：审 + 冻结",
+     what:"你用 approve.html 载入候选 + 现有词表 → 处理 ⚠ 疑似（D3 合并到已有 / D4 别名回填）→ 真新的才批准 → 导出。",
+     meaning:"<b>topic 集合在此被人冻死 → 粒度稳定。</b> 无 embedding 时 aliases/boundary 就是你 query 找卡的索引。",
+     prod:"keyword_table.jsonl（approved）",
      code:`{"canonical_id":"C-0002","canonical_name":"MDC Management Portal",
- "aliases":["MDC Management Portal access","Portal access","MDC Portal access"],
- "module":["02 - Engagement","MDC Onboarding"],
- "topic_type":"component","topic_class":"system_component",
- "boundary":"MDC Portal 的访问入口、环境链接与 access-right 申请；不含完整接入流程。",
- "subsections":["Portal links","UAT Access Right","PROD Access Right","permNetID"],
+ "aliases":["Portal access", ...], "boundary":"...", "subsections":[...],
  "status":"approved"}`,
-     meaning:"<b>topic 集合在此被人冻死 → 粒度稳定。</b> 无 embedding 时，这里的 <b>aliases / boundary</b> 就是你 query 时找卡的索引，质量=命根。",
-     problem:"上次被跳过：opencode 自己冻了词表跑通，topic 是 AI 选的、没人 review scope。这次必须你真审（闸 G3）。"},
+     problem:"上次被跳过：opencode 自己冻了词表，topic 没人 review。这次必须你真审（G3）。",
+     ex:{scenario:"你在 approve.html 看到 ⚠『Portal Access Setup ~ C-0002』，点『合并到 C-0002』。",
+         code:`// 词表里还是一行，没有 C-B；只是 A 多了别名（D4 回填）
+{"canonical_id":"C-0002","canonical_name":"MDC Management Portal",
+ "aliases":[..., "Portal Access Setup", "portal login"], ...}`,
+         take:"『合并』的本质 = 让 topic B 变成 A 的别名。从此 B 的 section 会被认成 A。"}},
     {n:"⑥",cls:"flag",tag:["global","全局"],title:"reduce 跨页合并建卡",
-     what:"所有页 section 按 canonical_id 分组 → 一 canonical 一卡；字段按 tier 填、subsection 按 metadata 填、冲突取新+标注；<b>只匹配冻结词表，不造词</b>（零 C-AUTO）。",
-     prod:"outputs/cards/*.json + cards_index.json + inverted_index.jsonl + review_queue.jsonl",
-     code:`{
-  "canonical_id":"C-0002","canonical_name":"MDC Management Portal",
-  "module":[...], "boundary":"...", "topic_class":"system_component",
-  "questions_agg_en":[...],                      // 无 embedding 时的检索钩子
-  "subsections":[
-    {"name":"UAT Access Right",
-     "fields":[{"label":"login","tier":"inline-value",
-                "value":"https://sapp-cmg.hk.hsbc:8004/login","sources":[...]}]}],
-  "fields":[
-    {"field":"definition","tier":"narrative","value":"...","sources":[...]},
-    {"field":"config","tier":"inline-value","value":"...","sources":[...]}],
-  "flags":[]
-}`,
-     meaning:"最终知识卡。<b>一张卡融多页</b>（如某 topic 同时来自种子页+别页）。每条字段带 tier + sources 锚点 → 可直接答或可下钻取证。",
-     problem:"opencode 现状：subsection 是占位 stub（“Captured subsection evidence for X.”、无 inline-value），definition 是整页元描述+拼接病句。对应闸 G4 + handoff/12 §3-C。"},
+     what:"所有页 section 按 canonical_id 分组 → 一 canonical 一卡；字段按 tier 填、subsection 按 metadata 填、冲突取新+标注；只匹配不造词。",
+     meaning:"最终知识卡，<b>一张卡融多页</b>。每条字段带 tier+sources → 可直接答或下钻取证。",
+     prod:"outputs/cards/*.json + inverted_index.jsonl + review_queue.jsonl",
+     code:`{ "canonical_id":"C-0002", "subsections":[{"name":"UAT Access Right",
+   "fields":[{"tier":"inline-value","value":"https://...","sources":[...]}]}],
+  "fields":[{"field":"definition","tier":"narrative",...}], "flags":[] }`,
+     problem:"opencode 现状：subsection 是占位 stub、definition 是整页元描述+拼接病句。对应 G4 / handoff12 §3-C。",
+     ex:{scenario:"重跑 reduce（吃 A+B 的 map）。B 的 section 命中 C-0002 别名 → 和 A 一起建成同一张卡。",
+         code:`// card A (C-0002) 被重新建出：
+UAT URL : 取新(B) + conflict! 列两值(A:v31 / B:v5) + 进 review_queue
+MFA     : 新增(来自 B)
+sources : page 3725660167 + 4400100    // 跨页
+// 仍是 1 张卡，无 card B`,
+         take:"合并 ≠ 往 A 追加；是用 A+B 的 section 把 card A 整个重建一遍，冲突取新+标注。"}},
     {n:"⑦",cls:"opt",tag:["opt","可选"],title:"load 入向量库（可选）",
-     what:"把每张卡 embedding 后写入向量库，供向量检索用。",
+     what:"把每张卡 embedding 写入向量库，供向量检索。",
+     meaning:"<b>build 到 ⑥ 已产出完整 cards，全程不需要 embedding。</b> 这步只为向量检索而加。",
      prod:"向量库（chroma / pgvector …）",
-     code:`// 仅“有 embedding”方案需要。
-// 你们的 LLM-wiki 无 embedding 方案 → 这步可直接跳过。
-// cards/*.json + cards_index.json 本身就是可用的知识库产物。`,
-     meaning:"<b>整条 build 流程到 ⑥ 就已产出完整 cards，全程不需要 embedding。</b> 这步只是“如果要做向量检索”才加。",
-     problem:null}
+     code:`// 你们 LLM-wiki 无 embedding 方案 → 跳过
+// cards/*.json + cards_index.json 本身就是成品`,
+     problem:null,
+     ex:{scenario:"无 embedding 方案：跳过。",
+         code:`// 不做向量检索 → 不需要这步
+// cards/C-0002.json 直接就是成品`,
+         take:"build 到 ⑥ 就完事了。"}}
   ]
 },
 query: {
   title: "用 cards 做问答（query time）",
   intro: "用户问题 → 找到相关卡 → 按字段 tier 取答（直答 / 下钻）→ 带原文引用组装答案。",
-  callout: {cls:"blue", html:"⚑ <b>你们大概率没有 embedding</b>：找卡不靠向量检索，而靠 <b>LLM/关键词在 card 目录里选卡</b>。所以 cards 的 <b>canonical_name + aliases + boundary + questions_agg</b> 就是你的索引——这也是为什么 build 阶段 ⑤ 的别名/边界质量是命根。"},
+  callout: {cls:"blue", html:"⚑ <b>你们大概率没有 embedding</b>：找卡靠 <b>LLM/关键词在 card 目录里选卡</b>（canonical_name+aliases+boundary+questions_agg），不是向量检索。所以别名/边界质量是命根。"},
+  exTitle: "📌 贯穿例子：用户问『怎么登录 MDC 管理门户的 UAT 环境？』——看它怎么命中合并后的 C-0002 并答出 UAT URL。",
   steps: [
     {n:"①",cls:"",tag:["page","输入"],title:"用户问题",
      what:"一个自然语言问题，可能带 module 提示。",
+     meaning:"问答起点。",
      prod:"query 字符串",
-     code:`"whatsApp 的 delivery mode / SLO 是什么？"`,
-     meaning:"问答的起点。",
-     problem:null},
-    {n:"②",cls:"global",tag:["global","选卡"],title:"找到相关卡（retrieval）",
-     what:"两种模式：\\nA) 无 embedding（你们的方案）：把 card 目录（canonical_name+aliases+boundary+module+questions_agg）给 LLM，让它挑相关卡；或用关键词/别名匹配。\\nB) 有 embedding：向量检索 top-k。",
+     code:`"<用户的问题>"`,
+     problem:null,
+     ex:{scenario:"用户提问。", code:`"怎么登录 MDC 管理门户的 UAT 环境？"`, take:"起点。"}},
+    {n:"②",cls:"global",tag:["global","选卡"],title:"找到相关卡",
+     what:"A) 无 embedding：把 card 目录给 LLM 选卡，或关键词/别名匹配。\\nB) 有 embedding：向量检索 top-k。",
+     meaning:"无 embedding 时 <b>aliases/boundary/questions 决定能不能找到对的卡</b>；找不到多半是别名缺 → 回 build⑤ 补。",
      prod:"命中的 card(s) / subsection / field",
-     code:`// 无 embedding 选卡：扫这张“目录”即可（小，几十~几百条）
-[
- {"canonical_id":"C-0001","name":"MDC supported notification channels",
-  "aliases":["channels"],"boundary":"渠道及各渠道属性",
-  "questions_agg_en":["What is whatsApp delivery mode?", ...]},
- {"canonical_id":"C-0002","name":"MDC Management Portal", ...}
-]
-// → 命中 C-0001（whatsApp 是它的 subsection）`,
-     meaning:"无 embedding 时，<b>aliases/boundary/questions 决定能不能找到对的卡</b>。找不到多半是别名缺 → 回 build ⑤ 补别名（D4 越用越全）。",
-     problem:null},
+     code:`// 无 embedding：扫这张目录（小，几十~几百条）
+[{"canonical_id":"C-0002","name":"...","aliases":[...],"questions_agg_en":[...]}]`,
+     problem:null,
+     ex:{scenario:"LLM 扫目录：C-0002 的别名含『Portal Access Setup/portal login』，问题里有『portal/UAT』。",
+         code:`// 命中 C-0002（MDC Management Portal）`,
+         take:"正因为 ⑤ 把 B 的叫法回填进 A 的别名，用户用 B 的词也能找到 A。"}},
     {n:"③",cls:"",tag:["page","取答"],title:"按 tier 取答",
-     what:"看命中字段的 tier：narrative→直接转述；inline-value→直接答且自带出处；pointer-only→顺 anchor 下钻回原文取确切值。",
+     what:"narrative→直接转述；inline-value→直接答且自带出处；pointer-only→顺 anchor 下钻回原文取确切值。",
+     meaning:"<b>cards 的价值</b>：精确值不靠 LLM 现编，要么逐字搬、要么下钻取。",
      prod:"答案片段 + 出处",
-     code:`命中 C-0001 → subsection "whatsApp" →
-  {"label":"Delivery Mode / SLO / RTB Cost",
-   "tier":"inline-value",
-   "value":"real-time mode only, now only support WPB",   // 逐字，可信
-   "sources":[{"anchor":"...whatsApp > Delivery Mode", ...}]}
-→ 直接答“real-time mode only, now only support WPB” + 引出处`,
-     meaning:"<b>这就是 cards 的价值</b>：精确值不靠 LLM 现编，要么逐字搬（inline-value），要么下钻取（pointer-only），不会瞎答。",
-     problem:null},
+     code:`命中字段.tier → 决定 直答 / 下钻`,
+     problem:null,
+     ex:{scenario:"命中 C-0002 → 子条目『UAT Access Right』。",
+         code:`{"name":"UAT Access Right","tier":"inline-value",
+ "value":"https://sapp-cmg-v2.hk.hsbc:8004/login","conflict":true}`,
+         take:"inline-value 直接给确切 URL；conflict 标记提示『还有旧值』。"}},
     {n:"④",cls:"",tag:["page","组装"],title:"组装答案 + 引用",
      what:"把取到的字段拼成回答，附 anchor/source_url 引用，可回原文核对。",
+     meaning:"答案<b>可追溯</b>，满足“引出原文”，Business 能核。",
      prod:"最终回答（带引用）",
-     code:`A：whatsApp 目前只支持 real-time 投递，且仅 WPB。
-   来源：MDC Project Check List > Channel Matrix > whatsApp > Delivery Mode
-   (confluence v31)`,
-     meaning:"答案<b>可追溯</b>——满足“引出原文”的硬目标，Business 能核。",
-     problem:null},
+     code:`A：... 。来源：<page> (<anchor>, v<version>)`,
+     problem:null,
+     ex:{scenario:"拼答案 + 引用 + 冲突提示。",
+         code:`A：UAT 登录 https://sapp-cmg-v2.hk.hsbc:8004/login
+   来源：MDC Onboarding Guide (v5)
+   注：旧页(v31)曾为 sapp-cmg，已被新值取代，待确认`,
+         take:"确切、可追溯，还把版本分歧透明告诉用户。"}},
     {n:"⑤",cls:"opt",tag:["opt","对比"],title:"三种回答族（PoC 对比）",
-     what:"① RAG：喂原始 chunk 让 LLM 写（需 embedding 检索）。② LLM+Wiki：用 approved cards（卡直答 / 卡+回原文取证）。③ Agentic：路由器选路径、必要时多跳下钻。",
-     prod:"eval 对比报告 / 看板",
-     code:`// 无 embedding 方案下：
-//  ① RAG 族基本退场（它依赖向量检索）
-//  ② LLM + Wiki cards  ← 你们主打
-//  ③ Agentic（基于卡 + 下钻）  ← 可叠加
-// 对比“哪条答得准/可追溯”，给领导看结论`,
-     meaning:"没 embedding 不影响 LLM-wiki 与 Agentic 这两族；只是 RAG 那族退场。卡片方案反而是这里的主角。",
-     problem:null}
+     what:"① RAG（喂原始 chunk，需 embedding）② LLM+Wiki（用 approved cards）③ Agentic（路由+下钻）。",
+     meaning:"没 embedding 不影响 ②③；只 RAG 退场。卡片方案在这里是主角。",
+     prod:"eval 对比 / 看板",
+     code:`② LLM+Wiki  ← 主打
+③ Agentic    ← 可叠加
+① RAG        ← 依赖向量检索，退场`,
+     problem:null,
+     ex:{scenario:"无 embedding 下的对比。",
+         code:`② 用 C-0002 卡直接答 ✅
+③ 卡 + 必要时下钻 ✅
+① RAG → 退场`,
+         take:"卡片方案在没 embedding 时正好是主角。"}}
   ]
 }
 };
 
-let cur = {flow:"build", i:0};
+let cur = {flow:"build", i:0, view:"explain"};
 const railEl=document.getElementById("rail"), detailEl=document.getElementById("detail"), introEl=document.getElementById("intro");
 
+function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 function renderIntro(){
   const f=FLOWS[cur.flow];
-  introEl.innerHTML = `<h1>${f.title}</h1><p>${f.intro}</p>`+
-    (f.callout?`<div class="callout ${f.callout.cls}">${f.callout.html}</div>`:"");
+  introEl.innerHTML=`<h1>${f.title}</h1><p>${f.intro}</p>`+(f.callout?`<div class="callout ${f.callout.cls}">${f.callout.html}</div>`:"");
 }
 function renderRail(){
   const f=FLOWS[cur.flow];
-  railEl.innerHTML = f.steps.map((s,idx)=>`
+  railEl.innerHTML=f.steps.map((s,idx)=>`
     <button class="node ${s.cls} ${idx===cur.i?'on':''}" data-i="${idx}" type="button">
       <span class="num">${s.n}</span>
       <span><span class="nt">${s.title}</span><span class="nd">${s.prod}</span></span>
-      ${s.problem?`<span class="warnflag">⚠</span>`:''}
+      ${s.problem?`<span class="wf">⚠</span>`:''}
     </button>`).join("");
 }
 function renderDetail(){
   const f=FLOWS[cur.flow], s=f.steps[cur.i];
   const tagCls={page:"page",global:"global",human:"human",opt:"opt"}[s.tag[0]];
   detailEl.className="detail "+s.cls;
+  let body="";
+  if(cur.view==="explain"){
+    body=`<div class="sec"><h3>流程 · 做什么</h3><p>${s.what.replace(/\\n/g,"<br>")}</p></div>
+          <div class="sec"><h3>含义</h3><p>${s.meaning}</p></div>
+          ${s.problem?`<div class="warn"><h3>⚠ opencode 现状问题</h3><p>${s.problem}</p></div>`:`<div class="ok">✓ 这步目前没问题</div>`}`;
+  }else if(cur.view==="struct"){
+    body=`<div class="sec"><h3>产物</h3><p><span class="prod">${s.prod}</span></p></div>
+          <div class="sec"><h3>产物结构（通用）</h3><pre>${esc(s.code)}</pre></div>`;
+  }else{
+    body=`<div class="excap">${f.exTitle}</div>
+          <div class="sec"><h3>这一步在例子里发生了什么</h3><p>${s.ex.scenario}</p></div>
+          <div class="sec"><h3>得到</h3><pre>${esc(s.ex.code)}</pre></div>
+          <div class="take">👉 ${s.ex.take}</div>`;
+  }
   detailEl.innerHTML=`
     <div class="dh"><span class="num">${s.n}</span><h2>${s.title}</h2><span class="tag ${tagCls}">${s.tag[1]}</span></div>
-    <div class="db">
-      <div class="sec"><h3>流程 · 做什么</h3><p>${s.what.replace(/\\n/g,"<br>")}</p></div>
-      <div class="sec"><h3>产物</h3><p><span class="prod">${s.prod}</span></p></div>
-      <div class="sec"><h3>产物结构</h3><pre>${esc(s.code)}</pre></div>
-      <div class="sec"><h3>含义</h3><p>${s.meaning}</p></div>
-      ${s.problem?`<div class="warn"><h3>⚠ opencode 现状问题</h3><p>${s.problem}</p></div>`
-                 :`<div class="ok">✓ 这步目前没问题</div>`}
+    <div class="subtabs">
+      <button data-view="explain" class="${cur.view==='explain'?'on':''}" type="button">💡 讲解</button>
+      <button data-view="struct"  class="${cur.view==='struct'?'on':''}" type="button">🧩 结构</button>
+      <button data-view="example" class="${cur.view==='example'?'on':''}" type="button">📌 举例</button>
     </div>
+    <div class="db">${body}</div>
     <div class="nav">
       <button type="button" id="prev" ${cur.i===0?'disabled':''}>← 上一步</button>
       <button type="button" class="go" id="next" ${cur.i===f.steps.length-1?'disabled':''}>下一步 →</button>
     </div>`;
+  detailEl.querySelectorAll(".subtabs button").forEach(b=>b.onclick=()=>{ cur.view=b.dataset.view; renderDetail(); });
   document.getElementById("prev").onclick=()=>{ if(cur.i>0){cur.i--;rerender();} };
   document.getElementById("next").onclick=()=>{ if(cur.i<f.steps.length-1){cur.i++;rerender();} };
 }
-function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 function rerender(){ renderRail(); renderDetail(); }
 railEl.addEventListener("click",e=>{ const b=e.target.closest("[data-i]"); if(!b)return; cur.i=+b.dataset.i; rerender(); });
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
