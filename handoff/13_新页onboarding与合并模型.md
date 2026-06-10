@@ -46,10 +46,20 @@ discover 输入已含完整 approved 词表(名/别名/boundary)。强化输出:
 ```
 → 把"疑似重复"**变可见**,而不是让 AI 静默拍板建新。`similarity` 高于阈值(如 ≥0.6)的,在 review 表里标 ⚠️。
 
-### D2 — 确定性 fuzzy 去重预检(非 AI 兜底)
-discover 写 `proposed_keywords.json` 前,跑一道**纯字符串**比对:每个候选的 `name + aliases + evidence_keywords` vs 现有词表的 `name + aliases`,算 token 重叠 / 编辑距离;高分对写进 `dup_warning`。
-- 专治表面变体:`Notification Preference` vs `Notification Preferences`、`MDC Portal` vs `MDC Management Portal`、大小写/连字符/单复数差异。
-- 这是 AI 漏报时的**确定性兜底**,不依赖模型。
+### D2 — 确定性 fuzzy 去重预检(非 AI,可复现)
+discover 写 `proposed_keywords.json` 前,跑一道**纯字符串**比对(不调模型,同输入同输出)。对每个候选 × 每个现有 canonical 算一个 `score ∈ [0,1]`,把高分的写进 `dup_warning`。
+
+**建议算法(opencode 照此实现,保证可复现):**
+1. **归一化**两边文本:小写、去标点、压空格、(可选)去单复数尾。比较对象 = 候选的每个 `name/alias` vs 现有的每个 `name/alias`。
+2. **单对字符串相似度 = `max(token_jaccard, char_trigram_dice)`**:
+   - `token_jaccard = |A∩B| / |A∪B|`(按单词分词的集合)—— 治词序/单复数,如 `notification channel` vs `notification channels`;
+   - `char_trigram_dice = 2|A∩B| / (|A|+|B|)`(按 3-gram 字符集合)—— 治拼写/连字符/大小写变体。
+3. **候选对某 canonical 的 `score` = 上面所有"候选名·别名 × 现有名·别名"配对里的最大值。**
+4. `score ≥ 0.6`(阈值可配)的写进 `dup_warning: [{canonical_id, name, score}]`。
+
+> **D2 的数 ≠ D1 的数,别混:** `dup_warning.score` 是上面这个**确定性字符串分**(可复现);`nearest_existing.similarity` 是 **discover(LLM)自报的语义相似度**(软值、不可复现、仅供参考)。approve.html 两个都显示、都能一键合并。
+>
+> 样例里 `MDC Portal access right` vs `MDC Management Portal` 标的 **0.82 是 LLM 语义分**;若按 D2 的 token_jaccard 只有 ~0.4(只共享 mdc/portal)。**这恰恰说明两个都要留**:D2 抓表面变体,D1 抓"词不同但意思一样"。
 
 ### D3 — approve.html 升级:能"合并到已有(已冻结)topic"
 当前 approve.html 只加载新提案。升级为:**同时加载现有冻结词表**,把已有 topic 显示为"🔒 已冻结"且作为合并目标。每个新候选除 keep/丢弃/批内合并外,新增:
