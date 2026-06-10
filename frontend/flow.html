@@ -13,7 +13,7 @@
 }
 *{box-sizing:border-box}
 body{margin:0;color:var(--ink);background:radial-gradient(circle at 15% 0%,#e3efe9 0,transparent 30%),var(--bg);
-  font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;font-size:13.5px;line-height:1.55}
+  font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;font-size:13.5px;line-height:1.6}
 button{font:inherit;cursor:pointer}
 code,pre{font-family:Consolas,"SF Mono",monospace}
 .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;min-height:60px;padding:0 24px;
@@ -26,10 +26,10 @@ code,pre{font-family:Consolas,"SF Mono",monospace}
 main{width:min(1100px,calc(100% - 34px));margin:20px auto 60px}
 .intro{padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:var(--shadow)}
 .intro h1{margin:0 0 5px;font-size:20px;letter-spacing:-.02em}
-.intro p{margin:0;color:#46514a;font-size:12.5px;line-height:1.6}
+.intro p{margin:0;color:#46514a;font-size:12.5px}
 .callout{margin-top:9px;padding:9px 12px;border-radius:9px;font-size:11.5px;line-height:1.55}
 .callout.blue{background:var(--blue-soft);color:#0f4d61}.callout.gold{background:var(--gold-soft);color:#6e4b16}
-.layout{display:grid;grid-template-columns:290px 1fr;gap:15px;margin-top:13px;align-items:start}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:15px;margin-top:13px;align-items:start}
 .rail{display:grid;gap:7px;position:sticky;top:74px}
 .node{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:#fff;box-shadow:var(--shadow)}
 .node:hover{border-color:#b9c6be}.node.on{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
@@ -46,18 +46,33 @@ main{width:min(1100px,calc(100% - 34px));margin:20px auto 60px}
 .tag.page{color:var(--green);background:var(--green-soft)}.tag.global{color:var(--blue);background:var(--blue-soft)}
 .tag.human{color:var(--gold);background:var(--gold-soft)}.tag.opt{color:var(--muted);background:#edf2ef}
 .subtabs{display:flex;gap:5px;padding:11px 18px 0}
-.subtabs button{padding:7px 13px;border:1px solid var(--line);border-radius:8px 8px 0 0;background:#f4f7f5;color:var(--muted);font-weight:700;font-size:12px;border-bottom:0}
-.subtabs button.on{color:var(--ink);background:#fff;box-shadow:0 -2px 8px rgba(25,45,34,.05)}
-.db{padding:8px 18px 16px;display:grid;gap:14px;border-top:1px solid var(--line);margin-top:-1px}
+.subtabs button{padding:7px 14px;border:1px solid var(--line);border-radius:8px 8px 0 0;background:#f4f7f5;color:var(--muted);font-weight:700;font-size:12.5px;border-bottom:0}
+.subtabs button.on{color:var(--ink);background:#fff}
+.db{padding:14px 18px 16px;display:grid;gap:14px;border-top:1px solid var(--line);margin-top:-1px}
 .sec h3{margin:0 0 5px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#4f5953}
-.sec p{margin:0;color:#39433d;font-size:13px;line-height:1.65}
-.prod{display:inline-block;padding:3px 8px;border-radius:6px;background:#eef2ef;color:#2f4a3d;font-size:11.5px;font-weight:700}
+.sec p{margin:0;color:#33403a;font-size:13.5px;line-height:1.72}
+.prodline{font-size:12px;color:var(--muted)}
+.prodline code{padding:2px 7px;border-radius:6px;background:#eef2ef;color:#2f4a3d;font-weight:700}
+.hint{font-size:11.5px;color:var(--blue);background:var(--blue-soft);padding:7px 10px;border-radius:8px}
+.fd{border:1px solid var(--line);border-radius:9px;background:#fbfcfb;overflow:hidden}
+.fd+.fd{margin-top:7px}
+.fd>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;font-size:12.5px}
+.fd>summary::-webkit-details-marker{display:none}
+.fd>summary::before{content:"▸";color:#9aa39d;font-size:11px}
+.fd[open]>summary::before{content:"▾"}
+.fd>summary code{font-weight:800;color:#1f3b2e}
+.ty{padding:2px 7px;border-radius:999px;background:#e8eeea;color:#516159;font-size:9.5px;font-weight:800;letter-spacing:.03em}
+.ty.enum{background:var(--gold-soft);color:#6e4b16}.ty.num{background:var(--blue-soft);color:#0f4d61}
+.fb{padding:0 13px 12px;font-size:12.5px;line-height:1.7;color:#3a443e;display:grid;gap:4px}
+.fb b{color:#1f3b2e}
+.fb .enums{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.fb .enums span{padding:3px 8px;border-radius:999px;background:#eef2ef;color:#41554b;font-size:11px;font-weight:700}
 pre{margin:0;padding:12px 14px;border-radius:10px;background:#0f1714;color:#cfe7da;font-size:11.5px;line-height:1.6;overflow:auto;white-space:pre}
 .warn{padding:11px 13px;border-radius:10px;background:var(--red-soft);border:1px solid #e6c1bb}
 .warn h3{color:#8a2f25}.warn p{color:#7a2a21}
 .ok{padding:9px 13px;border-radius:10px;background:var(--green-soft);color:#155e44;font-size:12px}
-.excap{padding:8px 11px;border-radius:8px;background:var(--gold-soft);color:#6e4b16;font-size:11.5px;line-height:1.5}
-.take{padding:9px 12px;border-radius:9px;background:var(--green-soft);color:#155e44;font-size:12.5px;line-height:1.55}
+.excap{padding:8px 11px;border-radius:8px;background:var(--gold-soft);color:#6e4b16;font-size:11.5px;line-height:1.55}
+.take{padding:10px 12px;border-radius:9px;background:var(--green-soft);color:#155e44;font-size:13px;line-height:1.6}
 .nav{display:flex;justify-content:space-between;gap:10px;padding:13px 18px;border-top:1px solid var(--line);background:#fbfcfb}
 .nav button{min-height:36px;padding:0 15px;border:1px solid var(--line);border-radius:9px;background:#fff;font-weight:700}
 .nav button.go{border:0;color:#fff;background:var(--green)}.nav button:disabled{opacity:.4;cursor:default}
@@ -69,13 +84,12 @@ pre{margin:0;padding:12px 14px;border-radius:10px;background:#0f1714;color:#cfe7
 <body>
 <header class="topbar">
   <span class="brand-mark">CF</span>
-  <span class="brand"><strong>Cards 流程图解</strong><small>build · query · 含贯穿例子</small></span>
+  <span class="brand"><strong>Cards 流程图解</strong><small>build · query · 字段可点开</small></span>
   <div class="tabs">
     <button class="tab on" data-flow="build" type="button">① 生成 cards</button>
     <button class="tab" data-flow="query" type="button">② 用 cards 问答</button>
   </div>
 </header>
-
 <main>
   <div class="intro" id="intro"></div>
   <div class="layout">
@@ -92,170 +106,248 @@ pre{margin:0;padding:12px 14px;border-radius:10px;background:#0f1714;color:#cfe7
     </div>
   </div>
 </main>
-
 <script>
 const FLOWS = {
 build: {
   title: "生成 cards（build time）",
-  intro: "处理单位是<b>一个 slice = 一批 Confluence 页一起进</b>。逐页 capture/chunk/map → 全局 discover → 人工冻结 → 全局 reduce 跨页合并出卡。一张卡天生融合多页。",
-  callout: {cls:"gold", html:"⚠ 现在只跑一页 = config 把范围设成 MDC 种子页，<b>不是流程限制</b>。扩页 = 把更多页放进 slice 再跑，已有 topic 自动并卡。"},
-  exTitle: "📌 贯穿例子：新页 B『MDC Onboarding Guide』里的 topic『Portal Access Setup』，人工审后合并进已有 card A『MDC Management Portal』(C-0002)。",
+  intro: "处理单位是<b>一个 slice = 一批 Confluence 页一起进</b>（不是一页一页）。逐页 capture/chunk/map → 全局 discover 发现主题 → 你人工冻结词表 → 全局 reduce 跨页合并出卡。一张卡天生融合多页。",
+  callout: {cls:"gold", html:"⚠ 现在只跑一页 = config 把范围设成了 MDC 种子页，<b>不是流程限制</b>。扩页 = 把更多页放进 slice 再跑一遍，已有主题会自动并卡。"},
+  exTitle: "📌 贯穿例子：新页 B『MDC Onboarding Guide』里有个主题『Portal Access Setup』，人工审后决定合并进已有的 card A『MDC Management Portal』(C-0002)。下面每步都跟着这个例子走。",
   steps: [
-    {n:"①",cls:"",tag:["page","逐页"],title:"capture 抓原文",
-     what:"用 MCP 抓每页原始内容，逐字落盘，不加工。",
-     meaning:"系统的“标准输入”=原文真相来源；后面一切都能顺 anchor 回到这里取证。",
-     prod:"outputs/capture/{page_id}.json",
-     code:`{ "page_id":"...", "title":"...", "confluence_version":31,
-  "body_md":"## ...整页 markdown...", "source_url":"...", "owner":"..." }`,
-     problem:null,
-     ex:{scenario:"新页 B = MDC Onboarding Guide（pageId 4400100，v5，比 A 新）被抓下来。",
-         code:`capture/4400100.json
+  {n:"①",cls:"",tag:["page","逐页"],title:"capture 抓原文",
+   doIt:"用 Confluence 的 MCP 接口，按页面编号(pageId)把<b>整页原始内容</b>抓下来，转成 markdown 逐字存成一个 JSON 文件。<b>不切、不总结、不加工</b>。",
+   why:"这是整条流水线的“原料仓库”和<b>唯一真相来源</b>。后面每一步抽出来的东西，都要能顺着锚点(anchor)回到这份原文去核对、去引用。这步要是抓错或抓漏，后面全错。",
+   analogy:"就像先把整本书原样复印存档，之后所有摘录都要能翻回到这页这行。",
+   prod:"outputs/capture/{page_id}.json",
+   fields:[
+    {f:"page_id",t:"string",m:"Confluence 页的唯一编号（就是网址里那串数字）。",ex:'"3725660167"'},
+    {f:"title",t:"string",m:"页面标题。",ex:'"MDC Project Check List"'},
+    {f:"body_md",t:"string (markdown)",m:"整页正文转成的 markdown 原文，含表格、列表、链接。后面 chunk 就是切它。",ex:'"## General Information ..."'},
+    {f:"source_url",t:"string (url)",m:"这页的网址，答案引用时回链用。",ex:'"https://wpb-confluence.../3725660167"'},
+    {f:"confluence_version",t:"number (整数)",m:"页面版本号，每改一次 +1。多页冲突时用它判新旧。",ex:"31"},
+    {f:"update_at",t:"string (日期)",m:"最后修改时间。冲突“取新”也看它。",ex:'"2026-05-20"'},
+    {f:"owner / labels",t:"string / array",m:"页面负责人 / 标签。",ex:'"...", ["mdc","channel"]'}
+   ],
+   problem:null,
+   ex:{scenario:"新页 B = MDC Onboarding Guide（pageId 4400100，版本 v5，比 A 那页新）。capture 把它整页原样抓下来落盘。",
+       code:`capture/4400100.json
 { "page_id":"4400100", "title":"MDC Onboarding Guide", "confluence_version":5,
-  "body_md":"## Portal Access Setup\\nUAT: https://sapp-cmg-v2.hk.hsbc:8004/login\\nMFA: required since 2026-06 ..." }`,
-         take:"原文照搬，还没切、还没归到任何 topic。"}},
-    {n:"②",cls:"flag",tag:["page","逐页"],title:"chunk 结构感知切分",
-     what:"把页按结构切 section：矩阵→单元格、表→行、Q&A→问、流程→步；每段带 metadata。",
-     meaning:"切得对不对决定一切——单元格级切分，精确事实才能成为<b>独立可检索单元</b>。",
-     prod:"outputs/refs/refs_{page_id}.json",
-     code:`{ "section_id":"...#whatsApp > Delivery Mode",
-  "metadata":{"channel":"whatsApp","attribute":"Delivery Mode"},
-  "body_md":"real-time mode only, now only support WPB" }`,
-     problem:"opencode 现状把整页切成 3 大块（part 1/2/3）→ 矩阵/表全压成散文。<b>头号 bug</b>，对应 G0 / handoff12。重跑从这步起。",
-     ex:{scenario:"page B 的『Portal Access Setup』块被切成几个 section。",
-         code:`B1  narrative   "如何申请并登录管理门户"
-B2  inline值    attr=UAT login → "https://sapp-cmg-v2.hk.hsbc:8004/login"
-B3  inline值    "MFA required since 2026-06, via HSBC Authenticator"`,
-         take:"URL/MFA 各成独立单元；能不能合并、能不能精确答，全靠这步切对。"}},
-    {n:"③",cls:"flag",tag:["page","逐段"],title:"map 结构化抽取",
-     what:"每个 section 调 LLM 抽：concepts / tier / fact_value / summary / questions / confidence。",
-     meaning:"<b>tier</b> 决定能不能直接答（narrative 可转述 / inline-value 原值 / pointer-only 下钻）；<b>questions</b> 是无 embedding 时的检索钩子。",
-     prod:"outputs/map/map_{page_id}.json",
-     code:`{ "tier":"inline-value", "fact_value":"real-time mode only ...",
-  "concepts":["whatsApp delivery"], "questions_en":["..."], "confidence":0.9 }`,
-     problem:"因为上游切成大块，map 把确切值（UAT URL 等）抽成了 narrative，inline-value 计数=0。对应 G1。",
-     ex:{scenario:"对 B2/B3 抽取，确切值标 inline-value 逐字留。",
-         code:`B2 → {tier:"inline-value", fact_value:"https://sapp-cmg-v2.hk.hsbc:8004/login"}
-B3 → {tier:"inline-value", fact_value:"MFA required since 2026-06 ..."}
-B1 → {tier:"narrative",    summary:"申请并登录 MDC 门户"}`,
-         take:"此时它们还叫『Portal Access Setup』，还没和 A 发生关系。"}},
-    {n:"④",cls:"",tag:["global","全局"],title:"discover 全局发现 topic",
-     what:"所有页关键词汇到一起全局聚类 → 候选 topic；带 D1(nearest_existing)+D2(dup_warning)。只提案，不建卡。",
-     meaning:"跨页发现 topic 在这完成；<b>解耦关键</b>：只产候选，topic 集合交给人冻。",
-     prod:"outputs/proposed_keywords.json",
-     code:`{ "candidates":[{ "canonical_name":"...", "aliases":[...],
-   "nearest_existing":{"canonical_id":"...","similarity":0.82},
-   "dup_warning":[{"canonical_id":"...","score":0.41}], "status":"proposed" }] }`,
-     problem:"之前揉在 reduce“边发现边建卡”→ 粒度漂移。现已解耦到这步。",
-     ex:{scenario:"全局聚类把 B 的 section 归成候选『Portal Access Setup』，并自动报『疑似=已有 C-0002』。",
-         code:`{ "canonical_name":"Portal Access Setup",
-  "nearest_existing":{"canonical_id":"C-0002","name":"MDC Management Portal","similarity":0.79},
-  "dup_warning":[{"canonical_id":"C-0002","score":0.44}], "status":"proposed" }`,
-         take:"D1/D2 把『其实是老 A』这个疑点摆到你面前——但不替你决定。"}},
-    {n:"⑤",cls:"human",tag:["human","人工"],title:"人工闸：审 + 冻结",
-     what:"你用 approve.html 载入候选 + 现有词表 → 处理 ⚠ 疑似（D3 合并到已有 / D4 别名回填）→ 真新的才批准 → 导出。",
-     meaning:"<b>topic 集合在此被人冻死 → 粒度稳定。</b> 无 embedding 时 aliases/boundary 就是你 query 找卡的索引。",
-     prod:"keyword_table.jsonl（approved）",
-     code:`{"canonical_id":"C-0002","canonical_name":"MDC Management Portal",
- "aliases":["Portal access", ...], "boundary":"...", "subsections":[...],
- "status":"approved"}`,
-     problem:"上次被跳过：opencode 自己冻了词表，topic 没人 review。这次必须你真审（G3）。",
-     ex:{scenario:"你在 approve.html 看到 ⚠『Portal Access Setup ~ C-0002』，点『合并到 C-0002』。",
-         code:`// 词表里还是一行，没有 C-B；只是 A 多了别名（D4 回填）
+  "body_md":"## Portal Access Setup\\nUAT: https://sapp-cmg-v2.hk.hsbc:8004/login\\nMFA: required since 2026-06 ...",
+  "source_url":"https://wpb-confluence.../4400100", "update_at":"2026-06-08" }`,
+       take:"现在 B 只是“原文落了盘”，还没切、还没和任何已有主题发生关系。"}},
+
+  {n:"②",cls:"flag",tag:["page","逐页"],title:"chunk 结构感知切分",
+   doIt:"把整页正文按<b>结构</b>切成一个个小块(section)。规则：Channel×属性的大矩阵 → 拆到<b>每个单元格</b>一块；普通记录表 → 每行一块；Q&A → 每个问题一块；流程 → 每个步骤一块；普通段落 → 按 H2/H3 标题切。每个小块还贴上 metadata（它来自矩阵的哪个 channel、哪个属性，或表的哪行、哪个问题）。",
+   why:"<b>切多细，决定后面能多精确。</b> 如果整页只切成 3 大坨，“whatsApp 的 SLO”这种格子级事实就被埋在一大段里，既抽不出来、也答不准。切到单元格级，每个事实才能成为一个能被<b>单独找到、单独引用</b>的最小单元。",
+   analogy:"像把一整版报纸按“豆腐块”剪开归档，而不是整版塞进一个信封。",
+   prod:"outputs/refs/refs_{page_id}.json（一组 section）",
+   fields:[
+    {f:"section_id",t:"string",m:"这一块的唯一 id ＝ 页id#标题路径。",ex:'"3725660167#...whatsApp > Delivery Mode"'},
+    {f:"heading_path",t:"array<string>",m:"这块在页里的标题层级路径（面包屑），告诉你它在结构里的位置。",ex:'["MDC Check List","Channel Matrix","whatsApp","Delivery Mode"]'},
+    {f:"metadata",t:"object",m:"结构标签：它来自矩阵的哪个 channel/attribute，或表的哪行(row_key)、哪个问题(question)、哪步(step)。后面 reduce 靠它把内容填进对的子条目。",ex:'{"channel":"whatsApp","attribute":"Delivery Mode"}'},
+    {f:"body_md",t:"string",m:"这一块的原文内容（就那个格子 / 那一小段）。",ex:'"real-time mode only, now only support WPB"'},
+    {f:"has_table",t:"boolean",enums:["true","false"],m:"这块里还含不含表格。",ex:"false"},
+    {f:"has_image",t:"boolean",enums:["true","false"],m:"这块里含不含图片。",ex:"false"}
+   ],
+   problem:"opencode 现状把整页按大小硬切成 3 大块（part 1/2/3），矩阵和子表全被压成散文坨。<b>这是头号 bug</b>，对应验收闸 G0 / handoff12。重跑必须从这一步开始。",
+   ex:{scenario:"page B 的『Portal Access Setup』这一块，被按结构切成 3 个小 section：一段说明、一条 UAT 登录 URL、一条 MFA 要求。",
+       code:`B1  body="如何申请并登录 MDC 管理门户"           metadata={block:"qa"}
+B2  body="https://sapp-cmg-v2.hk.hsbc:8004/login"  metadata={row_key:"UAT login"}
+B3  body="MFA required since 2026-06, via HSBC Authenticator"`,
+       take:"URL 和 MFA 各自成了独立的小块；能不能合并、能不能精确答，全靠这一步切对。"}},
+
+  {n:"③",cls:"flag",tag:["page","逐段"],title:"map 结构化抽取",
+   doIt:"对<b>每一个小块</b>调一次 LLM，把它读懂、抽成一条结构化记录：讲的是哪些概念、含哪些原始关键词、属于什么信息类型(info_type)、是哪一档可信度(tier)；如果是精确值就<b>逐字</b>抄进 fact_value，如果只是指路就写 pointer_to；再写中英文摘要和“这块能回答哪些问题”。",
+   why:"这步给每块贴上两个关键标签：<b>tier</b>（这条信息能不能张口直接答）——这是整套设计的心脏；以及 <b>questions</b>（这块能回答什么）——在没有 embedding 的方案里，它是 query 时找到这张卡的主要钩子。",
+   prod:"outputs/map/map_{page_id}.json",
+   fields:[
+    {f:"concepts",t:"array<string>",m:"这块主要在讲的主题词。",ex:'["whatsApp delivery"]'},
+    {f:"keywords_raw",t:"array<string>",m:"原文里出现的关键词，<b>逐字保留</b>（不做规范化、不合并同义）。",ex:'["whatsApp","real-time","WPB"]'},
+    {f:"info_type",t:"enum",enums:["what-is","how-to","config","troubleshoot","reference","decision","meeting-notes"],m:"这块属于哪类信息。",ex:'"config"'},
+    {f:"tier",t:"enum",enums:["narrative","inline-value","pointer-only"],m:"能不能直接答的三档：narrative=叙述可转述总结；inline-value=精确值逐字搬、可信；pointer-only=卡里不放值、只给指针，需下钻取。",ex:'"inline-value"'},
+    {f:"fact_value",t:"string | null",m:"tier=inline-value 时，从原文逐字抄来的精确值；否则为 null。",ex:'"real-time mode only, now only support WPB"'},
+    {f:"pointer_to",t:"string | null",m:"tier=pointer-only 时，指明“去哪看”；否则为 null。",ex:'"见 Journey Plugin 页 > Integration"'},
+    {f:"summary_en / summary_zh",t:"string",m:"中英文摘要。",ex:'"whatsApp delivery is real-time, WPB only"'},
+    {f:"questions_en / questions_zh",t:"array<string>",m:"这块能完整回答的问题（3–7 条）。无 embedding 时用来匹配用户问题。",ex:'["What is whatsApp delivery mode?"]'},
+    {f:"confidence",t:"number",range:"0.0 – 1.0",m:"抽取置信度，越低越要人复核（默认 <0.6 进复核队列）。",ex:"0.9"}
+   ],
+   problem:"因为上游切成了大块，map 把确切值（UAT/PROD 登录 URL 等）全抽成了 narrative 总结，inline-value 计数 = 0。对应闸 G1。",
+   ex:{scenario:"对 B2/B3 抽取时，确切值被正确标成 inline-value 并逐字留下；B1 这种说明则是 narrative。",
+       code:`B2 → {tier:"inline-value", fact_value:"https://sapp-cmg-v2.hk.hsbc:8004/login", info_type:"reference"}
+B3 → {tier:"inline-value", fact_value:"MFA required since 2026-06, via HSBC Authenticator"}
+B1 → {tier:"narrative",    summary_zh:"如何申请并登录 MDC 门户"}`,
+       take:"此时它们还都挂在“Portal Access Setup”名下，还没和 card A 发生关系。"}},
+
+  {n:"④",cls:"",tag:["global","全局"],title:"discover 全局发现主题",
+   doIt:"把<b>所有页所有小块</b>的关键词/概念汇集起来做一次<b>全局聚类</b>，得出一批“候选主题(topic)”。每个候选给规范名、别名、证据词、建议子条目；同时和“现有已批准词表”比对，对每个候选报出“它最像已有的哪个主题”：D1=LLM 语义相似、D2=确定性字符串相似。<b>只产候选清单，绝不直接建卡。</b>",
+   why:"这是“发现知识库该有哪些主题”的一步。把它<b>单独拎出来</b>（而不是边发现边建卡），是为了在“发现”和“建卡”之间插一道人工闸——主题由人定，粒度才稳。D1/D2 是为了防止“同一个东西被起了不同名字 → 变成两张卡”的碎片化。",
+   prod:"outputs/proposed_keywords.json",
+   fields:[
+    {f:"canonical_id",t:"string (C-PROP-*)",m:"候选的<b>临时</b> id，前缀 C-PROP-。人工批准后才换成正式 C-####。临时 id 绝不进最终卡。",ex:'"C-PROP-0002"'},
+    {f:"canonical_name",t:"string",m:"建议的规范名（最清楚的全称）。",ex:'"Portal Access Setup"'},
+    {f:"aliases",t:"array<string>",m:"同义词 / 别名 / 缩写。",ex:'["portal login"]'},
+    {f:"evidence_keywords",t:"array<string>",m:"支持它成为一个主题的证据词。",ex:'["portal","access right","UAT"]'},
+    {f:"suggested_subsections",t:"array<string>",m:"建议的二级子条目名（仅建议，人工可改）。",ex:'["UAT Access Right","PROD Access Right"]'},
+    {f:"nearest_existing",t:"object",m:"D1：LLM 觉得最像的已有主题 + 语义相似度(0–1，软值、不可复现，仅供参考)。",ex:'{"canonical_id":"C-0002","name":"MDC Management Portal","similarity":0.79}'},
+    {f:"dup_warning",t:"array<object>",m:"D2：确定性字符串相似度(0–1，可复现，max(token_jaccard, char_trigram_dice))报出的疑似重复。",ex:'[{"canonical_id":"C-0002","score":0.44}]'},
+    {f:"status",t:"enum",enums:["proposed","needs_review"],m:"proposed=正常待审；needs_review=连模型都拿不准、点名让人看。",ex:'"proposed"'}
+   ],
+   problem:"之前 opencode 把“发现”揉进 reduce“边发现边建卡”，导致主题粒度漂移。现在已解耦到这一步：只提案、不建卡。",
+   ex:{scenario:"全局聚类把 B 的几个小块归成一个候选主题『Portal Access Setup』，并自动报出“疑似 = 已有的 C-0002 (MDC Management Portal)”。",
+       code:`{ "canonical_name":"Portal Access Setup",
+  "nearest_existing":{"canonical_id":"C-0002","name":"MDC Management Portal","similarity":0.79},  // D1
+  "dup_warning":[{"canonical_id":"C-0002","score":0.44}],                                        // D2
+  "status":"proposed" }`,
+       take:"系统把“这其实可能就是老 C-0002”这个疑点摆到你面前——但它不替你决定，等你来拍板。"}},
+
+  {n:"⑤",cls:"human",tag:["human","人工"],title:"人工闸：审 + 冻结词表",
+   doIt:"你（人）用 approve.html 打开候选清单 + 现有已冻结词表，逐条决定：<b>保留为新主题 / 合并到某个已有主题</b>（它的名字会变成对方的别名）<b>/ 降级为某主题的子条目 / 丢弃</b>。顺手补全 boundary、module、subsection，最后导出一张“已批准词表”。",
+   why:"这是整条流水线<b>唯一需要人判断</b>的地方，也是“主题粒度稳不稳”的总闸。机器负责发现（覆盖广），人负责拍板（结构稳），两者各管一段。无 embedding 时，你在这里定的 <b>aliases / boundary</b> 直接就是 query 时找卡的索引，质量是命根。",
+   prod:"keyword_table.jsonl（approved，→ paths.keyword_table）",
+   fields:[
+    {f:"canonical_id",t:"string (C-####)",m:"正式稳定 id，一旦定下<b>永不复用、永不改</b>（换名字也认得出是同一个）。",ex:'"C-0002"'},
+    {f:"canonical_name",t:"string",m:"对外统一的规范名。卡片合并、倒排表都以它为键。",ex:'"MDC Management Portal"'},
+    {f:"aliases",t:"array<string>",m:"所有别名/同义/缩写。<b>合并、别名回填都往这里加</b>——它越全，召回越稳。",ex:'["Portal access","Portal Access Setup","portal login"]'},
+    {f:"module",t:"array<enum>",enums:["Integration & API standard","Delivery & tracking standard","Channel standard","MDC development guideline","Operations & release standard","Template & content standard","(本项目可自定义，如 02 - Engagement / MDC Onboarding)"],m:"域标签，可多个。用于导航和检索预过滤。只打标签，绝不用来删页。",ex:'["02 - Engagement","MDC Onboarding"]'},
+    {f:"topic_type",t:"enum",enums:["component","process","service","initiative","planning","inventory"],m:"分类提示（这是组件？流程？服务？计划？…），只做提示、不参与分组。",ex:'"component"'},
+    {f:"topic_class",t:"enum",enums:["workflow","system_component","catalog"],m:"决定卡片<b>派生哪些字段</b>：workflow→trigger/steps/outputs；system_component→purpose/capabilities/dependencies；catalog→categories/sla/cost。",ex:'"system_component"'},
+    {f:"boundary",t:"string",m:"范围边界：这个主题管到哪、不管哪。喂给 reduce 判断某段算不算它，专治一词多义误归。",ex:'"MDC 门户的访问入口、环境链接与 access-right 申请；不含完整接入流程。"'},
+    {f:"subsections",t:"array<string>",m:"二级子条目名单（层级由人定）。reduce 按这个名单把内容填进去。",ex:'["Portal links","UAT Access Right","PROD Access Right","permNetID"]'},
+    {f:"status",t:"enum",enums:["proposed","approved"],m:"只有 approved 才进正式建卡流程。",ex:'"approved"'}
+   ],
+   problem:"上次这步被跳过：opencode 自己冻了张词表跑通，主题是 AI 选的、scope 没人 review。这次必须你真审（闸 G3）。",
+   ex:{scenario:"你在 approve.html 里看到 ⚠『Portal Access Setup ~ C-0002 (相似 0.79)』，判断确实是同一个东西，点『合并到 C-0002』。",
+       code:`// 词表里仍然只有一行 C-0002，没有新建 C-B；
+// 只是 B 的名字+别名被“回填”进了 C-0002 的 aliases（这就是 D4）
 {"canonical_id":"C-0002","canonical_name":"MDC Management Portal",
- "aliases":[..., "Portal Access Setup", "portal login"], ...}`,
-         take:"『合并』的本质 = 让 topic B 变成 A 的别名。从此 B 的 section 会被认成 A。"}},
-    {n:"⑥",cls:"flag",tag:["global","全局"],title:"reduce 跨页合并建卡",
-     what:"所有页 section 按 canonical_id 分组 → 一 canonical 一卡；字段按 tier 填、subsection 按 metadata 填、冲突取新+标注；只匹配不造词。",
-     meaning:"最终知识卡，<b>一张卡融多页</b>。每条字段带 tier+sources → 可直接答或下钻取证。",
-     prod:"outputs/cards/*.json + inverted_index.jsonl + review_queue.jsonl",
-     code:`{ "canonical_id":"C-0002", "subsections":[{"name":"UAT Access Right",
-   "fields":[{"tier":"inline-value","value":"https://...","sources":[...]}]}],
-  "fields":[{"field":"definition","tier":"narrative",...}], "flags":[] }`,
-     problem:"opencode 现状：subsection 是占位 stub、definition 是整页元描述+拼接病句。对应 G4 / handoff12 §3-C。",
-     ex:{scenario:"重跑 reduce（吃 A+B 的 map）。B 的 section 命中 C-0002 别名 → 和 A 一起建成同一张卡。",
-         code:`// card A (C-0002) 被重新建出：
-UAT URL : 取新(B) + conflict! 列两值(A:v31 / B:v5) + 进 review_queue
-MFA     : 新增(来自 B)
-sources : page 3725660167 + 4400100    // 跨页
-// 仍是 1 张卡，无 card B`,
-         take:"合并 ≠ 往 A 追加；是用 A+B 的 section 把 card A 整个重建一遍，冲突取新+标注。"}},
-    {n:"⑦",cls:"opt",tag:["opt","可选"],title:"load 入向量库（可选）",
-     what:"把每张卡 embedding 写入向量库，供向量检索。",
-     meaning:"<b>build 到 ⑥ 已产出完整 cards，全程不需要 embedding。</b> 这步只为向量检索而加。",
-     prod:"向量库（chroma / pgvector …）",
-     code:`// 你们 LLM-wiki 无 embedding 方案 → 跳过
-// cards/*.json + cards_index.json 本身就是成品`,
-     problem:null,
-     ex:{scenario:"无 embedding 方案：跳过。",
-         code:`// 不做向量检索 → 不需要这步
-// cards/C-0002.json 直接就是成品`,
-         take:"build 到 ⑥ 就完事了。"}}
+ "aliases":[..., "Portal Access Setup", "portal login"], "status":"approved"}`,
+       take:"“合并”的本质 = 让主题 B 变成主题 A 的一个别名。从此 reduce 会把 B 的小块认成 A。"}},
+
+  {n:"⑥",cls:"flag",tag:["global","全局"],title:"reduce 跨页合并建卡",
+   doIt:"把<b>所有页</b>的小块，按它们匹配到的 canonical_id 分组（<b>只匹配冻结词表里已有的，不造新词</b>）；每组用卡片模板拼成一张卡：叙述类字段可合并总结、精确字段逐字搬并带锚点、同一字段多页不一致就<b>取新值并把分歧摆出来</b>、子条目按 metadata 把内容填进去。",
+   why:"这是“把散在多页的零碎事实，按主题汇总成一张可用知识卡”的一步。<b>一张卡天生融合多页</b>；冲突显式标注，是技术文档最容易出错处（同一参数多版本）的兜底。",
+   prod:"outputs/cards/*.json + inverted_index.jsonl + review_queue.jsonl",
+   fields:[
+    {f:"canonical_id / canonical_name / aliases / module / boundary / topic_class",t:"（透传自词表）",m:"卡片的身份与分类，原样来自 ⑤ 的冻结词表。",ex:'"C-0002" / "MDC Management Portal" / ...'},
+    {f:"questions_agg_en / questions_agg_zh",t:"array<string>",m:"这张卡聚合的可回答问题。无 embedding 时，query 用它来匹配用户问题。",ex:'["How to access MDC portal UAT?"]'},
+    {f:"subsections",t:"array<object>",m:"二级子条目，每个含 name / summary / fields / sources，内容按 metadata 路由填进来。",ex:'[{"name":"UAT Access Right","fields":[...],"sources":[...]}]'},
+    {f:"fields",t:"array<object>",m:"卡的正文知识条目，每条含 field（类别名）/ tier / value / sources。",ex:'[{"field":"definition","tier":"narrative","value":"...","sources":[...]}]'},
+    {f:"fields[].tier",t:"enum",enums:["narrative","inline-value","pointer-only"],m:"同 map 的三档，决定答题时直接答还是下钻。",ex:'"inline-value"'},
+    {f:"fields[].conflict",t:"boolean",enums:["true","false"],m:"这条精确值是否多页/多版本不一致。",ex:"true"},
+    {f:"fields[].authoritative",t:"boolean",enums:["true","false"],m:"冲突时，这条是不是“取新”胜出的那个值。",ex:"true"},
+    {f:"fields[].conflict_detail",t:"array<object>",m:"冲突时把各来源各值全摆出来（value/page_id/version/update_at），不偷偷选。",ex:'[{"value":"...v2","page_id":"4400100"},{"value":"...","page_id":"3725660167"}]'},
+    {f:"fields[].sources",t:"array<object>",m:"原文出处：page_id / anchor / source_url / confluence_version。每条 claim 都要能回原文。",ex:'[{"page_id":"4400100","anchor":"...","confluence_version":5}]'},
+    {f:"flags",t:"array<string>",m:"给人看的提示（有冲突 / 缩写待确认 等）。",ex:'["config field has version/update conflict"]'}
+   ],
+   problem:"opencode 现状：subsection 是占位 stub（summary=“Captured subsection evidence for X.”、无 inline-value），definition 是整页元描述 + 拼接病句。对应闸 G4 / handoff12 §3-C。",
+   ex:{scenario:"重跑 reduce（吃 A+B 两页的 map）。因为 B 现在是 C-0002 的别名，B 的小块命中 C-0002 → 和 A 的小块一起，建成同一张 card A。",
+       code:`// card A (C-0002) 被用 A+B 的小块重新建出来：
+UAT URL : 取新(B 的 v2) + conflict! 列两值(A:v31 旧 / B:v5 新) + 进 review_queue
+MFA     : A 没有、B 有 → 直接新增
+sources : 同时含 page 3725660167 和 4400100   ← 一张卡融两页
+// 全程仍是 1 张卡 C-0002，没有 card B`,
+       take:"“合并”不是往 A 文件里追加，而是用 A+B 的小块把 card A 整个重建一遍；精确值冲突一律取新+摆出分歧+进队列，不偷偷选。"}},
+
+  {n:"⑦",cls:"opt",tag:["opt","可选"],title:"load 入向量库（可选）",
+   doIt:"把每张卡向量化(embedding)，写入向量库，供 query 时按“向量相似度”检索。",
+   why:"<b>只有“用向量检索找卡”才需要这步。</b> build 流程到 ⑥ 就已经产出完整 cards，全程不依赖 embedding。你们的 LLM-wiki 无 embedding 方案 → 这步直接跳过，cards 文件本身就是成品。",
+   prod:"向量库（chroma / pgvector …）",
+   fields:[
+    {f:"embedding",t:"array<number>",m:"卡片文本的向量表示。维度取决于模型（如 BGE-m3 = 1024 维）。",ex:"[0.013, -0.27, ...]"},
+    {f:"metadata",t:"object",m:"随向量存的过滤字段（canonical_id / module 等），供检索时预过滤。",ex:'{"canonical_id":"C-0002","module":["..."]}'}
+   ],
+   problem:null,
+   ex:{scenario:"无 embedding 方案：这步直接跳过。",
+       code:`// 你们不做向量检索 → 不需要 load
+// outputs/cards/C-0002.json 直接就是可用成品`,
+       take:"build 到 ⑥ 就完事了。"}}
   ]
 },
 query: {
   title: "用 cards 做问答（query time）",
   intro: "用户问题 → 找到相关卡 → 按字段 tier 取答（直答 / 下钻）→ 带原文引用组装答案。",
-  callout: {cls:"blue", html:"⚑ <b>你们大概率没有 embedding</b>：找卡靠 <b>LLM/关键词在 card 目录里选卡</b>（canonical_name+aliases+boundary+questions_agg），不是向量检索。所以别名/边界质量是命根。"},
-  exTitle: "📌 贯穿例子：用户问『怎么登录 MDC 管理门户的 UAT 环境？』——看它怎么命中合并后的 C-0002 并答出 UAT URL。",
+  callout: {cls:"blue", html:"⚑ <b>你们大概率没有 embedding</b>：找卡不靠向量检索，而靠 <b>LLM/关键词在 card 目录里选卡</b>（canonical_name + aliases + boundary + questions_agg）。所以 ⑤ 里别名/边界的质量，直接决定这里找不找得到卡。"},
+  exTitle: "📌 贯穿例子：用户问『怎么登录 MDC 管理门户的 UAT 环境？』——看它怎么命中合并后的 C-0002 并答出 UAT 登录 URL。",
   steps: [
-    {n:"①",cls:"",tag:["page","输入"],title:"用户问题",
-     what:"一个自然语言问题，可能带 module 提示。",
-     meaning:"问答起点。",
-     prod:"query 字符串",
-     code:`"<用户的问题>"`,
-     problem:null,
-     ex:{scenario:"用户提问。", code:`"怎么登录 MDC 管理门户的 UAT 环境？"`, take:"起点。"}},
-    {n:"②",cls:"global",tag:["global","选卡"],title:"找到相关卡",
-     what:"A) 无 embedding：把 card 目录给 LLM 选卡，或关键词/别名匹配。\\nB) 有 embedding：向量检索 top-k。",
-     meaning:"无 embedding 时 <b>aliases/boundary/questions 决定能不能找到对的卡</b>；找不到多半是别名缺 → 回 build⑤ 补。",
-     prod:"命中的 card(s) / subsection / field",
-     code:`// 无 embedding：扫这张目录（小，几十~几百条）
-[{"canonical_id":"C-0002","name":"...","aliases":[...],"questions_agg_en":[...]}]`,
-     problem:null,
-     ex:{scenario:"LLM 扫目录：C-0002 的别名含『Portal Access Setup/portal login』，问题里有『portal/UAT』。",
-         code:`// 命中 C-0002（MDC Management Portal）`,
-         take:"正因为 ⑤ 把 B 的叫法回填进 A 的别名，用户用 B 的词也能找到 A。"}},
-    {n:"③",cls:"",tag:["page","取答"],title:"按 tier 取答",
-     what:"narrative→直接转述；inline-value→直接答且自带出处；pointer-only→顺 anchor 下钻回原文取确切值。",
-     meaning:"<b>cards 的价值</b>：精确值不靠 LLM 现编，要么逐字搬、要么下钻取。",
-     prod:"答案片段 + 出处",
-     code:`命中字段.tier → 决定 直答 / 下钻`,
-     problem:null,
-     ex:{scenario:"命中 C-0002 → 子条目『UAT Access Right』。",
-         code:`{"name":"UAT Access Right","tier":"inline-value",
- "value":"https://sapp-cmg-v2.hk.hsbc:8004/login","conflict":true}`,
-         take:"inline-value 直接给确切 URL；conflict 标记提示『还有旧值』。"}},
-    {n:"④",cls:"",tag:["page","组装"],title:"组装答案 + 引用",
-     what:"把取到的字段拼成回答，附 anchor/source_url 引用，可回原文核对。",
-     meaning:"答案<b>可追溯</b>，满足“引出原文”，Business 能核。",
-     prod:"最终回答（带引用）",
-     code:`A：... 。来源：<page> (<anchor>, v<version>)`,
-     problem:null,
-     ex:{scenario:"拼答案 + 引用 + 冲突提示。",
-         code:`A：UAT 登录 https://sapp-cmg-v2.hk.hsbc:8004/login
+  {n:"①",cls:"",tag:["page","输入"],title:"用户问题",
+   doIt:"用户用自然语言提一个问题，可能附带一个模块(module)提示来缩小范围。",
+   why:"问答的起点。问题的措辞会影响下一步“选卡”能不能命中——这也是为什么 card 的别名要尽量全。",
+   prod:"query 字符串（+ 可选 module 过滤）",
+   fields:[
+    {f:"query",t:"string",m:"用户的自然语言问题。",ex:'"怎么登录 MDC 管理门户的 UAT 环境？"'},
+    {f:"module (可选)",t:"enum",enums:["（同 ⑤ 的 module 取值）","留空 = 全部"],m:"可选的模块过滤，先把范围缩到某个域。",ex:'"MDC Onboarding"'}
+   ],
+   problem:null,
+   ex:{scenario:"用户在问答框输入问题，没指定 module。",code:`"怎么登录 MDC 管理门户的 UAT 环境？"`,
+       take:"起点。系统接下来要在所有卡里找出“讲这事”的那张。"}},
+
+  {n:"②",cls:"global",tag:["global","选卡"],title:"找到相关卡（retrieval）",
+   doIt:"两种模式：<b>A) 无 embedding（你们的方案）</b>——把 card 目录（每张卡的 canonical_name + aliases + boundary + module + questions_agg）给 LLM，让它挑出相关的卡；或直接用关键词/别名匹配。<b>B) 有 embedding</b>——把问题向量化，在向量库里取最相似的 top-k。",
+   why:"这步决定“能不能找到对的卡”。无 embedding 时，命中全靠 <b>aliases / boundary / questions</b>——找不到，多半是别名缺了，回 build ⑤ 补别名（D4 会让它越用越全）。",
+   prod:"命中的 card(s) / subsection / field",
+   fields:[
+    {f:"card 目录条目",t:"object",m:"无 embedding 时供 LLM 扫的“菜单”：每张卡的身份+别名+边界+可答问题。几十~几百条，全塞进上下文也不大。",ex:'{"canonical_id":"C-0002","name":"MDC Management Portal","aliases":[...],"questions_agg_en":[...]}'},
+    {f:"命中结果",t:"array<canonical_id>",m:"挑中的一张或几张卡。",ex:'["C-0002"]'}
+   ],
+   problem:null,
+   ex:{scenario:"LLM 扫目录：C-0002 的 aliases 含『Portal Access Setup / portal login』，questions 里有“how to access portal UAT”，用户问题里有“portal/UAT” → 命中 C-0002。",
+       code:`// 命中 C-0002（MDC Management Portal）
+// 注意：用户就算用 B 的叫法，也能找到 A——因为 ⑤ 把 B 的名字回填进了 A 的别名`,
+       take:"⑤ 的别名回填(D4)在这里兑现价值：换个说法也能找到同一张卡。"}},
+
+  {n:"③",cls:"",tag:["page","取答"],title:"按 tier 取答",
+   doIt:"看命中字段的 tier：<b>narrative</b> → 直接转述那段总结；<b>inline-value</b> → 直接答那个精确值、且自带出处；<b>pointer-only</b> → 顺着 anchor <b>下钻</b>回原文取确切值再答。",
+   why:"<b>这就是 cards 的核心价值</b>：精确值绝不靠 LLM 现编，要么逐字搬(inline-value)、要么下钻取(pointer-only)，所以精确题不会瞎答。",
+   prod:"答案片段 + 出处（+ 可能的下钻动作）",
+   fields:[
+    {f:"tier",t:"enum",enums:["narrative","inline-value","pointer-only"],m:"决定这条怎么用：转述 / 直答 / 下钻。",ex:'"inline-value"'},
+    {f:"value",t:"string | null",m:"inline-value/narrative 有值；pointer-only 为 null。",ex:'"https://sapp-cmg-v2.hk.hsbc:8004/login"'},
+    {f:"pointer_to",t:"string | null",m:"pointer-only 时指明去哪取。",ex:"null"},
+    {f:"conflict",t:"boolean",enums:["true","false"],m:"若为 true，提示这条还有别的版本值，答时应说明。",ex:"true"},
+    {f:"sources",t:"array<object>",m:"出处锚点，用于引用和回原文核对。",ex:'[{"page_id":"4400100","anchor":"...","confluence_version":5}]'}
+   ],
+   problem:null,
+   ex:{scenario:"命中 C-0002 → 子条目『UAT Access Right』，它是 inline-value。",
+       code:`{"name":"UAT Access Right","tier":"inline-value",
+ "value":"https://sapp-cmg-v2.hk.hsbc:8004/login","conflict":true,
+ "sources":[{"page_id":"4400100","confluence_version":5}]}`,
+       take:"inline-value 直接给出确切 URL；conflict=true 提示“还有个旧值”，答案里会一并说明。"}},
+
+  {n:"④",cls:"",tag:["page","组装"],title:"组装答案 + 引用",
+   doIt:"把取到的字段拼成一段回答，<b>附上 anchor / source_url 引用</b>，让用户能回原文核对；若有冲突，把版本分歧也透明写出来。",
+   why:"答案<b>可追溯</b>——满足“引出原文”的硬目标，Business 能直接核对真伪。这是和“纯 LLM 瞎答”最大的区别。",
+   prod:"最终回答（正文 + 引用 + 冲突提示）",
+   fields:[
+    {f:"answer",t:"string",m:"回答正文。",ex:'"UAT 登录地址是 https://sapp-cmg-v2.hk.hsbc:8004/login"'},
+    {f:"citations",t:"array<object>",m:"引用来源（页、anchor、版本、链接），逐条可点回原文。",ex:'[{"page":"MDC Onboarding Guide","version":5,"url":"..."}]'}
+   ],
+   problem:null,
+   ex:{scenario:"拼出带引用、带冲突提示的回答。",
+       code:`A：UAT 登录 https://sapp-cmg-v2.hk.hsbc:8004/login
    来源：MDC Onboarding Guide (v5)
-   注：旧页(v31)曾为 sapp-cmg，已被新值取代，待确认`,
-         take:"确切、可追溯，还把版本分歧透明告诉用户。"}},
-    {n:"⑤",cls:"opt",tag:["opt","对比"],title:"三种回答族（PoC 对比）",
-     what:"① RAG（喂原始 chunk，需 embedding）② LLM+Wiki（用 approved cards）③ Agentic（路由+下钻）。",
-     meaning:"没 embedding 不影响 ②③；只 RAG 退场。卡片方案在这里是主角。",
-     prod:"eval 对比 / 看板",
-     code:`② LLM+Wiki  ← 主打
-③ Agentic    ← 可叠加
-① RAG        ← 依赖向量检索，退场`,
-     problem:null,
-     ex:{scenario:"无 embedding 下的对比。",
-         code:`② 用 C-0002 卡直接答 ✅
-③ 卡 + 必要时下钻 ✅
-① RAG → 退场`,
-         take:"卡片方案在没 embedding 时正好是主角。"}}
+   注：旧页(v31)曾为 sapp-cmg，已被新值取代，待人工确认`,
+       take:"确切、可追溯，还把“版本变过”这件事透明告诉用户——而不是默默给一个值。"}},
+
+  {n:"⑤",cls:"opt",tag:["opt","对比"],title:"三种回答族（PoC 对比）",
+   doIt:"PoC 要用证据对比三条回答路线：<b>① RAG</b>（把检索到的原始 chunk 喂 LLM 生成）；<b>② LLM + Wiki</b>（用已批准 cards，分“卡片直答”和“卡片+回原文取证”）；<b>③ Agentic</b>（一个路由器决定走哪条，必要时多跳下钻）。",
+   why:"目的是给领导一个有证据的结论：哪条路线最准、最可追溯。<b>没 embedding 时，RAG 那族基本退场</b>（它依赖向量检索），主角变成卡片方案。",
+   prod:"eval 对比报告 / 看板",
+   fields:[
+    {f:"answer_family",t:"enum",enums:["rag","llm-wiki","agentic"],m:"三条回答路线之一。",ex:'"llm-wiki"'},
+    {f:"card_mode (仅 llm-wiki)",t:"enum",enums:["card-direct","card-grounding"],m:"卡片直答 / 卡片+回原文取证。",ex:'"card-grounding"'}
+   ],
+   problem:null,
+   ex:{scenario:"在没有 embedding 的现实下对比三族。",
+       code:`② LLM + Wiki ：用 C-0002 卡直接答 ✅ 主打
+③ Agentic    ：用卡 + 必要时下钻原文 ✅ 可叠加
+① RAG        ：依赖向量检索 → 退场`,
+       take:"卡片方案(②③)在没 embedding 时正好是主角；这也印证了我们 build 的方向是对的。"}}
   ]
 }
 };
 
 let cur = {flow:"build", i:0, view:"explain"};
 const railEl=document.getElementById("rail"), detailEl=document.getElementById("detail"), introEl=document.getElementById("intro");
-
 function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 function renderIntro(){
   const f=FLOWS[cur.flow];
@@ -270,18 +362,31 @@ function renderRail(){
       ${s.problem?`<span class="wf">⚠</span>`:''}
     </button>`).join("");
 }
+function fieldHtml(fl){
+  const isEnum=!!fl.enums, isNum=/number/.test(fl.t);
+  const tyCls=isEnum?"enum":(isNum?"num":"");
+  return `<details class="fd"><summary><code>${esc(fl.f)}</code> <span class="ty ${tyCls}">${esc(fl.t)}</span></summary>
+    <div class="fb">
+      <div><b>含义</b>：${fl.m}</div>
+      ${fl.enums?`<div><b>取值（枚举）</b><div class="enums">${fl.enums.map(e=>`<span>${esc(e)}</span>`).join("")}</div></div>`:''}
+      ${fl.range?`<div><b>取值范围</b>：${esc(fl.range)}</div>`:''}
+      ${fl.ex?`<div><b>例</b>：<code>${esc(fl.ex)}</code></div>`:''}
+    </div></details>`;
+}
 function renderDetail(){
   const f=FLOWS[cur.flow], s=f.steps[cur.i];
   const tagCls={page:"page",global:"global",human:"human",opt:"opt"}[s.tag[0]];
   detailEl.className="detail "+s.cls;
   let body="";
   if(cur.view==="explain"){
-    body=`<div class="sec"><h3>流程 · 做什么</h3><p>${s.what.replace(/\\n/g,"<br>")}</p></div>
-          <div class="sec"><h3>含义</h3><p>${s.meaning}</p></div>
+    body=`<div class="sec"><h3>这步做什么</h3><p>${s.doIt}</p></div>
+          <div class="sec"><h3>为什么重要</h3><p>${s.why}</p></div>
+          ${s.analogy?`<div class="sec"><h3>打个比方</h3><p>${s.analogy}</p></div>`:''}
           ${s.problem?`<div class="warn"><h3>⚠ opencode 现状问题</h3><p>${s.problem}</p></div>`:`<div class="ok">✓ 这步目前没问题</div>`}`;
   }else if(cur.view==="struct"){
-    body=`<div class="sec"><h3>产物</h3><p><span class="prod">${s.prod}</span></p></div>
-          <div class="sec"><h3>产物结构（通用）</h3><pre>${esc(s.code)}</pre></div>`;
+    body=`<div class="prodline">产物文件：<code>${esc(s.prod)}</code></div>
+          <div class="hint">👇 点任意字段展开，看它的含义 / 类型 / 取值枚举或范围 / 例子</div>
+          <div>${s.fields.map(fieldHtml).join("")}</div>`;
   }else{
     body=`<div class="excap">${f.exTitle}</div>
           <div class="sec"><h3>这一步在例子里发生了什么</h3><p>${s.ex.scenario}</p></div>
@@ -292,7 +397,7 @@ function renderDetail(){
     <div class="dh"><span class="num">${s.n}</span><h2>${s.title}</h2><span class="tag ${tagCls}">${s.tag[1]}</span></div>
     <div class="subtabs">
       <button data-view="explain" class="${cur.view==='explain'?'on':''}" type="button">💡 讲解</button>
-      <button data-view="struct"  class="${cur.view==='struct'?'on':''}" type="button">🧩 结构</button>
+      <button data-view="struct"  class="${cur.view==='struct'?'on':''}" type="button">🧩 结构（点开看字段）</button>
       <button data-view="example" class="${cur.view==='example'?'on':''}" type="button">📌 举例</button>
     </div>
     <div class="db">${body}</div>
