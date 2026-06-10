@@ -35,6 +35,8 @@ class MockLLM:
             return {"canonical_ids": canonical_ids_for(payload["section"], canonicals), "needs_review": []}
         if "card_reduce_resolve_aliases" in system:
             return {"aliases": []}
+        if "card_expand_boundary" in system:
+            return {"boundary": mock_expand_boundary(json.loads(user))}
         if "answer_from_context" in system:
             from backend.answer.service import synthesize_answer
 
@@ -61,6 +63,20 @@ class MockLLM:
         if "NO_ANSWER" in user:
             return '{"score": 0.8, "reason": "mock no-answer path"}'
         return '{"score": 1.0, "reason": "mock deterministic path"}'
+
+
+def mock_expand_boundary(payload: Dict) -> str:
+    """Deterministic stand-in for the LLM boundary writer (real LLM does this in-network)."""
+    name = str(payload.get("canonical_name") or "").strip()
+    extras = [str(item).strip() for item in (list(payload.get("aliases") or []) + list(payload.get("subsections") or [])) if str(item).strip()]
+    extras = list(dict.fromkeys(extras))
+    base = str(payload.get("current_boundary") or "").strip()
+    scope = "、".join(extras) if extras else name
+    if base:
+        return base.rstrip("。.") + (f"；并涵盖：{scope}。" if extras else "。")
+    if name:
+        return f"{name} 范围涵盖 {scope}。"
+    return base
 
 
 def parse_json_or_text(text: str):

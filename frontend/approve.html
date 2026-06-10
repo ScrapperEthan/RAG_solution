@@ -185,6 +185,7 @@ function toRow(c, frozen){
     evidence_keywords:arr(c.evidence_keywords),
     module:arr(c.suggested_module||c.module),
     boundary:c.suggested_boundary||c.boundary||"",
+    boundary_stale:!!c.boundary_stale,
     topic_type:c.suggested_topic_type||c.topic_type||"",
     topic_class:c.suggested_topic_class||c.topic_class||"",
     subsections:arr(c.suggested_subsections||c.subsections),
@@ -249,6 +250,7 @@ function foldInto(target, src, mode){
     target.evidence_keywords = uniq([...target.evidence_keywords, ...src.evidence_keywords]);
   }
   target.source_section_ids = uniq([...target.source_section_ids, ...src.source_section_ids]);
+  target.boundary_stale = true;   // 范围变了 → 标记，交给 refine-boundaries 用 AI 重写
 }
 function removeRow(uidToRemove){ state.rows = state.rows.filter(x=>x.uid!==uidToRemove); }
 
@@ -328,7 +330,7 @@ function rowHtml(r){
       <div class="fld"><label>canonical_id${isF?"（锁定）":""}</label>${idInput}</div>
       <div class="fld"><label>aliases（逗号分隔，匹配召回靠它）</label>
         <input type="text" data-field="aliases" data-uid="${r.uid}" value="${escA(r.aliases.join(", "))}" /></div>
-      <div class="fld full"><label>boundary（边界，喂给 reduce 判断归属）</label>
+      <div class="fld full"><label>boundary（边界，喂给 reduce 判断归属）${r.boundary_stale?' · <span style="color:var(--gold);font-weight:800">⚠ 范围已变，reduce 前跑 refine-boundaries 让 AI 重写（或手填）</span>':''}</label>
         <textarea data-field="boundary" data-uid="${r.uid}">${esc(r.boundary)}</textarea></div>
       <div class="fld"><label>topic_type</label><select data-field="topic_type" data-uid="${r.uid}">${typeSel}</select></div>
       <div class="fld"><label>topic_class（决定派生字段）</label><select data-field="topic_class" data-uid="${r.uid}">${classSel}</select></div>
@@ -388,7 +390,11 @@ list.addEventListener("change", e=>{
     render(); return;
   }
   const f=e.target.closest("[data-field]");
-  if(f){ const r=state.rows.find(x=>x.uid===f.dataset.uid); if(r){ if(f.dataset.field==="aliases") r.aliases=arr(f.value); else r[f.dataset.field]=f.value; } }
+  if(f){ const r=state.rows.find(x=>x.uid===f.dataset.uid); if(r){
+    if(f.dataset.field==="aliases") r.aliases=arr(f.value);
+    else r[f.dataset.field]=f.value;
+    if(f.dataset.field==="boundary" && f.value.trim()){ r.boundary_stale=false; render(); }  // 手填了就不用 AI 重写
+  } }
 });
 
 // ---- toolbar ----
@@ -433,11 +439,15 @@ document.getElementById("exportBtn").onclick = ()=>{
   if(dupId.length||dupName.length){ if(!confirm("发现重复："+(dupId.length?("id "+uniq(dupId).join(",")+" "):"")+(dupName.length?("名称 "+uniq(dupName).join(",")):"")+"\n建议先合并。仍导出？")) return; }
   const newReview=state.rows.filter(r=>r.keep&&!r.frozen&&r.review);
   if(newReview.length){ if(!confirm("还有 "+newReview.length+" 条新候选「待审」未处理。仍导出？")) return; }
-  const lines = kept.map(r=>JSON.stringify({
-    canonical_id:r.canonical_id.trim(), canonical_name:r.canonical_name.trim(),
-    aliases:r.aliases, module:r.module, topic_type:r.topic_type||"", topic_class:r.topic_class||"",
-    boundary:r.boundary.trim(), subsections:r.subsections, confidence:r.confidence, status:"approved"
-  }));
+  const lines = kept.map(r=>{
+    const obj = {
+      canonical_id:r.canonical_id.trim(), canonical_name:r.canonical_name.trim(),
+      aliases:r.aliases, module:r.module, topic_type:r.topic_type||"", topic_class:r.topic_class||"",
+      boundary:r.boundary.trim(), subsections:r.subsections, confidence:r.confidence, status:"approved"
+    };
+    if (r.boundary_stale) obj.boundary_stale = true;   // 让 refine-boundaries 知道这条要 AI 重写 boundary
+    return JSON.stringify(obj);
+  });
   const blob=new Blob([lines.join("\n")+"\n"],{type:"application/x-ndjson"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="keyword_table.jsonl";
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);

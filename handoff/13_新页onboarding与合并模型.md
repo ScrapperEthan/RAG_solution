@@ -73,6 +73,12 @@ discover 写 `proposed_keywords.json` 前,跑一道**纯字符串**比对(不调
 
 > **boundary 是裁判**:D1–D3 判"是不是同一个",很大程度看老 topic 的 `boundary` 写得清不清。维护好 boundary,是这套防线的地基。
 
+### D5 — 合并后 boundary 由 AI 自动扩展(已在我们仓库实现)
+合并会让老 topic 范围变宽,而 `boundary` 是 reduce 的"准入闸"——范围变宽、boundary 没跟上,就会把本该归入的新内容**误拒**(掉进 unmatched)。机制:
+- **approve.html**:每次合并/降级,给目标 topic 打 `boundary_stale: true`(**原 boundary 保留不动**),导出时带出;若你手填了 boundary,标记自动清除。
+- **`refine-boundaries` 命令(新增,走 LLM 端口)**:在 freeze 之后、reduce 之前跑;对 `boundary_stale` 或空 boundary 的 topic,**用 AI 按 `canonical_name` + 全部 `aliases` + `subsections` 重写 boundary**(覆盖合并后的并集),跑完清除标记,幂等。
+- 代码在我们仓库:`backend/reducer/boundary.py` + `pipeline.py` 的 `refine-boundaries` 命令 + MockLLM 离线兜底。**boundary 最初就是 AI 写的(discover 的 `suggested_boundary`),合并后也由 AI 续写,口径一致。**
+
 ---
 
 ## 4. 标准操作 loop(每来一页 / 一批)
@@ -84,6 +90,7 @@ discover 写 `proposed_keywords.json` 前,跑一道**纯字符串**比对(不调
      - 先看 ⚠️ 疑似重复 → 能合的「合并到已有 C-xxxx」（D3）→ 别名回填（D4）
      - 真新的 → 批准为新行（新 canonical_id）
      - 导出整张更新后的 keyword_table.jsonl
+3b. refine-boundaries（LLM）：对 boundary_stale / 空 boundary 的 topic 用 AI 重写 boundary（D5）
 4. reduce：老 topic 自动并入老卡（路 A）、新 topic 出新卡（路 B）
 5. 抽查：有没有"两张卡讲同一个东西"——若有，回 D3 合并、补别名/ boundary
 ```
