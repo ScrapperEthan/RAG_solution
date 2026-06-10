@@ -18,7 +18,7 @@ button,select,input,textarea{font:inherit}
 button,select{cursor:pointer}
 a{color:var(--green)}
 .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;min-height:64px;padding:0 28px;
-  border-bottom:1px solid rgba(223,229,224,.85);background:rgba(249,250,248,.92);backdrop-filter:blur(14px)}
+  border-bottom:1px solid rgba(223,229,224,.85);background:rgba(249,250,248,.92);backdrop-filter:blur(14px);flex-wrap:wrap}
 .brand-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;color:#fff;background:var(--green);font-size:11px;font-weight:800;letter-spacing:.06em}
 .brand strong{display:block;font-size:14px}
 .brand small{display:block;margin-top:2px;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}
@@ -28,34 +28,41 @@ a{color:var(--green)}
 .btn.green{border:0;color:#fff;background:var(--green)}
 .btn.green:hover{background:#0f523b}
 .btn.ghost{background:transparent}
-.counts{display:flex;gap:8px;margin-left:6px;font-size:11px;font-weight:700;color:var(--muted)}
+.counts{display:flex;gap:8px;margin-left:6px;font-size:11px;font-weight:700;color:var(--muted);flex-wrap:wrap}
 .counts b{color:var(--green)}
 .counts .drop{color:var(--red)}
 .counts .rev{color:var(--gold)}
+.counts .frz{color:#46514a}
 main{width:min(1180px,calc(100% - 40px));margin:0 auto 60px}
 .hero{padding:30px 4px 14px}
 .eyebrow{color:var(--green);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
 h1{margin:6px 0 0;font-size:28px;letter-spacing:-.03em}
-.hero p{margin:10px 0 0;max-width:760px;color:var(--muted);line-height:1.6}
+.hero p{margin:10px 0 0;max-width:780px;color:var(--muted);line-height:1.6}
 .help{margin:14px 4px 0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:var(--shadow);font-size:12px;line-height:1.7}
 .help b{color:var(--green)}
 .help code{padding:1px 5px;border-radius:5px;background:#eef2ef;font:11px Consolas,monospace}
 .list{display:grid;gap:14px;margin-top:18px}
+.divider{margin:14px 4px 2px;padding:10px 0 4px;border-top:1px dashed #c9d1cc;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.03em}
 .row{border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);overflow:hidden}
 .row.is-drop{opacity:.5}
 .row.is-review{border-color:#e7cf94}
-.row-head{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);background:#f8faf8}
+.row.is-frozen{border-color:#cdd8d1;background:#f6f9f7;box-shadow:none}
+.row-head{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);background:#f8faf8;flex-wrap:wrap}
+.row.is-frozen .row-head{background:#eef3f0}
 .row-head .id{font:700 11px Consolas,monospace;color:var(--muted)}
-.row-head .name{flex:1;min-width:0;font-size:16px;font-weight:800;border:1px solid transparent;background:transparent;border-radius:7px;padding:5px 8px}
+.row-head .name{flex:1;min-width:160px;font-size:16px;font-weight:800;border:1px solid transparent;background:transparent;border-radius:7px;padding:5px 8px}
 .row-head .name:focus{outline:0;border-color:var(--green);background:#fff}
+.row-head .name[readonly]{cursor:default}
 .pill{padding:4px 9px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap}
 .pill.sup{color:var(--green);background:var(--green-soft)}
 .pill.rev{color:var(--gold);background:var(--gold-soft)}
-.row-op{min-height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 8px;font-size:11px;font-weight:700;max-width:230px}
+.lock{padding:5px 10px;border-radius:999px;font-size:10px;font-weight:800;color:#46514a;background:#e3e9e5;white-space:nowrap}
+.row-op{min-height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 8px;font-size:11px;font-weight:700;max-width:260px}
 .row-body{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
 .fld{display:grid;gap:6px}
 .fld>label{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#4f5953}
 .fld input[type=text],.fld textarea,.fld select{width:100%;border:1px solid var(--line);border-radius:8px;background:#fbfcfb;padding:8px 10px;color:var(--ink)}
+.fld input[readonly]{background:#eef2ef;color:#566159}
 .fld textarea{min-height:60px;resize:vertical;line-height:1.5}
 .fld input:focus,.fld textarea:focus,.fld select:focus{outline:0;border-color:var(--green);background:#fff}
 .modchips,.subchips{display:flex;flex-wrap:wrap;gap:6px}
@@ -63,31 +70,36 @@ h1{margin:6px 0 0;font-size:28px;letter-spacing:-.03em}
 .chip.mod{cursor:pointer}
 .chip.mod.on{border-color:var(--green);color:var(--green);background:var(--green-soft);font-weight:700}
 .chip.sub{background:#fff}
-.chip.sub b{font-weight:700}
 .chip .x{cursor:pointer;color:#9aa39d;font-weight:800}
 .chip .x:hover{color:var(--red)}
 .subadd{display:flex;gap:6px;margin-top:6px}
 .subadd input{flex:1;border:1px solid var(--line);border-radius:8px;background:#fbfcfb;padding:6px 9px}
 .subadd button{min-height:32px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:700}
+.warn{grid-column:1/-1;display:grid;gap:6px;padding:9px 12px;border-radius:8px;background:var(--gold-soft);color:#795010;font-size:11px}
+.warn b{color:#6e4b16}
+.mini{margin-left:8px;min-height:26px;padding:0 9px;border:1px solid #d8bd88;border-radius:7px;background:#fff;font-size:10px;font-weight:700;color:#6e4b16;cursor:pointer}
+.mini:hover{background:#fff7e8}
 .meta{grid-column:1/-1;display:grid;gap:6px;padding:10px 12px;border:1px dashed #d7ddd8;border-radius:9px;background:#fbfcfb;color:var(--muted);font-size:11px}
 .meta .kw span{display:inline-block;margin:2px 4px 2px 0;padding:2px 7px;border-radius:999px;background:#eef2ef;color:#5e6c64;font-size:10px}
 .meta .src{font:10px Consolas,monospace;color:#8a938d;word-break:break-all}
 .full{grid-column:1/-1}
 .empty{margin-top:30px;padding:40px;border:1px dashed #d7ddd8;border-radius:14px;background:#fff;text-align:center;color:#8c9690}
 .foot{margin:26px 4px 0;color:var(--muted);font-size:11px;line-height:1.6}
-.review-reason{grid-column:1/-1;padding:8px 12px;border-radius:8px;background:var(--gold-soft);color:#795010;font-size:11px}
 @media(max-width:820px){.row-body{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="topbar">
   <span class="brand-mark">KT</span>
-  <span class="brand"><strong>Keyword Table Approve</strong><small>词表审批 · 冻结 reduce 输入</small></span>
+  <span class="brand"><strong>Keyword Table Approve</strong><small>词表审批 · 冻结 reduce 输入 · 防碎片化</small></span>
   <div class="toolbar">
     <input id="fileInput" type="file" accept=".json,application/json" hidden />
+    <input id="frozenInput" type="file" accept=".jsonl,.json" hidden />
     <button class="btn ghost" id="loadFileBtn" type="button">载入 proposed_keywords.json</button>
+    <button class="btn ghost" id="loadFrozenBtn" type="button">载入现有冻结词表 🔒</button>
     <button class="btn ghost" id="loadSampleBtn" type="button">加载样例</button>
-    <button class="btn" id="renumberBtn" type="button">重新编号 C-0001…</button>
+    <button class="btn ghost" id="clearBtn" type="button">清空</button>
+    <button class="btn" id="renumberBtn" type="button">给新行编号</button>
     <button class="btn green" id="exportBtn" type="button">导出 keyword_table.jsonl ↓</button>
     <span class="counts" id="counts"></span>
   </div>
@@ -95,106 +107,62 @@ h1{margin:6px 0 0;font-size:28px;letter-spacing:-.03em}
 
 <main>
   <div class="hero">
-    <div class="eyebrow">Human-in-the-loop gate</div>
+    <div class="eyebrow">Human-in-the-loop gate · anti-fragmentation</div>
     <h1>候选 topic 审批</h1>
-    <p>这是 discover → 〈这道闸〉 → reduce 中间的人工环节。审完点「导出」得到 <code>keyword_table.jsonl</code>，它就是 reduce 只匹配建卡时唯一的 topic 来源。导出的文件语法由工具保证，不用手写 JSON。</p>
+    <p>discover → 〈这道闸〉 → reduce 的人工环节。新页进来时,先<b>载入现有冻结词表</b>当合并目标,把"其实是老 topic 换了个名"的新候选 <b>合并到已有 🔒</b>(别名回填),真正的新 topic 才批准。导出 <code>keyword_table.jsonl</code> 整张更新表(含老行+新行)。</p>
   </div>
 
   <div class="help">
-    <b>每一条你可以做 4 件事：</b>
-    ① 直接改 <b>名称 / 别名 / 边界 / 模块 / 类型</b>（点进去就能编辑）；
-    ② 右上角下拉选 <b>合并到某个 topic</b>（本条变成对方的别名）；
-    ③ 同一下拉选 <b>降级为某 topic 的子条目（subsection）</b>；
-    ④ 选 <b>丢弃</b>（不进词表）。<br>
-    <b>boundary（边界）很重要</b>：它是 reduce 判断"某段内容算不算这个 topic"的依据，专治一词多义误归（如 OTP）。带 <span style="color:var(--gold)">待审</span> 标记的是 discover 拿不准的，请重点看。
+    <b>防碎片化用法(关键):</b>
+    ① 先「载入现有冻结词表 🔒」→ 老 topic 显示为合并目标;
+    ② 带 <span style="color:var(--gold)">⚠ 疑似</span> 的新候选,点旁边「合并到 C-xxxx」→ 它的名字+别名<b>并进老 topic</b>,不建新卡(这就是 D3+D4);
+    ③ 右上下拉也能手动「合并到已有 🔒」或「降级为子条目」;
+    ④ 真新的才「保留为新 topic」。<br>
+    导出时老行可能多了别名,整张表一并写出 —— <b>词表越用越聪明,重复卡随时间减少。</b>
   </div>
 
   <div class="list" id="list"></div>
-  <div class="empty" id="empty">还没有数据。点右上角「加载样例」预览操作，或「载入 proposed_keywords.json」开始正式审批。</div>
+  <div class="empty" id="empty">还没有数据。点「加载样例」预览防碎片化流程,或「载入 proposed_keywords.json」+「载入现有冻结词表」开始正式审批。</div>
 
   <div class="foot">
     导出 schema：<code>{canonical_id, canonical_name, aliases[], module[], topic_type, topic_class, boundary, subsections[], confidence, status:"approved"}</code><br>
-    对应指令文档 <code>handoff/09_OPENCODE_解耦topic发现与建卡_指令.md</code> §4.2。导出后把文件放到 <code>paths.keyword_table</code> 指向的位置，再让 opencode 跑 reduce。
+    对应 <code>handoff/09 §4.2</code> + <code>handoff/13</code>(合并模型 D3/D4)。导出后放到 <code>paths.keyword_table</code>,再让 opencode 跑 reduce。
   </div>
 </main>
 
 <script>
 const MODULES_DEFAULT = [
-  "Integration & API standard",
-  "Delivery & tracking standard",
-  "Channel standard",
-  "MDC development guideline",
-  "Operations & release standard",
-  "Template & content standard"
+  "Integration & API standard","Delivery & tracking standard","Channel standard",
+  "MDC development guideline","Operations & release standard","Template & content standard"
 ];
 const TOPIC_TYPES   = ["","component","process","service","initiative","planning","inventory"];
 const TOPIC_CLASSES = ["","workflow","system_component","catalog"];
 
 const SAMPLE = {
   modules: MODULES_DEFAULT,
+  frozen: [
+    {canonical_id:"C-0001",canonical_name:"MDC supported notification channels",aliases:["notification channels","channels"],
+     module:["Channel standard"],topic_type:"inventory",topic_class:"catalog",
+     boundary:"MDC 支持的渠道及各渠道属性。",subsections:["PN","SMS","Email","Letter","whatsApp","WeChat"],confidence:0.9,status:"approved"},
+    {canonical_id:"C-0002",canonical_name:"MDC Management Portal",aliases:["MDC Management Portal access","Portal access"],
+     module:["02 - Engagement","MDC Onboarding"],topic_type:"component",topic_class:"system_component",
+     boundary:"MDC Management Portal 的访问入口、环境链接与 access-right 申请信息。",
+     subsections:["Portal links","UAT Access Right","PROD Access Right","permNetID"],confidence:0.9,status:"approved"}
+  ],
   candidates: [
-    {canonical_id:"C-PROP-0001",canonical_name:"Channel Support",aliases:["channels","supported channels"],
-     topic_summary:"MDC 支持的渠道总览（PN/SMS/Email/Letter/WhatsApp）及各渠道属性。",
-     evidence_keywords:["PN","SMS","Email","Letter","WhatsApp","channel"],suggested_module:["Channel standard"],
-     suggested_boundary:"MDC 支持的渠道清单及每渠道的通用属性；不含单条消息的投递配置。",
-     suggested_topic_type:"inventory",suggested_topic_class:"catalog",
-     suggested_subsections:["PN","SMS","Email","Letter","WhatsApp"],
-     source_section_ids:["MDC#Check List > General Information"],support:5,status:"proposed"},
-    {canonical_id:"C-PROP-0002",canonical_name:"Template Maintenance",aliases:["template"],
-     topic_summary:"各渠道模板的维护方式与负责方。",evidence_keywords:["template","maintenance"],
-     suggested_module:["Template & content standard"],suggested_boundary:"消息模板的创建与维护流程。",
-     suggested_topic_type:"process",suggested_topic_class:"workflow",suggested_subsections:[],
-     source_section_ids:["MDC#Check List > Template Maintenance"],support:3,status:"proposed"},
-    {canonical_id:"C-PROP-0003",canonical_name:"Delivery Mode / SLO / RTB Cost",aliases:["SLO","RTB cost","delivery mode"],
-     topic_summary:"各渠道的投递模式、SLO 与 RTB 成本。",evidence_keywords:["SLO","RTB","delivery mode","cost"],
-     suggested_module:["Delivery & tracking standard","Operations & release standard"],
-     suggested_boundary:"渠道投递模式、服务等级目标与成本口径。",suggested_topic_type:"planning",
-     suggested_topic_class:"catalog",suggested_subsections:[],
-     source_section_ids:["MDC#Check List > Delivery Mode/SLO/RTB Cost"],support:4,status:"proposed"},
-    {canonical_id:"C-PROP-0004",canonical_name:"Notification Preference",aliases:["notification pref"],
-     topic_summary:"客户通知偏好设置。",evidence_keywords:["notification preference","opt-in","opt-out"],
-     suggested_module:["Channel standard"],suggested_boundary:"客户对通知渠道/频次的偏好。",
-     suggested_topic_type:"component",suggested_topic_class:"system_component",suggested_subsections:[],
-     source_section_ids:["MDC#Check List > Notification Preference"],support:3,status:"proposed"},
-    {canonical_id:"C-PROP-0005",canonical_name:"Notification Preferences",aliases:[],
-     topic_summary:"（与上一条疑似重复，演示「合并」用）",evidence_keywords:["notification preferences"],
-     suggested_module:["Channel standard"],suggested_boundary:"",suggested_topic_type:"component",
-     suggested_topic_class:"",suggested_subsections:[],source_section_ids:["MDC#Check List > Preference"],support:1,status:"proposed"},
-    {canonical_id:"C-PROP-0006",canonical_name:"Bounce Back Handling",aliases:["bounce back","bounce handling"],
-     topic_summary:"消息退信/失败的处理方式。",evidence_keywords:["bounce back","retry","fail"],
-     suggested_module:["Delivery & tracking standard"],suggested_boundary:"投递失败/退信的识别与后续处理。",
-     suggested_topic_type:"process",suggested_topic_class:"workflow",suggested_subsections:[],
-     source_section_ids:["MDC#Check List > Bounce Back Handling"],support:2,status:"proposed"},
-    {canonical_id:"C-PROP-0007",canonical_name:"Governance Procedure for New Message Onboarding",aliases:["onboarding governance","new message onboarding"],
-     topic_summary:"新消息上线的治理流程。",evidence_keywords:["governance","onboarding","new message"],
-     suggested_module:["Operations & release standard"],suggested_boundary:"新消息接入的审批与治理步骤。",
-     suggested_topic_type:"process",suggested_topic_class:"workflow",suggested_subsections:[],
-     source_section_ids:["MDC#Check List > Governance Procedure"],support:2,status:"proposed"},
-    {canonical_id:"C-PROP-0008",canonical_name:"Testing",aliases:["test"],
-     topic_summary:"消息测试范围（WPB: 仅 O63；WSB: O63 & O88）。",evidence_keywords:["testing","O63","O88","WPB","WSB"],
-     suggested_module:["Operations & release standard"],suggested_boundary:"消息上线前的测试范围与环境。",
-     suggested_topic_type:"process",suggested_topic_class:"workflow",
-     suggested_subsections:["WPB (O63)","WSB (O63 & O88)"],
-     source_section_ids:["MDC#Check List > Testing"],support:3,status:"proposed"},
-    {canonical_id:"C-PROP-0009",canonical_name:"O63 Test Scope",aliases:["O63"],
-     topic_summary:"（疑似应作为 Testing 的子条目，演示「降级」用）",evidence_keywords:["O63"],
-     suggested_module:["Operations & release standard"],suggested_boundary:"",suggested_topic_type:"",
-     suggested_topic_class:"",suggested_subsections:[],source_section_ids:["MDC#Check List > Testing"],support:1,status:"proposed"},
-    {canonical_id:"C-PROP-0010",canonical_name:"Resend / Retry Mechanism",aliases:["resend","retry"],
-     topic_summary:"消息重发/重试机制。",evidence_keywords:["resend","retry","mechanism"],
-     suggested_module:["Delivery & tracking standard"],suggested_boundary:"投递失败后的重发与重试策略。",
-     suggested_topic_type:"component",suggested_topic_class:"system_component",suggested_subsections:[],
-     source_section_ids:["MDC#Check List > Resend/Retry"],support:2,status:"proposed"},
-    {canonical_id:"C-PROP-0011",canonical_name:"OTP",aliases:["one-time password"],
-     topic_summary:"出现 OTP，但不确定指 MDC OTP Service 还是泛指一次性密码。",evidence_keywords:["OTP","one-time password"],
-     suggested_module:["MDC development guideline"],suggested_boundary:"",suggested_topic_type:"service",
-     suggested_topic_class:"",suggested_subsections:[],source_section_ids:["MDC#Check List > General Enquiries"],
-     support:1,status:"needs_review",needs_review_reason:"OTP 可能指 MDC OTP Service 或泛指一次性密码，请确认归属。"},
-    {canonical_id:"C-PROP-0012",canonical_name:"MDC Engagement and Requirement Process",aliases:["engagement process","requirement process"],
-     topic_summary:"MDC 的对接与需求收集流程。",evidence_keywords:["engagement","requirement","process"],
-     suggested_module:["MDC development guideline"],suggested_boundary:"如何与 MDC 团队对接并提交需求。",
-     suggested_topic_type:"process",suggested_topic_class:"workflow",suggested_subsections:[],
-     source_section_ids:["MDC#Check List > Engagement and Requirement Process"],support:2,status:"proposed"}
+    {canonical_id:"C-PROP-0001",canonical_name:"MDC Portal access right",aliases:["portal access right"],
+     topic_summary:"新页里又讲了 portal 访问权限申请(其实是老 C-0002)。",evidence_keywords:["portal","access right","UAT","PROD"],
+     suggested_module:["MDC Onboarding"],suggested_topic_type:"component",source_section_ids:["NEWPAGE#Access"],support:2,status:"proposed",
+     nearest_existing:{canonical_id:"C-0002",name:"MDC Management Portal",similarity:0.82,reason:"都讲 portal 访问入口与 access right"}},
+    {canonical_id:"C-PROP-0002",canonical_name:"Bulk SMS Throttling",aliases:["throttling","rate limit"],
+     topic_summary:"新页讲 SMS 批量限流(真·新 topic)。",evidence_keywords:["throttle","rate limit","SMS"],
+     suggested_module:["Delivery & tracking standard"],suggested_boundary:"SMS 批量发送的限流与配额。",
+     suggested_topic_type:"component",suggested_topic_class:"system_component",source_section_ids:["NEWPAGE#Throttle"],support:3,status:"proposed"},
+    {canonical_id:"C-PROP-0003",canonical_name:"notification channel",aliases:[],
+     topic_summary:"疑似与 C-0001 重复(单复数/措辞差异)。",evidence_keywords:["notification channel"],
+     suggested_module:["Channel standard"],suggested_topic_type:"inventory",suggested_topic_class:"catalog",
+     source_section_ids:["NEWPAGE#Chan"],support:1,status:"proposed",
+     dup_warning:[{canonical_id:"C-0001",name:"MDC supported notification channels",score:0.71}]}
   ]
 };
 
@@ -206,10 +174,10 @@ function arr(v){
   if (typeof v === "string"){ return v.split(/[;,]/).map(s=>s.trim()).filter(Boolean); }
   return [];
 }
-function toRow(c){
+function toRow(c, frozen){
   uid++;
   return {
-    uid:"r"+uid,
+    uid:"r"+uid, frozen: !!frozen,
     canonical_id:c.canonical_id||"",
     canonical_name:c.canonical_name||"",
     aliases:arr(c.aliases),
@@ -223,23 +191,40 @@ function toRow(c){
     source_section_ids:arr(c.source_section_ids),
     support:(c.support!==undefined&&c.support!==null)?c.support:"",
     confidence:(typeof c.confidence==="number")?c.confidence:0.9,
-    keep:(c.status==="dropped")?false:true,
+    keep: frozen ? true : (c.status==="dropped"?false:true),
     review:(c.status==="needs_review"),
-    needs_review_reason:c.needs_review_reason||""
+    needs_review_reason:c.needs_review_reason||"",
+    nearest_existing:(c.nearest_existing&&c.nearest_existing.canonical_id)?c.nearest_existing:null,
+    dup_warning:Array.isArray(c.dup_warning)?c.dup_warning.filter(d=>d&&d.canonical_id):[]
   };
 }
-function loadData(raw){
-  let candidates;
-  if (Array.isArray(raw)){ candidates=raw; }
-  else { candidates=raw.candidates||[]; if (Array.isArray(raw.modules)&&raw.modules.length) state.modules=raw.modules.slice(); }
-  // make sure any custom type/class values appear as options
-  state.rows = candidates.map(toRow);
+function ingestVocab(){
   state.rows.forEach(r=>{
     if (r.topic_type && !TOPIC_TYPES.includes(r.topic_type)) TOPIC_TYPES.push(r.topic_type);
     if (r.topic_class && !TOPIC_CLASSES.includes(r.topic_class)) TOPIC_CLASSES.push(r.topic_class);
     r.module.forEach(m=>{ if(!state.modules.includes(m)) state.modules.push(m); });
   });
-  render();
+}
+function loadProposed(raw){
+  let candidates;
+  if (Array.isArray(raw)){ candidates=raw; }
+  else {
+    candidates=raw.candidates||[];
+    if (Array.isArray(raw.modules)&&raw.modules.length) raw.modules.forEach(m=>{ if(!state.modules.includes(m)) state.modules.push(m); });
+    if (Array.isArray(raw.frozen)) raw.frozen.forEach(f=>state.rows.push(toRow(f,true)));
+  }
+  candidates.forEach(c=>state.rows.push(toRow(c,false)));
+  ingestVocab(); render();
+}
+function loadFrozenRows(rows){
+  rows.forEach(r=>state.rows.push(toRow(r,true)));
+  ingestVocab(); render();
+}
+function parseJsonl(text){
+  const out=[];
+  text.split(/\r?\n/).forEach(line=>{ line=line.trim(); if(!line||line.startsWith("//")||line.startsWith("#")) return;
+    try{ out.push(JSON.parse(line)); }catch(e){ throw new Error("第 ?? 行不是合法 JSON: "+line.slice(0,60)); } });
+  return out;
 }
 
 const esc = s => String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
@@ -253,203 +238,209 @@ function syncFromDom(){
     else r[f] = el.value;
   });
 }
-function keptRows(){ return state.rows.filter(r=>r.keep); }
-
-function render(){
-  const list = document.getElementById("list");
-  const empty = document.getElementById("empty");
-  empty.style.display = state.rows.length ? "none" : "block";
-  list.innerHTML = state.rows.map(rowHtml).join("");
-  // counts
-  const kept = state.rows.filter(r=>r.keep).length;
-  const drop = state.rows.filter(r=>!r.keep).length;
-  const rev  = state.rows.filter(r=>r.keep&&r.review).length;
-  document.getElementById("counts").innerHTML =
-    `<span>保留 <b>${kept}</b></span><span class="drop">丢弃 ${drop}</span>`+(rev?`<span class="rev">待审 ${rev}</span>`:"");
-}
-
-function rowHtml(r){
-  const others = keptRows().filter(x=>x.uid!==r.uid);
-  const opts = others.map(o=>escA(o.canonical_name||o.canonical_id)).map((nm,i)=>({uid:others[i].uid,nm})).filter(o=>o.nm);
-  const mergeOpts = opts.map(o=>`<option value="merge:${o.uid}">　合并到 → ${o.nm}</option>`).join("");
-  const demoteOpts = opts.map(o=>`<option value="demote:${o.uid}">　降级为子条目 → ${o.nm}</option>`).join("");
-  const typeSel = TOPIC_TYPES.map(t=>`<option value="${escA(t)}" ${t===r.topic_type?"selected":""}>${t||"(未定)"}</option>`).join("");
-  const classSel = TOPIC_CLASSES.map(t=>`<option value="${escA(t)}" ${t===r.topic_class?"selected":""}>${t||"(未定)"}</option>`).join("");
-  const modChips = state.modules.map(m=>`<span class="chip mod ${r.module.includes(m)?"on":""}" data-action="toggleMod" data-uid="${r.uid}" data-mod="${escA(m)}">${esc(m)}</span>`).join("");
-  const subChips = r.subsections.map((s,i)=>`<span class="chip sub"><b>${esc(s)}</b><span class="x" data-action="delSub" data-uid="${r.uid}" data-idx="${i}">×</span></span>`).join("") || `<span style="color:#9aa39d;font-size:11px">（无子条目）</span>`;
-  const kw = r.evidence_keywords.map(k=>`<span>${esc(k)}</span>`).join("");
-  return `
-  <div class="row ${r.keep?"":"is-drop"} ${(r.keep&&r.review)?"is-review":""}">
-    <div class="row-head">
-      <span class="id">${esc(r.canonical_id)}</span>
-      <input class="name" type="text" data-field="canonical_name" data-uid="${r.uid}" value="${escA(r.canonical_name)}" />
-      ${r.support!==""?`<span class="pill sup">命中 ${esc(r.support)}</span>`:""}
-      ${(r.keep&&r.review)?`<span class="pill rev">待审</span>`:""}
-      <select class="row-op" data-rowop data-uid="${r.uid}">
-        <option value="${r.keep?"keep":"drop"}">${r.keep?"✓ 保留为独立 topic":"已丢弃 — 恢复保留？"}</option>
-        ${r.keep?`<option value="drop">✕ 丢弃（不进词表）</option>`:`<option value="keep">恢复为保留</option>`}
-        ${mergeOpts}${demoteOpts}
-      </select>
-    </div>
-    <div class="row-body">
-      ${(r.keep&&r.review&&r.needs_review_reason)?`<div class="review-reason">⚠ ${esc(r.needs_review_reason)}</div>`:""}
-      <div class="fld">
-        <label>canonical_id</label>
-        <input type="text" data-field="canonical_id" data-uid="${r.uid}" value="${escA(r.canonical_id)}" />
-      </div>
-      <div class="fld">
-        <label>aliases（逗号分隔，匹配召回靠它）</label>
-        <input type="text" data-field="aliases" data-uid="${r.uid}" value="${escA(r.aliases.join(", "))}" />
-      </div>
-      <div class="fld full">
-        <label>boundary（边界，喂给 reduce 判断归属）</label>
-        <textarea data-field="boundary" data-uid="${r.uid}">${esc(r.boundary)}</textarea>
-      </div>
-      <div class="fld">
-        <label>topic_type</label>
-        <select data-field="topic_type" data-uid="${r.uid}">${typeSel}</select>
-      </div>
-      <div class="fld">
-        <label>topic_class（决定派生字段：workflow / system_component / catalog）</label>
-        <select data-field="topic_class" data-uid="${r.uid}">${classSel}</select>
-      </div>
-      <div class="fld full">
-        <label>module（域标签，可多选）</label>
-        <div class="modchips">${modChips}</div>
-      </div>
-      <div class="fld full">
-        <label>subsections（二级子条目）</label>
-        <div class="subchips">${subChips}</div>
-        <div class="subadd">
-          <input type="text" data-subnew="${r.uid}" placeholder="新增一个子条目名称，回车或点添加" />
-          <button type="button" data-action="addSub" data-uid="${r.uid}">添加子条目</button>
-        </div>
-      </div>
-      <div class="meta">
-        ${r.topic_summary?`<div>${esc(r.topic_summary)}</div>`:""}
-        ${kw?`<div class="kw">证据词：${kw}</div>`:""}
-        ${r.source_section_ids.length?`<div class="src">来源：${esc(r.source_section_ids.join(" · "))}</div>`:""}
-      </div>
-    </div>
-  </div>`;
-}
-
-// ---- events (delegation) ----
-const list = document.getElementById("list");
-list.addEventListener("click", e=>{
-  const t = e.target.closest("[data-action]"); if(!t) return;
-  const r = state.rows.find(x=>x.uid===t.dataset.uid); if(!r) return;
-  const act = t.dataset.action;
-  if (act==="toggleMod"){
-    syncFromDom();
-    const m = t.dataset.mod;
-    const i = r.module.indexOf(m);
-    if (i>=0) r.module.splice(i,1); else r.module.push(m);
-    render();
-  } else if (act==="addSub"){
-    syncFromDom();
-    const inp = document.querySelector(`[data-subnew="${r.uid}"]`);
-    const v = inp && inp.value.trim();
-    if (v && !r.subsections.includes(v)) r.subsections.push(v);
-    render();
-  } else if (act==="delSub"){
-    syncFromDom();
-    r.subsections.splice(Number(t.dataset.idx),1);
-    render();
-  }
-});
-list.addEventListener("keydown", e=>{
-  if (e.key==="Enter" && e.target.matches("[data-subnew]")){
-    e.preventDefault();
-    const u = e.target.getAttribute("data-subnew");
-    const r = state.rows.find(x=>x.uid===u); if(!r) return;
-    syncFromDom();
-    const v = e.target.value.trim();
-    if (v && !r.subsections.includes(v)) r.subsections.push(v);
-    render();
-  }
-});
-list.addEventListener("change", e=>{
-  const sel = e.target.closest("[data-rowop]");
-  if (sel){
-    const r = state.rows.find(x=>x.uid===sel.dataset.uid); if(!r) return;
-    const v = sel.value;
-    syncFromDom();
-    if (v==="keep"){ r.keep=true; }
-    else if (v==="drop"){ r.keep=false; }
-    else if (v.startsWith("merge:")){
-      const tgt = state.rows.find(x=>x.uid===v.slice(6)); if(tgt){ foldInto(tgt,r,"merge"); state.rows=state.rows.filter(x=>x.uid!==r.uid); }
-    } else if (v.startsWith("demote:")){
-      const tgt = state.rows.find(x=>x.uid===v.slice(7)); if(tgt){ foldInto(tgt,r,"demote"); state.rows=state.rows.filter(x=>x.uid!==r.uid); }
-    }
-    render();
-    return;
-  }
-  // text/select field already synced via syncFromDom on structural ops; keep state fresh anyway
-  const f = e.target.closest("[data-field]");
-  if (f){ const r=state.rows.find(x=>x.uid===f.dataset.uid); if(r){ if(f.dataset.field==="aliases") r.aliases=arr(f.value); else r[f.dataset.field]=f.value; } }
-});
-
 function uniq(a){ return Array.from(new Set(a.filter(Boolean))); }
 function foldInto(target, src, mode){
   if (mode==="merge"){
     target.aliases = uniq([...target.aliases, src.canonical_name, ...src.aliases]);
     target.evidence_keywords = uniq([...target.evidence_keywords, ...src.evidence_keywords]);
     target.subsections = uniq([...target.subsections, ...src.subsections]);
-  } else { // demote: src becomes a subsection of target
+  } else {
     target.subsections = uniq([...target.subsections, src.canonical_name, ...src.subsections]);
     target.evidence_keywords = uniq([...target.evidence_keywords, ...src.evidence_keywords]);
   }
   target.source_section_ids = uniq([...target.source_section_ids, ...src.source_section_ids]);
 }
+function removeRow(uidToRemove){ state.rows = state.rows.filter(x=>x.uid!==uidToRemove); }
+
+function render(){
+  const list = document.getElementById("list");
+  const empty = document.getElementById("empty");
+  empty.style.display = state.rows.length ? "none" : "block";
+  const proposed = state.rows.filter(r=>!r.frozen);
+  const frozen = state.rows.filter(r=>r.frozen);
+  let html = proposed.map(rowHtml).join("");
+  if (frozen.length) html += `<div class="divider">—— 现有已冻结 topic（🔒 合并目标 · 导出时一并写出，可补别名/子条目）——</div>` + frozen.map(rowHtml).join("");
+  list.innerHTML = html;
+  const newKept = proposed.filter(r=>r.keep).length;
+  const drop = proposed.filter(r=>!r.keep).length;
+  const rev = proposed.filter(r=>r.keep&&r.review).length;
+  document.getElementById("counts").innerHTML =
+    `<span>新候选保留 <b>${newKept}</b></span>`+
+    (frozen.length?`<span class="frz">已冻结 ${frozen.length}</span>`:"")+
+    `<span class="drop">丢弃 ${drop}</span>`+(rev?`<span class="rev">待审 ${rev}</span>`:"");
+}
+
+function warnBanner(r){
+  if (r.frozen) return "";
+  const hints=[];
+  if (r.nearest_existing) hints.push({cid:r.nearest_existing.canonical_id,name:r.nearest_existing.name,sc:r.nearest_existing.similarity,reason:r.nearest_existing.reason});
+  (r.dup_warning||[]).forEach(d=>hints.push({cid:d.canonical_id,name:d.name,sc:d.score,reason:d.reason}));
+  if(!hints.length) return "";
+  const items = hints.map(h=>{
+    const loaded = state.rows.some(x=>x.frozen && x.canonical_id===h.cid);
+    return `<div>⚠ 疑似 = <b>${esc(h.cid)}${h.name?" "+esc(h.name):""}</b>${h.sc!=null?` (相似 ${esc(h.sc)})`:""}${h.reason?`：${esc(h.reason)}`:""}
+      <button class="mini" data-action="quickMerge" data-uid="${r.uid}" data-cid="${escA(h.cid)}">${loaded?`合并到 ${esc(h.cid)}`:`合并到 ${esc(h.cid)}（需先载入冻结词表）`}</button></div>`;
+  }).join("");
+  return `<div class="warn">${items}</div>`;
+}
+
+function rowHtml(r){
+  const isF = r.frozen;
+  let opCtl;
+  if (isF){
+    opCtl = `<span class="lock">🔒 已冻结 · 合并目标</span>`;
+  } else {
+    const fz = state.rows.filter(x=>x.frozen).map(x=>`<option value="merge:${x.uid}">　合并到已有🔒 → ${escA(x.canonical_name)} (${escA(x.canonical_id)})</option>`).join("");
+    const mg = state.rows.filter(x=>!x.frozen&&x.uid!==r.uid&&x.keep).map(x=>`<option value="merge:${x.uid}">　合并到本批 → ${escA(x.canonical_name||x.canonical_id)}</option>`).join("");
+    const dm = state.rows.filter(x=>x.uid!==r.uid&&(x.frozen||x.keep)).map(x=>`<option value="demote:${x.uid}">　降级为子条目 → ${escA(x.canonical_name||x.canonical_id)}${x.frozen?" 🔒":""}</option>`).join("");
+    opCtl = `<select class="row-op" data-rowop data-uid="${r.uid}">
+      <option value="${r.keep?'keep':'drop'}">${r.keep?'✓ 保留为新 topic':'已丢弃 — 恢复？'}</option>
+      ${r.keep?`<option value="drop">✕ 丢弃（不进词表）</option>`:`<option value="keep">恢复为保留</option>`}
+      ${fz?`<optgroup label="合并到已有(🔒)">${fz}</optgroup>`:''}
+      ${mg?`<optgroup label="合并到本批候选">${mg}</optgroup>`:''}
+      ${dm?`<optgroup label="降级为子条目">${dm}</optgroup>`:''}
+    </select>`;
+  }
+  const nameInput = isF
+    ? `<input class="name" type="text" value="${escA(r.canonical_name)}" readonly title="已冻结，名称锁定" />`
+    : `<input class="name" type="text" data-field="canonical_name" data-uid="${r.uid}" value="${escA(r.canonical_name)}" />`;
+  const idInput = isF
+    ? `<input type="text" value="${escA(r.canonical_id)}" readonly />`
+    : `<input type="text" data-field="canonical_id" data-uid="${r.uid}" value="${escA(r.canonical_id)}" />`;
+  const typeSel = TOPIC_TYPES.map(t=>`<option value="${escA(t)}" ${t===r.topic_type?"selected":""}>${t||"(未定)"}</option>`).join("");
+  const classSel = TOPIC_CLASSES.map(t=>`<option value="${escA(t)}" ${t===r.topic_class?"selected":""}>${t||"(未定)"}</option>`).join("");
+  const modChips = state.modules.map(m=>`<span class="chip mod ${r.module.includes(m)?"on":""}" data-action="toggleMod" data-uid="${r.uid}" data-mod="${escA(m)}">${esc(m)}</span>`).join("");
+  const subChips = r.subsections.map((s,i)=>`<span class="chip sub"><b>${esc(s)}</b><span class="x" data-action="delSub" data-uid="${r.uid}" data-idx="${i}">×</span></span>`).join("") || `<span style="color:#9aa39d;font-size:11px">（无子条目）</span>`;
+  const kw = r.evidence_keywords.map(k=>`<span>${esc(k)}</span>`).join("");
+  return `
+  <div class="row ${r.keep?"":"is-drop"} ${(r.keep&&r.review)?"is-review":""} ${isF?"is-frozen":""}">
+    <div class="row-head">
+      <span class="id">${esc(r.canonical_id)}</span>
+      ${nameInput}
+      ${isF?`<span class="lock">🔒</span>`:""}
+      ${(r.support!==""&&!isF)?`<span class="pill sup">命中 ${esc(r.support)}</span>`:""}
+      ${(r.keep&&r.review)?`<span class="pill rev">待审</span>`:""}
+      ${opCtl}
+    </div>
+    <div class="row-body">
+      ${warnBanner(r)}
+      ${(r.keep&&r.review&&r.needs_review_reason)?`<div class="warn full">⚠ ${esc(r.needs_review_reason)}</div>`:""}
+      <div class="fld"><label>canonical_id${isF?"（锁定）":""}</label>${idInput}</div>
+      <div class="fld"><label>aliases（逗号分隔，匹配召回靠它）</label>
+        <input type="text" data-field="aliases" data-uid="${r.uid}" value="${escA(r.aliases.join(", "))}" /></div>
+      <div class="fld full"><label>boundary（边界，喂给 reduce 判断归属）</label>
+        <textarea data-field="boundary" data-uid="${r.uid}">${esc(r.boundary)}</textarea></div>
+      <div class="fld"><label>topic_type</label><select data-field="topic_type" data-uid="${r.uid}">${typeSel}</select></div>
+      <div class="fld"><label>topic_class（决定派生字段）</label><select data-field="topic_class" data-uid="${r.uid}">${classSel}</select></div>
+      <div class="fld full"><label>module（域标签，可多选）</label><div class="modchips">${modChips}</div></div>
+      <div class="fld full"><label>subsections（二级子条目）</label>
+        <div class="subchips">${subChips}</div>
+        <div class="subadd">
+          <input type="text" data-subnew="${r.uid}" placeholder="新增子条目名称，回车或点添加" />
+          <button type="button" data-action="addSub" data-uid="${r.uid}">添加子条目</button>
+        </div></div>
+      ${(r.topic_summary||kw||r.source_section_ids.length)?`<div class="meta">
+        ${r.topic_summary?`<div>${esc(r.topic_summary)}</div>`:""}
+        ${kw?`<div class="kw">证据词：${kw}</div>`:""}
+        ${r.source_section_ids.length?`<div class="src">来源：${esc(r.source_section_ids.join(" · "))}</div>`:""}
+      </div>`:""}
+    </div>
+  </div>`;
+}
+
+// ---- events ----
+const list = document.getElementById("list");
+list.addEventListener("click", e=>{
+  const t = e.target.closest("[data-action]"); if(!t) return;
+  const r = state.rows.find(x=>x.uid===t.dataset.uid); if(!r) return;
+  const act = t.dataset.action;
+  if (act==="toggleMod"){
+    syncFromDom(); const m=t.dataset.mod; const i=r.module.indexOf(m);
+    if(i>=0) r.module.splice(i,1); else r.module.push(m); render();
+  } else if (act==="addSub"){
+    syncFromDom(); const inp=document.querySelector(`[data-subnew="${r.uid}"]`); const v=inp&&inp.value.trim();
+    if(v&&!r.subsections.includes(v)) r.subsections.push(v); render();
+  } else if (act==="delSub"){
+    syncFromDom(); r.subsections.splice(Number(t.dataset.idx),1); render();
+  } else if (act==="quickMerge"){
+    syncFromDom();
+    const cid=t.dataset.cid; const tgt=state.rows.find(x=>x.frozen&&x.canonical_id===cid);
+    if(!tgt){ alert("没找到已冻结的 "+cid+"。请先「载入现有冻结词表」再合并。"); return; }
+    foldInto(tgt,r,"merge"); removeRow(r.uid); render();
+  }
+});
+list.addEventListener("keydown", e=>{
+  if (e.key==="Enter" && e.target.matches("[data-subnew]")){
+    e.preventDefault();
+    const r=state.rows.find(x=>x.uid===e.target.getAttribute("data-subnew")); if(!r) return;
+    syncFromDom(); const v=e.target.value.trim(); if(v&&!r.subsections.includes(v)) r.subsections.push(v); render();
+  }
+});
+list.addEventListener("change", e=>{
+  const sel=e.target.closest("[data-rowop]");
+  if (sel){
+    const r=state.rows.find(x=>x.uid===sel.dataset.uid); if(!r) return;
+    const v=sel.value; syncFromDom();
+    if(v==="keep"){ r.keep=true; }
+    else if(v==="drop"){ r.keep=false; }
+    else if(v.startsWith("merge:")){ const tgt=state.rows.find(x=>x.uid===v.slice(6)); if(tgt){ foldInto(tgt,r,"merge"); removeRow(r.uid); } }
+    else if(v.startsWith("demote:")){ const tgt=state.rows.find(x=>x.uid===v.slice(7)); if(tgt){ foldInto(tgt,r,"demote"); removeRow(r.uid); } }
+    render(); return;
+  }
+  const f=e.target.closest("[data-field]");
+  if(f){ const r=state.rows.find(x=>x.uid===f.dataset.uid); if(r){ if(f.dataset.field==="aliases") r.aliases=arr(f.value); else r[f.dataset.field]=f.value; } }
+});
 
 // ---- toolbar ----
-document.getElementById("loadSampleBtn").onclick = ()=> loadData(JSON.parse(JSON.stringify(SAMPLE)));
+document.getElementById("loadSampleBtn").onclick = ()=>{ state.rows=[]; loadProposed(JSON.parse(JSON.stringify(SAMPLE))); };
+document.getElementById("clearBtn").onclick = ()=>{ if(confirm("清空当前所有行？")){ state.rows=[]; render(); } };
 document.getElementById("loadFileBtn").onclick = ()=> document.getElementById("fileInput").click();
 document.getElementById("fileInput").onchange = e=>{
-  const file = e.target.files[0]; if(!file) return;
-  const fr = new FileReader();
-  fr.onload = ()=>{ try{ loadData(JSON.parse(fr.result)); }catch(err){ alert("解析失败：不是合法 JSON。\n"+err.message); } };
+  const file=e.target.files[0]; if(!file) return;
+  const fr=new FileReader();
+  fr.onload=()=>{ try{ loadProposed(JSON.parse(fr.result)); }catch(err){ alert("解析失败：不是合法 JSON。\n"+err.message); } };
+  fr.readAsText(file); e.target.value="";
+};
+document.getElementById("loadFrozenBtn").onclick = ()=> document.getElementById("frozenInput").click();
+document.getElementById("frozenInput").onchange = e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const fr=new FileReader();
+  fr.onload=()=>{ try{
+      const txt=fr.result.trim();
+      const rows = txt.startsWith("[") ? JSON.parse(txt) : parseJsonl(txt);
+      if(!Array.isArray(rows)) throw new Error("期望一组对象");
+      loadFrozenRows(rows);
+    }catch(err){ alert("载入冻结词表失败：\n"+err.message); } };
   fr.readAsText(file); e.target.value="";
 };
 document.getElementById("renumberBtn").onclick = ()=>{
   syncFromDom();
-  let i=1; state.rows.forEach(r=>{ if(r.keep){ r.canonical_id="C-"+String(i).padStart(4,"0"); i++; } });
+  let maxN=0; state.rows.forEach(r=>{ const m=/^C-(\d+)$/.exec(r.canonical_id); if(m) maxN=Math.max(maxN,parseInt(m[1],10)); });
+  let i=maxN+1;
+  state.rows.forEach(r=>{ if(r.keep && !r.frozen){ r.canonical_id="C-"+String(i).padStart(4,"0"); i++; } });
   render();
 };
 document.getElementById("exportBtn").onclick = ()=>{
   syncFromDom();
-  const kept = keptRows();
-  if (!kept.length){ alert("没有要保留的 topic，无法导出。"); return; }
-  // validations
-  const noName = kept.filter(r=>!r.canonical_name.trim());
-  if (noName.length){ alert("有 "+noName.length+" 条没有 canonical_name，请先填或丢弃。"); return; }
-  const noId = kept.filter(r=>!r.canonical_id.trim());
-  if (noId.length){ if(confirm(noId.length+" 条缺 canonical_id，点确定将自动按 C-0001… 编号。")){ let i=1; state.rows.forEach(r=>{if(r.keep){r.canonical_id="C-"+String(i).padStart(4,"0");i++;}}); } else return; }
-  const ids = kept.map(r=>r.canonical_id), names = kept.map(r=>r.canonical_name);
-  const dupId = ids.filter((x,i)=>ids.indexOf(x)!==i), dupName = names.filter((x,i)=>names.indexOf(x)!==i);
-  if (dupId.length || dupName.length){
-    if (!confirm("发现重复："+(dupId.length?("id "+uniq(dupId).join(",")+" "):"")+(dupName.length?("名称 "+uniq(dupName).join(",")):"")+"\n仍要导出吗？建议先合并。")) return;
-  }
-  const stillReview = kept.filter(r=>r.review);
-  if (stillReview.length){ if(!confirm("还有 "+stillReview.length+" 条「待审」未处理（OTP 这类歧义项）。仍要导出吗？")) return; }
+  const kept = state.rows.filter(r=>r.keep);
+  if(!kept.length){ alert("没有要导出的行。"); return; }
+  const noName=kept.filter(r=>!r.canonical_name.trim());
+  if(noName.length){ alert("有 "+noName.length+" 条没有 canonical_name。"); return; }
+  const noId=kept.filter(r=>!r.canonical_id.trim());
+  if(noId.length){ if(confirm(noId.length+" 条缺 canonical_id，确定将自动给新行编号？")){ document.getElementById("renumberBtn").click(); }else return; }
+  const ids=kept.map(r=>r.canonical_id), names=kept.map(r=>r.canonical_name);
+  const dupId=ids.filter((x,i)=>ids.indexOf(x)!==i), dupName=names.filter((x,i)=>names.indexOf(x)!==i);
+  if(dupId.length||dupName.length){ if(!confirm("发现重复："+(dupId.length?("id "+uniq(dupId).join(",")+" "):"")+(dupName.length?("名称 "+uniq(dupName).join(",")):"")+"\n建议先合并。仍导出？")) return; }
+  const newReview=state.rows.filter(r=>r.keep&&!r.frozen&&r.review);
+  if(newReview.length){ if(!confirm("还有 "+newReview.length+" 条新候选「待审」未处理。仍导出？")) return; }
   const lines = kept.map(r=>JSON.stringify({
-    canonical_id:r.canonical_id.trim(),
-    canonical_name:r.canonical_name.trim(),
-    aliases:r.aliases,
-    module:r.module,
-    topic_type:r.topic_type||"",
-    topic_class:r.topic_class||"",
-    boundary:r.boundary.trim(),
-    subsections:r.subsections,
-    confidence:r.confidence,
-    status:"approved"
+    canonical_id:r.canonical_id.trim(), canonical_name:r.canonical_name.trim(),
+    aliases:r.aliases, module:r.module, topic_type:r.topic_type||"", topic_class:r.topic_class||"",
+    boundary:r.boundary.trim(), subsections:r.subsections, confidence:r.confidence, status:"approved"
   }));
-  const blob = new Blob([lines.join("\n")+"\n"], {type:"application/x-ndjson"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob); a.download = "keyword_table.jsonl";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+  const blob=new Blob([lines.join("\n")+"\n"],{type:"application/x-ndjson"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="keyword_table.jsonl";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 };
 
 render();
