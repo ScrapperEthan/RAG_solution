@@ -37,6 +37,8 @@ class MockLLM:
             return {"aliases": []}
         if "card_expand_boundary" in system:
             return {"boundary": mock_expand_boundary(json.loads(user))}
+        if "card_discover_topics" in system:
+            return mock_discover(json.loads(user))
         if "answer_from_context" in system:
             from backend.answer.service import synthesize_answer
 
@@ -63,6 +65,39 @@ class MockLLM:
         if "NO_ANSWER" in user:
             return '{"score": 0.8, "reason": "mock no-answer path"}'
         return '{"score": 1.0, "reason": "mock deterministic path"}'
+
+
+def mock_discover(payload: Dict) -> Dict:
+    """Deterministic, domain-agnostic stand-in for topic discovery (offline only).
+
+    Maps raw terms that already match an approved canonical, clusters the rest by
+    normalized form into candidates. The real LLM does smarter clustering in-network.
+    """
+    def norm(text: str) -> str:
+        return re.sub(r"[^a-z0-9]+", " ", str(text).lower()).strip()
+
+    raw_terms = payload.get("raw_keywords") or []
+    approved = payload.get("approved_canonicals") or []
+    approved_terms: Dict[str, str] = {}
+    for canonical in approved:
+        for term in [canonical.get("canonical_name", ""), *(canonical.get("aliases") or [])]:
+            if term:
+                approved_terms[norm(term)] = canonical.get("canonical_id", "")
+
+    mapped = []
+    clusters: Dict[str, Dict] = {}
+    for term in raw_terms:
+        key = norm(term)
+        if not key:
+            continue
+        if key in approved_terms:
+            mapped.append({"raw": term, "canonical_id": approved_terms[key]})
+            continue
+        cluster = clusters.setdefault(key, {"canonical_name": term, "aliases": [], "evidence_keywords": [], "suggested_subsections": [], "nearest_existing": None})
+        if term != cluster["canonical_name"] and term not in cluster["aliases"]:
+            cluster["aliases"].append(term)
+        cluster["evidence_keywords"].append(term)
+    return {"mapped": mapped, "candidates": list(clusters.values()), "needs_review": []}
 
 
 def mock_expand_boundary(payload: Dict) -> str:

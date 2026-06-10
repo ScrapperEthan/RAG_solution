@@ -22,7 +22,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Confluence RAG/card PoC pipeline")
     parser.add_argument(
         "command",
-        choices=["ingest", "map", "reduce", "refine-boundaries", "load", "retrieve", "answer", "eval", "demo", "status"],
+        choices=["ingest", "map", "discover", "reduce", "refine-boundaries", "load", "retrieve", "answer", "eval", "demo", "status"],
     )
     parser.add_argument("--config", default="config.yaml")
     parser.add_argument("--query", default="")
@@ -56,6 +56,8 @@ def main() -> None:
         print_json("ingest", run_ingest(config, outputs_dir))
     elif args.command == "map":
         print_json("map", run_map(config, outputs_dir))
+    elif args.command == "discover":
+        print_json("discover", run_discover(config, outputs_dir))
     elif args.command == "reduce":
         print_json("reduce", run_reduce(config, outputs_dir))
     elif args.command == "refine-boundaries":
@@ -91,6 +93,14 @@ def run_reduce(config: Dict[str, Any], outputs_dir: Path) -> Dict[str, int]:
         resolve_path(config["paths"]["keyword_table"]),
         resolve_aliases=bool(config.get("reduce", {}).get("resolve_aliases", False)),
     ).run()
+
+
+def run_discover(config: Dict[str, Any], outputs_dir: Path) -> Dict[str, int]:
+    from backend.reducer.discovery import DiscoverService
+
+    llm = build_llm(config)
+    table = resolve_path(config["paths"]["keyword_table"])  # may not exist on the first slice
+    return DiscoverService(outputs_dir, llm, table).run()
 
 
 def run_refine_boundaries(config: Dict[str, Any]) -> Dict[str, int]:
