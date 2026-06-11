@@ -117,6 +117,22 @@ class ChunkGeneralityTest(unittest.TestCase):
         self.assertIn("a. api", step2["body_md"])
         self.assertIn("b. worker", step2["body_md"])
 
+    def test_pipe_heading_does_not_pollute_heading_path(self) -> None:
+        # Confluence -> Markdown sometimes promotes a table header row to a heading.
+        # It must not become a heading_path level (it polluted anchors/section_ids).
+        body = (
+            "## | Use Case ID | Channel | SMS |\n"
+            "| --- | --- | --- |\n"
+            "| UC1 | PN | yes |\n"
+            "| UC2 | SMS | no |\n"
+        )
+        sections = chunk_page(_page(body), {"max_tokens": 0})
+        self.assertFalse(
+            any("|" in h for s in sections for h in s["heading_path"]),
+            "a pipe-laden markdown heading must not pollute heading_path",
+        )
+        self.assertTrue(sections, "the recovered table/prose still yields sections")
+
     def test_plain_prose_falls_back_to_headings(self) -> None:
         prose = chunk_page(_page("## Overview\nSome text.\n\n## Details\nMore text.\n"), {"max_tokens": 0})
         self.assertEqual(len(prose), 2)

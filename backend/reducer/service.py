@@ -17,6 +17,7 @@ from backend.reducer.canonicals import (
 )
 from backend.schemas.validation import validate_card, validate_inverted_row, validate_review_item
 from backend.util import clean_dir, read_json, write_json, write_jsonl
+from backend.util import section_id as compute_section_id
 
 
 TIERS = {"narrative", "inline-value", "pointer-only"}
@@ -79,11 +80,16 @@ class ReducerService:
         return {"cards": len(cards), "inverted_rows": len(deduped), "review_queue": len(review_queue)}
 
     def _load_sections(self, map_files: List[Path]) -> List[Dict]:
+        # map sections carry the extraction result but not the original body_md;
+        # subsection narrative facts need it, so re-attach it from refs by section_id.
+        ref_lookup = load_ref_lookup(self.outputs_dir / "refs.json")
         sections: List[Dict] = []
         for path in map_files:
             page = read_json(path)
             for section in page["sections"]:
                 enriched = dict(section)
+                sid = str(section.get("section_id") or compute_section_id(str(page["page_id"]), section.get("heading_path") or []))
+                ref = ref_lookup.get(sid, {})
                 enriched.update(
                     {
                         "page_id": page["page_id"],
@@ -91,6 +97,8 @@ class ReducerService:
                         "source_url": page["source_url"],
                         "confluence_version": page["confluence_version"],
                         "update_at": page["update_at"],
+                        "section_id": sid,
+                        "body_md": ref.get("body_md", section.get("body_md", "")),
                         "metadata": dict(section.get("metadata") or {}),
                         "fact_values": list(section.get("fact_values") or []),
                     }
@@ -111,34 +119,30 @@ def match_section(section: Dict, canonicals: Dict[str, Dict]) -> List[str]:
 
 
 def canonical_ids_from_metadata(section: Dict, canonicals: Dict[str, Dict]) -> List[str]:
+    """Route a structured cell to BOTH its row topic and its column topic.
+
+    A matrix cell (e.g. channel=PN, attribute="Template Maintenance") is evidence
+    for the row/inventory topic whose subsection is that channel AND for the
+    column topic whose name/alias is that attribute. The old winner-take-all
+    scoring kept only the higher-scoring channel topic, which starved every
+    attribute-defined topic (it never received a single cell -> no card).
+    """
     metadata = section.get("metadata") or {}
-    signals = [
-        " > ".join(str(item) for item in section.get("heading_path", []) if str(item).strip()),
-        str(metadata.get("question") or ""),
-        str(metadata.get("row_key") or ""),
-        str(metadata.get("attribute") or ""),
-        str(metadata.get("channel") or ""),
-        " ".join(str(item) for item in section.get("concepts", [])),
-        " ".join(str(item) for item in section.get("keywords_raw", [])),
-    ]
-    signal_text = " > ".join(s for s in signals if s)
     row_terms = [normalize_term(str(metadata.get(k) or "")) for k in ("channel", "row_key")]
     row_terms = [t for t in row_terms if t]
+    column_text = " ".join(str(metadata.get(k) or "") for k in ("attribute", "question")).strip()
 
-    scored: List[Tuple[int, str]] = []
+    ids: List[str] = []
     for cid, canonical in canonicals.items():
-        score = 0
-        if canonical_id_in_text(signal_text, {cid: canonical}):
-            score += 3
         sub_terms = [normalize_term(item) for item in canonical.get("subsections", []) if str(item).strip()]
+        # row topic: this cell's row key is one of the canonical's subsections
         if any(term in sub_terms for term in row_terms):
-            score += 4
-        if score > 0:
-            scored.append((score, cid))
-    if not scored:
-        return []
-    top = max(score for score, _ in scored)
-    return [cid for score, cid in scored if score == top]
+            ids.append(cid)
+            continue
+        # column topic: the canonical's name/alias matches this cell's attribute/question
+        if column_text and canonical_id_in_text(column_text, {cid: canonical}):
+            ids.append(cid)
+    return dedupe_strings(ids)
 
 
 # ---------------------------------------------------------------------------
@@ -595,8 +599,16 @@ def sources(sections: List[Dict]) -> List[Dict]:
     return out
 
 
+def load_ref_lookup(path: Path) -> Dict[str, Dict]:
+    """Index refs.json by section_id so reduce can re-attach the original body_md."""
+    if not path.exists():
+        return {}
+    refs = read_json(path)
+    return {str(item.get("section_id") or ""): item for item in refs if isinstance(item, dict) and item.get("section_id")}
+
+
 def section_id(section: Dict) -> str:
-    return str(section.get("section_id") or f"{section.get('page_id','')}#{(section.get('heading_path') or [''])[-1]}")
+    return str(section.get("section_id") or compute_section_id(str(section.get("page_id", "")), section.get("heading_path") or []))
 
 
 def infer_topic_class(canonical: Dict) -> str:

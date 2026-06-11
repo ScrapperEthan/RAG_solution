@@ -78,6 +78,29 @@ class ReducerCleanTest(unittest.TestCase):
         stray = _section(["Other Page", "Misc"], {"table_kind": "matrix", "row_key": "Telex", "channel": "Telex", "attribute": "x"})
         self.assertEqual(match_section(stray, CANON), [])
 
+    def test_matrix_cell_routes_to_row_and_column_topics(self) -> None:
+        # a (channel x attribute) cell is evidence for the channel topic AND the
+        # attribute topic; winner-take-all used to drop the attribute topic.
+        canon = dict(CANON)
+        canon["C-0005"] = {
+            "canonical_id": "C-0005",
+            "canonical_name": "Template Governance and Maintenance",
+            "aliases": ["Template Maintenance"],
+            "module": [],
+            "topic_type": "process",
+            "topic_class": "workflow",
+            "boundary": "",
+            "subsections": ["Template Maintenance"],
+            "status": "approved",
+        }
+        cell = _section(
+            ["MDC Check List", "Channel Matrix", "PN", "Template Maintenance"],
+            {"table_kind": "matrix", "channel": "PN", "row_key": "PN", "attribute": "Template Maintenance"},
+        )
+        ids = match_section(cell, canon)
+        self.assertIn("C-0001", ids, "row topic (channels) must still match")
+        self.assertIn("C-0005", ids, "column topic (template governance) must no longer be starved")
+
     def test_subsection_filled_with_inline_value(self) -> None:
         card, _ = build_card("C-0001", [WHATSAPP_CELL], CANON)
         subs = {s["name"]: s for s in card["subsections"]}

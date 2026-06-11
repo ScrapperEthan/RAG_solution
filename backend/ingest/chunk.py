@@ -95,7 +95,7 @@ def parse_page(page: RawPage, body_md: str, structured: bool) -> List[Dict]:
             continue
 
         heading = HEADING_RE.match(line)
-        if heading:
+        if heading and "|" not in heading.group(2):
             flush_prose()
             level, title = heading.groups()
             if level == "#" or level == "##":
@@ -105,6 +105,13 @@ def parse_page(page: RawPage, body_md: str, structured: bool) -> List[Dict]:
                 h3 = title.strip()
             i += 1
             continue
+        if heading:
+            # A "heading" whose text is a pipe row is a mis-converted table header
+            # (Confluence -> Markdown sometimes promotes a bold header row). Drop the
+            # marker and let the table/prose machinery handle the row, so it does not
+            # pollute heading_path / anchors / section_id for everything beneath it.
+            line = heading.group(2)
+            lines[i] = line
 
         if structured and is_table_start(lines, i):
             caption = flush_prose()

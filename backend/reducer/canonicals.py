@@ -94,6 +94,8 @@ def normalize_concept(raw: Dict) -> Dict:
         "aliases": list_value(raw.get("aliases")),
         "module": list_value(raw.get("module")),
         "topic_type": str(raw.get("topic_type") or raw.get("type") or "").strip(),
+        "topic_class": str(raw.get("topic_class") or raw.get("class") or "").strip(),
+        "subsections": list_value(raw.get("subsections") or raw.get("subsection") or raw.get("children")),
         "confidence": float_value(raw.get("confidence"), 1.0),
         "note_useful": str(raw.get("note_useful") or raw.get("why useful") or "").strip(),
         "boundary": str(raw.get("boundary") or raw.get("topic boundary") or "").strip(),

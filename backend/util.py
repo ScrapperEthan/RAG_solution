@@ -53,6 +53,10 @@ def stable_hash(payload: Any) -> str:
 
 
 def section_id(page_id: str, heading_path: List[str]) -> str:
-    heading = heading_path[-1] if heading_path else ""
-    return f"{page_id}#{heading}"
+    # Use the full heading path (minus the page title) so cells that share a leaf
+    # — e.g. the same matrix attribute across different channels — get distinct
+    # ids. A leaf-only id collapses every channel's "Information" cell into one.
+    parts = [str(part).strip() for part in (heading_path or []) if str(part).strip()]
+    tail = parts[1:] if len(parts) > 1 else parts
+    return f"{page_id}#{' > '.join(tail)}"
 

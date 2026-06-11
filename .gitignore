@@ -5,3 +5,19 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 config.yaml
+
+# Local Claude config (never commit)
+.claude/
+
+# Intranet / real-data artifacts — NEVER commit.
+# These contain real internal Confluence URLs, staff names, and JIRA links.
+inputs/
+*3725660167*
+config.kb.page-*.yaml
+outputs/kb_page_*/
+outputs/cards/MDC_Management_Portal.json
+outputs/cards/MDC_supported_notification_channels.json
+outputs/cards/MDC_project_engagement_process.json
+outputs/cards/Message_Path_Service_Catalogue.json
+outputs/cards/Notification_Use_Case_Setup.json
+outputs/proposed_keywords.json
