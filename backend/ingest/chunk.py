@@ -11,7 +11,10 @@ HEADING_RE = re.compile(r"^(#{1,3})\s+(.+?)\s*$")
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+|[一-鿿]+")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 LIST_RE = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
-TABLE_RE = re.compile(r"^\s*\|.*\|\s*$")
+# Real Confluence -> Markdown rows are often NOT wrapped in leading/trailing
+# pipes (e.g. "a | b | c"), so accept an optional outer pipe with >=1 inner pipe.
+# (folds handoff/17 §1; the strict "^\\|.*\\|$" dropped every unwrapped data row.)
+TABLE_RE = re.compile(r"^\s*\|?.+\|.+\|?.*$")
 SEPARATOR_RE = re.compile(r"^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$")
 NUM_RE = re.compile(r"^\s*(\d+)[.)]\s+(.*\S)\s*$")
 SUB_RE = re.compile(r"^\s*([A-Za-z])[.)]\s+(.*\S)\s*$")

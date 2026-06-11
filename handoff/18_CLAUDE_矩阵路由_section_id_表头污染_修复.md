@@ -49,7 +49,19 @@ def section_id(page_id: str, heading_path: List[str]) -> str:
 
 ---
 
-## 3. `backend/ingest/chunk.py` — 表头行被当成 markdown 标题（修 heading_path 污染）
+## 3. `backend/ingest/chunk.py` — 两处
+
+### 3.0 放宽 TABLE_RE（= 同步 handoff/17 §1，**首轮漏折了**，会导致表全部不解析）
+真实 Confluence→Markdown 的表行常**不带首尾 `|`**（`a | b | c`）。严格版只认 `|...|`，`collect_table` 收 0 行 → 矩阵/记录表全退化成散文/qa（症状：diag `matrix cells: 0`、卡 subsections 全空）。
+
+```python
+# Before（严格，漏掉真实无包裹行）
+TABLE_RE = re.compile(r"^\s*\|.*\|\s*$")
+# After（放宽：首尾 | 可选，至少一个内部 |）
+TABLE_RE = re.compile(r"^\s*\|?.+\|.+\|?.*$")
+```
+
+### 3.1 表头行被当成 markdown 标题（修 heading_path 污染）
 
 ### 原因
 diag 实测 30 个 section 的 heading_path 被 `|` 污染，样例：

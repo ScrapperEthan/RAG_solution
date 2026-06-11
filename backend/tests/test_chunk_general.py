@@ -117,6 +117,21 @@ class ChunkGeneralityTest(unittest.TestCase):
         self.assertIn("a. api", step2["body_md"])
         self.assertIn("b. worker", step2["body_md"])
 
+    def test_unwrapped_table_rows_still_explode(self) -> None:
+        # real Confluence export: header/rows are NOT wrapped in outer pipes.
+        # The strict regex dropped every such row, degrading tables to prose.
+        body = (
+            "Channel | Information | Delivery Mode\n"
+            "--- | --- | ---\n"
+            "PN | push info | real-time\n"
+            "SMS | sms info | batch nightly\n"
+        )
+        sections = chunk_page(_page(body), {"max_tokens": 0})
+        matrix = [s for s in sections if _meta(s).get("table_kind") == "matrix"]
+        self.assertTrue(matrix, "unwrapped table rows must still explode into matrix cells")
+        self.assertTrue(any(_meta(s).get("channel") == "PN" for s in matrix))
+        self.assertTrue(any(_meta(s).get("channel") == "SMS" for s in matrix))
+
     def test_pipe_heading_does_not_pollute_heading_path(self) -> None:
         # Confluence -> Markdown sometimes promotes a table header row to a heading.
         # It must not become a heading_path level (it polluted anchors/section_ids).
