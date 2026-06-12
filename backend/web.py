@@ -232,6 +232,13 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
     def golden() -> Dict[str, Any]:
         return {"items": runtime.golden_items, "modules": runtime.modules()}
 
+    @app.get("/api/cards")
+    def cards() -> JSONResponse:
+        # Read-only feed for frontend/cards.html (the card visualizer). Returns the
+        # cards_index.json array, or [] before the pipeline has produced cards.
+        path = runtime.outputs_dir / "cards_index.json"
+        return JSONResponse(read_json(path) if path.exists() else [])
+
     @app.get("/api/eval-report")
     def eval_report(allow_demo: bool = False) -> JSONResponse:
         path = runtime.outputs_dir / "eval_report.json"

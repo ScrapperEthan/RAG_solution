@@ -9,6 +9,9 @@ config.yaml
 # Local Claude config (never commit)
 .claude/
 
+# Stray local artifact dirs (browser-test output, etc.)
+output/
+
 # Intranet / real-data artifacts — NEVER commit.
 # These contain real internal Confluence URLs, staff names, and JIRA links.
 inputs/

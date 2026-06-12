@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Card Explorer · Drill Path</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    body { font-size: 13px; }
+    button, input { font: inherit; }
+    input { color: var(--ink); }
+    .cards-topbar {
+      position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 18px;
+      min-height: 76px; padding: 0 36px; border-bottom: 1px solid rgba(223,229,224,.85);
+      background: rgba(249,250,248,.92); backdrop-filter: blur(18px);
+    }
+    .cards-topbar .top-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+    .nav-link, .soft-button, .copy-button {
+      border: 1px solid var(--line); border-radius: 9px; color: var(--ink); background: #fff;
+      font-weight: 700; text-decoration: none;
+    }
+    .nav-link, .soft-button { min-height: 39px; padding: 0 13px; }
+    .nav-link { display: inline-flex; align-items: center; }
+    .soft-button:hover, .nav-link:hover { border-color: #bccbc2; }
+    .soft-button.is-primary { border-color: var(--green); color: #fff; background: var(--green); }
+    .cards-main { width: min(1700px, calc(100% - 40px)); margin: 0 auto 50px; }
+    .cards-hero { display: flex; justify-content: space-between; gap: 28px; padding: 32px 4px 20px; }
+    .cards-hero h1 { font-size: clamp(28px, 3vw, 44px); }
+    .cards-hero p { max-width: 820px; margin-top: 10px; color: var(--muted); line-height: 1.6; }
+    .source-state { align-self: end; max-width: 360px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); background: #fff; font-size: 11px; line-height: 1.5; }
+    .source-state strong { color: var(--green); }
+    .source-state.is-warning { border-color: #ead8b4; color: #795010; background: var(--gold-soft); }
+    .ask-panel {
+      padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.95);
+      box-shadow: var(--shadow);
+    }
+    .ask-row { display: grid; grid-template-columns: minmax(220px,1fr) 180px auto; gap: 9px; }
+    .ask-row input, .search-input {
+      width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--line);
+      border-radius: 9px; background: #fbfcfb;
+    }
+    .ask-panel textarea { min-height: 86px; }
+    .ask-panel details { margin-top: 12px; }
+    .ask-panel details summary { color: var(--muted); cursor: pointer; font-size: 11px; font-weight: 800; }
+    .offline-grid { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 9px; margin-top: 9px; align-items: end; }
+    .offline-grid textarea { margin: 0; }
+    .ask-message { min-height: 18px; margin-top: 8px; color: var(--muted); font-size: 11px; }
+    .ask-message.is-error { color: var(--red); }
+    .workspace { display: grid; grid-template-columns: 320px minmax(0,1fr); gap: 16px; margin-top: 16px; align-items: start; }
+    .card-sidebar, .detail-panel {
+      border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.95); box-shadow: var(--shadow);
+    }
+    .card-sidebar { position: sticky; top: 92px; max-height: calc(100vh - 110px); overflow: hidden; }
+    .sidebar-head { padding: 14px; border-bottom: 1px solid var(--line); }
+    .legend { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+    .tier {
+      display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px; border-radius: 999px;
+      color: #5d6861; background: #eef2ef; font-size: 9px; font-weight: 800; white-space: nowrap;
+    }
+    .tier.inline-value { color: var(--green); background: var(--green-soft); }
+    .tier.pointer-only { color: #176b87; background: #e4f2f5; }
+    .card-list { max-height: calc(100vh - 225px); overflow: auto; padding: 8px; }
+    .module-group + .module-group { margin-top: 10px; }
+    .module-title { padding: 6px 7px; color: var(--muted); font-size: 9px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+    .card-choice {
+      display: grid; gap: 5px; width: 100%; margin: 3px 0; padding: 10px; border: 1px solid transparent;
+      border-radius: 9px; color: var(--ink); background: transparent; text-align: left;
+    }
+    .card-choice:hover { background: #f4f7f5; }
+    .card-choice.is-selected { border-color: #bcdccd; background: var(--green-soft); }
+    .card-choice.path-hit { border-color: var(--gold); box-shadow: inset 3px 0 var(--gold); }
+    .choice-title { font-weight: 800; line-height: 1.35; }
+    .choice-meta { display: flex; flex-wrap: wrap; gap: 5px; color: var(--muted); font-size: 9px; }
+    .choice-meta span { padding: 2px 5px; border-radius: 999px; background: #edf2ef; }
+    .detail-panel { min-width: 0; padding: 18px; }
+    .empty-detail { padding: 60px 20px; color: var(--muted); text-align: center; }
+    .drill-board { display: grid; gap: 8px; margin-bottom: 16px; }
+    .drill-board.is-empty { display: none; }
+    .drill-stage {
+      position: relative; padding: 12px 13px 12px 46px; border: 1px solid var(--line); border-radius: 11px;
+      background: #fbfcfb; line-height: 1.55;
+    }
+    .drill-stage .stage-no, .path-order {
+      display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: #fff;
+      background: var(--green); font-size: 10px; font-weight: 900;
+    }
+    .drill-stage .stage-no { position: absolute; left: 12px; top: 12px; }
+    .drill-stage strong { display: block; margin-bottom: 3px; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+    .drill-stage p { color: #4e5b54; white-space: pre-wrap; }
+    .drill-stage a { color: var(--green); word-break: break-all; }
+    .steps { display: flex; flex-wrap: wrap; gap: 6px; }
+    .step-chip { display: flex; gap: 6px; align-items: center; padding: 6px 8px; border-radius: 999px; background: #edf3ef; font-size: 10px; }
+    .step-chip b { display: grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; color: #fff; background: var(--green); font-size: 8px; }
+    .card-head { position: relative; padding: 4px 2px 18px; border-bottom: 1px solid var(--line); }
+    .card-head.path-hit { padding-left: 42px; }
+    .card-head .path-order { position: absolute; left: 3px; top: 5px; background: var(--gold); }
+    .card-id { color: var(--green); font: 800 10px Consolas,monospace; letter-spacing: .08em; }
+    .card-head h2 { margin: 5px 0 8px; font-size: 24px; letter-spacing: -.025em; }
+    .card-head p { color: #536058; line-height: 1.6; }
+    .meta-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+    .meta-chip { padding: 4px 8px; border-radius: 999px; color: #59665e; background: #edf2ef; font-size: 9px; font-weight: 800; }
+    .meta-chip.flag { color: #795010; background: var(--gold-soft); }
+    .tree-section { margin-top: 18px; }
+    .section-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
+    .section-title h3 { margin: 0; font-size: 15px; }
+    .section-title span { color: var(--muted); font-size: 10px; }
+    .tree-card {
+      position: relative; margin: 8px 0; border: 1px solid var(--line); border-radius: 11px;
+      background: #fff; overflow: hidden;
+    }
+    .tree-card.path-hit { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(165,110,24,.13); }
+    .tree-card.path-hit > .path-order { position: absolute; z-index: 2; right: 9px; top: 9px; background: var(--gold); }
+    .tree-card summary { padding: 12px 14px; cursor: pointer; background: #f8faf8; font-weight: 800; }
+    .tree-card summary small { margin-left: 7px; color: var(--muted); font-size: 9px; font-weight: 700; }
+    .tree-content { padding: 12px; }
+    .sub-summary { margin-bottom: 10px; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .fact-list { display: grid; gap: 7px; }
+    .fact-row {
+      position: relative; display: grid; grid-template-columns: minmax(120px,.32fr) minmax(0,1fr); gap: 12px;
+      padding: 11px; border: 1px solid var(--line); border-radius: 9px; background: #fbfcfb;
+    }
+    .fact-row.path-hit { border-color: var(--gold); background: #fffaf0; box-shadow: inset 3px 0 var(--gold); }
+    .fact-row.path-hit .path-order { position: absolute; right: 8px; top: 8px; width: 21px; height: 21px; background: var(--gold); }
+    .fact-label strong { display: block; margin-bottom: 7px; font-size: 11px; }
+    .fact-value { color: #3f4c45; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+    .empty-facts { padding: 13px; border: 1px dashed var(--line); border-radius: 9px; color: #929b95; background: #fbfcfb; text-align: center; }
+    .source-list, .id-list { display: grid; gap: 5px; margin-top: 9px; }
+    .source-row, .copy-row { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--muted); font-size: 9px; }
+    .source-row a { overflow: hidden; color: var(--green); text-overflow: ellipsis; white-space: nowrap; }
+    .source-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .copy-row code { overflow: hidden; color: #78837c; text-overflow: ellipsis; white-space: nowrap; }
+    .copy-button { flex: 0 0 auto; min-height: 23px; padding: 0 7px; color: var(--muted); font-size: 8px; }
+    .aggregate details { margin: 8px 0; border: 1px solid var(--line); border-radius: 9px; background: #fbfcfb; }
+    .aggregate summary { padding: 10px 12px; cursor: pointer; font-size: 11px; font-weight: 800; }
+    .aggregate-body { padding: 0 12px 12px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .aggregate-body ul { margin: 0; padding-left: 18px; }
+    .flash { animation: pathFlash 1.1s ease both; }
+    @keyframes pathFlash { 0% { transform: translateY(0); } 35% { transform: translateY(-2px); box-shadow: 0 0 0 5px rgba(165,110,24,.14); } 100% { transform: translateY(0); } }
+    @media (max-width: 1050px) {
+      .workspace { grid-template-columns: 270px minmax(0,1fr); }
+      .fact-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 780px) {
+      .cards-topbar { padding: 10px 16px; flex-wrap: wrap; }
+      .cards-topbar .top-actions { width: 100%; margin-left: 0; }
+      .cards-main { width: min(100% - 20px, 1700px); }
+      .cards-hero { display: block; }
+      .source-state { margin-top: 12px; }
+      .ask-row, .offline-grid, .workspace { grid-template-columns: 1fr; }
+      .card-sidebar { position: static; max-height: none; }
+      .card-list { max-height: 380px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cards-topbar">
+    <a class="brand" href="./index.html">
+      <span class="brand-mark">CI</span>
+      <span><strong>Card Explorer</strong><small>Topic → subsection → fact → citation</small></span>
+    </a>
+    <div class="top-actions">
+      <input id="cardsFile" type="file" accept=".json,application/json" hidden />
+      <button id="loadCardsBtn" class="soft-button" type="button">载入 cards_index.json</button>
+      <button id="sampleBtn" class="soft-button" type="button">脱敏 Sample</button>
+      <a class="nav-link" href="./index.html">返回问答</a>
+    </div>
+  </header>
+
+  <main class="cards-main">
+    <section class="cards-hero">
+      <div>
+        <div class="eyebrow">Approved card evidence · visual drill path</div>
+        <h1>卡片结构与回答路径</h1>
+        <p>浏览 topic、subsection、fact 与 field，并把一次回答从命中卡片到引用证据的路径直接高亮在树上。</p>
+      </div>
+      <div id="sourceState" class="source-state">正在读取 cards_index.json…</div>
+    </section>
+
+    <section class="ask-panel">
+      <form id="askForm" class="ask-row">
+        <input id="queryInput" type="text" value="What is the support contact for Sample Service?" aria-label="问题" />
+        <select id="answerMode" aria-label="answer mode">
+          <option value="agentic">agentic</option>
+          <option value="pure-rag">pure-rag</option>
+          <option value="card-direct">card-direct</option>
+          <option value="card-grounding">card-grounding</option>
+          <option value="llm-direct">llm-direct</option>
+        </select>
+        <button id="askBtn" class="soft-button is-primary" type="submit">提问并走路径</button>
+      </form>
+      <div id="askMessage" class="ask-message">答案会流式显示；收到 result 后自动定位命中卡并高亮证据。</div>
+      <details>
+        <summary>离线：贴一段 result JSON</summary>
+        <div class="offline-grid">
+          <textarea id="resultJson" placeholder='支持 result 对象，或 {"type":"result","result":{...}}'></textarea>
+          <button id="renderJsonBtn" class="soft-button" type="button">渲染 JSON 路径</button>
+        </div>
+      </details>
+    </section>
+
+    <section class="workspace">
+      <aside class="card-sidebar">
+        <div class="sidebar-head">
+          <input id="searchInput" class="search-input" type="search" placeholder="搜索 name / aliases / keywords" />
+          <div class="legend" aria-label="tier 图例">
+            <span class="tier inline-value">inline-value</span>
+            <span class="tier narrative">narrative</span>
+            <span class="tier pointer-only">pointer-only</span>
+          </div>
+        </div>
+        <div id="cardList" class="card-list"></div>
+      </aside>
+
+      <section class="detail-panel">
+        <div id="drillBoard" class="drill-board is-empty"></div>
+        <div id="cardDetail" class="empty-detail">正在加载卡片…</div>
+      </section>
+    </section>
+  </main>
+
+<script>
+const SAMPLE_CARD = {
+  canonical_id: "C-SAMPLE-01",
+  canonical_name: "Sample Service Support",
+  topic_class: "reference",
+  aliases: ["sample support", "support contact"],
+  module: ["Example Module", "Service Operations"],
+  boundary: "Public, synthetic support contacts and escalation pointers used only for the offline visual demo.",
+  topic_type: "reference",
+  status: "approved",
+  keywords_raw_agg: ["support", "contact", "escalation"],
+  concepts_agg: ["service support"],
+  questions_agg_en: ["What is the support contact for Sample Service?"],
+  questions_agg_zh: ["Sample Service 的支持联系人是谁？"],
+  source_section_ids: ["sample-page#Sample Service > Support Contact"],
+  subsections: [
+    {
+      name: "Support",
+      summary: "Synthetic support details for the offline demo.",
+      key_points: ["Support Contact: A B CHEN"],
+      facts: [
+        {
+          label: "Support Contact",
+          field: "support_contact",
+          tier: "inline-value",
+          value: "A B CHEN",
+          pointer_to: null,
+          sources: [{page_id:"sample-page",anchor:"Sample Service > Support Contact",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],
+          source_section_ids: ["sample-page#Sample Service > Support Contact"]
+        }
+      ],
+      evidence_keywords: ["support", "contact"],
+      source_section_ids: ["sample-page#Sample Service > Support Contact"],
+      sources: [{page_id:"sample-page",anchor:"Sample Service > Support",source_url:"https://example.test/wiki/sample-page",confluence_version:1}]
+    },
+    {
+      name: "Escalation",
+      summary: "This subsection intentionally has no extracted facts.",
+      facts: [],
+      evidence_keywords: ["escalation"],
+      source_section_ids: ["sample-page#Sample Service > Escalation"],
+      sources: [{page_id:"sample-page",anchor:"Sample Service > Escalation",source_url:"https://example.test/wiki/sample-page",confluence_version:1}]
+    }
+  ],
+  fields: [
+    {field:"overview",tier:"narrative",value:"Sample Service is a synthetic example used for the Card Explorer.",pointer_to:null,sources:[{page_id:"sample-page",anchor:"Sample Service > Overview",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],evidence_keywords:["sample"],source_section_ids:["sample-page#Sample Service > Overview"]},
+    {field:"runbook",tier:"pointer-only",value:null,pointer_to:"Sample Service > Operations Runbook",sources:[{page_id:"sample-page",anchor:"Sample Service > Operations Runbook",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],evidence_keywords:["runbook"],source_section_ids:["sample-page#Sample Service > Operations Runbook"]}
+  ],
+  flags: []
+};
+
+const SAMPLE_RESULT = {
+  query: "What is the support contact for Sample Service?",
+  answer: "The support contact for Sample Service is A B CHEN.",
+  citations: ["https://example.test/wiki/sample-page"],
+  retrieved_section_ids: ["sample-page#Sample Service > Support Contact"],
+  drilled: false,
+  card_evidence: [{field:"support_contact",label:"Support Contact",tier:"inline-value",value:"A B CHEN",pointer_to:null,sources:[{page_id:"sample-page",anchor:"Sample Service > Support Contact",source_url:"https://example.test/wiki/sample-page"}],source_section_ids:["sample-page#Sample Service > Support Contact"]}],
+  evidence_sections: [],
+  execution: {
+    requested_mode: "agentic",
+    path: "agentic-card-direct",
+    evidence_kind: "card",
+    steps: ["Match approved canonical card","Classify intent as exact","Use answerable card fields directly"],
+    intent: "exact",
+    drilled: false,
+    card: {canonical_id:"C-SAMPLE-01",canonical_name:"Sample Service Support",module:["Example Module","Service Operations"]}
+  }
+};
+
+const state = { cards: [], selectedId: null, result: null, busy: false, sample: false, streamAnswer: "" };
+const el = id => document.getElementById(id);
+const arr = value => Array.isArray(value) ? value.filter(v => v !== null && v !== undefined && String(v).trim()) : [];
+const esc = value => String(value ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const text = value => value === null || value === undefined || value === "" ? "—" : String(value);
+const norm = value => String(value ?? "").trim().toLowerCase();
+
+el("askForm").addEventListener("submit", submitQuestion);
+el("searchInput").addEventListener("input", renderCardList);
+el("sampleBtn").addEventListener("click", () => useSample(true));
+el("loadCardsBtn").addEventListener("click", () => el("cardsFile").click());
+el("cardsFile").addEventListener("change", loadLocalCards);
+el("renderJsonBtn").addEventListener("click", renderPastedResult);
+el("cardList").addEventListener("click", event => {
+  const choice = event.target.closest("[data-card-id]");
+  if (!choice) return;
+  state.selectedId = choice.dataset.cardId;
+  renderCardList();
+  renderCardDetail();
+});
+document.addEventListener("click", event => {
+  const button = event.target.closest("[data-copy]");
+  if (!button) return;
+  navigator.clipboard?.writeText(button.dataset.copy).then(() => {
+    const old = button.textContent; button.textContent = "已复制"; setTimeout(() => button.textContent = old, 900);
+  }).catch(() => { button.textContent = "复制失败"; });
+});
+
+initialize();
+
+async function initialize() {
+  if (new URLSearchParams(location.search).get("sample") === "1") {
+    useSample(true);
+    return;
+  }
+  try {
+    const response = await fetch("/outputs/cards_index.json", {cache:"no-store"});
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const cards = await response.json();
+    setCards(cards, false);
+    setSourceState(`已从 <strong>/outputs/cards_index.json</strong> 读取 ${state.cards.length} 张卡。`);
+  } catch (error) {
+    useSample(false);
+    setSourceState(`无法自动读取 outputs/cards_index.json（${esc(error.message)}）。已回退到<strong>脱敏 sample</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
+  }
+}
+
+function setCards(cards, sample) {
+  if (!Array.isArray(cards)) throw new Error("cards_index.json 须为 card 数组");
+  state.cards = cards;
+  state.sample = sample;
+  state.selectedId = cards[0]?.canonical_id || null;
+  state.result = null;
+  state.streamAnswer = "";
+  renderAll();
+}
+
+function useSample(renderPath) {
+  setCards([structuredClone(SAMPLE_CARD)], true);
+  setSourceState("当前使用<strong>脱敏 sample</strong>，不包含真实内网数据。", true);
+  if (renderPath) applyResult(structuredClone(SAMPLE_RESULT), true);
+}
+
+function setSourceState(html, warning = false) {
+  el("sourceState").className = `source-state${warning ? " is-warning" : ""}`;
+  el("sourceState").innerHTML = html;
+}
+
+async function loadLocalCards(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  try {
+    const cards = JSON.parse(await file.text());
+    setCards(cards, false);
+    setSourceState(`已读取本地文件 <strong>${esc(file.name)}</strong>，共 ${state.cards.length} 张卡。`);
+  } catch (error) {
+    setSourceState(`文件读取失败：${esc(error.message)}`, true);
+  } finally {
+    event.target.value = "";
+  }
+}
+
+function renderAll() {
+  renderCardList();
+  renderDrillBoard();
+  renderCardDetail();
+}
+
+function cardSearchText(card) {
+  return [
+    card.canonical_name, card.canonical_id, ...arr(card.aliases), ...arr(card.keywords_raw_agg),
+    ...arr(card.concepts_agg), ...arr(card.questions_agg_en), ...arr(card.questions_agg_zh)
+  ].join(" ").toLowerCase();
+}
+
+function moduleKey(card) {
+  return arr(card.module).join(" / ") || "未分组";
+}
+
+function renderCardList() {
+  const query = norm(el("searchInput").value);
+  const visible = state.cards.filter(card => !query || cardSearchText(card).includes(query));
+  const groups = new Map();
+  visible.forEach(card => {
+    const key = moduleKey(card);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(card);
+  });
+  const hitId = state.result?.execution?.card?.canonical_id;
+  el("cardList").innerHTML = visible.length ? [...groups.entries()].sort(([a],[b]) => a.localeCompare(b)).map(([module, cards]) => `
+    <section class="module-group">
+      <div class="module-title">${esc(module)} · ${cards.length}</div>
+      ${cards.sort((a,b) => String(a.canonical_name).localeCompare(String(b.canonical_name))).map(card => `
+        <button class="card-choice ${card.canonical_id === state.selectedId ? "is-selected" : ""} ${card.canonical_id === hitId ? "path-hit" : ""}" type="button" data-card-id="${esc(card.canonical_id)}">
+          <span class="choice-title">${esc(card.canonical_name || card.canonical_id)}</span>
+          <span class="choice-meta"><span>${esc(card.topic_class || card.topic_type || "untyped")}</span><span>${esc(card.status || "unknown")}</span></span>
+        </button>`).join("")}
+    </section>`).join("") : '<div class="empty-facts">没有匹配卡片</div>';
+}
+
+function selectedCard() {
+  return state.cards.find(card => card.canonical_id === state.selectedId) || null;
+}
+
+function tierHtml(tier) {
+  const value = tier || "narrative";
+  return `<span class="tier ${esc(value)}">${esc(value)}</span>`;
+}
+
+function sourceHtml(sources) {
+  const rows = arr(sources);
+  if (!rows.length) return "";
+  return `<div class="source-list">${rows.map(source => {
+    const label = source.anchor || source.page_id || source.source_url || "source";
+    const href = safeUrl(source.source_url);
+    return `<div class="source-row">
+      ${href ? `<a href="${esc(href)}" target="_blank" rel="noreferrer">${esc(label)}</a>` : `<span>${esc(label)}</span>`}
+      <button class="copy-button" type="button" data-copy="${esc(label)}">复制 anchor</button>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function idListHtml(ids) {
+  const rows = arr(ids);
+  if (!rows.length) return "";
+  return `<div class="id-list">${rows.map(id => `<div class="copy-row"><code>${esc(id)}</code><button class="copy-button" type="button" data-copy="${esc(id)}">复制 section_id</button></div>`).join("")}</div>`;
+}
+
+function safeUrl(value) {
+  try {
+    const url = new URL(value);
+    return ["http:","https:"].includes(url.protocol) ? url.href : "";
+  } catch (_) { return ""; }
+}
+
+function cardHitTokens(result) {
+  const tokens = new Set();
+  const add = value => { if (value !== null && value !== undefined && String(value).trim()) tokens.add(norm(value)); };
+  const evidence = [...arr(result?.card_evidence), ...arr(result?.evidence_sections)];
+  arr(result?.retrieved_section_ids).forEach(add);
+  evidence.forEach(item => {
+    const headingPath = arr(item.heading_path);
+    [item.field, item.label, item.value, item.pointer_to, item.section_id, ...(arr(item.source_section_ids)), headingPath.at(-1)].forEach(add);
+    arr(item.sources).forEach(source => add(source.anchor));
+  });
+  return tokens;
+}
+
+function itemIsHit(item, result) {
+  if (!result) return false;
+  const tokens = cardHitTokens(result);
+  const headingPath = arr(item.heading_path);
+  const candidates = [
+    item.field, item.label, item.name, item.value, item.pointer_to, item.section_id,
+    ...arr(item.source_section_ids), headingPath.at(-1)
+  ];
+  arr(item.sources).forEach(source => candidates.push(source.anchor));
+  return candidates.some(candidate => {
+    const n = norm(candidate);
+    if (!n) return false;
+    for (const token of tokens) {
+      if (token === n || (token.length > 5 && n.includes(token)) || (n.length > 5 && token.includes(n))) return true;
+    }
+    return false;
+  });
+}
+
+function factHtml(item, kind) {
+  const label = item.label || item.field || `${kind} item`;
+  const value = item.value ?? item.pointer_to;
+  const hit = itemIsHit(item, state.result);
+  return `<article class="fact-row ${hit ? "path-hit" : ""}">
+    ${hit ? '<span class="path-order">4</span>' : ""}
+    <div class="fact-label"><strong>${esc(label)}</strong>${tierHtml(item.tier)}</div>
+    <div>
+      <div class="fact-value">${esc(text(value))}</div>
+      ${sourceHtml(item.sources)}
+      ${idListHtml(item.source_section_ids)}
+    </div>
+  </article>`;
+}
+
+function renderCardDetail() {
+  const card = selectedCard();
+  if (!card) {
+    el("cardDetail").className = "empty-detail";
+    el("cardDetail").innerHTML = "没有可显示的卡片。";
+    return;
+  }
+  const topicHit = state.result?.execution?.card?.canonical_id === card.canonical_id;
+  const subsections = arr(card.subsections);
+  const fields = arr(card.fields);
+  el("cardDetail").className = "";
+  el("cardDetail").innerHTML = `
+    <header class="card-head ${topicHit ? "path-hit" : ""}">
+      ${topicHit ? '<span class="path-order">2</span>' : ""}
+      <div class="card-id">${esc(card.canonical_id || "NO-ID")}</div>
+      <h2>${esc(card.canonical_name || "Unnamed card")}</h2>
+      <p>${esc(card.boundary || "未提供 boundary")}</p>
+      <div class="meta-chips">
+        ${arr(card.aliases).map(value => `<span class="meta-chip">alias · ${esc(value)}</span>`).join("")}
+        ${arr(card.module).map(value => `<span class="meta-chip">module · ${esc(value)}</span>`).join("")}
+        ${card.topic_class ? `<span class="meta-chip">${esc(card.topic_class)}</span>` : ""}
+        ${card.status ? `<span class="meta-chip">${esc(card.status)}</span>` : ""}
+        ${arr(card.flags).map(value => `<span class="meta-chip flag">flag · ${esc(typeof value === "string" ? value : JSON.stringify(value))}</span>`).join("")}
+      </div>
+      ${idListHtml(card.source_section_ids)}
+    </header>
+
+    <section class="tree-section">
+      <div class="section-title"><h3>Subsections</h3><span>${subsections.length} groups</span></div>
+      ${subsections.length ? subsections.map((subsection, index) => {
+        const facts = arr(subsection.facts || subsection.fields);
+        const hit = itemIsHit(subsection, state.result) || facts.some(fact => itemIsHit(fact, state.result));
+        return `<details class="tree-card ${hit ? "path-hit" : ""}" open>
+          ${hit ? '<span class="path-order">4</span>' : ""}
+          <summary>${esc(subsection.name || `Subsection ${index + 1}`)} <small>${facts.length} facts</small></summary>
+          <div class="tree-content">
+            ${subsection.summary ? `<div class="sub-summary">${esc(subsection.summary)}</div>` : ""}
+            <div class="fact-list">${facts.length ? facts.map(fact => factHtml(fact, "fact")).join("") : '<div class="empty-facts">（无抽取事实）</div>'}</div>
+            ${sourceHtml(subsection.sources)}
+            ${idListHtml(subsection.source_section_ids)}
+          </div>
+        </details>`;
+      }).join("") : '<div class="empty-facts">（无 subsection）</div>'}
+    </section>
+
+    <section class="tree-section">
+      <div class="section-title"><h3>Fields</h3><span>${fields.length} fields</span></div>
+      <div class="fact-list">${fields.length ? fields.map(field => factHtml(field, "field")).join("") : '<div class="empty-facts">（无 card-level fields）</div>'}</div>
+    </section>
+
+    <section class="tree-section aggregate">
+      <div class="section-title"><h3>Aggregates</h3><span>默认折叠</span></div>
+      ${aggregateHtml("Raw keywords", card.keywords_raw_agg)}
+      ${aggregateHtml("Concepts", card.concepts_agg)}
+      ${aggregateHtml("Questions · EN", card.questions_agg_en)}
+      ${aggregateHtml("Questions · ZH", card.questions_agg_zh)}
+    </section>`;
+}
+
+function aggregateHtml(label, values) {
+  const rows = arr(values);
+  return `<details><summary>${esc(label)} · ${rows.length}</summary><div class="aggregate-body">${rows.length ? `<ul>${rows.map(value => `<li>${esc(value)}</li>`).join("")}</ul>` : "（无）"}</div></details>`;
+}
+
+function renderDrillBoard() {
+  const result = state.result;
+  if (!result) {
+    el("drillBoard").className = "drill-board is-empty";
+    el("drillBoard").innerHTML = "";
+    return;
+  }
+  const execution = result.execution || {};
+  const card = execution.card;
+  const evidenceCount = arr(result.card_evidence).length + arr(result.evidence_sections).length;
+  const citations = arr(result.citations);
+  el("drillBoard").className = "drill-board";
+  el("drillBoard").innerHTML = `
+    <article class="drill-stage" data-stage="1"><span class="stage-no">1</span><strong>用户问题 · intent ${esc(execution.intent || "unknown")}</strong><p>${esc(result.query || el("queryInput").value)}</p></article>
+    <article class="drill-stage" data-stage="2"><span class="stage-no">2</span><strong>命中 topic</strong><p>${card ? `${esc(card.canonical_id)} · ${esc(card.canonical_name)}` : "没有命中卡片，进入 fallback / no-grounding 路径"}</p></article>
+    <article class="drill-stage" data-stage="3"><span class="stage-no">3</span><strong>${esc(execution.path || "execution steps")}</strong><div class="steps">${arr(execution.steps).map((step,index) => `<span class="step-chip"><b>${index + 1}</b>${esc(step)}</span>`).join("") || "没有返回 execution.steps"}</div></article>
+    <article class="drill-stage" data-stage="4"><span class="stage-no">4</span><strong>落到证据 · ${esc(execution.evidence_kind || "none")}</strong><p>${evidenceCount} 条 card field / source section 已映射到下方树结构。</p></article>
+    <article class="drill-stage" data-stage="5"><span class="stage-no">5</span><strong>答案 + citations</strong><p>${esc(result.answer || state.streamAnswer || "—")}</p><div class="source-list">${citations.map(url => {
+      const href = safeUrl(url);
+      return href ? `<div class="source-row"><a href="${esc(href)}" target="_blank" rel="noreferrer">${esc(url)}</a></div>` : `<div class="source-row"><span>${esc(url)}</span></div>`;
+    }).join("") || '<div class="source-row"><span>无 citation</span></div>'}</div></article>`;
+}
+
+async function submitQuestion(event) {
+  event.preventDefault();
+  if (state.busy) return;
+  const query = el("queryInput").value.trim();
+  if (!query) return;
+  state.busy = true;
+  state.streamAnswer = "";
+  state.result = null;
+  el("askBtn").disabled = true;
+  setAskMessage("正在请求 /api/chat/stream，答案流式接收中…");
+  renderDrillBoard();
+  try {
+    const response = await fetch("/api/chat/stream", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({query, answer_mode:el("answerMode").value, language:"en", module:null})
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    await readNdjson(response);
+  } catch (error) {
+    useSample(false);
+    applyResult(structuredClone(SAMPLE_RESULT), true);
+    setAskMessage(`API 不可用（${error.message}），已回退并渲染脱敏 sample 路径。`, true);
+  } finally {
+    state.busy = false;
+    el("askBtn").disabled = false;
+  }
+}
+
+async function readNdjson(response) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  while (true) {
+    const {value, done} = await reader.read();
+    buffer += decoder.decode(value || new Uint8Array(), {stream:!done});
+    const lines = buffer.split("\n");
+    buffer = lines.pop() || "";
+    lines.filter(Boolean).forEach(line => handleEvent(JSON.parse(line)));
+    if (done) break;
+  }
+  if (buffer.trim()) handleEvent(JSON.parse(buffer));
+}
+
+function handleEvent(event) {
+  if (event.type === "token") {
+    state.streamAnswer += event.text || "";
+    setAskMessage(`流式答案：${state.streamAnswer}`);
+    return;
+  }
+  if (event.type === "result") {
+    applyResult(event.result, true);
+    setAskMessage("回答完成，路径已映射并高亮。");
+    return;
+  }
+  if (event.type === "error") throw new Error(event.message || "Unknown stream error");
+}
+
+function renderPastedResult() {
+  try {
+    let payload = JSON.parse(el("resultJson").value);
+    if (payload.type === "result" && payload.result) payload = payload.result;
+    applyResult(payload, true);
+    setAskMessage("离线 result JSON 已渲染。");
+  } catch (error) {
+    setAskMessage(`JSON 解析失败：${error.message}`, true);
+  }
+}
+
+function applyResult(result, animate) {
+  if (!result || typeof result !== "object") throw new Error("result 须为对象");
+  state.result = result;
+  const cardId = result.execution?.card?.canonical_id;
+  if (cardId && state.cards.some(card => card.canonical_id === cardId)) state.selectedId = cardId;
+  renderAll();
+  if (animate) animatePath();
+}
+
+function animatePath() {
+  const targets = [
+    '[data-stage="1"]',
+    '.card-choice.path-hit, .card-head.path-hit, [data-stage="2"]',
+    '[data-stage="3"]',
+    '.tree-card.path-hit, .fact-row.path-hit, [data-stage="4"]',
+    '[data-stage="5"]'
+  ];
+  targets.forEach((selector, index) => setTimeout(() => {
+    document.querySelectorAll(selector).forEach(node => {
+      node.classList.remove("flash");
+      void node.offsetWidth;
+      node.classList.add("flash");
+    });
+  }, index * 260));
+}
+
+function setAskMessage(message, error = false) {
+  el("askMessage").className = `ask-message${error ? " is-error" : ""}`;
+  el("askMessage").textContent = message;
+}
+</script>
+</body>
+</html>
