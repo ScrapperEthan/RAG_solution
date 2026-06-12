@@ -234,21 +234,54 @@ def aggregate_evidence(sections: List[Dict]) -> Dict[str, List[str]]:
 def build_subsections(canonical: Dict, sections: List[Dict]) -> List[Dict]:
     names = [str(name).strip() for name in canonical.get("subsections", []) if str(name).strip()]
     rows: List[Dict] = []
+    claimed: set = set()
     for name in names:
         matched = route_subsection_sections(name, sections)
-        facts = build_subsection_facts(matched)
-        rows.append(
-            {
-                "name": name,
-                "summary": synthesize_subsection(name, facts),
-                "key_points": subsection_key_points(facts),
-                "facts": facts,
-                "evidence_keywords": dedupe_strings(k for s in matched for k in s.get("keywords_raw", [])),
-                "source_section_ids": dedupe_strings(section_id(s) for s in matched),
-                "sources": sources(matched),
-            }
-        )
+        for section in matched:
+            claimed.add(section_id(section))
+        rows.append(_subsection_row(name, matched))
+    # Data-derived fallback: matched sections that NO named subsection claimed get
+    # grouped by their own key (channel/row_key/attribute/...) so their facts
+    # (contact names, ticket URLs, ...) surface as structured facts instead of only
+    # landing in keywords_raw_agg. This is what fills cards when the (machine-named)
+    # keyword-table subsections do not literally match the page's data terms.
+    leftover: Dict[str, List[Dict]] = {}
+    for section in sections:
+        if section_id(section) in claimed:
+            continue
+        key = natural_subsection_key(section)
+        if key:
+            leftover.setdefault(key, []).append(section)
+    existing = {row["name"].lower() for row in rows}
+    for key, group in leftover.items():
+        if key.lower() in existing:
+            continue
+        row = _subsection_row(key, group)
+        if row["facts"]:
+            rows.append(row)
     return rows
+
+
+def _subsection_row(name: str, matched: List[Dict]) -> Dict:
+    facts = build_subsection_facts(matched)
+    return {
+        "name": name,
+        "summary": synthesize_subsection(name, facts),
+        "key_points": subsection_key_points(facts),
+        "facts": facts,
+        "evidence_keywords": dedupe_strings(k for s in matched for k in s.get("keywords_raw", [])),
+        "source_section_ids": dedupe_strings(section_id(s) for s in matched),
+        "sources": sources(matched),
+    }
+
+
+def natural_subsection_key(section: Dict) -> str:
+    metadata = section.get("metadata") or {}
+    for key in ("row_key", "channel", "attribute", "question", "environment"):
+        value = str(metadata.get(key) or "").strip()
+        if value:
+            return value
+    return str((section.get("heading_path") or [""])[-1]).strip()
 
 
 def route_subsection_sections(name: str, sections: List[Dict]) -> List[Dict]:

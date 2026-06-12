@@ -131,6 +131,37 @@ class ReducerCleanTest(unittest.TestCase):
         self.assertIn("PN", subs)
         self.assertNotIn(": Q:", subs["whatsApp"]["summary"])
 
+    def test_unrouted_facts_surface_as_data_derived_subsection(self) -> None:
+        # machine-named subsections don't match the data terms; the inline-value
+        # fact must still surface (grouped by its own key), not vanish into
+        # keywords_raw_agg.
+        canon = {
+            "C-9": {
+                "canonical_id": "C-9",
+                "canonical_name": "Engagement Contacts",
+                "aliases": ["contact point"],
+                "module": [],
+                "topic_type": "reference",
+                "topic_class": "",
+                "boundary": "",
+                "subsections": ["Application contacts", "Governance contacts"],
+                "status": "approved",
+            }
+        }
+        cell = _section(
+            ["MDC Check List", "Q&A", "Engagement contact point", "MDC", "Contact Point"],
+            {"table_kind": "matrix", "row_key": "MDC", "channel": "MDC", "attribute": "Contact Point"},
+            tier="inline-value",
+            fact_values=["Joe Z Y JIAN"],
+        )
+        card, _ = build_card("C-9", [cell], canon)
+        subs = {s["name"]: s for s in card["subsections"]}
+        self.assertIn("MDC", subs, "unrouted cell surfaces under its own data key")
+        self.assertTrue(
+            any("Joe Z Y JIAN" in (f.get("value") or "") for f in subs["MDC"]["facts"]),
+            subs["MDC"]["facts"],
+        )
+
     def test_no_hardcoded_dmp_or_otp_flags(self) -> None:
         cell = _section(
             ["MDC Check List", "Matrix", "whatsApp", "Info"],
