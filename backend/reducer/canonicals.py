@@ -161,10 +161,15 @@ def canonical_ids_for(section: Dict, canonicals: Dict[str, Dict]) -> List[str]:
         concept_ids = canonical_ids_in_text(concepts[0], canonicals)
         if concept_ids:
             return concept_ids
-    elif len(concepts) > 1:
-        return []
     primary_keywords = [str(item) for item in section.get("keywords_raw", [])[:2]]
-    return dedupe(cid for text in primary_keywords for cid in canonical_ids_in_text(text, canonicals))
+    keyword_ids = dedupe(cid for text in primary_keywords for cid in canonical_ids_in_text(text, canonicals))
+    if len(concepts) > 1:
+        # A multi-concept narrative (e.g. an image/screenshot section whose table
+        # was OCR'd into one blob) is ambiguous by heading, but its title usually
+        # sits in keywords_raw. Attribute it only when those leading keywords name
+        # exactly one canonical; if several, it is genuinely ambiguous.
+        return keyword_ids if len(keyword_ids) == 1 else []
+    return keyword_ids
 
 
 def canonical_ids_in_text(text: str, canonicals: Dict[str, Dict]) -> List[str]:

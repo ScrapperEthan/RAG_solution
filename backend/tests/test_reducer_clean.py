@@ -78,6 +78,26 @@ class ReducerCleanTest(unittest.TestCase):
         stray = _section(["Other Page", "Misc"], {"table_kind": "matrix", "row_key": "Telex", "channel": "Telex", "attribute": "x"})
         self.assertEqual(match_section(stray, CANON), [])
 
+    def test_image_section_matched_by_keyword_name(self) -> None:
+        # an image/screenshot section is OCR'd into one prose blob with many
+        # concepts, but its title (a canonical name) sits in keywords_raw.
+        canon = dict(CANON)
+        canon["C-0004"] = {
+            "canonical_id": "C-0004",
+            "canonical_name": "Message Path Service Catalogue",
+            "aliases": ["message path"],
+            "module": [],
+            "topic_type": "inventory",
+            "topic_class": "catalog",
+            "boundary": "",
+            "subsections": [],
+            "status": "approved",
+        }
+        section = _section(["MDC Check List", "Image Evidence", "image-evidence-1"], {})
+        section["concepts"] = ["messaging paths", "service levels", "cost tiers"]
+        section["keywords_raw"] = ["Message Path Service Catalogue", "For transparency, below table ..."]
+        self.assertEqual(match_section(section, canon), ["C-0004"])
+
     def test_matrix_cell_routes_to_row_and_column_topics(self) -> None:
         # a (channel x attribute) cell is evidence for the channel topic AND the
         # attribute topic; winner-take-all used to drop the attribute topic.
