@@ -67,6 +67,9 @@ class ReducerService:
             review_queue.extend(conflicts)
             write_json(cards_dir / f"{safe_filename(card['canonical_name'])}.json", card)
 
+        unmatched_topics = [cid for cid in canonicals if cid not in grouped]
+        for cid in unmatched_topics:
+            review_queue.append(unmatched_canonical_item(cid, canonicals[cid]))
         review_queue.extend(low_confidence_items(sections))
         deduped = dedupe_inverted(inverted_rows)
         for row in deduped:
@@ -77,7 +80,12 @@ class ReducerService:
         write_jsonl(self.outputs_dir / "review_queue.jsonl", review_queue)
         (self.outputs_dir / "canonical_keywords.md").write_text(render_registry_markdown(canonicals), encoding="utf-8")
         write_json(self.outputs_dir / "cards_index.json", cards)
-        return {"cards": len(cards), "inverted_rows": len(deduped), "review_queue": len(review_queue)}
+        return {
+            "cards": len(cards),
+            "inverted_rows": len(deduped),
+            "review_queue": len(review_queue),
+            "unmatched_topics": len(unmatched_topics),
+        }
 
     def _load_sections(self, map_files: List[Path]) -> List[Dict]:
         # map sections carry the extraction result but not the original body_md;
@@ -554,6 +562,27 @@ def narrative_fact_value(section: Dict) -> str:
 
 def conflict_item(cid: str, conflict: Dict, n: int) -> Dict:
     return {"queue_id": f"RQ-conflict-{cid}-{n:03d}", "type": "conflict", "canonical_id": cid, "field": "config", "detail": conflict["detail"], "options": conflict["options"], "status": "open"}
+
+
+def unmatched_canonical_item(cid: str, canonical: Dict) -> Dict:
+    """An approved topic that no section claimed -> surfaced, not silently dropped.
+
+    reduce only builds a card for a canonical that owns >=1 section, so an
+    approved topic with no owning section produces no card. Emit it to the review
+    queue so the keyword-table owner sees it (drop the topic, or fix extraction).
+    """
+    return {
+        "queue_id": f"RQ-unmatched-topic-{cid}",
+        "type": "unmatched-canonical",
+        "canonical_id": cid,
+        "field": "card",
+        "detail": (
+            f"Approved topic '{canonical['canonical_name']}' matched no section, so no card was built. "
+            "Review whether to drop it from the keyword table or fix extraction."
+        ),
+        "options": canonical.get("aliases", []),
+        "status": "open",
+    }
 
 
 def unmatched_review_item(section: Dict) -> Dict:

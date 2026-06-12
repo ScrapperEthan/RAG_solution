@@ -14,8 +14,9 @@ from backend.reducer.service import (
     clean_narrative_text,
     is_junk_value,
     match_section,
+    unmatched_canonical_item,
 )
-from backend.schemas.validation import validate_card
+from backend.schemas.validation import validate_card, validate_review_item
 
 
 CANON = {
@@ -176,6 +177,12 @@ class ReducerCleanTest(unittest.TestCase):
     def test_card_passes_validation(self) -> None:
         card, _ = build_card("C-0001", [WHATSAPP_CELL], CANON)
         validate_card(card)  # raises on failure
+
+    def test_unmatched_canonical_surfaced_as_valid_review_item(self) -> None:
+        item = unmatched_canonical_item("C-0001", CANON["C-0001"])
+        validate_review_item(item)  # raises on failure
+        self.assertEqual(item["type"], "unmatched-canonical")
+        self.assertEqual(item["canonical_id"], "C-0001")
 
     def test_cleaning_kills_echo_and_junk(self) -> None:
         self.assertNotIn("Q:", clean_narrative_text("Q: portal access right Q: portal access right"))
