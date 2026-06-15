@@ -246,7 +246,7 @@
 - `uv run python -m unittest backend.tests.test_cards_knowledge_map -v`
   - 结果：`Ran 7 tests`，`OK`
 - `uv run python -m unittest discover -s backend/tests -v`
-  - 结果：`Ran 82 tests`，`OK`
+  - 结果：`Ran 83 tests`，`OK`
 - `node --check` 检查 `frontend/cards.html` 内联脚本
   - 结果：通过
 - `git diff --check`
@@ -279,4 +279,15 @@
 - 离线实时问答：成功显示 `Agentic → Card direct`、卡片字段和“每年 10 天”。
 - 离线评估看板：成功渲染 4 个问题、4 个 Variant 与三族横向对比。
 - 直接 `file://` 自动化访问受浏览器安全策略限制；代码层面直接双击与无 API 静态服务均进入同一个失败回退分支。
-- `uv run python -m unittest discover -s backend/tests -v`：`Ran 82 tests`，`OK`。
+- `uv run python -m unittest discover -s backend/tests -v`：`Ran 83 tests`，`OK`。
+
+## 离线 Mock 演示节奏与步骤高亮补充
+
+根据演示反馈，离线 Mock 回答不再瞬间完成。点击“开始回答”后会先展示全部执行步骤，并按顺序逐步推进：
+
+- 当前步骤停留约 1.6 秒，显示“进行中”并使用醒目高亮。
+- 已走过的步骤保留“已完成”状态，尚未执行的步骤显示“等待”。
+- 全部步骤完成后，才开始流式生成最终答案并展示证据。
+- 上述人工演示节奏仅在离线 Mock 模式启用，真实后端问答不会被额外延迟。
+
+新增前端回归检查，覆盖离线演示节奏参数、当前步骤语义标记，以及等待 / 进行中 / 已完成三种视觉状态。

@@ -75,6 +75,15 @@ class FrontendClarityTest(unittest.TestCase):
             self.assertIn(copy, OFFLINE_DEMO)
         self.assertIn(".system-status.is-demo", STYLE)
 
+    def test_offline_demo_moves_slowly_and_highlights_the_active_step(self) -> None:
+        self.assertIn("const offlineDemoTiming", APP)
+        self.assertIn("stepHold: 1600", APP)
+        self.assertIn('renderExecutionTrace(result.execution, { activeIndex: index, completedCount: index });', APP)
+        self.assertIn('setStatus("working", `步骤 ${index + 1}/${steps.length} · 进行中`);', APP)
+        self.assertIn('aria-current="step"', APP)
+        for css_class in (".trace-step.is-active", ".trace-step.is-complete", ".trace-step.is-pending"):
+            self.assertIn(css_class, STYLE)
+
 
 if __name__ == "__main__":
     unittest.main()

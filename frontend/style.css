@@ -145,10 +145,22 @@ textarea[readonly] { color: #46514a; background: #f3f6f4; }
 .provenance-badge.is-retrieval, .provenance-badge.is-drill { color: #59665e; border-color: var(--line); background: #edf2ef; }
 .provenance-badge.is-none { color: var(--red); border-color: #e8c5c1; background: #faece9; }
 .evidence-list { display: grid; gap: 8px; margin-top: 12px; }
-.execution-trace { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.trace-step { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid #dce7e1; border-radius: 999px; color: #546159; background: #f4f8f5; font-size: 9px; }
-.trace-step span { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; color: white; background: var(--green); font-size: 8px; }
-.trace-step strong { font-weight: 700; }
+.execution-trace { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; margin-top: 12px; }
+.trace-step {
+  display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 8px; align-items: center;
+  min-height: 58px; padding: 9px 10px; border: 1px solid #dce7e1; border-radius: 10px;
+  color: #68736d; background: #f6f8f6; font-size: 9px; transition: border-color .2s, background .2s, box-shadow .2s;
+}
+.trace-step span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: #748078; background: #e5ebe7; font-size: 9px; font-weight: 800; }
+.trace-step strong { font-size: 10px; font-weight: 750; line-height: 1.45; }
+.trace-step em { color: #909992; font-size: 8px; font-style: normal; font-weight: 850; white-space: nowrap; }
+.trace-step.is-active { color: var(--ink); border-color: var(--green-bright); background: #f0faf5; box-shadow: 0 0 0 3px rgba(32, 164, 116, .18), 0 9px 24px rgba(22, 95, 70, .12); }
+.trace-step.is-active span { color: white; background: var(--green); animation: pulse 1s infinite; }
+.trace-step.is-active em { color: var(--green); }
+.trace-step.is-complete { color: #43554b; border-color: #c9dfd3; background: var(--green-soft); }
+.trace-step.is-complete span { color: white; background: var(--green-bright); }
+.trace-step.is-complete em { color: var(--green); }
+.trace-step.is-pending { opacity: .72; }
 .evidence-card { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #fbfcfb; }
 .evidence-rank { color: #a4ada7; font: 700 11px Consolas, monospace; }
 .evidence-title { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

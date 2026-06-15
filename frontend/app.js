@@ -52,6 +52,14 @@ const pathLabels = {
   "agentic-source-drilldown": "Agentic → source drilldown",
   "llm-direct": "模型直答 · 无 grounding 基线",
 };
+const offlineDemoTiming = {
+  prepare: 650,
+  stepHold: 1600,
+  stepSettle: 350,
+  answerLeadIn: 700,
+  answerChunk: 65,
+};
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => switchView(button.dataset.view)));
 el("goldenModeBtn").addEventListener("click", () => setMode("golden"));
@@ -108,7 +116,7 @@ function activateOfflineDemo(reason) {
   renderModules(demo.modules);
   renderHealth(demo.health);
   renderDemoBanner();
-  el("demoTip").textContent = "当前是脱敏离线演示：可切换问题与回答方式，查看不同回答路径和证据；自由提问会用内置示例知识响应。";
+  el("demoTip").textContent = "当前是脱敏离线演示：点击开始回答后，执行步骤会逐个高亮，全部完成后再展示答案与证据。";
   updateAnswerMode();
   syncGoldenQuestion();
 }
@@ -282,10 +290,40 @@ async function submitQuestion(event) {
 
 async function runOfflineQuestion(request) {
   const result = offlineResultFor(request);
-  const chunks = result.answer.match(/.{1,12}/gu) || [result.answer];
+  const steps = result.execution.steps || [];
+  el("llmAnswer").className = "answer-copy is-empty";
+  el("llmAnswer").textContent = "离线演示会先走完回答路径，再生成最终答案。";
+  el("evidenceTitle").textContent = "Mock 执行流程";
+  el("evidenceSubtitle").textContent = "当前步骤会高亮，完成后再进入下一步";
+  el("evidenceCount").textContent = `0 / ${steps.length} 步`;
+  el("evidenceList").innerHTML = '<div class="empty-state is-loading">请观察上方执行轨迹：演示会逐步推进，并在流程完成后展示证据。</div>';
+  renderExecutionTrace(result.execution, { completedCount: 0 });
+  setStatus("working", "准备执行 Mock 流程");
+  await sleep(offlineDemoTiming.prepare);
+
+  for (const [index, step] of steps.entries()) {
+    renderExecutionTrace(result.execution, { activeIndex: index, completedCount: index });
+    el("evidenceCount").textContent = `步骤 ${index + 1} / ${steps.length}`;
+    el("evidenceSubtitle").textContent = `正在执行：${step}`;
+    setStatus("working", `步骤 ${index + 1}/${steps.length} · 进行中`);
+    await sleep(offlineDemoTiming.stepHold);
+    renderExecutionTrace(result.execution, { completedCount: index + 1 });
+    await sleep(offlineDemoTiming.stepSettle);
+  }
+
+  el("evidenceTitle").textContent = "执行完成 · 正在生成答案";
+  el("evidenceSubtitle").textContent = "全部 Mock 步骤已完成，正在组织最终回答";
+  el("evidenceCount").textContent = `${steps.length} / ${steps.length} 步`;
+  el("evidenceList").innerHTML = '<div class="empty-state is-loading">回答路径执行完成，正在输出答案与对应证据...</div>';
+  el("llmAnswer").className = "answer-copy streaming";
+  el("llmAnswer").textContent = "";
+  setStatus("working", "正在生成最终答案");
+  await sleep(offlineDemoTiming.answerLeadIn);
+
+  const chunks = result.answer.match(/.{1,8}/gu) || [result.answer];
   for (const chunk of chunks) {
     el("llmAnswer").textContent += chunk;
-    await new Promise((resolve) => setTimeout(resolve, 28));
+    await sleep(offlineDemoTiming.answerChunk);
   }
   renderResult(result);
 }
@@ -442,10 +480,17 @@ function renderEvidenceProvenance(evidenceKind, drilled) {
     <span class="provenance-badge is-drill">是否回原文：${drilled === true ? "是" : "否"}</span>`;
 }
 
-function renderExecutionTrace(execution) {
+function renderExecutionTrace(execution, progress = null) {
   const steps = execution.steps || [];
+  const completedCount = progress?.completedCount ?? steps.length;
+  const activeIndex = progress?.activeIndex ?? -1;
   el("executionTrace").innerHTML = steps.length
-    ? steps.map((step, index) => `<div class="trace-step"><span>${index + 1}</span><strong>${escapeHtml(step)}</strong></div>`).join("")
+    ? steps.map((step, index) => {
+        const status = index === activeIndex ? "active" : index < completedCount ? "complete" : "pending";
+        const label = status === "active" ? "进行中" : status === "complete" ? "已完成" : "等待";
+        const ariaCurrent = status === "active" ? ' aria-current="step"' : "";
+        return `<div class="trace-step is-${status}"${ariaCurrent}><span>${index + 1}</span><strong>${escapeHtml(step)}</strong><em>${label}</em></div>`;
+      }).join("")
     : "";
 }
 
