@@ -246,7 +246,7 @@
 - `uv run python -m unittest backend.tests.test_cards_knowledge_map -v`
   - 结果：`Ran 7 tests`，`OK`
 - `uv run python -m unittest discover -s backend/tests -v`
-  - 结果：`Ran 81 tests`，`OK`
+  - 结果：`Ran 82 tests`，`OK`
 - `node --check` 检查 `frontend/cards.html` 内联脚本
   - 结果：通过
 - `git diff --check`
@@ -257,3 +257,26 @@
 ## 25 号截图证据
 
 ![25 号脱敏请假示例知识地图](./evidence_25/25_knowledge_map_sample.png)
+
+---
+
+# index.html 无后端离线演示：用户反馈补充
+
+## 结论
+
+直接打开 `frontend/index.html` 或仅启动静态文件服务、没有后端 API 时，页面现在会自动进入醒目标注的“脱敏离线演示”模式，不再让实时问答和评估看板整体失效。
+
+- 内置 4 个易懂的员工请假 Golden 问题。
+- Agentic、RAG、卡片直答、卡片回原文取证、模型直答基线均可点击演示。
+- 回答区继续展示实际路径、证据来源、是否回原文和执行步骤。
+- 评估看板自动加载内置脱敏报告，三族对比、Variant、问题下钻均可操作。
+- 顶部和演示建议明确标注当前为离线脱敏数据，避免被误认为真实 API 结果。
+- 后端可用时保持原逻辑，继续读取真实 `/api/golden`、`/api/chat/stream` 与 `/api/eval-report`。
+
+## 验证
+
+- 无后端静态服务浏览器实测：自动显示“离线演示 · 无需后端”。
+- 离线实时问答：成功显示 `Agentic → Card direct`、卡片字段和“每年 10 天”。
+- 离线评估看板：成功渲染 4 个问题、4 个 Variant 与三族横向对比。
+- 直接 `file://` 自动化访问受浏览器安全策略限制；代码层面直接双击与无 API 静态服务均进入同一个失败回退分支。
+- `uv run python -m unittest discover -s backend/tests -v`：`Ran 82 tests`，`OK`。

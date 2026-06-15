@@ -6,6 +6,8 @@ const state = {
   health: null,
   allowDemoReport: false,
   answerFamily: "agentic",
+  offlineDemo: false,
+  offlineReason: "",
 };
 
 const el = (id) => document.getElementById(id);
@@ -86,11 +88,29 @@ async function initialize() {
     updateAnswerMode();
     syncGoldenQuestion();
   } catch (error) {
-    renderHealth(null);
-    setStatus("error", error.message);
-    el("llmAnswer").className = "answer-copy error-copy";
-    el("llmAnswer").textContent = "无法连接演示 API。请使用 uv run python -m backend.web 启动服务。";
+    activateOfflineDemo(error.message);
   }
+}
+
+function activateOfflineDemo(reason) {
+  const demo = window.OFFLINE_DEMO;
+  if (!demo) {
+    renderHealth(null);
+    setStatus("error", reason || "离线演示数据不可用");
+    return;
+  }
+  state.offlineDemo = true;
+  state.offlineReason = reason || "未连接后端服务";
+  state.golden = demo.items;
+  state.health = demo.health;
+  state.report = null;
+  renderGoldenOptions();
+  renderModules(demo.modules);
+  renderHealth(demo.health);
+  renderDemoBanner();
+  el("demoTip").textContent = "当前是脱敏离线演示：可切换问题与回答方式，查看不同回答路径和证据；自由提问会用内置示例知识响应。";
+  updateAnswerMode();
+  syncGoldenQuestion();
 }
 
 function switchView(view) {
@@ -135,6 +155,11 @@ function renderModules(modules) {
 
 function renderHealth(health) {
   const status = el("systemStatus");
+  if (state.offlineDemo) {
+    status.className = "system-status is-demo";
+    status.innerHTML = "<span></span>离线演示 · 无需后端";
+    return;
+  }
   if (!health) {
     status.className = "system-status is-error";
     status.innerHTML = "<span></span>服务未连接";
@@ -233,6 +258,10 @@ async function submitQuestion(event) {
   };
 
   try {
+    if (state.offlineDemo) {
+      await runOfflineQuestion(request);
+      return;
+    }
     const response = await fetch("/api/chat/stream", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -249,6 +278,103 @@ async function submitQuestion(event) {
     el("askBtn").disabled = false;
     el("askBtn").querySelector("span").textContent = "开始回答";
   }
+}
+
+async function runOfflineQuestion(request) {
+  const result = offlineResultFor(request);
+  const chunks = result.answer.match(/.{1,12}/gu) || [result.answer];
+  for (const chunk of chunks) {
+    el("llmAnswer").textContent += chunk;
+    await new Promise((resolve) => setTimeout(resolve, 28));
+  }
+  renderResult(result);
+}
+
+function offlineResultFor(request) {
+  const demo = window.OFFLINE_DEMO;
+  const query = String(request.query || "").toLowerCase();
+  const selected = demo.items.find((item) => item.q_id === request.golden_id)
+    || demo.items.find((item) => [item.q_zh, item.q_en, item.field_label, item.value].filter(Boolean).some((value) => query.includes(String(value).toLowerCase())))
+    || demo.items.find((item) => (query.includes("刷脸") || query.includes("face")) && item.q_id === "D-004")
+    || demo.items.find((item) => (query.includes("年假") || query.includes("几天")) && item.q_id === "D-001")
+    || demo.items.find((item) => query.includes("审批") && item.q_id === "D-002")
+    || demo.items.find((item) => (query.includes("联系") || query.includes("找谁") || query.includes("卡住")) && item.q_id === "D-003")
+    || demo.items.find((item) => item.q_id === "D-004");
+  const mode = request.answer_mode;
+  const source = {
+    title: selected.source_title,
+    section_id: selected.section_id,
+    heading_path: selected.heading_path,
+    module: selected.module,
+    source_url: `https://example.test/wiki/${selected.q_id.toLowerCase()}`,
+    score: 0.93,
+  };
+  const cardEvidence = selected.card && selected.field ? [{
+    field: selected.field,
+    label: selected.field_label,
+    tier: "inline-value",
+    value: selected.value,
+    sources: [{ anchor: selected.heading_path.join(" > "), source_url: source.source_url }],
+    source_section_ids: [selected.section_id],
+  }] : [];
+  const isOutOfScope = selected.type === "out-of-scope";
+  let path = "agentic-card-direct";
+  let evidenceKind = isOutOfScope ? "retrieval" : "card";
+  let drilled = false;
+  let evidenceSections = [];
+  let card = selected.card;
+  let answer = selected.answer;
+
+  if (mode === "pure-rag") {
+    path = "rag-retrieval";
+    evidenceKind = "retrieval";
+    evidenceSections = [source];
+    card = null;
+  } else if (mode === "card-grounding") {
+    path = "card-grounding";
+    evidenceKind = selected.card ? "source" : "retrieval";
+    drilled = true;
+    evidenceSections = [source];
+  } else if (mode === "card-direct") {
+    path = "card-direct";
+    evidenceKind = selected.card ? "card" : "none";
+    card = selected.card;
+  } else if (mode === "llm-direct") {
+    path = "llm-direct";
+    evidenceKind = "none";
+    card = null;
+    answer = isOutOfScope
+      ? "我无法从当前对话确认是否支持刷脸审批。"
+      : `${selected.gold_answer}（离线模型直答演示，不提供本地证据。）`;
+  } else if (selected.type === "multihop" || selected.type === "pointer-drill") {
+    path = "agentic-source-drilldown";
+    evidenceKind = "source";
+    drilled = true;
+    evidenceSections = [source];
+  } else if (isOutOfScope) {
+    path = "agentic-rag-fallback";
+    evidenceKind = "retrieval";
+    evidenceSections = [source];
+    card = null;
+  }
+
+  return {
+    query: request.query,
+    answer,
+    citations: evidenceKind === "none" ? [] : [source.source_url],
+    drilled,
+    card_evidence: evidenceKind === "card" ? cardEvidence : [],
+    evidence_sections: evidenceSections,
+    execution: {
+      requested_mode: mode,
+      path,
+      evidence_kind: evidenceKind,
+      intent: isOutOfScope ? "out-of-scope" : selected.type,
+      drilled,
+      card,
+      steps: selected.steps,
+    },
+  };
 }
 
 async function readNdjson(response, onEvent) {
@@ -373,6 +499,15 @@ function setStatus(type, label) {
 
 async function loadEvaluation(allowDemo = false) {
   showEvalNotice('<div class="empty-state is-loading">正在检查评估报告...</div>');
+  if (state.offlineDemo) {
+    state.report = window.OFFLINE_DEMO.report;
+    state.allowDemoReport = true;
+    renderDemoBanner();
+    renderEvaluation();
+    el("evalNotice").hidden = true;
+    el("evalReportContent").hidden = false;
+    return;
+  }
   try {
     const response = await fetch(`/api/eval-report?allow_demo=${allowDemo ? "true" : "false"}&t=${Date.now()}`);
     if (response.status === 409) {
@@ -396,6 +531,11 @@ async function loadEvaluation(allowDemo = false) {
 
 function renderDemoBanner() {
   const banner = el("demoBanner");
+  if (state.offlineDemo) {
+    banner.hidden = false;
+    banner.innerHTML = `<strong>脱敏离线演示</strong><span>未连接后端，已自动启用内置示例。实时问答、回答路径和评估看板均可直接操作；刷新页面即可重新尝试连接真实 API。</span>`;
+    return;
+  }
   const providers = state.health?.providers || {};
   const demoProvider = providers.llm === "mock" || providers.embedder === "hash";
   const demo = demoProvider || isDemoReport(state.report);

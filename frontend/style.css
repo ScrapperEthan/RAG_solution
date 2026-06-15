@@ -44,6 +44,8 @@ button:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3p
 .system-status { justify-self: end; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .system-status span { width: 8px; height: 8px; border-radius: 50%; background: #9aa39d; }
 .system-status.is-online span { background: var(--green-bright); box-shadow: 0 0 0 5px rgba(32, 164, 116, .12); }
+.system-status.is-demo { color: #795010; }
+.system-status.is-demo span { background: var(--gold); box-shadow: 0 0 0 5px rgba(165, 110, 24, .12); }
 .system-status.is-error span { background: var(--red); }
 .demo-banner { display: flex; gap: 14px; padding: 10px 36px; color: #795010; background: var(--gold-soft); border-bottom: 1px solid #ead8b4; font-size: 12px; }
 

@@ -12,6 +12,7 @@ APP = (ROOT / "frontend" / "app.js").read_text(encoding="utf-8")
 STYLE = (ROOT / "frontend" / "style.css").read_text(encoding="utf-8")
 CARDS = (ROOT / "frontend" / "cards.html").read_text(encoding="utf-8")
 FLOW = (ROOT / "frontend" / "flow.html").read_text(encoding="utf-8")
+OFFLINE_DEMO = (ROOT / "frontend" / "offline-demo.js").read_text(encoding="utf-8")
 
 
 class FrontendClarityTest(unittest.TestCase):
@@ -61,6 +62,18 @@ class FrontendClarityTest(unittest.TestCase):
         self.assertIn("主问答页：同一问题在 基线 / RAG / 卡片库 三族下的回答", INDEX)
         self.assertIn("演示一次回答的下钻路径", CARDS)
         self.assertIn("不是</u>主问答页", CARDS)
+
+    def test_index_has_a_complete_backend_free_demo_fallback(self) -> None:
+        self.assertIn('<script src="./offline-demo.js"></script>', INDEX)
+        self.assertIn('<span id="demoTip">', INDEX)
+        self.assertIn("activateOfflineDemo(error.message);", APP)
+        self.assertIn("if (state.offlineDemo)", APP)
+        self.assertIn("await runOfflineQuestion(request);", APP)
+        self.assertIn("state.report = window.OFFLINE_DEMO.report;", APP)
+        self.assertIn("脱敏离线演示", APP)
+        for copy in ("我每年有几天年假？", "请假申请规则", "D-004", "offline-demo-hash"):
+            self.assertIn(copy, OFFLINE_DEMO)
+        self.assertIn(".system-status.is-demo", STYLE)
 
 
 if __name__ == "__main__":

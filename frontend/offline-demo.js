@@ -1,0 +1,127 @@
+(() => {
+  const questions = [
+    {
+      q_id: "D-001",
+      type: "single",
+      q_zh: "我每年有几天年假？",
+      q_en: "How many annual leave days do I have?",
+      gold_answer: "每位员工每年有 10 天年假。",
+      human_checked: true,
+      module: ["人事服务", "请假"],
+      card: { canonical_id: "C-DEMO-LEAVE-RULES", canonical_name: "请假申请规则" },
+      field: "annual_leave_days",
+      field_label: "年假天数",
+      value: "每年 10 天",
+      source_title: "请假申请规则",
+      section_id: "demo-leave-policy#请假申请规则 > 可以请几天",
+      heading_path: ["请假申请规则", "可以请几天"],
+      answer: "根据已审批的“请假申请规则”卡片，每位员工每年有 10 天年假。",
+      steps: ["匹配“请假申请规则”卡", "识别为明确数值问题", "直接读取“年假天数”字段"],
+    },
+    {
+      q_id: "D-002",
+      type: "multihop",
+      q_zh: "请假申请提交后会经过谁审批？",
+      q_en: "Who approves a leave request after it is submitted?",
+      gold_answer: "请假申请提交后，先由直属经理审批，再由人事系统记录结果。",
+      human_checked: true,
+      module: ["人事服务", "请假"],
+      card: { canonical_id: "C-DEMO-LEAVE-FLOW", canonical_name: "请假审批流程" },
+      field: "approval_process",
+      field_label: "审批流程",
+      value: "直属经理审批 → 人事系统记录",
+      source_title: "请假审批流程",
+      section_id: "demo-leave-flow#请假审批流程 > 审批步骤",
+      heading_path: ["请假审批流程", "审批步骤"],
+      answer: "请假申请提交后，先由直属经理审批；审批通过后，人事系统会记录结果。",
+      steps: ["匹配“请假审批流程”卡", "判断需要查看流程原文", "回到审批步骤取证并生成回答"],
+    },
+    {
+      q_id: "D-003",
+      type: "pointer-drill",
+      q_zh: "请假申请卡住了应该找谁？",
+      q_en: "Who should I contact when my leave request is stuck?",
+      gold_answer: "请联系员工服务台的人事帮助邮箱 hr-help@example.test。",
+      human_checked: true,
+      module: ["人事服务", "员工帮助"],
+      card: { canonical_id: "C-DEMO-LEAVE-HELP", canonical_name: "请假问题找谁" },
+      field: "help_email",
+      field_label: "帮助邮箱",
+      value: "hr-help@example.test",
+      source_title: "请假问题找谁",
+      section_id: "demo-leave-help#请假问题找谁 > 联系方式",
+      heading_path: ["请假问题找谁", "联系方式"],
+      answer: "请联系员工服务台的人事帮助邮箱：hr-help@example.test。",
+      steps: ["匹配“请假问题找谁”卡", "沿联系方式指针回到原文", "读取帮助邮箱并回答"],
+    },
+    {
+      q_id: "D-004",
+      type: "out-of-scope",
+      q_zh: "请假系统支持刷脸审批吗？",
+      q_en: "Does the leave system support face-recognition approval?",
+      gold_answer: "NO_ANSWER — 脱敏知识库没有记录刷脸审批功能。",
+      human_checked: true,
+      module: ["人事服务", "请假"],
+      card: null,
+      field: null,
+      field_label: null,
+      value: null,
+      source_title: "请假申请规则",
+      section_id: "demo-leave-policy#请假申请规则",
+      heading_path: ["请假申请规则"],
+      answer: "NO_ANSWER — 当前脱敏知识库没有记录刷脸审批功能。",
+      steps: ["未命中可回答卡片字段", "检索请假相关原文", "未发现可验证依据，拒绝猜测"],
+    },
+  ];
+
+  const variants = [
+    {
+      id: "V1", label: "原文检索 · Pure RAG", answer_source: "pure-rag", family: "rag",
+      metrics: { "hit@8": 1, "recall@8": 0.88, faithfulness: 0.9, context_precision: 0.72, association_recall: null, drill_miss_rate: null },
+    },
+    {
+      id: "C1", label: "卡片直答", answer_source: "card-direct", family: "llm-wiki",
+      metrics: { "hit@8": 0.75, "recall@8": 0.7, faithfulness: 0.95, context_precision: 0.8, association_recall: 0.75, drill_miss_rate: 0.25 },
+    },
+    {
+      id: "C2", label: "卡片定位 + 回原文取证", answer_source: "card-grounding", family: "llm-wiki",
+      metrics: { "hit@8": 1, "recall@8": 0.92, faithfulness: 1, context_precision: 0.9, association_recall: 1, drill_miss_rate: 0 },
+    },
+    {
+      id: "A1", label: "Agentic 自动路由", answer_source: "agentic", family: "agentic",
+      metrics: { "hit@8": 1, "recall@8": 0.96, faithfulness: 1, context_precision: 0.92, association_recall: 1, drill_miss_rate: 0 },
+    },
+  ];
+
+  const reportItems = questions.map((question) => ({
+    q_id: question.q_id,
+    type: question.type,
+    q: question.q_zh,
+    gold: question.section_id,
+    per_variant: Object.fromEntries(variants.map((variant) => [
+      variant.id,
+      {
+        "hit@8": variant.id !== "C1" || question.type !== "out-of-scope",
+        retrieved: question.type === "out-of-scope" && variant.id === "C1" ? [] : [question.section_id],
+        answer: variant.id === "C1" && question.type === "out-of-scope" ? "卡片没有可直接回答的字段。" : question.answer,
+        drilled: variant.answer_source === "card-grounding" || (variant.answer_source === "agentic" && question.type !== "single"),
+      },
+    ])),
+  }));
+
+  window.OFFLINE_DEMO = {
+    health: { providers: { llm: "offline-demo", embedder: "offline-demo-hash", store: "browser-memory" } },
+    modules: ["人事服务", "请假", "员工帮助"],
+    items: questions,
+    report: {
+      run_id: "offline-demo",
+      embedding_model: "offline-demo-hash",
+      judge: "mock",
+      metric_source: "内置脱敏演示数据",
+      golden: { size: questions.length, by_type: { single: 1, multihop: 1, "pointer-drill": 1, "out-of-scope": 1 } },
+      baseline_id: "V1",
+      variants,
+      items: reportItems,
+    },
+  };
+})();
