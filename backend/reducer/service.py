@@ -164,6 +164,11 @@ def build_card(cid: str, sections: List[Dict], canonicals: Dict[str, Dict], llm:
     topic_class = canonical.get("topic_class") or infer_topic_class(canonical)
     evidence = aggregate_evidence(sections)
     subsections = build_subsections(canonical, sections)
+    fact_conflicts = [
+        (subsection["name"], conflict)
+        for subsection in subsections
+        for conflict in subsection.pop("_fact_conflicts", [])
+    ]
 
     fields: List[Dict] = []
     queue: List[Dict] = []
@@ -194,11 +199,18 @@ def build_card(cid: str, sections: List[Dict], canonicals: Dict[str, Dict], llm:
     if related:
         fields.append(related)
 
+    for subsection_name, conflict in fact_conflicts:
+        queue.append(fact_conflict_item(cid, subsection_name, conflict))
+
     fields = [f for f in fields if _has_content(f)]
 
     flags: List[str] = []
     if any(item["type"] == "conflict" for item in queue):
         flags.append("config field has a version/date conflict")
+    flags.extend(
+        f"subsection '{subsection_name}' label '{conflict['label']}' has conflicting values"
+        for subsection_name, conflict in fact_conflicts
+    )
 
     card = {
         "canonical_id": cid,
@@ -278,7 +290,7 @@ def build_subsections(canonical: Dict, sections: List[Dict]) -> List[Dict]:
 
 
 def _subsection_row(name: str, matched: List[Dict]) -> Dict:
-    facts = build_subsection_facts(matched)
+    facts, conflicts = resolve_subsection_fact_conflicts(build_subsection_facts(matched))
     return {
         "name": name,
         "summary": synthesize_subsection(name, facts),
@@ -287,6 +299,7 @@ def _subsection_row(name: str, matched: List[Dict]) -> Dict:
         "evidence_keywords": dedupe_strings(k for s in matched for k in s.get("keywords_raw", [])),
         "source_section_ids": dedupe_strings(section_id(s) for s in matched),
         "sources": sources(matched),
+        "_fact_conflicts": conflicts,
     }
 
 
@@ -335,7 +348,7 @@ def build_subsection_facts(sections: List[Dict]) -> List[Dict]:
         summary = narrative_fact_value(section)
         if summary and not is_junk_value(summary):
             facts.append(make_fact(label, "narrative", summary, section))
-    return dedupe_facts(facts)
+    return facts
 
 
 def make_fact(label: str, tier: str, value: str, section: Dict, pointer_to: Optional[str] = None) -> Dict:
@@ -346,7 +359,57 @@ def make_fact(label: str, tier: str, value: str, section: Dict, pointer_to: Opti
         "pointer_to": pointer_to,
         "sources": sources([section]),
         "source_section_ids": [section_id(section)],
+        "_section": section,
     }
+
+
+def resolve_subsection_fact_conflicts(facts: List[Dict]) -> Tuple[List[Dict], List[Dict]]:
+    grouped: Dict[str, List[Dict]] = {}
+    for fact in facts:
+        if fact.get("tier") not in {"inline-value", "narrative"} or not fact.get("value"):
+            continue
+        grouped.setdefault(normalize_term(fact.get("label", "")), []).append(fact)
+
+    removed = set()
+    conflicts: List[Dict] = []
+    for candidates in grouped.values():
+        unique_values = {clean_inline_value(candidate["value"]) for candidate in candidates}
+        if len(unique_values) <= 1:
+            continue
+        candidates.sort(
+            key=lambda candidate: (
+                parse_update_at(candidate["_section"].get("update_at", "")),
+                int(candidate["_section"].get("confluence_version") or 0),
+            ),
+            reverse=True,
+        )
+        chosen = candidates[0]
+        removed.update(id(candidate) for candidate in candidates[1:])
+        conflicts.append(
+            {
+                "label": chosen["label"],
+                "chosen": clean_inline_value(chosen["value"]),
+                "value_count": len(unique_values),
+                "candidates": [
+                    {
+                        "value": clean_inline_value(candidate["value"]),
+                        "page_id": candidate["_section"].get("page_id", ""),
+                        "confluence_version": candidate["_section"].get("confluence_version", ""),
+                        "update_at": candidate["_section"].get("update_at", ""),
+                    }
+                    for candidate in candidates
+                ],
+            }
+        )
+
+    visible_facts: List[Dict] = []
+    for fact in facts:
+        if id(fact) in removed:
+            continue
+        visible = dict(fact)
+        visible.pop("_section", None)
+        visible_facts.append(visible)
+    return dedupe_facts(visible_facts), conflicts
 
 
 def fact_label(section: Dict) -> str:
@@ -628,6 +691,26 @@ def narrative_fact_value(section: Dict) -> str:
 
 def conflict_item(cid: str, conflict: Dict, n: int) -> Dict:
     return {"queue_id": f"RQ-conflict-{cid}-{n:03d}", "type": "conflict", "canonical_id": cid, "field": "config", "detail": conflict["detail"], "options": conflict["options"], "status": "open"}
+
+
+def fact_conflict_item(cid: str, subsection_name: str, conflict: Dict) -> Dict:
+    label = conflict["label"]
+    candidates = conflict["candidates"]
+    return {
+        "queue_id": f"RQ-factconflict-{cid}-{stable_short(f'{subsection_name}|{label}')}",
+        "type": "fact-conflict",
+        "canonical_id": cid,
+        "field": f"{subsection_name} / {label}",
+        "detail": (
+            f"Subsection '{subsection_name}' label '{label}' has {conflict['value_count']} conflicting values; "
+            f"temporarily kept newest '{conflict['chosen']}'."
+        ),
+        "options": [
+            f"{candidate['value']} ({candidate['page_id']}, v{candidate['confluence_version']}, {candidate['update_at']})"
+            for candidate in candidates
+        ],
+        "status": "open",
+    }
 
 
 def near_miss_sections(canonical: Dict, sections: List[Dict], limit: int = 5) -> List[Dict]:

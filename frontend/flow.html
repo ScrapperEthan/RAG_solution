@@ -541,7 +541,7 @@ INTENT_SYSTEM 出: {"intent":"exact"}
        take:"确切、可追溯。inline-value 直接给值且不经 LLM；pointer-only 下钻后由 LLM 只读原文抽取——两条路都带出处。"}},
 
   {n:"⑤",cls:"opt",tag:["opt","对比"],title:"三种回答族（PoC 对比）",
-   doIt:"PoC 用证据对比三条回答路线：<b>① RAG</b>（向量检索原始 chunk 喂 LLM）；<b>② LLM + Wiki</b>（用已批准 cards，分“卡片直答 card-direct”和“卡片+回原文取证 card-grounding”）；<b>③ Agentic</b>（路由器判意图，决定走直答还是下钻，必要时多跳）。",
+   doIt:"PoC 用证据对比三条回答路线：<b>① RAG</b>（向量检索原始 chunk 喂 LLM）；<b>② 卡片库（审批卡）</b>（用已批准 cards，分“卡片直答 card-direct”和“卡片+回原文取证 card-grounding”）；<b>③ Agentic</b>（路由器判意图，决定走直答还是下钻，必要时多跳）。",
    why:"目的是给领导一个有证据的结论：哪条路线最准、最可追溯。<b>没 embedding 时，RAG 那族基本退场</b>（它依赖向量检索），主角变成卡片方案。",
    prod:"eval 对比报告 / 看板",
    fields:[
@@ -550,7 +550,7 @@ INTENT_SYSTEM 出: {"intent":"exact"}
    ],
    problem:null,
    ex:{scenario:"在没有 embedding 的现实下对比三族。",
-       code:`② LLM + Wiki ：用 C-0002 卡直接答 ✅ 主打（card-direct / card-grounding）
+       code:`② 卡片库（审批卡）：用 C-0002 卡直接答 ✅ 主打（card-direct / card-grounding）
 ③ Agentic    ：LLM 路由找卡 + 判意图 + 必要时下钻 ✅ 可叠加（主推）
 ① RAG        ：依赖向量检索 → 无 embedding 时退场`,
        take:"卡片方案(②③)在没 embedding 时正好是主角；这也印证 build 的方向是对的。"}}

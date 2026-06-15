@@ -47,7 +47,37 @@
     .offline-grid textarea { margin: 0; }
     .ask-message { min-height: 18px; margin-top: 8px; color: var(--muted); font-size: 11px; }
     .ask-message.is-error { color: var(--red); }
+    .view-toolbar {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
+      margin-top: 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.9);
+    }
+    .view-switch { display: flex; gap: 4px; padding: 3px; border-radius: 10px; background: #edf1ee; }
+    .view-switch button { min-height: 34px; padding: 0 13px; border: 0; border-radius: 7px; color: var(--muted); background: transparent; font-weight: 800; }
+    .view-switch button.is-active { color: #fff; background: var(--green); }
+    .module-edge-toggle { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .module-edge-toggle input { accent-color: var(--green); }
     .workspace { display: grid; grid-template-columns: 320px minmax(0,1fr); gap: 16px; margin-top: 16px; align-items: start; }
+    .map-workspace {
+      margin-top: 16px; padding: 16px; border: 1px solid var(--line); border-radius: 16px;
+      background: rgba(255,255,255,.95); box-shadow: var(--shadow);
+    }
+    .map-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: start; margin-bottom: 12px; }
+    .map-head h2 { margin: 0 0 5px; font-size: 18px; }
+    .map-head p, .map-status { color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .map-status { padding: 6px 9px; border-radius: 999px; background: #edf2ef; }
+    .knowledge-map { min-height: 600px; overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: radial-gradient(circle at 50% 45%, #fff 0, #f4f8f5 72%); }
+    .knowledge-map svg { display: block; width: 100%; height: auto; min-height: 600px; }
+    .graph-edge { stroke: #aebdb4; stroke-width: 1.6; stroke-opacity: .6; }
+    .graph-edge.is-module { stroke: #cbd4ce; stroke-width: 1; stroke-dasharray: 5 6; stroke-opacity: .45; }
+    .graph-node { cursor: pointer; }
+    .graph-node circle { stroke: #fff; stroke-width: 3; filter: drop-shadow(0 4px 7px rgba(31,48,39,.16)); transition: stroke-width .15s ease, transform .15s ease; }
+    .graph-node:hover circle { stroke-width: 6; }
+    .graph-node text { fill: #26322b; font-size: 11px; font-weight: 800; pointer-events: none; paint-order: stroke; stroke: rgba(255,255,255,.92); stroke-width: 4px; stroke-linejoin: round; }
+    .graph-node.is-selected circle { stroke: var(--gold); stroke-width: 6; }
+    .map-legend { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 999px; color: #59665e; background: #fff; font-size: 9px; font-weight: 800; }
+    .map-legend i { width: 9px; height: 9px; border-radius: 50%; }
+    .map-empty-note { margin-top: 10px; padding: 10px 12px; border-radius: 9px; color: #795010; background: var(--gold-soft); font-size: 11px; }
     .card-sidebar, .detail-panel {
       border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.95); box-shadow: var(--shadow);
     }
@@ -148,6 +178,7 @@
       .cards-hero { display: block; }
       .source-state { margin-top: 12px; }
       .ask-row, .offline-grid, .workspace { grid-template-columns: 1fr; }
+      .knowledge-map, .knowledge-map svg { min-height: 430px; }
       .card-sidebar { position: static; max-height: none; }
       .card-list { max-height: 380px; }
     }
@@ -172,7 +203,7 @@
       <div>
         <div class="eyebrow">Approved card evidence · visual drill path</div>
         <h1>卡片结构与回答路径</h1>
-        <p>浏览 topic、subsection、fact 与 field，并把一次回答从命中卡片到引用证据的路径直接高亮在树上。</p>
+        <p>浏览卡片结构或知识地图，并演示一次回答从命中卡片到引用证据的下钻路径。</p>
         <p style="margin-top:8px;font-size:12px;color:var(--muted,#6b7280)">
           <strong>这是什么页：</strong>卡片<em>结构</em>可视化（reduce 产出的 cards_index.json），<u>不是</u>主问答页。
           下方提问框只用来在卡片树上<strong>高亮一次回答的下钻路径</strong>，方便看“命中哪张卡 → 取了哪条 fact → 回链哪个原文”。
@@ -193,9 +224,9 @@
           <option value="card-grounding">card-grounding</option>
           <option value="llm-direct">llm-direct</option>
         </select>
-        <button id="askBtn" class="soft-button is-primary" type="submit">提问并走路径</button>
+        <button id="askBtn" class="soft-button is-primary" type="submit">演示一次回答的下钻路径</button>
       </form>
-      <div id="askMessage" class="ask-message">答案会流式显示；收到 result 后自动定位命中卡并高亮证据。</div>
+      <div id="askMessage" class="ask-message">此处用于演示下钻路径；收到 result 后自动定位命中卡并高亮证据。</div>
       <details>
         <summary>离线：贴一段 result JSON</summary>
         <div class="offline-grid">
@@ -205,7 +236,18 @@
       </details>
     </section>
 
-    <section class="workspace">
+    <section class="view-toolbar" aria-label="卡片视图切换">
+      <div class="view-switch" role="group">
+        <button id="structureViewBtn" class="is-active" type="button">结构</button>
+        <button id="mapViewBtn" type="button">知识地图</button>
+      </div>
+      <label id="moduleEdgeField" class="module-edge-toggle" hidden>
+        <input id="moduleEdgeToggle" type="checkbox" />
+        显示同 module 淡边
+      </label>
+    </section>
+
+    <section id="structureWorkspace" class="workspace">
       <aside class="card-sidebar">
         <div class="sidebar-head">
           <input id="searchInput" class="search-input" type="search" placeholder="搜索 name / aliases / keywords" />
@@ -222,6 +264,19 @@
         <div id="drillBoard" class="drill-board is-empty"></div>
         <div id="cardDetail" class="empty-detail">正在加载卡片…</div>
       </section>
+    </section>
+
+    <section id="mapWorkspace" class="map-workspace" hidden>
+      <div class="map-head">
+        <div>
+          <h2>知识地图</h2>
+          <p>节点是审批卡片，实线来自 related_components；颜色表示社区，图过稀时回退为 module 分组。</p>
+        </div>
+        <span id="mapStatus" class="map-status">等待渲染</span>
+      </div>
+      <div id="knowledgeMap" class="knowledge-map" aria-label="卡片知识地图"></div>
+      <div id="mapEmptyNote" class="map-empty-note" hidden>这些卡之间暂无 related_components 关联。</div>
+      <div id="mapLegend" class="map-legend"></div>
     </section>
   </main>
 
@@ -271,10 +326,25 @@ const SAMPLE_CARD = {
   ],
   fields: [
     {field:"overview",tier:"narrative",value:"Sample Service is a synthetic example used for the Card Explorer.",pointer_to:null,sources:[{page_id:"sample-page",anchor:"Sample Service > Overview",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],evidence_keywords:["sample"],source_section_ids:["sample-page#Sample Service > Overview"]},
-    {field:"runbook",tier:"pointer-only",value:null,pointer_to:"Sample Service > Operations Runbook",sources:[{page_id:"sample-page",anchor:"Sample Service > Operations Runbook",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],evidence_keywords:["runbook"],source_section_ids:["sample-page#Sample Service > Operations Runbook"]}
+    {field:"runbook",tier:"pointer-only",value:null,pointer_to:"Sample Service > Operations Runbook",sources:[{page_id:"sample-page",anchor:"Sample Service > Operations Runbook",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],evidence_keywords:["runbook"],source_section_ids:["sample-page#Sample Service > Operations Runbook"]},
+    {field:"related_components",tier:"narrative",value:"Related to Sample Runbook and Sample Escalation.",soft_links:["C-SAMPLE-02","C-SAMPLE-03"],sources:[],evidence_keywords:["sample"],source_section_ids:[]}
   ],
   flags: []
 };
+
+const SAMPLE_CARDS = [
+  SAMPLE_CARD,
+  {
+    canonical_id:"C-SAMPLE-02", canonical_name:"Sample Runbook", topic_class:"workflow", aliases:["sample operations"],
+    module:["Example Module","Service Operations"], boundary:"Synthetic operations steps for the offline map.", topic_type:"process",
+    status:"approved", subsections:[], fields:[{field:"related_components",tier:"narrative",value:"Related to Sample Service Support.",soft_links:["C-SAMPLE-01"],sources:[],source_section_ids:[]}], flags:[]
+  },
+  {
+    canonical_id:"C-SAMPLE-03", canonical_name:"Sample Escalation", topic_class:"reference", aliases:["sample escalation"],
+    module:["Example Module","Governance"], boundary:"Synthetic escalation policy for the offline map.", topic_type:"reference",
+    status:"approved", subsections:[], fields:[{field:"related_components",tier:"narrative",value:"Related to Sample Service Support.",soft_links:["C-SAMPLE-01"],sources:[],source_section_ids:[]}], flags:[]
+  }
+];
 
 const SAMPLE_RESULT = {
   query: "What is the support contact for Sample Service?",
@@ -295,7 +365,7 @@ const SAMPLE_RESULT = {
   }
 };
 
-const state = { cards: [], selectedId: null, result: null, busy: false, sample: false, streamAnswer: "" };
+const state = { cards: [], selectedId: null, result: null, busy: false, sample: false, streamAnswer: "", view: "structure", includeModuleEdges: false };
 const el = id => document.getElementById(id);
 const arr = value => Array.isArray(value) ? value.filter(v => v !== null && v !== undefined && String(v).trim()) : [];
 const esc = value => String(value ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -308,6 +378,12 @@ el("sampleBtn").addEventListener("click", () => useSample(true));
 el("loadCardsBtn").addEventListener("click", () => el("cardsFile").click());
 el("cardsFile").addEventListener("change", loadLocalCards);
 el("renderJsonBtn").addEventListener("click", renderPastedResult);
+el("structureViewBtn").addEventListener("click", () => setView("structure"));
+el("mapViewBtn").addEventListener("click", () => setView("map"));
+el("moduleEdgeToggle").addEventListener("change", event => {
+  state.includeModuleEdges = event.target.checked;
+  renderKnowledgeMap();
+});
 el("cardList").addEventListener("click", event => {
   const choice = event.target.closest("[data-card-id]");
   if (!choice) return;
@@ -358,7 +434,7 @@ function setCards(cards, sample) {
 }
 
 function useSample(renderPath) {
-  setCards([structuredClone(SAMPLE_CARD)], true);
+  setCards(structuredClone(SAMPLE_CARDS), true);
   setSourceState("当前使用<strong>脱敏 sample</strong>，不包含真实内网数据。", true);
   if (renderPath) applyResult(structuredClone(SAMPLE_RESULT), true);
 }
@@ -386,6 +462,7 @@ function renderAll() {
   renderCardList();
   renderDrillBoard();
   renderCardDetail();
+  if (state.view === "map") renderKnowledgeMap();
 }
 
 function cardSearchText(card) {
@@ -397,6 +474,170 @@ function cardSearchText(card) {
 
 function moduleKey(card) {
   return arr(card.module).join(" / ") || "未分组";
+}
+
+function setView(view) {
+  state.view = view;
+  el("structureViewBtn").classList.toggle("is-active", view === "structure");
+  el("mapViewBtn").classList.toggle("is-active", view === "map");
+  el("structureWorkspace").hidden = view !== "structure";
+  el("mapWorkspace").hidden = view !== "map";
+  el("moduleEdgeField").hidden = view !== "map";
+  if (view === "map") renderKnowledgeMap();
+}
+
+function graphData() {
+  const nodes = state.cards.filter(card => card?.canonical_id).map(card => ({id:String(card.canonical_id), card}));
+  const ids = new Set(nodes.map(node => node.id));
+  const edges = [];
+  const seen = new Set();
+  const addEdge = (source, target, type) => {
+    if (!ids.has(source) || !ids.has(target) || source === target) return;
+    const pair = [source, target].sort();
+    const key = pair.join("|");
+    if (seen.has(key)) return;
+    seen.add(key);
+    edges.push({source:pair[0], target:pair[1], type});
+  };
+  nodes.forEach(({id, card}) => arr(card.fields).filter(field => field.field === "related_components").forEach(field => {
+    arr(field.soft_links).forEach(target => addEdge(id, String(target), "related"));
+  }));
+  const explicitCount = edges.length;
+  if (state.includeModuleEdges) {
+    for (let i = 0; i < nodes.length; i += 1) {
+      for (let j = i + 1; j < nodes.length; j += 1) {
+        const left = new Set(arr(nodes[i].card.module));
+        if (arr(nodes[j].card.module).some(module => left.has(module))) addEdge(nodes[i].id, nodes[j].id, "module");
+      }
+    }
+  }
+  return {nodes, edges, explicitCount};
+}
+
+function graphGroups(nodes, edges, explicitCount) {
+  const useCommunities = explicitCount >= Math.max(1, Math.floor(nodes.length / 3));
+  if (!useCommunities) return {mode:"module", groups:new Map(nodes.map(node => [node.id, moduleKey(node.card)]))};
+  const adjacency = new Map(nodes.map(node => [node.id, []]));
+  edges.forEach(edge => {
+    adjacency.get(edge.source).push(edge.target);
+    adjacency.get(edge.target).push(edge.source);
+  });
+  const labels = new Map(nodes.map(node => [node.id, node.id]));
+  for (let pass = 0; pass < 12; pass += 1) {
+    let changed = false;
+    nodes.forEach(node => {
+      const counts = new Map();
+      adjacency.get(node.id).forEach(neighbor => {
+        const label = labels.get(neighbor);
+        counts.set(label, (counts.get(label) || 0) + 1);
+      });
+      const best = [...counts.entries()].sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0];
+      if (best && best !== labels.get(node.id)) {
+        labels.set(node.id, best);
+        changed = true;
+      }
+    });
+    if (!changed) break;
+  }
+  const communityIds = [...new Set(labels.values())].sort();
+  const names = new Map(communityIds.map((id,index) => [id, `社区 ${index + 1}`]));
+  return {mode:"community", groups:new Map(nodes.map(node => [node.id, names.get(labels.get(node.id))]))};
+}
+
+function layoutGraph(nodes, edges) {
+  const width = 1200;
+  const height = 680;
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const positions = new Map(nodes.map((node,index) => {
+    const angle = (Math.PI * 2 * index) / Math.max(nodes.length, 1);
+    const ring = 180 + (index % 3) * 35;
+    return [node.id, {x:centerX + Math.cos(angle) * ring, y:centerY + Math.sin(angle) * ring, vx:0, vy:0}];
+  }));
+  const adjacency = new Map(nodes.map(node => [node.id, 0]));
+  edges.forEach(edge => {
+    adjacency.set(edge.source, adjacency.get(edge.source) + 1);
+    adjacency.set(edge.target, adjacency.get(edge.target) + 1);
+  });
+  for (let step = 0; step < 180; step += 1) {
+    for (let i = 0; i < nodes.length; i += 1) {
+      const a = positions.get(nodes[i].id);
+      for (let j = i + 1; j < nodes.length; j += 1) {
+        const b = positions.get(nodes[j].id);
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        const distance = Math.max(Math.hypot(dx, dy), 4);
+        const force = 10500 / (distance * distance);
+        dx /= distance; dy /= distance;
+        a.vx -= dx * force; a.vy -= dy * force;
+        b.vx += dx * force; b.vy += dy * force;
+      }
+    }
+    edges.forEach(edge => {
+      const a = positions.get(edge.source);
+      const b = positions.get(edge.target);
+      let dx = b.x - a.x;
+      let dy = b.y - a.y;
+      const distance = Math.max(Math.hypot(dx, dy), 1);
+      const target = edge.type === "module" ? 210 : 145;
+      const force = (distance - target) * (edge.type === "module" ? .006 : .012);
+      dx /= distance; dy /= distance;
+      a.vx += dx * force; a.vy += dy * force;
+      b.vx -= dx * force; b.vy -= dy * force;
+    });
+    nodes.forEach(node => {
+      const point = positions.get(node.id);
+      point.vx += (centerX - point.x) * .0008;
+      point.vy += (centerY - point.y) * .0008;
+      point.vx *= .82; point.vy *= .82;
+      point.x = Math.max(55, Math.min(width - 55, point.x + point.vx));
+      point.y = Math.max(55, Math.min(height - 55, point.y + point.vy));
+    });
+  }
+  return {positions, adjacency, width, height};
+}
+
+function renderKnowledgeMap() {
+  const {nodes, edges, explicitCount} = graphData();
+  if (!nodes.length) {
+    el("knowledgeMap").innerHTML = '<div class="empty-detail">没有可绘制的卡片。</div>';
+    el("mapLegend").innerHTML = "";
+    el("mapStatus").textContent = "0 nodes";
+    return;
+  }
+  const {mode, groups} = graphGroups(nodes, edges, explicitCount);
+  const groupNames = [...new Set(groups.values())].sort();
+  const palette = ["#1b7f56","#176b87","#6f4bb2","#c65d3a","#a56e18","#3d6f8e","#8a5b74","#54744f","#9b6840","#5e69a8"];
+  const colors = new Map(groupNames.map((group,index) => [group, palette[index % palette.length]]));
+  const {positions, adjacency, width, height} = layoutGraph(nodes, edges);
+  const shortLabel = value => String(value || "").length > 22 ? `${String(value).slice(0, 20)}…` : String(value || "");
+  const edgeSvg = edges.map(edge => {
+    const a = positions.get(edge.source);
+    const b = positions.get(edge.target);
+    return `<line class="graph-edge ${edge.type === "module" ? "is-module" : ""}" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" />`;
+  }).join("");
+  const nodeSvg = nodes.map(node => {
+    const point = positions.get(node.id);
+    const degree = adjacency.get(node.id);
+    const radius = Math.min(25, 13 + degree * 2.2);
+    const modules = arr(node.card.module).join(" / ") || "未分组";
+    return `<g class="graph-node ${node.id === state.selectedId ? "is-selected" : ""}" data-map-card-id="${esc(node.id)}" transform="translate(${point.x.toFixed(1)} ${point.y.toFixed(1)})">
+      <title>${esc(node.card.canonical_name || node.id)} · module: ${esc(modules)} · degree: ${degree}</title>
+      <circle r="${radius}" fill="${colors.get(groups.get(node.id))}" />
+      <text y="${radius + 18}" text-anchor="middle">${esc(shortLabel(node.card.canonical_name || node.id))}</text>
+    </g>`;
+  }).join("");
+  el("knowledgeMap").innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="知识地图">${edgeSvg}${nodeSvg}</svg>`;
+  el("mapStatus").textContent = `${nodes.length} nodes · ${explicitCount} related edges · ${mode === "community" ? "社区着色" : "module 着色"}`;
+  el("mapEmptyNote").hidden = explicitCount > 0;
+  el("mapLegend").innerHTML = groupNames.map(group => `<span><i style="background:${colors.get(group)}"></i>${esc(group)}</span>`).join("");
+  el("knowledgeMap").querySelectorAll("[data-map-card-id]").forEach(node => node.addEventListener("click", () => {
+    state.selectedId = node.dataset.mapCardId;
+    setView("structure");
+    renderCardList();
+    renderCardDetail();
+    el("structureWorkspace").scrollIntoView({behavior:"smooth", block:"start"});
+  }));
 }
 
 function renderCardList() {

@@ -33,7 +33,7 @@
             <h1>从企业知识中，得到可追溯的回答</h1>
             <p>使用 Golden Set 对比标准答案，或直接提出业务问题。系统会按实际回答路径展示可用的执行轨迹与证据。</p>
             <p style="margin-top:8px;font-size:12px;opacity:.75">
-              <strong>这是什么页：</strong>主问答页 —— LLM 回答 + <strong>思维链（下方「执行轨迹」逐步展示路由/检索/取证）</strong>。
+              <strong>这是什么页：</strong>主问答页：同一问题在 基线 / RAG / 卡片库 三族下的回答 + <strong>执行轨迹（思维链）</strong>。
               数据源：<code>/api/golden</code>、<code>/api/chat/stream</code>、<code>/api/eval-report</code>。
               想看一张卡的内部结构（topic→subsection→fact→引用），点顶部 <a href="./cards.html">卡片路径</a>。
             </p>
@@ -71,18 +71,19 @@
                   <strong>RAG</strong><small>检索原文生成</small>
                 </button>
                 <button class="answer-family" type="button" data-answer-family="llm-wiki">
-                  <strong>LLM + Wiki</strong><small>使用审批卡片</small>
+                  <strong>卡片库（审批卡）</strong><small>结构化知识直答 / 取证</small>
                 </button>
               </div>
               <small id="answerModeHint" class="field-hint"></small>
             </div>
 
             <label id="cardModeField" class="field is-hidden">
-              <span>LLM + Wiki 子模式</span>
+              <span>卡片库（审批卡）子模式</span>
               <select id="cardModeSelect">
                 <option value="card-direct">卡片直答</option>
                 <option value="card-grounding">卡片 + 回原文取证</option>
               </select>
+              <small id="cardModeHint" class="card-mode-hint"></small>
             </label>
 
             <button id="directBaselineBtn" class="baseline-button" type="button" data-answer-family="llm-direct">
@@ -153,6 +154,7 @@
                 <div><strong id="evidenceTitle">执行轨迹</strong><span id="evidenceSubtitle">Actual answer path and available evidence</span></div>
                 <span id="evidenceCount" class="count-chip">等待执行</span>
               </div>
+              <div id="evidenceProvenance" class="evidence-provenance" aria-live="polite"></div>
               <div id="executionTrace" class="execution-trace"></div>
               <div id="evidenceList" class="evidence-list">
                 <div class="empty-state">提交问题后，将按实际路径展示检索章节、卡片字段、下钻原文，或说明没有可验证证据。</div>

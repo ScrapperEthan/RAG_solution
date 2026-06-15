@@ -34,14 +34,25 @@ CANON = {
 }
 
 
-def _section(heading_path, metadata, *, tier="narrative", fact_values=None, info_type="reference", summary="s"):
+def _section(
+    heading_path,
+    metadata,
+    *,
+    tier="narrative",
+    fact_values=None,
+    info_type="reference",
+    summary="s",
+    page_id="3725",
+    confluence_version=31,
+    update_at="2026-06-10T00:00:00Z",
+):
     return {
-        "section_id": "3725#" + "_".join(heading_path),
-        "page_id": "3725",
+        "section_id": page_id + "#" + "_".join(heading_path),
+        "page_id": page_id,
         "title": heading_path[0],
         "source_url": "https://wpb/x",
-        "confluence_version": 31,
-        "update_at": "2026-06-10T00:00:00Z",
+        "confluence_version": confluence_version,
+        "update_at": update_at,
         "anchor": " > ".join(heading_path),
         "heading_path": heading_path,
         "metadata": metadata,
@@ -131,6 +142,62 @@ class ReducerCleanTest(unittest.TestCase):
         # an empty subsection still renders gracefully (no stub echo)
         self.assertIn("PN", subs)
         self.assertNotIn(": Q:", subs["whatsApp"]["summary"])
+
+    def test_subsection_same_label_conflict_keeps_newest_and_queues_review(self) -> None:
+        old = _section(
+            ["MDC Check List", "Channel Matrix", "PN", "SLO"],
+            {"table_kind": "matrix", "channel": "PN", "row_key": "PN", "attribute": "SLO"},
+            tier="inline-value",
+            fact_values=["4h"],
+            page_id="old-page",
+            confluence_version=4,
+            update_at="2026-05-01T00:00:00Z",
+        )
+        new = _section(
+            ["MDC Catalogue", "Channel Matrix", "PN", "SLO"],
+            {"table_kind": "matrix", "channel": "PN", "row_key": "PN", "attribute": "SLO"},
+            tier="inline-value",
+            fact_values=["8h"],
+            page_id="new-page",
+            confluence_version=8,
+            update_at="2026-06-01T00:00:00Z",
+        )
+
+        card, queue = build_card("C-0001", [old, new], CANON)
+
+        conflict = next(item for item in queue if item["type"] == "fact-conflict")
+        validate_review_item(conflict)
+        self.assertTrue(any(option.startswith("4h (old-page, v4") for option in conflict["options"]))
+        self.assertTrue(any(option.startswith("8h (new-page, v8") for option in conflict["options"]))
+        pn = next(subsection for subsection in card["subsections"] if subsection["name"] == "PN")
+        slo = [fact for fact in pn["facts"] if fact["label"] == "SLO"]
+        self.assertEqual([fact["value"] for fact in slo], ["8h"])
+        self.assertIn("subsection 'PN' label 'SLO' has conflicting values", card["flags"])
+
+    def test_subsection_same_label_same_value_does_not_queue_conflict(self) -> None:
+        first = _section(
+            ["MDC Check List", "Channel Matrix", "PN", "SLO"],
+            {"table_kind": "matrix", "channel": "PN", "row_key": "PN", "attribute": "SLO"},
+            tier="inline-value",
+            fact_values=["4h"],
+            page_id="page-a",
+            confluence_version=4,
+            update_at="2026-05-01T00:00:00Z",
+        )
+        second = _section(
+            ["MDC Catalogue", "Channel Matrix", "PN", "SLO"],
+            {"table_kind": "matrix", "channel": "PN", "row_key": "PN", "attribute": "SLO"},
+            tier="inline-value",
+            fact_values=["4h"],
+            page_id="page-b",
+            confluence_version=5,
+            update_at="2026-06-01T00:00:00Z",
+        )
+
+        card, queue = build_card("C-0001", [first, second], CANON)
+
+        self.assertFalse(any(item["type"] == "fact-conflict" for item in queue))
+        self.assertFalse(any("conflicting values" in flag for flag in card["flags"]))
 
     def test_unrouted_facts_surface_as_data_derived_subsection(self) -> None:
         # machine-named subsections don't match the data terms; the inline-value

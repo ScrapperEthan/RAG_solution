@@ -27,8 +27,18 @@ const typeColors = {
 const answerModeCopy = {
   agentic: ["Agentic", "推荐：先匹配 Card，再按意图和字段 tier 决定直答、下钻或 RAG fallback。"],
   rag: ["RAG", "覆盖原文和长尾问题；风险是信息较碎，跨章节综合题较弱。会展示命中章节和检索分数。"],
-  "llm-wiki": ["LLM + Wiki（卡片）", "综合和概念题更强、更易读；精确细节受卡片保真度限制，可选择回原文取证。"],
-  "llm-direct": ["模型直答 · 无 grounding 基线", "只调用连接的模型，不使用本地 Wiki 卡片、检索或来源下钻。"],
+  "llm-wiki": ["卡片库（审批卡）", "综合和概念题更强、更易读；精确细节受卡片保真度限制，可选择回原文取证。"],
+  "llm-direct": ["模型直答 · 无 grounding 基线", "只调用连接的模型，不使用审批卡片库、检索或来源下钻。"],
+};
+const cardModeCopy = {
+  "card-direct": "答案直接取自卡片里 reduce 已提炼的字段值，不回原文。快、像查词条；精确值受卡片保真度限制。",
+  "card-grounding": "卡片只用来定位主题，答案回到 Confluence 原文段落由 LLM 重新生成，可逐句追溯。适合精确值/有争议的问题。",
+};
+const evidenceKindCopy = {
+  card: ["证据来源：卡片字段（未回原文）", "card"],
+  source: ["证据来源：原文段落（已回原文取证）", "source"],
+  retrieval: ["证据来源：全库检索（RAG，未经卡片）", "retrieval"],
+  none: ["无可验证证据", "none"],
 };
 const pathLabels = {
   "rag-retrieval": "Pure RAG retrieval",
@@ -159,6 +169,7 @@ function resetAnswer(clearQuestion = true) {
   el("evidenceTitle").textContent = "执行轨迹";
   el("evidenceSubtitle").textContent = "Actual answer path and available evidence";
   el("evidenceCount").textContent = "等待执行";
+  el("evidenceProvenance").innerHTML = "";
   el("executionTrace").innerHTML = "";
   el("evidenceList").innerHTML = '<div class="empty-state">提交问题后，将按实际路径展示检索章节、卡片字段、下钻原文，或说明没有可验证证据。</div>';
   setStatus("idle", "等待提问");
@@ -172,6 +183,11 @@ function updateAnswerMode() {
   const [label, hint] = answerModeCopy[family] || [family, ""];
   el("answerModeHint").textContent = hint;
   el("answerSourceLabel").textContent = `请求路径：${label}`;
+  updateCardModeHint();
+}
+
+function updateCardModeHint() {
+  el("cardModeHint").textContent = cardModeCopy[el("cardModeSelect").value] || "";
 }
 
 function setAnswerFamily(family) {
@@ -203,6 +219,7 @@ async function submitQuestion(event) {
   el("llmAnswer").textContent = "";
   el("llmMeta").innerHTML = "";
   el("executionTrace").innerHTML = "";
+  el("evidenceProvenance").innerHTML = "";
   el("evidenceList").innerHTML = '<div class="empty-state is-loading">正在执行所选回答路径...</div>';
   el("activeQuestion").innerHTML = `<small>${state.mode === "golden" ? "CURRENT GOLDEN QUESTION" : "FREE QUESTION"}</small><strong>${escapeHtml(query)}</strong>`;
   setStatus("working", "正在路由与生成");
@@ -275,6 +292,7 @@ function renderResult(result) {
     execution.drilled === true ? "<span>source drilled</span>" : "",
     `<span>${(result.citations || []).length} citations</span>`,
   ].join("");
+  renderEvidenceProvenance(evidenceKind, execution.drilled === true || result.drilled === true);
   renderExecutionTrace(execution);
   if (evidenceKind === "retrieval") {
     renderSectionEvidence(refs, true, "检索证据", "Retrieved and ranked Confluence sections");
@@ -286,9 +304,16 @@ function renderResult(result) {
     el("evidenceTitle").textContent = "模型通道说明";
     el("evidenceSubtitle").textContent = "No local retrieval or Card evidence is available";
     el("evidenceCount").textContent = "无本地证据";
-    el("evidenceList").innerHTML = '<div class="empty-state">该回答来自无 grounding 的模型直答基线，没有使用本地 Wiki 卡片、检索或来源下钻，因此不展示本地证据或分数。</div>';
+    el("evidenceList").innerHTML = '<div class="empty-state">该回答来自无 grounding 的模型直答基线，没有使用审批卡片库、检索或来源下钻，因此不展示本地证据或分数。</div>';
   }
   setStatus("complete", "回答完成");
+}
+
+function renderEvidenceProvenance(evidenceKind, drilled) {
+  const [label, kind] = evidenceKindCopy[evidenceKind] || evidenceKindCopy.none;
+  el("evidenceProvenance").innerHTML = `
+    <span class="provenance-badge is-${kind}">${escapeHtml(label)}</span>
+    <span class="provenance-badge is-drill">是否回原文：${drilled === true ? "是" : "否"}</span>`;
 }
 
 function renderExecutionTrace(execution) {
@@ -426,7 +451,7 @@ function renderEvalOverview() {
   const cards = isDemoReport(state.report)
     ? [
         ["Evaluation View", "三族横向对比", "Demo 数据不评选 Champion", "neutral"],
-        ["Variants", `${state.report.variants.length} variants`, "RAG / LLM + Wiki / Agentic", "neutral"],
+        ["Variants", `${state.report.variants.length} variants`, "RAG / 卡片库（审批卡） / Agentic", "neutral"],
         ["Metric Source", state.report.metric_source || state.report.judge || "unknown", "当前为演示评估来源", "warn"],
         ["Golden Set", `${state.report.golden.size} items`, `${Object.keys(state.report.golden.by_type).length} question types`, "neutral"],
       ]
@@ -446,7 +471,7 @@ function renderEvalOverview() {
 
 const familyMeta = {
   rag: ["RAG", "从原文检索并生成"],
-  "llm-wiki": ["LLM + Wiki（卡片）", "使用审批后的结构化 Card"],
+  "llm-wiki": ["卡片库（审批卡）", "使用审批后的结构化 Card"],
   agentic: ["Agentic", "Card 优先，按意图路由并可回退 RAG"],
 };
 
@@ -593,7 +618,7 @@ function variantTags(variant, best, base) {
   if (best && variant.id === best.id) tags.push(["Champion", "good"]);
   if (variant.id === base.id) tags.push(["Baseline", "neutral"]);
   const family = variantFamily(variant);
-  if (family === "llm-wiki") tags.push(["LLM + Wiki", "accent"]);
+  if (family === "llm-wiki") tags.push(["卡片库（审批卡）", "accent"]);
   if (family === "agentic") tags.push(["Agentic", "primary"]);
   if (family === "rag") tags.push(["RAG", "neutral"]);
   return tags.map(([label, tone]) => `<span class="tag ${tone}">${escapeHtml(label)}</span>`).join("");
