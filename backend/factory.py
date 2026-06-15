@@ -7,6 +7,7 @@ from backend.adapters.confluence_mcp import McpConfluenceSource
 from backend.adapters.embedder_hash import HashEmbedder
 from backend.adapters.embedder_intranet import IntranetEmbedder
 from backend.adapters.embedder_local import LocalBgeM3Embedder
+from backend.adapters.llm_copilot import CopilotLLM
 from backend.adapters.llm_gpt55 import Gpt55LLM
 from backend.adapters.llm_mock import MockLLM
 from backend.adapters.llm_openai_compat import OpenAICompatLLM
@@ -35,6 +36,8 @@ def build_llm(config: Dict[str, Any]) -> LLM:
         return OpenAICompatLLM(config["llm"])
     if provider == "gpt55":
         return Gpt55LLM(config["llm"])
+    if provider == "copilot":
+        return CopilotLLM(config["llm"])
     raise ValueError(f"Unknown llm provider: {provider}")
 
 
