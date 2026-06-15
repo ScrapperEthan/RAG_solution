@@ -372,7 +372,7 @@ def resolve_subsection_fact_conflicts(facts: List[Dict]) -> Tuple[List[Dict], Li
 
     removed = set()
     conflicts: List[Dict] = []
-    for candidates in grouped.values():
+    for normalized_label, candidates in grouped.items():
         unique_values = {clean_inline_value(candidate["value"]) for candidate in candidates}
         if len(unique_values) <= 1:
             continue
@@ -388,6 +388,7 @@ def resolve_subsection_fact_conflicts(facts: List[Dict]) -> Tuple[List[Dict], Li
         conflicts.append(
             {
                 "label": chosen["label"],
+                "normalized_label": normalized_label,
                 "chosen": clean_inline_value(chosen["value"]),
                 "value_count": len(unique_values),
                 "candidates": [
@@ -695,9 +696,10 @@ def conflict_item(cid: str, conflict: Dict, n: int) -> Dict:
 
 def fact_conflict_item(cid: str, subsection_name: str, conflict: Dict) -> Dict:
     label = conflict["label"]
+    normalized_label = conflict.get("normalized_label") or normalize_term(label)
     candidates = conflict["candidates"]
     return {
-        "queue_id": f"RQ-factconflict-{cid}-{stable_short(f'{subsection_name}|{label}')}",
+        "queue_id": f"RQ-factconflict-{cid}-{stable_short(f'{subsection_name}|{normalized_label}')}",
         "type": "fact-conflict",
         "canonical_id": cid,
         "field": f"{subsection_name} / {label}",

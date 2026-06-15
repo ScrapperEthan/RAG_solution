@@ -199,6 +199,41 @@ class ReducerCleanTest(unittest.TestCase):
         self.assertFalse(any(item["type"] == "fact-conflict" for item in queue))
         self.assertFalse(any("conflicting values" in flag for flag in card["flags"]))
 
+    def test_subsection_conflict_normalizes_label_and_has_stable_queue_id(self) -> None:
+        upper = _section(
+            ["MDC Check List", "Channel Matrix", "PN", "SLO"],
+            {"table_kind": "matrix", "channel": "PN", "row_key": "PN", "attribute": "SLO"},
+            tier="inline-value",
+            fact_values=["4h"],
+            page_id="upper-page",
+            confluence_version=4,
+            update_at="2026-05-01T00:00:00Z",
+        )
+        lower = _section(
+            ["MDC Catalogue", "Channel Matrix", "PN", "slo"],
+            {"table_kind": "matrix", "channel": "PN", "row_key": "PN", "attribute": " slo "},
+            tier="inline-value",
+            fact_values=["8h"],
+            page_id="lower-page",
+            confluence_version=8,
+            update_at="2026-06-01T00:00:00Z",
+        )
+
+        newest_lower_card, newest_lower_queue = build_card("C-0001", [upper, lower], CANON)
+        newest_lower_conflict = next(item for item in newest_lower_queue if item["type"] == "fact-conflict")
+
+        upper["update_at"] = "2026-07-01T00:00:00Z"
+        newest_upper_card, newest_upper_queue = build_card("C-0001", [upper, lower], CANON)
+        newest_upper_conflict = next(item for item in newest_upper_queue if item["type"] == "fact-conflict")
+
+        self.assertEqual(newest_lower_conflict["queue_id"], newest_upper_conflict["queue_id"])
+        self.assertEqual(newest_lower_conflict["field"], "PN / slo")
+        self.assertEqual(newest_upper_conflict["field"], "PN / SLO")
+        newest_lower_pn = next(subsection for subsection in newest_lower_card["subsections"] if subsection["name"] == "PN")
+        newest_upper_pn = next(subsection for subsection in newest_upper_card["subsections"] if subsection["name"] == "PN")
+        self.assertEqual([fact["value"] for fact in newest_lower_pn["facts"] if fact["label"] == "slo"], ["8h"])
+        self.assertEqual([fact["value"] for fact in newest_upper_pn["facts"] if fact["label"] == "SLO"], ["4h"])
+
     def test_unrouted_facts_surface_as_data_derived_subsection(self) -> None:
         # machine-named subsections don't match the data terms; the inline-value
         # fact must still surface (grouped by its own key), not vanish into

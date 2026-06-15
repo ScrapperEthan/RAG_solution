@@ -1,0 +1,19 @@
+test_card_passes_validation (backend.tests.test_reducer_clean.ReducerCleanTest.test_card_passes_validation) ... ok
+test_cleaning_kills_echo_and_junk (backend.tests.test_reducer_clean.ReducerCleanTest.test_cleaning_kills_echo_and_junk) ... ok
+test_image_section_matched_by_keyword_name (backend.tests.test_reducer_clean.ReducerCleanTest.test_image_section_matched_by_keyword_name) ... ok
+test_match_is_table_only_no_c_auto (backend.tests.test_reducer_clean.ReducerCleanTest.test_match_is_table_only_no_c_auto) ... ok
+test_matrix_cell_routes_to_row_and_column_topics (backend.tests.test_reducer_clean.ReducerCleanTest.test_matrix_cell_routes_to_row_and_column_topics) ... ok
+test_no_hardcoded_dmp_or_otp_flags (backend.tests.test_reducer_clean.ReducerCleanTest.test_no_hardcoded_dmp_or_otp_flags) ... ok
+test_subsection_conflict_normalizes_label_and_has_stable_queue_id (backend.tests.test_reducer_clean.ReducerCleanTest.test_subsection_conflict_normalizes_label_and_has_stable_queue_id) ... ok
+test_subsection_filled_with_inline_value (backend.tests.test_reducer_clean.ReducerCleanTest.test_subsection_filled_with_inline_value) ... ok
+test_subsection_same_label_conflict_keeps_newest_and_queues_review (backend.tests.test_reducer_clean.ReducerCleanTest.test_subsection_same_label_conflict_keeps_newest_and_queues_review) ... ok
+test_subsection_same_label_same_value_does_not_queue_conflict (backend.tests.test_reducer_clean.ReducerCleanTest.test_subsection_same_label_same_value_does_not_queue_conflict) ... ok
+test_unmatched_canonical_surfaced_as_valid_review_item (backend.tests.test_reducer_clean.ReducerCleanTest.test_unmatched_canonical_surfaced_as_valid_review_item) ... ok
+test_unmatched_canonical_surfaces_near_miss_sections (backend.tests.test_reducer_clean.ReducerCleanTest.test_unmatched_canonical_surfaces_near_miss_sections) ... ok
+test_unmatched_section (backend.tests.test_reducer_clean.ReducerCleanTest.test_unmatched_section) ... ok
+test_unrouted_facts_surface_as_data_derived_subsection (backend.tests.test_reducer_clean.ReducerCleanTest.test_unrouted_facts_surface_as_data_derived_subsection) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.003s
+
+OK

@@ -28,6 +28,10 @@
     .cards-hero { display: flex; justify-content: space-between; gap: 28px; padding: 32px 4px 20px; }
     .cards-hero h1 { font-size: clamp(28px, 3vw, 44px); }
     .cards-hero p { max-width: 820px; margin-top: 10px; color: var(--muted); line-height: 1.6; }
+    .reading-guide { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin-top: 14px; max-width: 820px; }
+    .reading-guide article { padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.8); }
+    .reading-guide strong { display: block; margin-bottom: 4px; color: var(--ink); font-size: 11px; }
+    .reading-guide span { color: var(--muted); font-size: 10px; line-height: 1.55; }
     .source-state { align-self: end; max-width: 360px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); background: #fff; font-size: 11px; line-height: 1.5; }
     .source-state strong { color: var(--green); }
     .source-state.is-warning { border-color: #ead8b4; color: #795010; background: var(--gold-soft); }
@@ -65,6 +69,11 @@
     .map-head h2 { margin: 0 0 5px; font-size: 18px; }
     .map-head p, .map-status { color: var(--muted); font-size: 11px; line-height: 1.5; }
     .map-status { padding: 6px 9px; border-radius: 999px; background: #edf2ef; }
+    .map-guide { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin-bottom: 12px; }
+    .map-guide article { position: relative; min-height: 66px; padding: 11px 11px 11px 42px; border: 1px solid var(--line); border-radius: 11px; background: #f8faf8; }
+    .map-guide b { position: absolute; left: 11px; top: 11px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; background: var(--green); font-size: 10px; }
+    .map-guide strong { display: block; margin-bottom: 3px; font-size: 11px; }
+    .map-guide span { color: var(--muted); font-size: 10px; line-height: 1.45; }
     .knowledge-map { min-height: 600px; overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: radial-gradient(circle at 50% 45%, #fff 0, #f4f8f5 72%); }
     .knowledge-map svg { display: block; width: 100%; height: auto; min-height: 600px; }
     .graph-edge { stroke: #aebdb4; stroke-width: 1.6; stroke-opacity: .6; }
@@ -176,6 +185,7 @@
       .cards-topbar .top-actions { width: 100%; margin-left: 0; }
       .cards-main { width: min(100% - 20px, 1700px); }
       .cards-hero { display: block; }
+      .reading-guide, .map-guide { grid-template-columns: 1fr; }
       .source-state { margin-top: 12px; }
       .ask-row, .offline-grid, .workspace { grid-template-columns: 1fr; }
       .knowledge-map, .knowledge-map svg { min-height: 430px; }
@@ -193,7 +203,7 @@
     <div class="top-actions">
       <input id="cardsFile" type="file" accept=".json,application/json" hidden />
       <button id="loadCardsBtn" class="soft-button" type="button">载入 cards_index.json</button>
-      <button id="sampleBtn" class="soft-button" type="button">脱敏 Sample</button>
+      <button id="sampleBtn" class="soft-button" type="button">打开请假示例</button>
       <a class="nav-link" href="./index.html">返回问答</a>
     </div>
   </header>
@@ -203,20 +213,24 @@
       <div>
         <div class="eyebrow">Approved card evidence · visual drill path</div>
         <h1>卡片结构与回答路径</h1>
-        <p>浏览卡片结构或知识地图，并演示一次回答从命中卡片到引用证据的下钻路径。</p>
+        <p>用一个简单的“请假”例子，看懂知识卡里存了什么，以及系统回答时到底用了哪条证据。</p>
         <p style="margin-top:8px;font-size:12px;color:var(--muted,#6b7280)">
           <strong>这是什么页：</strong>卡片<em>结构</em>可视化（reduce 产出的 cards_index.json），<u>不是</u>主问答页。
           下方提问框只用来在卡片树上<strong>高亮一次回答的下钻路径</strong>，方便看“命中哪张卡 → 取了哪条 fact → 回链哪个原文”。
           要做带 LLM 思维链的主问答，请回 <a href="./index.html">问答页（index.html）</a>。
-          数据源：<code>GET /api/cards</code>（无数据时回退脱敏 sample）。
+          数据源：<code>GET /api/cards</code>（无数据时回退脱敏示例）。
         </p>
+        <div class="reading-guide" aria-label="页面阅读说明">
+          <article><strong>看“结构”</strong><span>点演示按钮，然后按 1 → 5 看：问题如何命中“请假申请规则”，再落到“每年 10 天”这条事实。</span></article>
+          <article><strong>看“知识地图”</strong><span>把每张知识卡看成一个圆点。点任意圆点，页面会回到“结构”并打开这张卡。</span></article>
+        </div>
       </div>
       <div id="sourceState" class="source-state">正在读取 /api/cards…</div>
     </section>
 
     <section class="ask-panel">
       <form id="askForm" class="ask-row">
-        <input id="queryInput" type="text" value="What is the support contact for Sample Service?" aria-label="问题" />
+        <input id="queryInput" type="text" value="我每年有几天年假？" aria-label="问题" />
         <select id="answerMode" aria-label="answer mode">
           <option value="agentic">agentic</option>
           <option value="pure-rag">pure-rag</option>
@@ -226,7 +240,7 @@
         </select>
         <button id="askBtn" class="soft-button is-primary" type="submit">演示一次回答的下钻路径</button>
       </form>
-      <div id="askMessage" class="ask-message">此处用于演示下钻路径；收到 result 后自动定位命中卡并高亮证据。</div>
+      <div id="askMessage" class="ask-message">点演示后会自动回到“结构”，并高亮“问题 → 请假申请规则 → 每年 10 天 → 原文链接”。</div>
       <details>
         <summary>离线：贴一段 result JSON</summary>
         <div class="offline-grid">
@@ -243,7 +257,7 @@
       </div>
       <label id="moduleEdgeField" class="module-edge-toggle" hidden>
         <input id="moduleEdgeToggle" type="checkbox" />
-        显示同 module 淡边
+        同时显示同一业务模块的弱关联（虚线）
       </label>
     </section>
 
@@ -270,64 +284,73 @@
       <div class="map-head">
         <div>
           <h2>知识地图</h2>
-          <p>节点是审批卡片，实线来自 related_components；颜色表示社区，图过稀时回退为 module 分组。</p>
+          <p>它回答的是“这些知识卡之间有什么关系”。点任意圆点，会回到“结构”查看卡片里的具体内容。</p>
         </div>
         <span id="mapStatus" class="map-status">等待渲染</span>
       </div>
+      <div class="map-guide" aria-label="知识地图阅读说明">
+        <article><b>1</b><strong>圆点 = 一张知识卡</strong><span>例如“请假申请规则”是一张卡，里面有年假天数等事实。</span></article>
+        <article><b>2</b><strong>实线 = 两张卡明确相关</strong><span>同颜色通常是一组相关知识；请假规则会连到审批流程和余额查询。</span></article>
+        <article><b>3</b><strong>点击圆点 = 查看卡片内容</strong><span>页面会自动切回“结构”，打开你点击的那张卡。</span></article>
+      </div>
       <div id="knowledgeMap" class="knowledge-map" aria-label="卡片知识地图"></div>
-      <div id="mapEmptyNote" class="map-empty-note" hidden>这些卡之间暂无 related_components 关联。</div>
+      <div id="mapEmptyNote" class="map-empty-note" hidden>这些知识卡目前还没有明确关联；仍可点击圆点查看每张卡。</div>
       <div id="mapLegend" class="map-legend"></div>
     </section>
   </main>
 
 <script>
 const SAMPLE_CARD = {
-  canonical_id: "C-SAMPLE-01",
-  canonical_name: "Sample Service Support",
+  canonical_id: "C-DEMO-LEAVE-RULES",
+  canonical_name: "请假申请规则",
   topic_class: "reference",
-  aliases: ["sample support", "support contact"],
-  module: ["Example Module", "Service Operations"],
-  boundary: "Public, synthetic support contacts and escalation pointers used only for the offline visual demo.",
+  aliases: ["年假规则", "请假规定"],
+  module: ["人事服务", "请假"],
+  boundary: "回答员工有多少年假、去哪里提交请假申请。所有内容均为脱敏演示数据。",
   topic_type: "reference",
   status: "approved",
-  keywords_raw_agg: ["support", "contact", "escalation"],
-  concepts_agg: ["service support"],
-  questions_agg_en: ["What is the support contact for Sample Service?"],
-  questions_agg_zh: ["Sample Service 的支持联系人是谁？"],
-  source_section_ids: ["sample-page#Sample Service > Support Contact"],
+  keywords_raw_agg: ["请假", "年假", "申请"],
+  concepts_agg: ["员工请假"],
+  questions_agg_en: ["How many annual leave days do I have?"],
+  questions_agg_zh: ["我每年有几天年假？", "去哪里请假？"],
+  source_section_ids: ["demo-leave-policy#请假申请规则"],
   subsections: [
     {
-      name: "Support",
-      summary: "Synthetic support details for the offline demo.",
-      key_points: ["Support Contact: A B CHEN"],
+      name: "可以请几天",
+      summary: "这里保存可以直接回答员工问题的明确数值。",
+      key_points: ["年假天数：每年 10 天"],
       facts: [
         {
-          label: "Support Contact",
-          field: "support_contact",
+          label: "年假天数",
+          field: "annual_leave_days",
           tier: "inline-value",
-          value: "A B CHEN",
+          value: "每年 10 天",
           pointer_to: null,
-          sources: [{page_id:"sample-page",anchor:"Sample Service > Support Contact",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],
-          source_section_ids: ["sample-page#Sample Service > Support Contact"]
+          sources: [{page_id:"demo-leave-policy",anchor:"请假申请规则 > 可以请几天",source_url:"https://example.test/wiki/leave-policy",confluence_version:1}],
+          source_section_ids: ["demo-leave-policy#请假申请规则 > 可以请几天"]
         }
       ],
-      evidence_keywords: ["support", "contact"],
-      source_section_ids: ["sample-page#Sample Service > Support Contact"],
-      sources: [{page_id:"sample-page",anchor:"Sample Service > Support",source_url:"https://example.test/wiki/sample-page",confluence_version:1}]
+      evidence_keywords: ["年假", "天数"],
+      source_section_ids: ["demo-leave-policy#请假申请规则 > 可以请几天"],
+      sources: [{page_id:"demo-leave-policy",anchor:"请假申请规则 > 可以请几天",source_url:"https://example.test/wiki/leave-policy",confluence_version:1}]
     },
     {
-      name: "Escalation",
-      summary: "This subsection intentionally has no extracted facts.",
-      facts: [],
-      evidence_keywords: ["escalation"],
-      source_section_ids: ["sample-page#Sample Service > Escalation"],
-      sources: [{page_id:"sample-page",anchor:"Sample Service > Escalation",source_url:"https://example.test/wiki/sample-page",confluence_version:1}]
+      name: "去哪里申请",
+      summary: "这里保存提交请假申请的入口。",
+      facts: [{
+        label:"申请入口", field:"application_entry", tier:"inline-value", value:"员工服务台 > 请假申请", pointer_to:null,
+        sources:[{page_id:"demo-leave-policy",anchor:"请假申请规则 > 去哪里申请",source_url:"https://example.test/wiki/leave-policy",confluence_version:1}],
+        source_section_ids:["demo-leave-policy#请假申请规则 > 去哪里申请"]
+      }],
+      evidence_keywords: ["请假", "申请入口"],
+      source_section_ids: ["demo-leave-policy#请假申请规则 > 去哪里申请"],
+      sources: [{page_id:"demo-leave-policy",anchor:"请假申请规则 > 去哪里申请",source_url:"https://example.test/wiki/leave-policy",confluence_version:1}]
     }
   ],
   fields: [
-    {field:"overview",tier:"narrative",value:"Sample Service is a synthetic example used for the Card Explorer.",pointer_to:null,sources:[{page_id:"sample-page",anchor:"Sample Service > Overview",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],evidence_keywords:["sample"],source_section_ids:["sample-page#Sample Service > Overview"]},
-    {field:"runbook",tier:"pointer-only",value:null,pointer_to:"Sample Service > Operations Runbook",sources:[{page_id:"sample-page",anchor:"Sample Service > Operations Runbook",source_url:"https://example.test/wiki/sample-page",confluence_version:1}],evidence_keywords:["runbook"],source_section_ids:["sample-page#Sample Service > Operations Runbook"]},
-    {field:"related_components",tier:"narrative",value:"Related to Sample Runbook and Sample Escalation.",soft_links:["C-SAMPLE-02","C-SAMPLE-03"],sources:[],evidence_keywords:["sample"],source_section_ids:[]}
+    {field:"overview",tier:"narrative",value:"员工请假时，先确认可用天数，再提交申请并等待审批。",pointer_to:null,sources:[{page_id:"demo-leave-policy",anchor:"请假申请规则",source_url:"https://example.test/wiki/leave-policy",confluence_version:1}],evidence_keywords:["请假"],source_section_ids:["demo-leave-policy#请假申请规则"]},
+    {field:"approval_process",tier:"pointer-only",value:null,pointer_to:"请假审批流程",sources:[{page_id:"demo-leave-policy",anchor:"请假申请规则 > 审批流程",source_url:"https://example.test/wiki/leave-policy",confluence_version:1}],evidence_keywords:["审批"],source_section_ids:["demo-leave-policy#请假申请规则 > 审批流程"]},
+    {field:"related_components",tier:"narrative",value:"请假规则与审批流程、余额查询、问题联系人相关。",soft_links:["C-DEMO-LEAVE-FLOW","C-DEMO-LEAVE-BALANCE","C-DEMO-LEAVE-HELP"],sources:[],evidence_keywords:["请假"],source_section_ids:[]}
   ],
   flags: []
 };
@@ -335,33 +358,41 @@ const SAMPLE_CARD = {
 const SAMPLE_CARDS = [
   SAMPLE_CARD,
   {
-    canonical_id:"C-SAMPLE-02", canonical_name:"Sample Runbook", topic_class:"workflow", aliases:["sample operations"],
-    module:["Example Module","Service Operations"], boundary:"Synthetic operations steps for the offline map.", topic_type:"process",
-    status:"approved", subsections:[], fields:[{field:"related_components",tier:"narrative",value:"Related to Sample Service Support.",soft_links:["C-SAMPLE-01"],sources:[],source_section_ids:[]}], flags:[]
+    canonical_id:"C-DEMO-LEAVE-FLOW", canonical_name:"请假审批流程", topic_class:"workflow", aliases:["请假怎么审批"],
+    module:["人事服务","请假"], boundary:"说明提交请假申请后，申请会经过哪些步骤。", topic_type:"process", status:"approved",
+    subsections:[{name:"审批步骤",summary:"提交后先由直属经理审批。",facts:[{label:"第一审批人",field:"first_approver",tier:"inline-value",value:"直属经理",sources:[{page_id:"demo-leave-flow",anchor:"请假审批流程 > 审批步骤",source_url:"https://example.test/wiki/leave-flow",confluence_version:1}],source_section_ids:["demo-leave-flow#请假审批流程 > 审批步骤"]}],sources:[],source_section_ids:[]}],
+    fields:[{field:"related_components",tier:"narrative",value:"审批前需要查看请假规则。",soft_links:["C-DEMO-LEAVE-RULES","C-DEMO-LEAVE-HELP"],sources:[],source_section_ids:[]}], flags:[]
   },
   {
-    canonical_id:"C-SAMPLE-03", canonical_name:"Sample Escalation", topic_class:"reference", aliases:["sample escalation"],
-    module:["Example Module","Governance"], boundary:"Synthetic escalation policy for the offline map.", topic_type:"reference",
-    status:"approved", subsections:[], fields:[{field:"related_components",tier:"narrative",value:"Related to Sample Service Support.",soft_links:["C-SAMPLE-01"],sources:[],source_section_ids:[]}], flags:[]
+    canonical_id:"C-DEMO-LEAVE-BALANCE", canonical_name:"年假余额查询", topic_class:"reference", aliases:["剩余年假"],
+    module:["人事服务","请假"], boundary:"说明员工去哪里查看自己还剩多少年假。", topic_type:"reference", status:"approved",
+    subsections:[{name:"查询入口",summary:"余额会显示在员工服务台。",facts:[{label:"查询位置",field:"balance_entry",tier:"inline-value",value:"员工服务台 > 我的假期",sources:[{page_id:"demo-leave-balance",anchor:"年假余额查询 > 查询入口",source_url:"https://example.test/wiki/leave-balance",confluence_version:1}],source_section_ids:["demo-leave-balance#年假余额查询 > 查询入口"]}],sources:[],source_section_ids:[]}],
+    fields:[{field:"related_components",tier:"narrative",value:"查询余额时通常还要查看请假规则。",soft_links:["C-DEMO-LEAVE-RULES"],sources:[],source_section_ids:[]}], flags:[]
+  },
+  {
+    canonical_id:"C-DEMO-LEAVE-HELP", canonical_name:"请假问题找谁", topic_class:"reference", aliases:["请假联系人"],
+    module:["人事服务","员工帮助"], boundary:"说明请假申请卡住或规则看不懂时联系谁。", topic_type:"reference", status:"approved",
+    subsections:[{name:"联系方式",summary:"这里保存演示用的帮助邮箱。",facts:[{label:"帮助邮箱",field:"help_email",tier:"inline-value",value:"hr-help@example.test",sources:[{page_id:"demo-leave-help",anchor:"请假问题找谁 > 联系方式",source_url:"https://example.test/wiki/leave-help",confluence_version:1}],source_section_ids:["demo-leave-help#请假问题找谁 > 联系方式"]}],sources:[],source_section_ids:[]}],
+    fields:[{field:"related_components",tier:"narrative",value:"可协助处理请假规则与审批流程问题。",soft_links:["C-DEMO-LEAVE-RULES","C-DEMO-LEAVE-FLOW"],sources:[],source_section_ids:[]}], flags:[]
   }
 ];
 
 const SAMPLE_RESULT = {
-  query: "What is the support contact for Sample Service?",
-  answer: "The support contact for Sample Service is A B CHEN.",
-  citations: ["https://example.test/wiki/sample-page"],
-  retrieved_section_ids: ["sample-page#Sample Service > Support Contact"],
+  query: "我每年有几天年假？",
+  answer: "每位员工每年有 10 天年假。",
+  citations: ["https://example.test/wiki/leave-policy"],
+  retrieved_section_ids: ["demo-leave-policy#请假申请规则 > 可以请几天"],
   drilled: false,
-  card_evidence: [{field:"support_contact",label:"Support Contact",tier:"inline-value",value:"A B CHEN",pointer_to:null,sources:[{page_id:"sample-page",anchor:"Sample Service > Support Contact",source_url:"https://example.test/wiki/sample-page"}],source_section_ids:["sample-page#Sample Service > Support Contact"]}],
+  card_evidence: [{field:"annual_leave_days",label:"年假天数",tier:"inline-value",value:"每年 10 天",pointer_to:null,sources:[{page_id:"demo-leave-policy",anchor:"请假申请规则 > 可以请几天",source_url:"https://example.test/wiki/leave-policy"}],source_section_ids:["demo-leave-policy#请假申请规则 > 可以请几天"]}],
   evidence_sections: [],
   execution: {
     requested_mode: "agentic",
     path: "agentic-card-direct",
     evidence_kind: "card",
-    steps: ["Match approved canonical card","Classify intent as exact","Use answerable card fields directly"],
+    steps: ["找到已审批的“请假申请规则”卡", "识别问题是在询问明确数值", "直接使用卡片里的“年假天数”事实"],
     intent: "exact",
     drilled: false,
-    card: {canonical_id:"C-SAMPLE-01",canonical_name:"Sample Service Support",module:["Example Module","Service Operations"]}
+    card: {canonical_id:"C-DEMO-LEAVE-RULES",canonical_name:"请假申请规则",module:["人事服务","请假"]}
   }
 };
 
@@ -412,14 +443,14 @@ async function initialize() {
     const cards = await response.json();
     if (!Array.isArray(cards) || cards.length === 0) {
       useSample(false);
-      setSourceState(`<strong>/api/cards</strong> 返回空（流水线还没产出 cards_index.json）。已回退到<strong>脱敏 sample</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
+      setSourceState(`<strong>/api/cards</strong> 返回空（流水线还没产出 cards_index.json）。已回退到<strong>脱敏请假示例</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
       return;
     }
     setCards(cards, false);
     setSourceState(`已从 <strong>/api/cards</strong> 读取 ${state.cards.length} 张卡（源文件 outputs/cards_index.json）。`);
   } catch (error) {
     useSample(false);
-    setSourceState(`无法自动读取 <strong>/api/cards</strong>（${esc(error.message)}）。已回退到<strong>脱敏 sample</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
+    setSourceState(`无法自动读取 <strong>/api/cards</strong>（${esc(error.message)}）。已回退到<strong>脱敏请假示例</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
   }
 }
 
@@ -435,7 +466,7 @@ function setCards(cards, sample) {
 
 function useSample(renderPath) {
   setCards(structuredClone(SAMPLE_CARDS), true);
-  setSourceState("当前使用<strong>脱敏 sample</strong>，不包含真实内网数据。", true);
+  setSourceState("当前使用<strong>脱敏请假示例</strong>，不包含真实内网数据。", true);
   if (renderPath) applyResult(structuredClone(SAMPLE_RESULT), true);
 }
 
@@ -540,7 +571,7 @@ function graphGroups(nodes, edges, explicitCount) {
     if (!changed) break;
   }
   const communityIds = [...new Set(labels.values())].sort();
-  const names = new Map(communityIds.map((id,index) => [id, `社区 ${index + 1}`]));
+  const names = new Map(communityIds.map((id,index) => [id, `相关知识组 ${index + 1}`]));
   return {mode:"community", groups:new Map(nodes.map(node => [node.id, names.get(labels.get(node.id))]))};
 }
 
@@ -602,7 +633,7 @@ function renderKnowledgeMap() {
   if (!nodes.length) {
     el("knowledgeMap").innerHTML = '<div class="empty-detail">没有可绘制的卡片。</div>';
     el("mapLegend").innerHTML = "";
-    el("mapStatus").textContent = "0 nodes";
+    el("mapStatus").textContent = "0 张知识卡";
     return;
   }
   const {mode, groups} = graphGroups(nodes, edges, explicitCount);
@@ -622,13 +653,13 @@ function renderKnowledgeMap() {
     const radius = Math.min(25, 13 + degree * 2.2);
     const modules = arr(node.card.module).join(" / ") || "未分组";
     return `<g class="graph-node ${node.id === state.selectedId ? "is-selected" : ""}" data-map-card-id="${esc(node.id)}" transform="translate(${point.x.toFixed(1)} ${point.y.toFixed(1)})">
-      <title>${esc(node.card.canonical_name || node.id)} · module: ${esc(modules)} · degree: ${degree}</title>
+      <title>${esc(node.card.canonical_name || node.id)} · 业务模块：${esc(modules)} · 关联卡片：${degree} 张</title>
       <circle r="${radius}" fill="${colors.get(groups.get(node.id))}" />
       <text y="${radius + 18}" text-anchor="middle">${esc(shortLabel(node.card.canonical_name || node.id))}</text>
     </g>`;
   }).join("");
   el("knowledgeMap").innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="知识地图">${edgeSvg}${nodeSvg}</svg>`;
-  el("mapStatus").textContent = `${nodes.length} nodes · ${explicitCount} related edges · ${mode === "community" ? "社区着色" : "module 着色"}`;
+  el("mapStatus").textContent = `${nodes.length} 张知识卡 · ${explicitCount} 条明确关联 · ${mode === "community" ? "按相关知识分组" : "按业务模块分组"}`;
   el("mapEmptyNote").hidden = explicitCount > 0;
   el("mapLegend").innerHTML = groupNames.map(group => `<span><i style="background:${colors.get(group)}"></i>${esc(group)}</span>`).join("");
   el("knowledgeMap").querySelectorAll("[data-map-card-id]").forEach(node => node.addEventListener("click", () => {
@@ -771,13 +802,13 @@ function renderCardDetail() {
     </header>
 
     <section class="tree-section">
-      <div class="section-title"><h3>Subsections</h3><span>${subsections.length} groups</span></div>
+      <div class="section-title"><h3>卡片分区（Subsections）</h3><span>${subsections.length} 个分区</span></div>
       ${subsections.length ? subsections.map((subsection, index) => {
         const facts = arr(subsection.facts || subsection.fields);
         const hit = itemIsHit(subsection, state.result) || facts.some(fact => itemIsHit(fact, state.result));
         return `<details class="tree-card ${hit ? "path-hit" : ""}" open>
           ${hit ? '<span class="path-order">4</span>' : ""}
-          <summary>${esc(subsection.name || `Subsection ${index + 1}`)} <small>${facts.length} facts</small></summary>
+          <summary>${esc(subsection.name || `分区 ${index + 1}`)} <small>${facts.length} 条事实</small></summary>
           <div class="tree-content">
             ${subsection.summary ? `<div class="sub-summary">${esc(subsection.summary)}</div>` : ""}
             <div class="fact-list">${facts.length ? facts.map(fact => factHtml(fact, "fact")).join("") : '<div class="empty-facts">（无抽取事实）</div>'}</div>
@@ -789,12 +820,12 @@ function renderCardDetail() {
     </section>
 
     <section class="tree-section">
-      <div class="section-title"><h3>Fields</h3><span>${fields.length} fields</span></div>
+      <div class="section-title"><h3>卡片级字段（Fields）</h3><span>${fields.length} 个字段</span></div>
       <div class="fact-list">${fields.length ? fields.map(field => factHtml(field, "field")).join("") : '<div class="empty-facts">（无 card-level fields）</div>'}</div>
     </section>
 
     <section class="tree-section aggregate">
-      <div class="section-title"><h3>Aggregates</h3><span>默认折叠</span></div>
+      <div class="section-title"><h3>搜索辅助信息（Aggregates）</h3><span>默认折叠</span></div>
       ${aggregateHtml("Raw keywords", card.keywords_raw_agg)}
       ${aggregateHtml("Concepts", card.concepts_agg)}
       ${aggregateHtml("Questions · EN", card.questions_agg_en)}
@@ -820,11 +851,11 @@ function renderDrillBoard() {
   const citations = arr(result.citations);
   el("drillBoard").className = "drill-board";
   el("drillBoard").innerHTML = `
-    <article class="drill-stage" data-stage="1"><span class="stage-no">1</span><strong>用户问题 · intent ${esc(execution.intent || "unknown")}</strong><p>${esc(result.query || el("queryInput").value)}</p></article>
-    <article class="drill-stage" data-stage="2"><span class="stage-no">2</span><strong>命中 topic</strong><p>${card ? `${esc(card.canonical_id)} · ${esc(card.canonical_name)}` : "没有命中卡片，进入 fallback / no-grounding 路径"}</p></article>
-    <article class="drill-stage" data-stage="3"><span class="stage-no">3</span><strong>${esc(execution.path || "execution steps")}</strong><div class="steps">${arr(execution.steps).map((step,index) => `<span class="step-chip"><b>${index + 1}</b>${esc(step)}</span>`).join("") || "没有返回 execution.steps"}</div></article>
-    <article class="drill-stage" data-stage="4"><span class="stage-no">4</span><strong>落到证据 · ${esc(execution.evidence_kind || "none")}</strong><p>${evidenceCount} 条 card field / source section 已映射到下方树结构。</p></article>
-    <article class="drill-stage" data-stage="5"><span class="stage-no">5</span><strong>答案 + citations</strong><p>${esc(result.answer || state.streamAnswer || "—")}</p><div class="source-list">${citations.map(url => {
+    <article class="drill-stage" data-stage="1"><span class="stage-no">1</span><strong>用户问题 · 意图 ${esc(execution.intent || "unknown")}</strong><p>${esc(result.query || el("queryInput").value)}</p></article>
+    <article class="drill-stage" data-stage="2"><span class="stage-no">2</span><strong>命中知识卡</strong><p>${card ? `${esc(card.canonical_id)} · ${esc(card.canonical_name)}` : "没有命中卡片，进入备用检索路径"}</p></article>
+    <article class="drill-stage" data-stage="3"><span class="stage-no">3</span><strong>系统采取的路径 · ${esc(execution.path || "unknown")}</strong><div class="steps">${arr(execution.steps).map((step,index) => `<span class="step-chip"><b>${index + 1}</b>${esc(step)}</span>`).join("") || "没有返回执行步骤"}</div></article>
+    <article class="drill-stage" data-stage="4"><span class="stage-no">4</span><strong>找到答案依据 · ${esc(execution.evidence_kind || "none")}</strong><p>${evidenceCount} 条卡片事实或原文段落已映射到下方结构。</p></article>
+    <article class="drill-stage" data-stage="5"><span class="stage-no">5</span><strong>生成答案 + 原文链接</strong><p>${esc(result.answer || state.streamAnswer || "—")}</p><div class="source-list">${citations.map(url => {
       const href = safeUrl(url);
       return href ? `<div class="source-row"><a href="${esc(href)}" target="_blank" rel="noreferrer">${esc(url)}</a></div>` : `<div class="source-row"><span>${esc(url)}</span></div>`;
     }).join("") || '<div class="source-row"><span>无 citation</span></div>'}</div></article>`;
@@ -835,24 +866,26 @@ async function submitQuestion(event) {
   if (state.busy) return;
   const query = el("queryInput").value.trim();
   if (!query) return;
+  setView("structure");
   state.busy = true;
   state.streamAnswer = "";
   state.result = null;
   el("askBtn").disabled = true;
-  setAskMessage("正在请求 /api/chat/stream，答案流式接收中…");
+  setAskMessage("已切回“结构”，正在请求 /api/chat/stream 并准备高亮回答路径…");
   renderDrillBoard();
+  el("structureWorkspace").scrollIntoView({behavior:"smooth", block:"start"});
   try {
     const response = await fetch("/api/chat/stream", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({query, answer_mode:el("answerMode").value, language:"en", module:null})
+      body: JSON.stringify({query, answer_mode:el("answerMode").value, language:"zh", module:null})
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     await readNdjson(response);
   } catch (error) {
     useSample(false);
     applyResult(structuredClone(SAMPLE_RESULT), true);
-    setAskMessage(`API 不可用（${error.message}），已回退并渲染脱敏 sample 路径。`, true);
+    setAskMessage(`API 不可用（${error.message}），已回退并渲染脱敏请假示例路径。`, true);
   } finally {
     state.busy = false;
     el("askBtn").disabled = false;
@@ -882,7 +915,7 @@ function handleEvent(event) {
   }
   if (event.type === "result") {
     applyResult(event.result, true);
-    setAskMessage("回答完成，路径已映射并高亮。");
+    setAskMessage("回答完成。已回到“结构”，并高亮本次回答使用的卡片和证据。");
     return;
   }
   if (event.type === "error") throw new Error(event.message || "Unknown stream error");
@@ -893,7 +926,7 @@ function renderPastedResult() {
     let payload = JSON.parse(el("resultJson").value);
     if (payload.type === "result" && payload.result) payload = payload.result;
     applyResult(payload, true);
-    setAskMessage("离线 result JSON 已渲染。");
+    setAskMessage("离线 result JSON 已渲染。已回到“结构”并高亮回答路径。");
   } catch (error) {
     setAskMessage(`JSON 解析失败：${error.message}`, true);
   }
@@ -904,8 +937,12 @@ function applyResult(result, animate) {
   state.result = result;
   const cardId = result.execution?.card?.canonical_id;
   if (cardId && state.cards.some(card => card.canonical_id === cardId)) state.selectedId = cardId;
+  setView("structure");
   renderAll();
-  if (animate) animatePath();
+  if (animate) {
+    el("structureWorkspace").scrollIntoView({behavior:"smooth", block:"start"});
+    animatePath();
+  }
 }
 
 function animatePath() {
