@@ -1,0 +1,319 @@
+{
+  "canonical_id": "C-0005",
+  "canonical_name": "Template Governance and Maintenance",
+  "topic_class": "workflow",
+  "aliases": [
+    "Template Maintenance",
+    "Template Content",
+    "Create template in portal",
+    "message Inventory"
+  ],
+  "module": [
+    "Q2 - Engagement",
+    "MDC Onboarding"
+  ],
+  "boundary": "模板的创建、维护、治理流程与 message inventory 记录；不含渠道清单。",
+  "topic_type": "process",
+  "status": "approved",
+  "keywords_raw_agg": [
+    "Message Inventory",
+    "create template in portal",
+    "Owner",
+    "content team",
+    "Tool",
+    "MDC portal",
+    "governance team",
+    "governance tool"
+  ],
+  "concepts_agg": [
+    "Message Inventory",
+    "create template in portal",
+    "Owner",
+    "Tool"
+  ],
+  "questions_agg_en": [
+    "What is Message Inventory?",
+    "Message Inventory what-is",
+    "Where is Message Inventory documented?",
+    "What is the Owner for create template in portal?",
+    "What is the Tool for create template in portal?",
+    "What is the Owner for message Inventory?",
+    "What is the Tool for message Inventory?"
+  ],
+  "questions_agg_zh": [
+    "Message Inventory 是什么?",
+    "Message Inventory what-is",
+    "Message Inventory 在哪里说明?",
+    "create template in portal 的 Owner 是什么？",
+    "create template in portal 的 Tool 是什么？",
+    "message Inventory 的 Owner 是什么？",
+    "message Inventory 的 Tool 是什么？"
+  ],
+  "source_section_ids": [
+    "9100003#Template Governance and Maintenance",
+    "9100003#Template Governance and Maintenance > create template in portal > Owner",
+    "9100003#Template Governance and Maintenance > create template in portal > Tool",
+    "9100003#Template Governance and Maintenance > message Inventory > Owner",
+    "9100003#Template Governance and Maintenance > message Inventory > Tool"
+  ],
+  "subsections": [
+    {
+      "name": "Template Maintenance",
+      "summary": "Template Maintenance (no extracted facts).",
+      "key_points": [],
+      "facts": [],
+      "evidence_keywords": [],
+      "source_section_ids": [],
+      "sources": []
+    },
+    {
+      "name": "create template in portal",
+      "summary": "create template in portal: Owner: content team; Tool: MDC portal",
+      "key_points": [
+        "Owner: content team",
+        "Tool: MDC portal"
+      ],
+      "facts": [
+        {
+          "label": "Owner",
+          "tier": "inline-value",
+          "value": "content team",
+          "pointer_to": null,
+          "sources": [
+            {
+              "page_id": "9100003",
+              "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+              "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+              "confluence_version": 4
+            }
+          ],
+          "source_section_ids": [
+            "9100003#Template Governance and Maintenance > create template in portal > Owner"
+          ]
+        },
+        {
+          "label": "Tool",
+          "tier": "inline-value",
+          "value": "MDC portal",
+          "pointer_to": null,
+          "sources": [
+            {
+              "page_id": "9100003",
+              "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+              "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+              "confluence_version": 4
+            }
+          ],
+          "source_section_ids": [
+            "9100003#Template Governance and Maintenance > create template in portal > Tool"
+          ]
+        }
+      ],
+      "evidence_keywords": [
+        "create template in portal",
+        "Owner",
+        "content team",
+        "Tool",
+        "MDC portal"
+      ],
+      "source_section_ids": [
+        "9100003#Template Governance and Maintenance > create template in portal > Owner",
+        "9100003#Template Governance and Maintenance > create template in portal > Tool"
+      ],
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ]
+    },
+    {
+      "name": "message Inventory",
+      "summary": "message Inventory: Owner: governance team; Tool: governance tool",
+      "key_points": [
+        "Owner: governance team",
+        "Tool: governance tool"
+      ],
+      "facts": [
+        {
+          "label": "Owner",
+          "tier": "inline-value",
+          "value": "governance team",
+          "pointer_to": null,
+          "sources": [
+            {
+              "page_id": "9100003",
+              "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+              "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+              "confluence_version": 4
+            }
+          ],
+          "source_section_ids": [
+            "9100003#Template Governance and Maintenance > message Inventory > Owner"
+          ]
+        },
+        {
+          "label": "Tool",
+          "tier": "inline-value",
+          "value": "governance tool",
+          "pointer_to": null,
+          "sources": [
+            {
+              "page_id": "9100003",
+              "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+              "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+              "confluence_version": 4
+            }
+          ],
+          "source_section_ids": [
+            "9100003#Template Governance and Maintenance > message Inventory > Tool"
+          ]
+        }
+      ],
+      "evidence_keywords": [
+        "message Inventory",
+        "Owner",
+        "governance team",
+        "Tool",
+        "governance tool"
+      ],
+      "source_section_ids": [
+        "9100003#Template Governance and Maintenance > message Inventory > Owner",
+        "9100003#Template Governance and Maintenance > message Inventory > Tool"
+      ],
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "field": "definition",
+      "tier": "narrative",
+      "value": "Template Governance and Maintenance（又称 Template Maintenance, Template Content）：模板的创建、维护、治理流程与 message inventory 记录；不含渠道清单。 覆盖：Template Maintenance、create template in portal、message Inventory。",
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ],
+      "evidence_keywords": [
+        "Message Inventory",
+        "create template in portal",
+        "Owner",
+        "content team",
+        "Tool",
+        "MDC portal",
+        "governance team",
+        "governance tool"
+      ],
+      "source_section_ids": [
+        "9100003#Template Governance and Maintenance",
+        "9100003#Template Governance and Maintenance > create template in portal > Owner",
+        "9100003#Template Governance and Maintenance > create template in portal > Tool",
+        "9100003#Template Governance and Maintenance > message Inventory > Owner",
+        "9100003#Template Governance and Maintenance > message Inventory > Tool"
+      ]
+    },
+    {
+      "field": "overview",
+      "tier": "narrative",
+      "value": "create template in portal — Owner: content team; Tool: MDC portal\nmessage Inventory — Owner: governance team; Tool: governance tool",
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ],
+      "evidence_keywords": [
+        "Message Inventory",
+        "create template in portal",
+        "Owner",
+        "content team",
+        "Tool",
+        "MDC portal",
+        "governance team",
+        "governance tool"
+      ],
+      "source_section_ids": [
+        "9100003#Template Governance and Maintenance",
+        "9100003#Template Governance and Maintenance > create template in portal > Owner",
+        "9100003#Template Governance and Maintenance > create template in portal > Tool",
+        "9100003#Template Governance and Maintenance > message Inventory > Owner",
+        "9100003#Template Governance and Maintenance > message Inventory > Tool"
+      ]
+    }
+  ],
+  "flags": []
+}

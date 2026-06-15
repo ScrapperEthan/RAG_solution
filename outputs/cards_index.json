@@ -1,340 +1,2952 @@
 [
   {
-    "canonical_id": "C-0007",
-    "canonical_name": "DM Plugin",
+    "canonical_id": "C-0001",
+    "canonical_name": "MDC supported notification channels",
+    "topic_class": "catalog",
     "aliases": [
-      "DM plugin",
-      "Data Management plugin",
-      "DMP"
+      "Push Notification (PN)",
+      "SMS and Email",
+      "Letter",
+      "Whatsapp",
+      "Messaging channels for MDC",
+      "Delivery Channel"
     ],
     "module": [
-      "Integration & API standard",
-      "Delivery & tracking standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
-    "boundary": "消息投递、批处理、重试和下游渠道交付；不含 Journey 编排或 Adaptor 转换。",
-    "topic_type": "component",
-    "status": "approved",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "DM Plugin: What is the DM Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 FAQ 说明 DM Plugin 的 troubleshoot 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > What is the DM Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          },
-          {
-            "page_id": "200066",
-            "anchor": "DM Plugin Troubleshooting > FAQ",
-            "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-            "confluence_version": 4
-          }
-        ]
-      },
-      {
-        "field": "config",
-        "tier": "inline-value",
-        "value": "batch_size: 1000; max_retry: 3",
-        "authoritative": true,
-        "conflict": true,
-        "conflict_detail": [
-          {
-            "value": "batch_size: 1000",
-            "page_id": "777001",
-            "confluence_version": 3,
-            "update_at": "2026-05-28T09:00:00Z"
-          },
-          {
-            "value": "batch_size: 500",
-            "page_id": "123456",
-            "confluence_version": 7,
-            "update_at": "2026-05-20T10:00:00Z"
-          }
-        ],
-        "sources": [
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > DM Plugin Config (post-migration)",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          },
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > Configuration",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          }
-        ]
-      },
-      {
-        "field": "pointer",
-        "tier": "pointer-only",
-        "value": null,
-        "pointer_to": "Journey Plugin page > Integration",
-        "sources": [
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          }
-        ]
-      },
-      {
-        "field": "config_pointer",
-        "tier": "pointer-only",
-        "value": null,
-        "pointer_to": "DM Plugin Overview > Configuration",
-        "sources": [
-          {
-            "page_id": "200066",
-            "anchor": "DM Plugin Troubleshooting > Retry Behaviour",
-            "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-            "confluence_version": 4
-          }
-        ]
-      },
-      {
-        "field": "troubleshoot",
-        "tier": "inline-value",
-        "value": "DM-429: the DM plugin is rate limited by a downstream channel; DM-503: downstream channel unavailable; messages are requeued",
-        "sources": [
-          {
-            "page_id": "200066",
-            "anchor": "DM Plugin Troubleshooting > Common Errors",
-            "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-            "confluence_version": 4
-          }
-        ]
-      },
-      {
-        "field": "troubleshoot_notes",
-        "tier": "narrative",
-        "value": "FAQ covers troubleshoot information for DM Plugin (narrative).",
-        "sources": [
-          {
-            "page_id": "200066",
-            "anchor": "DM Plugin Troubleshooting > FAQ",
-            "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-            "confluence_version": 4
-          }
-        ]
-      },
-      {
-        "field": "related_components",
-        "tier": "narrative",
-        "value": "Related to Journey Plugin, Adaptor, SFMC Migration.",
-        "soft_links": [
-          "C-0008",
-          "C-0009",
-          "C-0100"
-        ],
-        "sources": [
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > What is the DM Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          },
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > Configuration",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          },
-          {
-            "page_id": "123456",
-            "anchor": "DM Plugin Overview > How it connects to the Journey Plugin",
-            "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-            "confluence_version": 7
-          },
-          {
-            "page_id": "200066",
-            "anchor": "DM Plugin Troubleshooting > Common Errors",
-            "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "200066",
-            "anchor": "DM Plugin Troubleshooting > Retry Behaviour",
-            "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "200066",
-            "anchor": "DM Plugin Troubleshooting > FAQ",
-            "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > DM Plugin Config (post-migration)",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          }
-        ]
-      }
-    ],
-    "flags": [
-      "alias 'DMP' should remain auditable in Business review",
-      "config field has version/update conflict"
-    ]
-  },
-  {
-    "canonical_id": "C-0009",
-    "canonical_name": "Adaptor",
-    "aliases": [
-      "adaptor",
-      "adapter",
-      "single adaptor"
-    ],
-    "module": [
-      "Integration & API standard"
-    ],
-    "boundary": "DM 与 Journey 之间的格式转换和单一适配层决策。",
-    "topic_type": "component",
-    "status": "approved",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "Adaptor: What is the Adaptor 说明 DM Plugin, Journey Plugin, Adaptor 的 what-is 信息(narrative)。 Payload Mapping 说明 Adaptor 的 how-to 信息(narrative)。 Decision 说明 DM Plugin, Journey Plugin, Adaptor 的 decision 信息(narrative)。 Rationale 说明 Adaptor, SFMC Migration 的 decision 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "140020",
-            "anchor": "Adaptor > What is the Adaptor",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "140020",
-            "anchor": "Adaptor > Payload Mapping",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Decision",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Rationale",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          }
-        ]
-      },
-      {
-        "field": "config",
-        "tier": "inline-value",
-        "value": "adaptor_mode: sync",
-        "authoritative": true,
-        "conflict": false,
-        "conflict_detail": [],
-        "sources": [
-          {
-            "page_id": "140020",
-            "anchor": "Adaptor > Configuration",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          }
-        ]
-      },
-      {
-        "field": "pointer",
-        "tier": "pointer-only",
-        "value": null,
-        "pointer_to": "source page referenced by this section",
-        "sources": [
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Consequences",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          }
-        ]
-      },
-      {
-        "field": "related_components",
-        "tier": "narrative",
-        "value": "Related to DM Plugin, Journey Plugin, SFMC Migration.",
-        "soft_links": [
-          "C-0007",
-          "C-0008",
-          "C-0100"
-        ],
-        "sources": [
-          {
-            "page_id": "140020",
-            "anchor": "Adaptor > What is the Adaptor",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "140020",
-            "anchor": "Adaptor > Configuration",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "140020",
-            "anchor": "Adaptor > Payload Mapping",
-            "source_url": "https://confluence.local/x/Adaptor",
-            "confluence_version": 5
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Decision",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Rationale",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          },
-          {
-            "page_id": "230088",
-            "anchor": "Design Decision: Single Adaptor Layer > Consequences",
-            "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-            "confluence_version": 2
-          }
-        ]
-      }
-    ],
-    "flags": []
-  },
-  {
-    "canonical_id": "C-0101",
-    "canonical_name": "Message Inventory",
-    "aliases": [
-      "message inventory"
-    ],
-    "module": [
-      "Template & content standard",
-      "Delivery & tracking standard"
-    ],
-    "boundary": "消息类型清单、生产者和消费者关系。",
+    "boundary": "MDC 支持的通知渠道（PN/SMS/Email/Letter/Whatsapp）及各渠道的投递模式、模板与退信处理等事实；不含 portal 访问或 use case 配置。",
     "topic_type": "inventory",
     "status": "approved",
+    "keywords_raw_agg": [
+      "MDC supported notification channels",
+      "PN",
+      "Delivery Mode",
+      "real-time",
+      "Template",
+      "PN content template",
+      "Bounce Back",
+      "retry once",
+      "SMS",
+      "batched",
+      "SMS content template",
+      "resend after 5 min",
+      "Email",
+      "Email content template",
+      "resend after 30 min",
+      "Letter",
+      "daily file",
+      "Letter content template",
+      "manual follow-up",
+      "Whatsapp",
+      "Whatsapp content template"
+    ],
+    "concepts_agg": [
+      "MDC supported notification channels",
+      "PN",
+      "Delivery Mode",
+      "Template",
+      "Bounce Back",
+      "SMS",
+      "Email",
+      "Letter",
+      "Whatsapp"
+    ],
+    "questions_agg_en": [
+      "What is MDC supported notification channels?",
+      "MDC supported notification channels what-is",
+      "Where is MDC supported notification channels documented?",
+      "What is the Delivery Mode for PN?",
+      "What is the Template for PN?",
+      "What is the Bounce Back for PN?",
+      "What is the Delivery Mode for SMS?",
+      "What is the Template for SMS?",
+      "What is the Bounce Back for SMS?",
+      "What is the Delivery Mode for Email?",
+      "What is the Template for Email?",
+      "What is the Bounce Back for Email?",
+      "What is the Delivery Mode for Letter?",
+      "What is the Template for Letter?",
+      "What is the Bounce Back for Letter?",
+      "What is the Delivery Mode for Whatsapp?",
+      "What is the Template for Whatsapp?",
+      "What is the Bounce Back for Whatsapp?"
+    ],
+    "questions_agg_zh": [
+      "MDC supported notification channels 是什么?",
+      "MDC supported notification channels what-is",
+      "MDC supported notification channels 在哪里说明?",
+      "PN 的 Delivery Mode 是什么？",
+      "PN 的 Template 是什么？",
+      "PN 的 Bounce Back 是什么？",
+      "SMS 的 Delivery Mode 是什么？",
+      "SMS 的 Template 是什么？",
+      "SMS 的 Bounce Back 是什么？",
+      "Email 的 Delivery Mode 是什么？",
+      "Email 的 Template 是什么？",
+      "Email 的 Bounce Back 是什么？",
+      "Letter 的 Delivery Mode 是什么？",
+      "Letter 的 Template 是什么？",
+      "Letter 的 Bounce Back 是什么？",
+      "Whatsapp 的 Delivery Mode 是什么？",
+      "Whatsapp 的 Template 是什么？",
+      "Whatsapp 的 Bounce Back 是什么？"
+    ],
+    "source_section_ids": [
+      "9100001#MDC supported notification channels",
+      "9100001#MDC supported notification channels > PN > Delivery Mode",
+      "9100001#MDC supported notification channels > PN > Template",
+      "9100001#MDC supported notification channels > PN > Bounce Back",
+      "9100001#MDC supported notification channels > SMS > Delivery Mode",
+      "9100001#MDC supported notification channels > SMS > Template",
+      "9100001#MDC supported notification channels > SMS > Bounce Back",
+      "9100001#MDC supported notification channels > Email > Delivery Mode",
+      "9100001#MDC supported notification channels > Email > Template",
+      "9100001#MDC supported notification channels > Email > Bounce Back",
+      "9100001#MDC supported notification channels > Letter > Delivery Mode",
+      "9100001#MDC supported notification channels > Letter > Template",
+      "9100001#MDC supported notification channels > Letter > Bounce Back",
+      "9100001#MDC supported notification channels > Whatsapp > Delivery Mode",
+      "9100001#MDC supported notification channels > Whatsapp > Template",
+      "9100001#MDC supported notification channels > Whatsapp > Bounce Back"
+    ],
+    "subsections": [
+      {
+        "name": "PN",
+        "summary": "PN: Delivery Mode: real-time; Template: PN content template; Bounce Back: retry once",
+        "key_points": [
+          "Delivery Mode: real-time",
+          "Template: PN content template",
+          "Bounce Back: retry once"
+        ],
+        "facts": [
+          {
+            "label": "Delivery Mode",
+            "tier": "inline-value",
+            "value": "real-time",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > PN > Delivery Mode",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > PN > Delivery Mode"
+            ]
+          },
+          {
+            "label": "Template",
+            "tier": "inline-value",
+            "value": "PN content template",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > PN > Template",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > PN > Template"
+            ]
+          },
+          {
+            "label": "Bounce Back",
+            "tier": "inline-value",
+            "value": "retry once",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > PN > Bounce Back",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > PN > Bounce Back"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "PN",
+          "Delivery Mode",
+          "real-time",
+          "Template",
+          "PN content template",
+          "Bounce Back",
+          "retry once"
+        ],
+        "source_section_ids": [
+          "9100001#MDC supported notification channels > PN > Delivery Mode",
+          "9100001#MDC supported notification channels > PN > Template",
+          "9100001#MDC supported notification channels > PN > Bounce Back"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "SMS",
+        "summary": "SMS: Delivery Mode: batched; Template: SMS content template; Bounce Back: resend after 5 min",
+        "key_points": [
+          "Delivery Mode: batched",
+          "Template: SMS content template",
+          "Bounce Back: resend after 5 min"
+        ],
+        "facts": [
+          {
+            "label": "Delivery Mode",
+            "tier": "inline-value",
+            "value": "batched",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Delivery Mode",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > SMS > Delivery Mode"
+            ]
+          },
+          {
+            "label": "Template",
+            "tier": "inline-value",
+            "value": "SMS content template",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Template",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > SMS > Template"
+            ]
+          },
+          {
+            "label": "Bounce Back",
+            "tier": "inline-value",
+            "value": "resend after 5 min",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Bounce Back",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > SMS > Bounce Back"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "SMS",
+          "Delivery Mode",
+          "batched",
+          "Template",
+          "SMS content template",
+          "Bounce Back",
+          "resend after 5 min"
+        ],
+        "source_section_ids": [
+          "9100001#MDC supported notification channels > SMS > Delivery Mode",
+          "9100001#MDC supported notification channels > SMS > Template",
+          "9100001#MDC supported notification channels > SMS > Bounce Back"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "Email",
+        "summary": "Email: Delivery Mode: batched; Template: Email content template; Bounce Back: resend after 30 min",
+        "key_points": [
+          "Delivery Mode: batched",
+          "Template: Email content template",
+          "Bounce Back: resend after 30 min"
+        ],
+        "facts": [
+          {
+            "label": "Delivery Mode",
+            "tier": "inline-value",
+            "value": "batched",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Email > Delivery Mode",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Email > Delivery Mode"
+            ]
+          },
+          {
+            "label": "Template",
+            "tier": "inline-value",
+            "value": "Email content template",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Email > Template",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Email > Template"
+            ]
+          },
+          {
+            "label": "Bounce Back",
+            "tier": "inline-value",
+            "value": "resend after 30 min",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Email > Bounce Back",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Email > Bounce Back"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Email",
+          "Delivery Mode",
+          "batched",
+          "Template",
+          "Email content template",
+          "Bounce Back",
+          "resend after 30 min"
+        ],
+        "source_section_ids": [
+          "9100001#MDC supported notification channels > Email > Delivery Mode",
+          "9100001#MDC supported notification channels > Email > Template",
+          "9100001#MDC supported notification channels > Email > Bounce Back"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "Letter",
+        "summary": "Letter: Delivery Mode: daily file; Template: Letter content template; Bounce Back: manual follow-up",
+        "key_points": [
+          "Delivery Mode: daily file",
+          "Template: Letter content template",
+          "Bounce Back: manual follow-up"
+        ],
+        "facts": [
+          {
+            "label": "Delivery Mode",
+            "tier": "inline-value",
+            "value": "daily file",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Delivery Mode",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Letter > Delivery Mode"
+            ]
+          },
+          {
+            "label": "Template",
+            "tier": "inline-value",
+            "value": "Letter content template",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Template",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Letter > Template"
+            ]
+          },
+          {
+            "label": "Bounce Back",
+            "tier": "inline-value",
+            "value": "manual follow-up",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Bounce Back",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Letter > Bounce Back"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Letter",
+          "Delivery Mode",
+          "daily file",
+          "Template",
+          "Letter content template",
+          "Bounce Back",
+          "manual follow-up"
+        ],
+        "source_section_ids": [
+          "9100001#MDC supported notification channels > Letter > Delivery Mode",
+          "9100001#MDC supported notification channels > Letter > Template",
+          "9100001#MDC supported notification channels > Letter > Bounce Back"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "Whatsapp",
+        "summary": "Whatsapp: Delivery Mode: real-time; Template: Whatsapp content template; Bounce Back: retry once",
+        "key_points": [
+          "Delivery Mode: real-time",
+          "Template: Whatsapp content template",
+          "Bounce Back: retry once"
+        ],
+        "facts": [
+          {
+            "label": "Delivery Mode",
+            "tier": "inline-value",
+            "value": "real-time",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Delivery Mode",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Whatsapp > Delivery Mode"
+            ]
+          },
+          {
+            "label": "Template",
+            "tier": "inline-value",
+            "value": "Whatsapp content template",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Template",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Whatsapp > Template"
+            ]
+          },
+          {
+            "label": "Bounce Back",
+            "tier": "inline-value",
+            "value": "retry once",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Bounce Back",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC supported notification channels > Whatsapp > Bounce Back"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Whatsapp",
+          "Delivery Mode",
+          "real-time",
+          "Template",
+          "Whatsapp content template",
+          "Bounce Back",
+          "retry once"
+        ],
+        "source_section_ids": [
+          "9100001#MDC supported notification channels > Whatsapp > Delivery Mode",
+          "9100001#MDC supported notification channels > Whatsapp > Template",
+          "9100001#MDC supported notification channels > Whatsapp > Bounce Back"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      }
+    ],
     "fields": [
       {
         "field": "definition",
         "tier": "narrative",
-        "value": "Message Inventory: Overview 说明 Overview 的 what-is 信息(narrative)。",
+        "value": "MDC supported notification channels（又称 Push Notification (PN), SMS and Email）：MDC supports several messaging channels for delivery. Each channel has its own\ndelivery mode, content template, and bounce back handling。 覆盖：PN、SMS、Email、Letter、Whatsapp。",
         "sources": [
           {
-            "page_id": "160033",
-            "anchor": "Message Inventory > Overview",
-            "source_url": "https://confluence.local/x/Message-Inventory",
-            "confluence_version": 3
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
           }
+        ],
+        "evidence_keywords": [
+          "MDC supported notification channels",
+          "PN",
+          "Delivery Mode",
+          "real-time",
+          "Template",
+          "PN content template",
+          "Bounce Back",
+          "retry once",
+          "SMS",
+          "batched",
+          "SMS content template",
+          "resend after 5 min",
+          "Email",
+          "Email content template",
+          "resend after 30 min",
+          "Letter",
+          "daily file",
+          "Letter content template",
+          "manual follow-up",
+          "Whatsapp",
+          "Whatsapp content template"
+        ],
+        "source_section_ids": [
+          "9100001#MDC supported notification channels",
+          "9100001#MDC supported notification channels > PN > Delivery Mode",
+          "9100001#MDC supported notification channels > PN > Template",
+          "9100001#MDC supported notification channels > PN > Bounce Back",
+          "9100001#MDC supported notification channels > SMS > Delivery Mode",
+          "9100001#MDC supported notification channels > SMS > Template",
+          "9100001#MDC supported notification channels > SMS > Bounce Back",
+          "9100001#MDC supported notification channels > Email > Delivery Mode",
+          "9100001#MDC supported notification channels > Email > Template",
+          "9100001#MDC supported notification channels > Email > Bounce Back",
+          "9100001#MDC supported notification channels > Letter > Delivery Mode",
+          "9100001#MDC supported notification channels > Letter > Template",
+          "9100001#MDC supported notification channels > Letter > Bounce Back",
+          "9100001#MDC supported notification channels > Whatsapp > Delivery Mode",
+          "9100001#MDC supported notification channels > Whatsapp > Template",
+          "9100001#MDC supported notification channels > Whatsapp > Bounce Back"
+        ]
+      },
+      {
+        "field": "overview",
+        "tier": "narrative",
+        "value": "PN — Delivery Mode: real-time; Template: PN content template; Bounce Back: retry once\nSMS — Delivery Mode: batched; Template: SMS content template; Bounce Back: resend after 5 min\nEmail — Delivery Mode: batched; Template: Email content template; Bounce Back: resend after 30 min\nLetter — Delivery Mode: daily file; Template: Letter content template; Bounce Back: manual follow-up\nWhatsapp — Delivery Mode: real-time; Template: Whatsapp content template; Bounce Back: retry once",
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > PN > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > SMS > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Email > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Letter > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Delivery Mode",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Template",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC supported notification channels > Whatsapp > Bounce Back",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ],
+        "evidence_keywords": [
+          "MDC supported notification channels",
+          "PN",
+          "Delivery Mode",
+          "real-time",
+          "Template",
+          "PN content template",
+          "Bounce Back",
+          "retry once",
+          "SMS",
+          "batched",
+          "SMS content template",
+          "resend after 5 min",
+          "Email",
+          "Email content template",
+          "resend after 30 min",
+          "Letter",
+          "daily file",
+          "Letter content template",
+          "manual follow-up",
+          "Whatsapp",
+          "Whatsapp content template"
+        ],
+        "source_section_ids": [
+          "9100001#MDC supported notification channels",
+          "9100001#MDC supported notification channels > PN > Delivery Mode",
+          "9100001#MDC supported notification channels > PN > Template",
+          "9100001#MDC supported notification channels > PN > Bounce Back",
+          "9100001#MDC supported notification channels > SMS > Delivery Mode",
+          "9100001#MDC supported notification channels > SMS > Template",
+          "9100001#MDC supported notification channels > SMS > Bounce Back",
+          "9100001#MDC supported notification channels > Email > Delivery Mode",
+          "9100001#MDC supported notification channels > Email > Template",
+          "9100001#MDC supported notification channels > Email > Bounce Back",
+          "9100001#MDC supported notification channels > Letter > Delivery Mode",
+          "9100001#MDC supported notification channels > Letter > Template",
+          "9100001#MDC supported notification channels > Letter > Bounce Back",
+          "9100001#MDC supported notification channels > Whatsapp > Delivery Mode",
+          "9100001#MDC supported notification channels > Whatsapp > Template",
+          "9100001#MDC supported notification channels > Whatsapp > Bounce Back"
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0002",
+    "canonical_name": "MDC Management Portal",
+    "topic_class": "system component",
+    "aliases": [
+      "MDC Messaging Platform",
+      "Portal access right application and link",
+      "UAT Access right",
+      "PROD Access right"
+    ],
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "boundary": "MDC portal 渠道管理入口与 UAT/PROD access right 申请链接；不含渠道清单或 use case 流程。",
+    "topic_type": "inventory",
+    "status": "approved",
+    "keywords_raw_agg": [
+      "MDC Management Portal",
+      "Portal link",
+      "Link",
+      "https://mdc-portal.example.local",
+      "Notes",
+      "landing page",
+      "UAT Access right",
+      "https://mdc-portal-uat.example.local/access",
+      "request via portal",
+      "PROD Access right",
+      "https://mdc-portal-prod.example.local/access",
+      "needs line-manager approval"
+    ],
+    "concepts_agg": [
+      "MDC Management Portal",
+      "Portal link",
+      "Link",
+      "Notes",
+      "UAT Access right",
+      "PROD Access right"
+    ],
+    "questions_agg_en": [
+      "What is MDC Management Portal?",
+      "MDC Management Portal what-is",
+      "Where is MDC Management Portal documented?",
+      "What is the Link for Portal link?",
+      "What is the Notes for Portal link?",
+      "What is the Link for UAT Access right?",
+      "What is the Notes for UAT Access right?",
+      "What is the Link for PROD Access right?",
+      "What is the Notes for PROD Access right?"
+    ],
+    "questions_agg_zh": [
+      "MDC Management Portal 是什么?",
+      "MDC Management Portal what-is",
+      "MDC Management Portal 在哪里说明?",
+      "Portal link 的 Link 是什么？",
+      "Portal link 的 Notes 是什么？",
+      "UAT Access right 的 Link 是什么？",
+      "UAT Access right 的 Notes 是什么？",
+      "PROD Access right 的 Link 是什么？",
+      "PROD Access right 的 Notes 是什么？"
+    ],
+    "source_section_ids": [
+      "9100001#MDC Management Portal",
+      "9100001#MDC Management Portal > Portal link > Link",
+      "9100001#MDC Management Portal > Portal link > Notes",
+      "9100001#MDC Management Portal > UAT Access right > Link",
+      "9100001#MDC Management Portal > UAT Access right > Notes",
+      "9100001#MDC Management Portal > PROD Access right > Link",
+      "9100001#MDC Management Portal > PROD Access right > Notes"
+    ],
+    "subsections": [
+      {
+        "name": "Portal link",
+        "summary": "Portal link: Link: https://mdc-portal.example.local; Notes: landing page; Link: https://mdc-portal-uat.example.local/access; Link: https://mdc-portal-prod.example.local/access",
+        "key_points": [
+          "Link: https://mdc-portal.example.local",
+          "Notes: landing page",
+          "Link: https://mdc-portal-uat.example.local/access",
+          "Link: https://mdc-portal-prod.example.local/access"
+        ],
+        "facts": [
+          {
+            "label": "Link",
+            "tier": "inline-value",
+            "value": "https://mdc-portal.example.local",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC Management Portal > Portal link > Link",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC Management Portal > Portal link > Link"
+            ]
+          },
+          {
+            "label": "Notes",
+            "tier": "inline-value",
+            "value": "landing page",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC Management Portal > Portal link > Notes",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC Management Portal > Portal link > Notes"
+            ]
+          },
+          {
+            "label": "Link",
+            "tier": "inline-value",
+            "value": "https://mdc-portal-uat.example.local/access",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Link",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC Management Portal > UAT Access right > Link"
+            ]
+          },
+          {
+            "label": "Link",
+            "tier": "inline-value",
+            "value": "https://mdc-portal-prod.example.local/access",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Link",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC Management Portal > PROD Access right > Link"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Portal link",
+          "Link",
+          "https://mdc-portal.example.local",
+          "Notes",
+          "landing page",
+          "UAT Access right",
+          "https://mdc-portal-uat.example.local/access",
+          "PROD Access right",
+          "https://mdc-portal-prod.example.local/access"
+        ],
+        "source_section_ids": [
+          "9100001#MDC Management Portal > Portal link > Link",
+          "9100001#MDC Management Portal > Portal link > Notes",
+          "9100001#MDC Management Portal > UAT Access right > Link",
+          "9100001#MDC Management Portal > PROD Access right > Link"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > Portal link > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > Portal link > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "UAT Access right",
+        "summary": "UAT Access right: Link: https://mdc-portal-uat.example.local/access; Notes: request via portal",
+        "key_points": [
+          "Link: https://mdc-portal-uat.example.local/access",
+          "Notes: request via portal"
+        ],
+        "facts": [
+          {
+            "label": "Link",
+            "tier": "inline-value",
+            "value": "https://mdc-portal-uat.example.local/access",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Link",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC Management Portal > UAT Access right > Link"
+            ]
+          },
+          {
+            "label": "Notes",
+            "tier": "inline-value",
+            "value": "request via portal",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Notes",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC Management Portal > UAT Access right > Notes"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "UAT Access right",
+          "Link",
+          "https://mdc-portal-uat.example.local/access",
+          "Notes",
+          "request via portal"
+        ],
+        "source_section_ids": [
+          "9100001#MDC Management Portal > UAT Access right > Link",
+          "9100001#MDC Management Portal > UAT Access right > Notes"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "PROD Access right",
+        "summary": "PROD Access right: Link: https://mdc-portal-prod.example.local/access; Notes: needs line-manager approval",
+        "key_points": [
+          "Link: https://mdc-portal-prod.example.local/access",
+          "Notes: needs line-manager approval"
+        ],
+        "facts": [
+          {
+            "label": "Link",
+            "tier": "inline-value",
+            "value": "https://mdc-portal-prod.example.local/access",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Link",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC Management Portal > PROD Access right > Link"
+            ]
+          },
+          {
+            "label": "Notes",
+            "tier": "inline-value",
+            "value": "needs line-manager approval",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Notes",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC Management Portal > PROD Access right > Notes"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "PROD Access right",
+          "Link",
+          "https://mdc-portal-prod.example.local/access",
+          "Notes",
+          "needs line-manager approval"
+        ],
+        "source_section_ids": [
+          "9100001#MDC Management Portal > PROD Access right > Link",
+          "9100001#MDC Management Portal > PROD Access right > Notes"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      }
+    ],
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "MDC Management Portal（又称 MDC Messaging Platform, Portal access right application and link）：The MDC Management Portal (also called the MDC Messaging Platform) is where teams\nmanage channels and request access rights for each environment。 覆盖：Portal link、UAT Access right、PROD Access right。",
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > Portal link > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > Portal link > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ],
+        "evidence_keywords": [
+          "MDC Management Portal",
+          "Portal link",
+          "Link",
+          "https://mdc-portal.example.local",
+          "Notes",
+          "landing page",
+          "UAT Access right",
+          "https://mdc-portal-uat.example.local/access",
+          "request via portal",
+          "PROD Access right",
+          "https://mdc-portal-prod.example.local/access",
+          "needs line-manager approval"
+        ],
+        "source_section_ids": [
+          "9100001#MDC Management Portal",
+          "9100001#MDC Management Portal > Portal link > Link",
+          "9100001#MDC Management Portal > Portal link > Notes",
+          "9100001#MDC Management Portal > UAT Access right > Link",
+          "9100001#MDC Management Portal > UAT Access right > Notes",
+          "9100001#MDC Management Portal > PROD Access right > Link",
+          "9100001#MDC Management Portal > PROD Access right > Notes"
+        ]
+      },
+      {
+        "field": "overview",
+        "tier": "narrative",
+        "value": "Portal link — Link: https://mdc-portal.example.local; Notes: landing page; Link: https://mdc-portal-uat.example.local/access\nUAT Access right — Link: https://mdc-portal-uat.example.local/access; Notes: request via portal\nPROD Access right — Link: https://mdc-portal-prod.example.local/access; Notes: needs line-manager approval",
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > Portal link > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > Portal link > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > UAT Access right > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Link",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC Management Portal > PROD Access right > Notes",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ],
+        "evidence_keywords": [
+          "MDC Management Portal",
+          "Portal link",
+          "Link",
+          "https://mdc-portal.example.local",
+          "Notes",
+          "landing page",
+          "UAT Access right",
+          "https://mdc-portal-uat.example.local/access",
+          "request via portal",
+          "PROD Access right",
+          "https://mdc-portal-prod.example.local/access",
+          "needs line-manager approval"
+        ],
+        "source_section_ids": [
+          "9100001#MDC Management Portal",
+          "9100001#MDC Management Portal > Portal link > Link",
+          "9100001#MDC Management Portal > Portal link > Notes",
+          "9100001#MDC Management Portal > UAT Access right > Link",
+          "9100001#MDC Management Portal > UAT Access right > Notes",
+          "9100001#MDC Management Portal > PROD Access right > Link",
+          "9100001#MDC Management Portal > PROD Access right > Notes"
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0003",
+    "canonical_name": "Notification Use Case Setup",
+    "topic_class": "workflow",
+    "aliases": [
+      "use case",
+      "M488",
+      "M489",
+      "Create use case in portal"
+    ],
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "boundary": "notification use case 的定义、portal 内创建、输入输出映射与各 use case 的 SLO baseline。",
+    "topic_type": "process",
+    "status": "approved",
+    "keywords_raw_agg": [
+      "Notification Use Case Setup",
+      "M488",
+      "Name",
+      "Payment OTP notification",
+      "SLO baseline",
+      "5 min",
+      "M489",
+      "Statement ready notification",
+      "30 min"
+    ],
+    "concepts_agg": [
+      "Notification Use Case Setup",
+      "M488",
+      "Name",
+      "SLO baseline",
+      "M489"
+    ],
+    "questions_agg_en": [
+      "What is Notification Use Case Setup?",
+      "Notification Use Case Setup what-is",
+      "Where is Notification Use Case Setup documented?",
+      "What is the Name for M488?",
+      "What is the SLO baseline for M488?",
+      "What is the Name for M489?",
+      "What is the SLO baseline for M489?"
+    ],
+    "questions_agg_zh": [
+      "Notification Use Case Setup 是什么?",
+      "Notification Use Case Setup what-is",
+      "Notification Use Case Setup 在哪里说明?",
+      "M488 的 Name 是什么？",
+      "M488 的 SLO baseline 是什么？",
+      "M489 的 Name 是什么？",
+      "M489 的 SLO baseline 是什么？"
+    ],
+    "source_section_ids": [
+      "9100001#Notification Use Case Setup",
+      "9100001#Notification Use Case Setup > M488 > Name",
+      "9100001#Notification Use Case Setup > M488 > SLO baseline",
+      "9100001#Notification Use Case Setup > M489 > Name",
+      "9100001#Notification Use Case Setup > M489 > SLO baseline"
+    ],
+    "subsections": [
+      {
+        "name": "use case template",
+        "summary": "use case template (no extracted facts).",
+        "key_points": [],
+        "facts": [],
+        "evidence_keywords": [],
+        "source_section_ids": [],
+        "sources": []
+      },
+      {
+        "name": "input output mapping",
+        "summary": "input output mapping (no extracted facts).",
+        "key_points": [],
+        "facts": [],
+        "evidence_keywords": [],
+        "source_section_ids": [],
+        "sources": []
+      },
+      {
+        "name": "SLO baseline",
+        "summary": "SLO baseline: SLO baseline: 5 min; SLO baseline: 30 min",
+        "key_points": [
+          "SLO baseline: 5 min",
+          "SLO baseline: 30 min"
+        ],
+        "facts": [
+          {
+            "label": "SLO baseline",
+            "tier": "inline-value",
+            "value": "5 min",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > Notification Use Case Setup > M488 > SLO baseline",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#Notification Use Case Setup > M488 > SLO baseline"
+            ]
+          },
+          {
+            "label": "SLO baseline",
+            "tier": "inline-value",
+            "value": "30 min",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > Notification Use Case Setup > M489 > SLO baseline",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#Notification Use Case Setup > M489 > SLO baseline"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "M488",
+          "SLO baseline",
+          "5 min",
+          "M489",
+          "30 min"
+        ],
+        "source_section_ids": [
+          "9100001#Notification Use Case Setup > M488 > SLO baseline",
+          "9100001#Notification Use Case Setup > M489 > SLO baseline"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M488 > SLO baseline",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M489 > SLO baseline",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "M488",
+        "summary": "M488: Name: Payment OTP notification",
+        "key_points": [
+          "Name: Payment OTP notification"
+        ],
+        "facts": [
+          {
+            "label": "Name",
+            "tier": "inline-value",
+            "value": "Payment OTP notification",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > Notification Use Case Setup > M488 > Name",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#Notification Use Case Setup > M488 > Name"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "M488",
+          "Name",
+          "Payment OTP notification"
+        ],
+        "source_section_ids": [
+          "9100001#Notification Use Case Setup > M488 > Name"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M488 > Name",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "M489",
+        "summary": "M489: Name: Statement ready notification",
+        "key_points": [
+          "Name: Statement ready notification"
+        ],
+        "facts": [
+          {
+            "label": "Name",
+            "tier": "inline-value",
+            "value": "Statement ready notification",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > Notification Use Case Setup > M489 > Name",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#Notification Use Case Setup > M489 > Name"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "M489",
+          "Name",
+          "Statement ready notification"
+        ],
+        "source_section_ids": [
+          "9100001#Notification Use Case Setup > M489 > Name"
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M489 > Name",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      }
+    ],
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "Notification Use Case Setup（又称 use case, M488）：A notification use case is created in the portal and mapped to a message path。 覆盖：use case template、input output mapping、SLO baseline、M488、M489。",
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M488 > Name",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M488 > SLO baseline",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M489 > Name",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M489 > SLO baseline",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ],
+        "evidence_keywords": [
+          "Notification Use Case Setup",
+          "M488",
+          "Name",
+          "Payment OTP notification",
+          "SLO baseline",
+          "5 min",
+          "M489",
+          "Statement ready notification",
+          "30 min"
+        ],
+        "source_section_ids": [
+          "9100001#Notification Use Case Setup",
+          "9100001#Notification Use Case Setup > M488 > Name",
+          "9100001#Notification Use Case Setup > M488 > SLO baseline",
+          "9100001#Notification Use Case Setup > M489 > Name",
+          "9100001#Notification Use Case Setup > M489 > SLO baseline"
+        ]
+      },
+      {
+        "field": "overview",
+        "tier": "narrative",
+        "value": "SLO baseline — SLO baseline: 5 min; SLO baseline: 30 min\nM488 — Name: Payment OTP notification\nM489 — Name: Statement ready notification",
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M488 > Name",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M488 > SLO baseline",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M489 > Name",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > Notification Use Case Setup > M489 > SLO baseline",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ],
+        "evidence_keywords": [
+          "Notification Use Case Setup",
+          "M488",
+          "Name",
+          "Payment OTP notification",
+          "SLO baseline",
+          "5 min",
+          "M489",
+          "Statement ready notification",
+          "30 min"
+        ],
+        "source_section_ids": [
+          "9100001#Notification Use Case Setup",
+          "9100001#Notification Use Case Setup > M488 > Name",
+          "9100001#Notification Use Case Setup > M488 > SLO baseline",
+          "9100001#Notification Use Case Setup > M489 > Name",
+          "9100001#Notification Use Case Setup > M489 > SLO baseline"
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0007",
+    "canonical_name": "MDC project engagement process",
+    "topic_class": "workflow",
+    "aliases": [
+      "MDC Engagement and Requirement Process",
+      "General Enquiries in Projects",
+      "engagement contact point"
+    ],
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "boundary": "MDC onboarding 咨询接入、对接联系人与不同治理流程的对接事项。",
+    "topic_type": "process",
+    "status": "approved",
+    "keywords_raw_agg": [
+      "Step 1: Raise an onboarding enquiry via the engagement contact point.",
+      "Step 2: Confirm requirements with the MDC governance Process owner.",
+      "Step 3: Schedule the technical onboarding session and confirm channels."
+    ],
+    "concepts_agg": [
+      "Step 1: Raise an onboarding enquiry via the engagement contact point.",
+      "Step 2: Confirm requirements with the MDC governance Process owner.",
+      "Step 3: Schedule the technical onboarding session and confirm channels."
+    ],
+    "questions_agg_en": [
+      "What is Step 1: Raise an onboarding enquiry via the engagement contact point.?",
+      "What is Step 2: Confirm requirements with the MDC governance Process owner.?",
+      "What is Step 3: Schedule the technical onboarding session and confirm channels.?"
+    ],
+    "questions_agg_zh": [
+      "Step 1: Raise an onboarding enquiry via the engagement contact point. 是什么？",
+      "Step 2: Confirm requirements with the MDC governance Process owner. 是什么？",
+      "Step 3: Schedule the technical onboarding session and confirm channels. 是什么？"
+    ],
+    "source_section_ids": [
+      "9100001#MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point.",
+      "9100001#MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner.",
+      "9100001#MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels."
+    ],
+    "subsections": [
+      {
+        "name": "engagement contact point",
+        "summary": "engagement contact point: Step 1: 1. Raise an onboarding enquiry via the engagement contact point.",
+        "key_points": [
+          "Step 1: 1. Raise an onboarding enquiry via the engagement contact point."
+        ],
+        "facts": [
+          {
+            "label": "Step 1",
+            "tier": "narrative",
+            "value": "1. Raise an onboarding enquiry via the engagement contact point.",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point.",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point."
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Step 1: Raise an onboarding enquiry via the engagement contact point."
+        ],
+        "source_section_ids": [
+          "9100001#MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point."
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "governance Process",
+        "summary": "governance Process: Step 2: 2. Confirm requirements with the MDC governance Process owner.",
+        "key_points": [
+          "Step 2: 2. Confirm requirements with the MDC governance Process owner."
+        ],
+        "facts": [
+          {
+            "label": "Step 2",
+            "tier": "narrative",
+            "value": "2. Confirm requirements with the MDC governance Process owner.",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner.",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner."
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Step 2: Confirm requirements with the MDC governance Process owner."
+        ],
+        "source_section_ids": [
+          "9100001#MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner."
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      },
+      {
+        "name": "Step 3: Schedule the technical onboarding session and confirm channels.",
+        "summary": "Step 3: Schedule the technical onboarding session and confirm channels.: Step 3: 3. Schedule the technical onboarding session and confirm channels.",
+        "key_points": [
+          "Step 3: 3. Schedule the technical onboarding session and confirm channels."
+        ],
+        "facts": [
+          {
+            "label": "Step 3",
+            "tier": "narrative",
+            "value": "3. Schedule the technical onboarding session and confirm channels.",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100001",
+                "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels.",
+                "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+                "confluence_version": 31
+              }
+            ],
+            "source_section_ids": [
+              "9100001#MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels."
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Step 3: Schedule the technical onboarding session and confirm channels."
+        ],
+        "source_section_ids": [
+          "9100001#MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels."
+        ],
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ]
+      }
+    ],
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "MDC project engagement process（又称 MDC Engagement and Requirement Process, General Enquiries in Projects）：1. Raise an onboarding enquiry via the engagement contact point。 覆盖：engagement contact point、governance Process、Step 3: Schedule the technical onboarding session and confirm channels.。",
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ],
+        "evidence_keywords": [
+          "Step 1: Raise an onboarding enquiry via the engagement contact point.",
+          "Step 2: Confirm requirements with the MDC governance Process owner.",
+          "Step 3: Schedule the technical onboarding session and confirm channels."
+        ],
+        "source_section_ids": [
+          "9100001#MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point.",
+          "9100001#MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner.",
+          "9100001#MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels."
+        ]
+      },
+      {
+        "field": "overview",
+        "tier": "narrative",
+        "value": "engagement contact point — Step 1: 1. Raise an onboarding enquiry via the engagement contact point.\ngovernance Process — Step 2: 2. Confirm requirements with the MDC governance Process owner.\nStep 3: Schedule the technical onboarding session and confirm channels. — Step 3: 3. Schedule the technical onboarding session and confirm channels.",
+        "sources": [
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          },
+          {
+            "page_id": "9100001",
+            "anchor": "MDC Project Check List > MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels.",
+            "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+            "confluence_version": 31
+          }
+        ],
+        "evidence_keywords": [
+          "Step 1: Raise an onboarding enquiry via the engagement contact point.",
+          "Step 2: Confirm requirements with the MDC governance Process owner.",
+          "Step 3: Schedule the technical onboarding session and confirm channels."
+        ],
+        "source_section_ids": [
+          "9100001#MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point.",
+          "9100001#MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner.",
+          "9100001#MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels."
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0004",
+    "canonical_name": "Message Path Service Catalogue",
+    "topic_class": "catalog",
+    "aliases": [
+      "message path",
+      "service standard",
+      "baseline SLO",
+      "actual performance"
+    ],
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "boundary": "各 message path 的 service standard、baseline SLO 与 actual performance rate。",
+    "topic_type": "inventory",
+    "status": "approved",
+    "keywords_raw_agg": [
+      "Message Path Service Catalogue",
+      "M488 payment path",
+      "service baseline SLO",
+      "5 min",
+      "actual performance rate",
+      "4.2 min",
+      "M489 statement path",
+      "30 min",
+      "22 min"
+    ],
+    "concepts_agg": [
+      "Message Path Service Catalogue",
+      "M488 payment path",
+      "service baseline SLO",
+      "actual performance rate",
+      "M489 statement path"
+    ],
+    "questions_agg_en": [
+      "What is Message Path Service Catalogue?",
+      "Message Path Service Catalogue what-is",
+      "Where is Message Path Service Catalogue documented?",
+      "What is the service baseline SLO for M488 payment path?",
+      "What is the actual performance rate for M488 payment path?",
+      "What is the service baseline SLO for M489 statement path?",
+      "What is the actual performance rate for M489 statement path?"
+    ],
+    "questions_agg_zh": [
+      "Message Path Service Catalogue 是什么?",
+      "Message Path Service Catalogue what-is",
+      "Message Path Service Catalogue 在哪里说明?",
+      "M488 payment path 的 service baseline SLO 是什么？",
+      "M488 payment path 的 actual performance rate 是什么？",
+      "M489 statement path 的 service baseline SLO 是什么？",
+      "M489 statement path 的 actual performance rate 是什么？"
+    ],
+    "source_section_ids": [
+      "9100002#Message Path Service Catalogue",
+      "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO",
+      "9100002#Message Path Service Catalogue > M488 payment path > actual performance rate",
+      "9100002#Message Path Service Catalogue > M489 statement path > service baseline SLO",
+      "9100002#Message Path Service Catalogue > M489 statement path > actual performance rate"
+    ],
+    "subsections": [
+      {
+        "name": "service baseline SLO",
+        "summary": "service baseline SLO: service baseline SLO: 5 min; service baseline SLO: 30 min",
+        "key_points": [
+          "service baseline SLO: 5 min",
+          "service baseline SLO: 30 min"
+        ],
+        "facts": [
+          {
+            "label": "service baseline SLO",
+            "tier": "inline-value",
+            "value": "5 min",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100002",
+                "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > service baseline SLO",
+                "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+                "confluence_version": 6
+              }
+            ],
+            "source_section_ids": [
+              "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO"
+            ]
+          },
+          {
+            "label": "service baseline SLO",
+            "tier": "inline-value",
+            "value": "30 min",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100002",
+                "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > service baseline SLO",
+                "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+                "confluence_version": 6
+              }
+            ],
+            "source_section_ids": [
+              "9100002#Message Path Service Catalogue > M489 statement path > service baseline SLO"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "M488 payment path",
+          "service baseline SLO",
+          "5 min",
+          "M489 statement path",
+          "30 min"
+        ],
+        "source_section_ids": [
+          "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO",
+          "9100002#Message Path Service Catalogue > M489 statement path > service baseline SLO"
+        ],
+        "sources": [
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > service baseline SLO",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > service baseline SLO",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          }
+        ]
+      },
+      {
+        "name": "actual performance rate",
+        "summary": "actual performance rate: actual performance rate: 4.2 min; actual performance rate: 22 min",
+        "key_points": [
+          "actual performance rate: 4.2 min",
+          "actual performance rate: 22 min"
+        ],
+        "facts": [
+          {
+            "label": "actual performance rate",
+            "tier": "inline-value",
+            "value": "4.2 min",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100002",
+                "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > actual performance rate",
+                "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+                "confluence_version": 6
+              }
+            ],
+            "source_section_ids": [
+              "9100002#Message Path Service Catalogue > M488 payment path > actual performance rate"
+            ]
+          },
+          {
+            "label": "actual performance rate",
+            "tier": "inline-value",
+            "value": "22 min",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100002",
+                "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > actual performance rate",
+                "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+                "confluence_version": 6
+              }
+            ],
+            "source_section_ids": [
+              "9100002#Message Path Service Catalogue > M489 statement path > actual performance rate"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "M488 payment path",
+          "actual performance rate",
+          "4.2 min",
+          "M489 statement path",
+          "22 min"
+        ],
+        "source_section_ids": [
+          "9100002#Message Path Service Catalogue > M488 payment path > actual performance rate",
+          "9100002#Message Path Service Catalogue > M489 statement path > actual performance rate"
+        ],
+        "sources": [
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > actual performance rate",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > actual performance rate",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          }
+        ]
+      }
+    ],
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "Message Path Service Catalogue（又称 message path, service standard）：Each notification use case runs over a message path with a published service\nstandard. The catalogue lists the baseline SLO and the actual performance rate。 覆盖：service baseline SLO、actual performance rate。",
+        "sources": [
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > service baseline SLO",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > actual performance rate",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > service baseline SLO",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > actual performance rate",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          }
+        ],
+        "evidence_keywords": [
+          "Message Path Service Catalogue",
+          "M488 payment path",
+          "service baseline SLO",
+          "5 min",
+          "actual performance rate",
+          "4.2 min",
+          "M489 statement path",
+          "30 min",
+          "22 min"
+        ],
+        "source_section_ids": [
+          "9100002#Message Path Service Catalogue",
+          "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO",
+          "9100002#Message Path Service Catalogue > M488 payment path > actual performance rate",
+          "9100002#Message Path Service Catalogue > M489 statement path > service baseline SLO",
+          "9100002#Message Path Service Catalogue > M489 statement path > actual performance rate"
+        ]
+      },
+      {
+        "field": "overview",
+        "tier": "narrative",
+        "value": "service baseline SLO — service baseline SLO: 5 min; service baseline SLO: 30 min\nactual performance rate — actual performance rate: 4.2 min; actual performance rate: 22 min",
+        "sources": [
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > service baseline SLO",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > actual performance rate",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > service baseline SLO",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > actual performance rate",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          }
+        ],
+        "evidence_keywords": [
+          "Message Path Service Catalogue",
+          "M488 payment path",
+          "service baseline SLO",
+          "5 min",
+          "actual performance rate",
+          "4.2 min",
+          "M489 statement path",
+          "30 min",
+          "22 min"
+        ],
+        "source_section_ids": [
+          "9100002#Message Path Service Catalogue",
+          "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO",
+          "9100002#Message Path Service Catalogue > M488 payment path > actual performance rate",
+          "9100002#Message Path Service Catalogue > M489 statement path > service baseline SLO",
+          "9100002#Message Path Service Catalogue > M489 statement path > actual performance rate"
+        ]
+      },
+      {
+        "field": "related_components",
+        "tier": "narrative",
+        "value": "Related to Notification Use Case Setup.",
+        "soft_links": [
+          "C-0003"
+        ],
+        "sources": [
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > service baseline SLO",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > actual performance rate",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > service baseline SLO",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          },
+          {
+            "page_id": "9100002",
+            "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > actual performance rate",
+            "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+            "confluence_version": 6
+          }
+        ],
+        "evidence_keywords": [
+          "Message Path Service Catalogue",
+          "M488 payment path",
+          "service baseline SLO",
+          "5 min",
+          "actual performance rate",
+          "4.2 min",
+          "M489 statement path",
+          "30 min",
+          "22 min"
+        ],
+        "source_section_ids": [
+          "9100002#Message Path Service Catalogue",
+          "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO",
+          "9100002#Message Path Service Catalogue > M488 payment path > actual performance rate",
+          "9100002#Message Path Service Catalogue > M489 statement path > service baseline SLO",
+          "9100002#Message Path Service Catalogue > M489 statement path > actual performance rate"
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0005",
+    "canonical_name": "Template Governance and Maintenance",
+    "topic_class": "workflow",
+    "aliases": [
+      "Template Maintenance",
+      "Template Content",
+      "Create template in portal",
+      "message Inventory"
+    ],
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "boundary": "模板的创建、维护、治理流程与 message inventory 记录；不含渠道清单。",
+    "topic_type": "process",
+    "status": "approved",
+    "keywords_raw_agg": [
+      "Message Inventory",
+      "create template in portal",
+      "Owner",
+      "content team",
+      "Tool",
+      "MDC portal",
+      "governance team",
+      "governance tool"
+    ],
+    "concepts_agg": [
+      "Message Inventory",
+      "create template in portal",
+      "Owner",
+      "Tool"
+    ],
+    "questions_agg_en": [
+      "What is Message Inventory?",
+      "Message Inventory what-is",
+      "Where is Message Inventory documented?",
+      "What is the Owner for create template in portal?",
+      "What is the Tool for create template in portal?",
+      "What is the Owner for message Inventory?",
+      "What is the Tool for message Inventory?"
+    ],
+    "questions_agg_zh": [
+      "Message Inventory 是什么?",
+      "Message Inventory what-is",
+      "Message Inventory 在哪里说明?",
+      "create template in portal 的 Owner 是什么？",
+      "create template in portal 的 Tool 是什么？",
+      "message Inventory 的 Owner 是什么？",
+      "message Inventory 的 Tool 是什么？"
+    ],
+    "source_section_ids": [
+      "9100003#Template Governance and Maintenance",
+      "9100003#Template Governance and Maintenance > create template in portal > Owner",
+      "9100003#Template Governance and Maintenance > create template in portal > Tool",
+      "9100003#Template Governance and Maintenance > message Inventory > Owner",
+      "9100003#Template Governance and Maintenance > message Inventory > Tool"
+    ],
+    "subsections": [
+      {
+        "name": "Template Maintenance",
+        "summary": "Template Maintenance (no extracted facts).",
+        "key_points": [],
+        "facts": [],
+        "evidence_keywords": [],
+        "source_section_ids": [],
+        "sources": []
+      },
+      {
+        "name": "create template in portal",
+        "summary": "create template in portal: Owner: content team; Tool: MDC portal",
+        "key_points": [
+          "Owner: content team",
+          "Tool: MDC portal"
+        ],
+        "facts": [
+          {
+            "label": "Owner",
+            "tier": "inline-value",
+            "value": "content team",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100003",
+                "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+                "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+                "confluence_version": 4
+              }
+            ],
+            "source_section_ids": [
+              "9100003#Template Governance and Maintenance > create template in portal > Owner"
+            ]
+          },
+          {
+            "label": "Tool",
+            "tier": "inline-value",
+            "value": "MDC portal",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100003",
+                "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+                "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+                "confluence_version": 4
+              }
+            ],
+            "source_section_ids": [
+              "9100003#Template Governance and Maintenance > create template in portal > Tool"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "create template in portal",
+          "Owner",
+          "content team",
+          "Tool",
+          "MDC portal"
+        ],
+        "source_section_ids": [
+          "9100003#Template Governance and Maintenance > create template in portal > Owner",
+          "9100003#Template Governance and Maintenance > create template in portal > Tool"
+        ],
+        "sources": [
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          }
+        ]
+      },
+      {
+        "name": "message Inventory",
+        "summary": "message Inventory: Owner: governance team; Tool: governance tool",
+        "key_points": [
+          "Owner: governance team",
+          "Tool: governance tool"
+        ],
+        "facts": [
+          {
+            "label": "Owner",
+            "tier": "inline-value",
+            "value": "governance team",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100003",
+                "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+                "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+                "confluence_version": 4
+              }
+            ],
+            "source_section_ids": [
+              "9100003#Template Governance and Maintenance > message Inventory > Owner"
+            ]
+          },
+          {
+            "label": "Tool",
+            "tier": "inline-value",
+            "value": "governance tool",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100003",
+                "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+                "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+                "confluence_version": 4
+              }
+            ],
+            "source_section_ids": [
+              "9100003#Template Governance and Maintenance > message Inventory > Tool"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "message Inventory",
+          "Owner",
+          "governance team",
+          "Tool",
+          "governance tool"
+        ],
+        "source_section_ids": [
+          "9100003#Template Governance and Maintenance > message Inventory > Owner",
+          "9100003#Template Governance and Maintenance > message Inventory > Tool"
+        ],
+        "sources": [
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          }
+        ]
+      }
+    ],
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "Template Governance and Maintenance（又称 Template Maintenance, Template Content）：模板的创建、维护、治理流程与 message inventory 记录；不含渠道清单。 覆盖：Template Maintenance、create template in portal、message Inventory。",
+        "sources": [
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          }
+        ],
+        "evidence_keywords": [
+          "Message Inventory",
+          "create template in portal",
+          "Owner",
+          "content team",
+          "Tool",
+          "MDC portal",
+          "governance team",
+          "governance tool"
+        ],
+        "source_section_ids": [
+          "9100003#Template Governance and Maintenance",
+          "9100003#Template Governance and Maintenance > create template in portal > Owner",
+          "9100003#Template Governance and Maintenance > create template in portal > Tool",
+          "9100003#Template Governance and Maintenance > message Inventory > Owner",
+          "9100003#Template Governance and Maintenance > message Inventory > Tool"
+        ]
+      },
+      {
+        "field": "overview",
+        "tier": "narrative",
+        "value": "create template in portal — Owner: content team; Tool: MDC portal\nmessage Inventory — Owner: governance team; Tool: governance tool",
+        "sources": [
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          }
+        ],
+        "evidence_keywords": [
+          "Message Inventory",
+          "create template in portal",
+          "Owner",
+          "content team",
+          "Tool",
+          "MDC portal",
+          "governance team",
+          "governance tool"
+        ],
+        "source_section_ids": [
+          "9100003#Template Governance and Maintenance",
+          "9100003#Template Governance and Maintenance > create template in portal > Owner",
+          "9100003#Template Governance and Maintenance > create template in portal > Tool",
+          "9100003#Template Governance and Maintenance > message Inventory > Owner",
+          "9100003#Template Governance and Maintenance > message Inventory > Tool"
+        ]
+      }
+    ],
+    "flags": []
+  },
+  {
+    "canonical_id": "C-0006",
+    "canonical_name": "Testing, bounce back, and retry",
+    "topic_class": "workflow",
+    "aliases": [
+      "Testing and Access Rights",
+      "Bounce Back Handling",
+      "Resend / Retry Mechanism"
+    ],
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "boundary": "消息测试方式、bounce back 处理与 resend/retry 机制。",
+    "topic_type": "process",
+    "status": "approved",
+    "keywords_raw_agg": [
+      "Testing, bounce back, and retry",
+      "Bounce Back Handling",
+      "Behaviour",
+      "mark undeliverable",
+      "Owner",
+      "ops team",
+      "Resend / Retry Mechanism",
+      "scheduled retry"
+    ],
+    "concepts_agg": [
+      "Testing, bounce back, and retry",
+      "Bounce Back Handling",
+      "Behaviour",
+      "Owner",
+      "Resend / Retry Mechanism"
+    ],
+    "questions_agg_en": [
+      "What is Testing, bounce back, and retry?",
+      "Testing, bounce back, and retry what-is",
+      "Where is Testing, bounce back, and retry documented?",
+      "What is the Behaviour for Bounce Back Handling?",
+      "What is the Owner for Bounce Back Handling?",
+      "What is the Behaviour for Resend / Retry Mechanism?",
+      "What is the Owner for Resend / Retry Mechanism?",
+      "Where should I look up the exact value for Testing, bounce back, and retry?"
+    ],
+    "questions_agg_zh": [
+      "Testing, bounce back, and retry 是什么?",
+      "Testing, bounce back, and retry what-is",
+      "Testing, bounce back, and retry 在哪里说明?",
+      "Bounce Back Handling 的 Behaviour 是什么？",
+      "Bounce Back Handling 的 Owner 是什么？",
+      "Resend / Retry Mechanism 的 Behaviour 是什么？",
+      "Resend / Retry Mechanism 的 Owner 是什么？",
+      "Testing, bounce back, and retry 的精确值应该去哪里查?"
+    ],
+    "source_section_ids": [
+      "9100003#Testing, bounce back, and retry",
+      "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+      "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner",
+      "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+      "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+    ],
+    "subsections": [
+      {
+        "name": "Bounce Back Handling",
+        "summary": "Bounce Back Handling: Behaviour: mark undeliverable; Owner: ops team",
+        "key_points": [
+          "Behaviour: mark undeliverable",
+          "Owner: ops team"
+        ],
+        "facts": [
+          {
+            "label": "Behaviour",
+            "tier": "inline-value",
+            "value": "mark undeliverable",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100003",
+                "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+                "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+                "confluence_version": 4
+              }
+            ],
+            "source_section_ids": [
+              "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour"
+            ]
+          },
+          {
+            "label": "Owner",
+            "tier": "inline-value",
+            "value": "ops team",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100003",
+                "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+                "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+                "confluence_version": 4
+              }
+            ],
+            "source_section_ids": [
+              "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Bounce Back Handling",
+          "Behaviour",
+          "mark undeliverable",
+          "Owner",
+          "ops team"
+        ],
+        "source_section_ids": [
+          "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+          "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner"
+        ],
+        "sources": [
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          }
+        ]
+      },
+      {
+        "name": "Resend / Retry Mechanism",
+        "summary": "Resend / Retry Mechanism: Behaviour: scheduled retry; Owner: ops team",
+        "key_points": [
+          "Behaviour: scheduled retry",
+          "Owner: ops team"
+        ],
+        "facts": [
+          {
+            "label": "Behaviour",
+            "tier": "inline-value",
+            "value": "scheduled retry",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100003",
+                "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+                "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+                "confluence_version": 4
+              }
+            ],
+            "source_section_ids": [
+              "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour"
+            ]
+          },
+          {
+            "label": "Owner",
+            "tier": "inline-value",
+            "value": "ops team",
+            "pointer_to": null,
+            "sources": [
+              {
+                "page_id": "9100003",
+                "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+                "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+                "confluence_version": 4
+              }
+            ],
+            "source_section_ids": [
+              "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+            ]
+          }
+        ],
+        "evidence_keywords": [
+          "Resend / Retry Mechanism",
+          "Behaviour",
+          "scheduled retry",
+          "Owner",
+          "ops team"
+        ],
+        "source_section_ids": [
+          "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+          "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+        ],
+        "sources": [
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          }
+        ]
+      }
+    ],
+    "fields": [
+      {
+        "field": "definition",
+        "tier": "narrative",
+        "value": "Testing, bounce back, and retry（又称 Testing and Access Rights, Bounce Back Handling）：For the exact retry counts and timing, refer to the Message Path Service Catalogue。 覆盖：Bounce Back Handling、Resend / Retry Mechanism。",
+        "sources": [
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          }
+        ],
+        "evidence_keywords": [
+          "Testing, bounce back, and retry",
+          "Bounce Back Handling",
+          "Behaviour",
+          "mark undeliverable",
+          "Owner",
+          "ops team",
+          "Resend / Retry Mechanism",
+          "scheduled retry"
+        ],
+        "source_section_ids": [
+          "9100003#Testing, bounce back, and retry",
+          "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+          "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner",
+          "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+          "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+        ]
+      },
+      {
+        "field": "overview",
+        "tier": "narrative",
+        "value": "Bounce Back Handling — Behaviour: mark undeliverable; Owner: ops team\nResend / Retry Mechanism — Behaviour: scheduled retry; Owner: ops team",
+        "sources": [
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          },
+          {
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
+          }
+        ],
+        "evidence_keywords": [
+          "Testing, bounce back, and retry",
+          "Bounce Back Handling",
+          "Behaviour",
+          "mark undeliverable",
+          "Owner",
+          "ops team",
+          "Resend / Retry Mechanism",
+          "scheduled retry"
+        ],
+        "source_section_ids": [
+          "9100003#Testing, bounce back, and retry",
+          "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+          "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner",
+          "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+          "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
         ]
       },
       {
@@ -344,337 +2956,14 @@
         "pointer_to": "source page referenced by this section",
         "sources": [
           {
-            "page_id": "160033",
-            "anchor": "Message Inventory > Batch Processing Notes",
-            "source_url": "https://confluence.local/x/Message-Inventory",
-            "confluence_version": 3
+            "page_id": "9100003",
+            "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry",
+            "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+            "confluence_version": 4
           }
-        ]
-      },
-      {
-        "field": "related_components",
-        "tier": "narrative",
-        "value": "Related to DM Plugin.",
-        "soft_links": [
-          "C-0007"
         ],
-        "sources": [
-          {
-            "page_id": "160033",
-            "anchor": "Message Inventory > Overview",
-            "source_url": "https://confluence.local/x/Message-Inventory",
-            "confluence_version": 3
-          },
-          {
-            "page_id": "160033",
-            "anchor": "Message Inventory > Batch Processing Notes",
-            "source_url": "https://confluence.local/x/Message-Inventory",
-            "confluence_version": 3
-          }
-        ]
-      }
-    ],
-    "flags": []
-  },
-  {
-    "canonical_id": "C-0103",
-    "canonical_name": "Delivery Process",
-    "aliases": [
-      "delivery way of working"
-    ],
-    "module": [
-      "Operations & release standard"
-    ],
-    "boundary": "planning、build、test、release 阶段和职责分工。",
-    "topic_type": "process",
-    "status": "approved",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "Delivery Process: Delivery Process 说明 Delivery Process 的 what-is 信息(narrative)。 Roles and Responsibilities 说明 DM Plugin, Journey Plugin, Adaptor, MDC OTP Service 的 what-is 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Delivery Process",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          }
-        ]
-      },
-      {
-        "field": "related_components",
-        "tier": "narrative",
-        "value": "Related to DM Plugin, Journey Plugin, Adaptor, MDC OTP Service.",
-        "soft_links": [
-          "C-0007",
-          "C-0008",
-          "C-0009",
-          "C-0014"
-        ],
-        "sources": [
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Delivery Process",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          },
-          {
-            "page_id": "180044",
-            "anchor": "Delivery Way of Working > Roles and Responsibilities",
-            "source_url": "https://confluence.local/x/Delivery-WoW",
-            "confluence_version": 6
-          }
-        ]
-      }
-    ],
-    "flags": []
-  },
-  {
-    "canonical_id": "C-0102",
-    "canonical_name": "Supply and Demand",
-    "aliases": [
-      "capacity planning",
-      "peak handling"
-    ],
-    "module": [
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "boundary": "容量预测、供需和峰值处理，不包含具体插件配置。",
-    "topic_type": "planning",
-    "status": "approved",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "Supply and Demand: Capacity Planning 说明 Capacity Planning 的 config 信息(narrative)。 Peak Handling 说明 Peak Handling 的 what-is 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "210077",
-            "anchor": "Supply and Demand (Capacity Planning) > Capacity Planning",
-            "source_url": "https://confluence.local/x/Supply-and-Demand",
-            "confluence_version": 1
-          },
-          {
-            "page_id": "210077",
-            "anchor": "Supply and Demand (Capacity Planning) > Peak Handling",
-            "source_url": "https://confluence.local/x/Supply-and-Demand",
-            "confluence_version": 1
-          }
-        ]
-      }
-    ],
-    "flags": []
-  },
-  {
-    "canonical_id": "C-0008",
-    "canonical_name": "Journey Plugin",
-    "aliases": [
-      "Journey plugin"
-    ],
-    "module": [
-      "Channel standard",
-      "Delivery & tracking standard"
-    ],
-    "boundary": "用户旅程编排与并发 Journey 配置；不含 DM 投递和 Adaptor 转换。",
-    "topic_type": "component",
-    "status": "approved",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "Journey Plugin: What is the Journey Plugin 说明 DM Plugin, Journey Plugin 的 what-is 信息(narrative)。 Receiving from DM 说明 DM Plugin, Journey Plugin, Adaptor 的 how-to 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > What is the Journey Plugin",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Receiving from DM",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          }
-        ]
-      },
-      {
-        "field": "config",
-        "tier": "inline-value",
-        "value": "max_concurrent_journeys: 50",
-        "authoritative": true,
-        "conflict": false,
-        "conflict_detail": [],
-        "sources": [
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Configuration",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          }
-        ]
-      },
-      {
-        "field": "related_components",
-        "tier": "narrative",
-        "value": "Related to DM Plugin, Adaptor.",
-        "soft_links": [
-          "C-0007",
-          "C-0009"
-        ],
-        "sources": [
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > What is the Journey Plugin",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Receiving from DM",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          },
-          {
-            "page_id": "220110",
-            "anchor": "Journey Plugin Overview > Configuration",
-            "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-            "confluence_version": 4
-          }
-        ]
-      }
-    ],
-    "flags": []
-  },
-  {
-    "canonical_id": "C-0014",
-    "canonical_name": "MDC OTP Service",
-    "aliases": [
-      "MDC OTP",
-      "OTP service"
-    ],
-    "module": [
-      "MDC development guideline",
-      "Integration & API standard"
-    ],
-    "boundary": "MDC 流程的一次性密码生成、校验和配置；泛指 OTP 需人工确认。",
-    "topic_type": "service",
-    "status": "approved",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "MDC OTP Service: What is the MDC OTP Service 说明 MDC OTP Service 的 what-is 信息(narrative)。 Troubleshooting 说明 MDC OTP Service 的 troubleshoot 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "305001",
-            "anchor": "MDC OTP Service > What is the MDC OTP Service",
-            "source_url": "https://confluence.local/x/MDC-OTP-Service",
-            "confluence_version": 2
-          },
-          {
-            "page_id": "305001",
-            "anchor": "MDC OTP Service > Troubleshooting",
-            "source_url": "https://confluence.local/x/MDC-OTP-Service",
-            "confluence_version": 2
-          }
-        ]
-      },
-      {
-        "field": "config",
-        "tier": "inline-value",
-        "value": "otp_length: 6; otp_ttl: 300",
-        "authoritative": true,
-        "conflict": false,
-        "conflict_detail": [],
-        "sources": [
-          {
-            "page_id": "305001",
-            "anchor": "MDC OTP Service > OTP Generation Config",
-            "source_url": "https://confluence.local/x/MDC-OTP-Service",
-            "confluence_version": 2
-          }
-        ]
-      },
-      {
-        "field": "troubleshoot",
-        "tier": "narrative",
-        "value": "Troubleshooting covers troubleshoot information for MDC OTP Service (narrative).",
-        "sources": [
-          {
-            "page_id": "305001",
-            "anchor": "MDC OTP Service > Troubleshooting",
-            "source_url": "https://confluence.local/x/MDC-OTP-Service",
-            "confluence_version": 2
-          }
-        ]
-      }
-    ],
-    "flags": [
-      "OTP may be ambiguous outside MDC OTP context"
-    ]
-  },
-  {
-    "canonical_id": "C-0100",
-    "canonical_name": "SFMC Migration",
-    "aliases": [
-      "SFMC"
-    ],
-    "module": [
-      "Channel standard",
-      "Operations & release standard"
-    ],
-    "boundary": "迁移到 SFMC 的范围、决策和迁移后变化。",
-    "topic_type": "initiative",
-    "status": "approved",
-    "fields": [
-      {
-        "field": "definition",
-        "tier": "narrative",
-        "value": "SFMC Migration: Overview 说明 DM Plugin, SFMC Migration 的 config 信息(narrative)。 Known Issues 说明 DM Plugin 的 config 信息(narrative)。",
-        "sources": [
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > Overview",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          },
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > Known Issues",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          }
-        ]
-      },
-      {
-        "field": "related_components",
-        "tier": "narrative",
-        "value": "Related to DM Plugin.",
-        "soft_links": [
-          "C-0007"
-        ],
-        "sources": [
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > Overview",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          },
-          {
-            "page_id": "777001",
-            "anchor": "SFMC Migration > Known Issues",
-            "source_url": "https://confluence.local/x/SFMC-Migration",
-            "confluence_version": 3
-          }
+        "source_section_ids": [
+          "9100003#Testing, bounce back, and retry"
         ]
       }
     ],

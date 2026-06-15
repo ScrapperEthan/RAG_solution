@@ -1,0 +1,501 @@
+{
+  "page_id": "9100003",
+  "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+  "title": "MDC Template Governance and Testing",
+  "space": "MDC",
+  "tree_path": [
+    "Q2 - Engagement",
+    "MDC Onboarding",
+    "MDC Template Governance and Testing"
+  ],
+  "owner": "mdc-team",
+  "labels": [
+    "mdc",
+    "template",
+    "testing"
+  ],
+  "confluence_version": 4,
+  "update_at": "2026-05-22T08:00:00Z",
+  "captured_at": "2026-06-04T00:00:00Z",
+  "page_summary": {
+    "summary_en": "MDC Template Governance and Testing captures 8 matrix facts, 3 narrative sections. Key entities: Template Governance and Maintenance, create template in portal, message Inventory, Testing, bounce back, and retry, Bounce Back Handling, Resend / Retry Mechanism.",
+    "summary_zh": "MDC Template Governance and Testing 收录了 8 个矩阵事实、3 个叙述段落。 关键条目：Template Governance and Maintenance, create template in portal, message Inventory, Testing, bounce back, and retry, Bounce Back Handling, Resend / Retry Mechanism。",
+    "cross_questions_en": [
+      "What does MDC Template Governance and Testing capture?",
+      "How do the entities on this page relate?"
+    ],
+    "cross_questions_zh": [
+      "MDC Template Governance and Testing 收录了哪些内容？",
+      "本页各条目之间有什么关系？"
+    ]
+  },
+  "sections": [
+    {
+      "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Template Governance and Maintenance"
+      ],
+      "concepts": [
+        "Message Inventory"
+      ],
+      "keywords_raw": [
+        "Message Inventory"
+      ],
+      "info_type": "what-is",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Template Governance and Maintenance covers what-is information for Message Inventory (narrative).",
+      "summary_zh": "Template Governance and Maintenance 说明 Message Inventory 的 what-is 信息(narrative)。",
+      "questions_en": [
+        "What is Message Inventory?",
+        "Message Inventory what-is",
+        "Where is Message Inventory documented?"
+      ],
+      "questions_zh": [
+        "Message Inventory 是什么?",
+        "Message Inventory what-is",
+        "Message Inventory 在哪里说明?"
+      ],
+      "confidence": 0.86,
+      "section_id": "9100003#Template Governance and Maintenance",
+      "metadata": {},
+      "fact_values": []
+    },
+    {
+      "section_id": "9100003#Template Governance and Maintenance > create template in portal > Owner",
+      "metadata": {
+        "table": "template_governance_and_maintenance",
+        "table_kind": "matrix",
+        "entity_key": "Template Step",
+        "row_key": "create template in portal",
+        "channel": "create template in portal",
+        "attribute": "Owner"
+      },
+      "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Owner",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Template Governance and Maintenance",
+        "create template in portal",
+        "Owner"
+      ],
+      "concepts": [
+        "create template in portal",
+        "Owner"
+      ],
+      "keywords_raw": [
+        "create template in portal",
+        "Owner",
+        "content team"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "content team",
+      "fact_values": [
+        "content team"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Owner: content team",
+      "summary_zh": "Owner: content team",
+      "questions_en": [
+        "What is the Owner for create template in portal?"
+      ],
+      "questions_zh": [
+        "create template in portal 的 Owner 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100003#Template Governance and Maintenance > create template in portal > Tool",
+      "metadata": {
+        "table": "template_governance_and_maintenance",
+        "table_kind": "matrix",
+        "entity_key": "Template Step",
+        "row_key": "create template in portal",
+        "channel": "create template in portal",
+        "attribute": "Tool"
+      },
+      "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > create template in portal > Tool",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Template Governance and Maintenance",
+        "create template in portal",
+        "Tool"
+      ],
+      "concepts": [
+        "create template in portal",
+        "Tool"
+      ],
+      "keywords_raw": [
+        "create template in portal",
+        "Tool",
+        "MDC portal"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "MDC portal",
+      "fact_values": [
+        "MDC portal"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Tool: MDC portal",
+      "summary_zh": "Tool: MDC portal",
+      "questions_en": [
+        "What is the Tool for create template in portal?"
+      ],
+      "questions_zh": [
+        "create template in portal 的 Tool 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100003#Template Governance and Maintenance > message Inventory > Owner",
+      "metadata": {
+        "table": "template_governance_and_maintenance",
+        "table_kind": "matrix",
+        "entity_key": "Template Step",
+        "row_key": "message Inventory",
+        "channel": "message Inventory",
+        "attribute": "Owner"
+      },
+      "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Owner",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Template Governance and Maintenance",
+        "message Inventory",
+        "Owner"
+      ],
+      "concepts": [
+        "message Inventory",
+        "Owner"
+      ],
+      "keywords_raw": [
+        "message Inventory",
+        "Owner",
+        "governance team"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "governance team",
+      "fact_values": [
+        "governance team"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Owner: governance team",
+      "summary_zh": "Owner: governance team",
+      "questions_en": [
+        "What is the Owner for message Inventory?"
+      ],
+      "questions_zh": [
+        "message Inventory 的 Owner 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100003#Template Governance and Maintenance > message Inventory > Tool",
+      "metadata": {
+        "table": "template_governance_and_maintenance",
+        "table_kind": "matrix",
+        "entity_key": "Template Step",
+        "row_key": "message Inventory",
+        "channel": "message Inventory",
+        "attribute": "Tool"
+      },
+      "anchor": "MDC Template Governance and Testing > Template Governance and Maintenance > message Inventory > Tool",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Template Governance and Maintenance",
+        "message Inventory",
+        "Tool"
+      ],
+      "concepts": [
+        "message Inventory",
+        "Tool"
+      ],
+      "keywords_raw": [
+        "message Inventory",
+        "Tool",
+        "governance tool"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "governance tool",
+      "fact_values": [
+        "governance tool"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "governance tool",
+      "summary_zh": "governance tool",
+      "questions_en": [
+        "What is the Tool for message Inventory?"
+      ],
+      "questions_zh": [
+        "message Inventory 的 Tool 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Testing, bounce back, and retry"
+      ],
+      "concepts": [
+        "Testing, bounce back, and retry"
+      ],
+      "keywords_raw": [
+        "Testing, bounce back, and retry"
+      ],
+      "info_type": "what-is",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Testing, bounce back, and retry covers what-is information for Testing, bounce back, and retry (narrative).",
+      "summary_zh": "Testing, bounce back, and retry 说明 Testing, bounce back, and retry 的 what-is 信息(narrative)。",
+      "questions_en": [
+        "What is Testing, bounce back, and retry?",
+        "Testing, bounce back, and retry what-is",
+        "Where is Testing, bounce back, and retry documented?"
+      ],
+      "questions_zh": [
+        "Testing, bounce back, and retry 是什么?",
+        "Testing, bounce back, and retry what-is",
+        "Testing, bounce back, and retry 在哪里说明?"
+      ],
+      "confidence": 0.86,
+      "section_id": "9100003#Testing, bounce back, and retry",
+      "metadata": {},
+      "fact_values": []
+    },
+    {
+      "section_id": "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+      "metadata": {
+        "table": "testing_bounce_back_and_retry",
+        "table_kind": "matrix",
+        "entity_key": "Mechanism",
+        "row_key": "Bounce Back Handling",
+        "channel": "Bounce Back Handling",
+        "attribute": "Behaviour"
+      },
+      "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Testing, bounce back, and retry",
+        "Bounce Back Handling",
+        "Behaviour"
+      ],
+      "concepts": [
+        "Bounce Back Handling",
+        "Behaviour"
+      ],
+      "keywords_raw": [
+        "Bounce Back Handling",
+        "Behaviour",
+        "mark undeliverable"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "mark undeliverable",
+      "fact_values": [
+        "mark undeliverable"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Behaviour: mark undeliverable",
+      "summary_zh": "Behaviour: mark undeliverable",
+      "questions_en": [
+        "What is the Behaviour for Bounce Back Handling?"
+      ],
+      "questions_zh": [
+        "Bounce Back Handling 的 Behaviour 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner",
+      "metadata": {
+        "table": "testing_bounce_back_and_retry",
+        "table_kind": "matrix",
+        "entity_key": "Mechanism",
+        "row_key": "Bounce Back Handling",
+        "channel": "Bounce Back Handling",
+        "attribute": "Owner"
+      },
+      "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Testing, bounce back, and retry",
+        "Bounce Back Handling",
+        "Owner"
+      ],
+      "concepts": [
+        "Bounce Back Handling",
+        "Owner"
+      ],
+      "keywords_raw": [
+        "Bounce Back Handling",
+        "Owner",
+        "ops team"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "ops team",
+      "fact_values": [
+        "ops team"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Owner: ops team",
+      "summary_zh": "Owner: ops team",
+      "questions_en": [
+        "What is the Owner for Bounce Back Handling?"
+      ],
+      "questions_zh": [
+        "Bounce Back Handling 的 Owner 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+      "metadata": {
+        "table": "testing_bounce_back_and_retry",
+        "table_kind": "matrix",
+        "entity_key": "Mechanism",
+        "row_key": "Resend / Retry Mechanism",
+        "channel": "Resend / Retry Mechanism",
+        "attribute": "Behaviour"
+      },
+      "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Testing, bounce back, and retry",
+        "Resend / Retry Mechanism",
+        "Behaviour"
+      ],
+      "concepts": [
+        "Resend / Retry Mechanism",
+        "Behaviour"
+      ],
+      "keywords_raw": [
+        "Resend / Retry Mechanism",
+        "Behaviour",
+        "scheduled retry"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "scheduled retry",
+      "fact_values": [
+        "scheduled retry"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Behaviour: scheduled retry",
+      "summary_zh": "Behaviour: scheduled retry",
+      "questions_en": [
+        "What is the Behaviour for Resend / Retry Mechanism?"
+      ],
+      "questions_zh": [
+        "Resend / Retry Mechanism 的 Behaviour 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+      "metadata": {
+        "table": "testing_bounce_back_and_retry",
+        "table_kind": "matrix",
+        "entity_key": "Mechanism",
+        "row_key": "Resend / Retry Mechanism",
+        "channel": "Resend / Retry Mechanism",
+        "attribute": "Owner"
+      },
+      "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Testing, bounce back, and retry",
+        "Resend / Retry Mechanism",
+        "Owner"
+      ],
+      "concepts": [
+        "Resend / Retry Mechanism",
+        "Owner"
+      ],
+      "keywords_raw": [
+        "Resend / Retry Mechanism",
+        "Owner",
+        "ops team"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "ops team",
+      "fact_values": [
+        "ops team"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Owner: ops team",
+      "summary_zh": "Owner: ops team",
+      "questions_en": [
+        "What is the Owner for Resend / Retry Mechanism?"
+      ],
+      "questions_zh": [
+        "Resend / Retry Mechanism 的 Owner 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry",
+      "heading_path": [
+        "MDC Template Governance and Testing",
+        "Testing, bounce back, and retry"
+      ],
+      "concepts": [
+        "Testing, bounce back, and retry"
+      ],
+      "keywords_raw": [
+        "Testing, bounce back, and retry"
+      ],
+      "info_type": "what-is",
+      "tier": "pointer-only",
+      "fact_value": null,
+      "pointer_to": "source page referenced by this section",
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Testing, bounce back, and retry covers what-is information for Testing, bounce back, and retry (pointer-only).",
+      "summary_zh": "Testing, bounce back, and retry 说明 Testing, bounce back, and retry 的 what-is 信息(pointer-only)。",
+      "questions_en": [
+        "Where should I look up the exact value for Testing, bounce back, and retry?",
+        "What is Testing, bounce back, and retry?",
+        "Testing, bounce back, and retry what-is",
+        "Where is Testing, bounce back, and retry documented?"
+      ],
+      "questions_zh": [
+        "Testing, bounce back, and retry 的精确值应该去哪里查?",
+        "Testing, bounce back, and retry 是什么?",
+        "Testing, bounce back, and retry what-is",
+        "Testing, bounce back, and retry 在哪里说明?"
+      ],
+      "confidence": 0.65,
+      "section_id": "9100003#Testing, bounce back, and retry",
+      "metadata": {},
+      "fact_values": []
+    }
+  ]
+}

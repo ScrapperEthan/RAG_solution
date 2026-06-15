@@ -27,6 +27,24 @@ Decision rules:
 INTENT_SCHEMA = {"type": "object", "required": ["intent"]}
 
 
+ROUTER_SYSTEM = """task: agentic_route_card
+Select the approved knowledge card(s) that can answer the user question.
+You receive a compact card catalog: each entry has canonical_id, canonical_name,
+aliases, boundary, and module. There is no vector index — this selection IS the
+retrieval step. Return STRICT JSON: {"canonical_ids": [string, ...]}.
+
+Rules:
+- Only return canonical_ids that appear in the catalog.
+- Prefer the single best card. Return multiple ids only when the question
+  genuinely spans more than one card.
+- Match on meaning, not surface words: a question may hit a card through its
+  aliases or boundary even if it never repeats the canonical_name.
+- The boundary states what the card does and does not cover — respect it.
+- If no card's boundary covers the question, return {"canonical_ids": []}."""
+
+ROUTER_SCHEMA = {"type": "object", "required": ["canonical_ids"]}
+
+
 class AgenticService:
     def __init__(self, outputs_dir: Path, retriever: Retriever, answerer: AnswerService, llm: LLM):
         self.outputs_dir = outputs_dir
@@ -159,6 +177,48 @@ class AgenticService:
         return intent
 
     def find_card(self, query: str) -> Optional[Dict]:
+        """Retrieve the card to answer from. No embedding: the LLM reads a compact
+        card catalog and picks (primary); deterministic keyword/alias matching is
+        the fallback when the LLM declines or the pipeline runs offline."""
+        routed = self.route_card_llm(query)
+        if routed is not None:
+            return routed
+        return self.match_card_keyword(query)
+
+    def route_card_llm(self, query: str) -> Optional[Dict]:
+        """Let the LLM select a card from the catalog (id + name + aliases +
+        boundary + module). The catalog is small enough to fit one prompt, so this
+        single selection replaces vector retrieval. Returns None when the LLM
+        declines or errors, so the caller falls back to keyword matching."""
+        if not self.cards:
+            return None
+        catalog = [
+            {
+                "canonical_id": cid,
+                "canonical_name": card["canonical_name"],
+                "aliases": card.get("aliases", []),
+                "boundary": card.get("boundary", ""),
+                "module": card.get("module", []),
+            }
+            for cid, card in self.cards.items()
+        ]
+        try:
+            response = self.llm.complete_json(
+                ROUTER_SYSTEM,
+                json.dumps({"query": query, "cards": catalog}, ensure_ascii=False),
+                schema=ROUTER_SCHEMA,
+            )
+        except Exception:
+            return None
+        ids = response.get("canonical_ids") if isinstance(response, dict) else None
+        if not ids:
+            return None
+        for cid in ids:
+            if cid in self.cards:
+                return self.cards[cid]
+        return None
+
+    def match_card_keyword(self, query: str) -> Optional[Dict]:
         lowered = query.lower()
         for cid, card in self.cards.items():
             names = [card["canonical_name"]] + card.get("aliases", [])

@@ -25,7 +25,7 @@ DEFAULT_CONFIG: Dict[str, Any] = {
         "keyword_table": "fixtures/keyword_table.jsonl",
     },
     "slice": {
-        "root": "06-Delivery/10. Planned Project/2026 Planned Project",
+        "root": "Q2 - Engagement/MDC Onboarding",
     },
     "llm": {
         "base_url": "",

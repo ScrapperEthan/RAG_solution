@@ -1,0 +1,329 @@
+{
+  "canonical_id": "C-0006",
+  "canonical_name": "Testing, bounce back, and retry",
+  "topic_class": "workflow",
+  "aliases": [
+    "Testing and Access Rights",
+    "Bounce Back Handling",
+    "Resend / Retry Mechanism"
+  ],
+  "module": [
+    "Q2 - Engagement",
+    "MDC Onboarding"
+  ],
+  "boundary": "消息测试方式、bounce back 处理与 resend/retry 机制。",
+  "topic_type": "process",
+  "status": "approved",
+  "keywords_raw_agg": [
+    "Testing, bounce back, and retry",
+    "Bounce Back Handling",
+    "Behaviour",
+    "mark undeliverable",
+    "Owner",
+    "ops team",
+    "Resend / Retry Mechanism",
+    "scheduled retry"
+  ],
+  "concepts_agg": [
+    "Testing, bounce back, and retry",
+    "Bounce Back Handling",
+    "Behaviour",
+    "Owner",
+    "Resend / Retry Mechanism"
+  ],
+  "questions_agg_en": [
+    "What is Testing, bounce back, and retry?",
+    "Testing, bounce back, and retry what-is",
+    "Where is Testing, bounce back, and retry documented?",
+    "What is the Behaviour for Bounce Back Handling?",
+    "What is the Owner for Bounce Back Handling?",
+    "What is the Behaviour for Resend / Retry Mechanism?",
+    "What is the Owner for Resend / Retry Mechanism?",
+    "Where should I look up the exact value for Testing, bounce back, and retry?"
+  ],
+  "questions_agg_zh": [
+    "Testing, bounce back, and retry 是什么?",
+    "Testing, bounce back, and retry what-is",
+    "Testing, bounce back, and retry 在哪里说明?",
+    "Bounce Back Handling 的 Behaviour 是什么？",
+    "Bounce Back Handling 的 Owner 是什么？",
+    "Resend / Retry Mechanism 的 Behaviour 是什么？",
+    "Resend / Retry Mechanism 的 Owner 是什么？",
+    "Testing, bounce back, and retry 的精确值应该去哪里查?"
+  ],
+  "source_section_ids": [
+    "9100003#Testing, bounce back, and retry",
+    "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+    "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner",
+    "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+    "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+  ],
+  "subsections": [
+    {
+      "name": "Bounce Back Handling",
+      "summary": "Bounce Back Handling: Behaviour: mark undeliverable; Owner: ops team",
+      "key_points": [
+        "Behaviour: mark undeliverable",
+        "Owner: ops team"
+      ],
+      "facts": [
+        {
+          "label": "Behaviour",
+          "tier": "inline-value",
+          "value": "mark undeliverable",
+          "pointer_to": null,
+          "sources": [
+            {
+              "page_id": "9100003",
+              "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+              "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+              "confluence_version": 4
+            }
+          ],
+          "source_section_ids": [
+            "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour"
+          ]
+        },
+        {
+          "label": "Owner",
+          "tier": "inline-value",
+          "value": "ops team",
+          "pointer_to": null,
+          "sources": [
+            {
+              "page_id": "9100003",
+              "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+              "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+              "confluence_version": 4
+            }
+          ],
+          "source_section_ids": [
+            "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner"
+          ]
+        }
+      ],
+      "evidence_keywords": [
+        "Bounce Back Handling",
+        "Behaviour",
+        "mark undeliverable",
+        "Owner",
+        "ops team"
+      ],
+      "source_section_ids": [
+        "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+        "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner"
+      ],
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ]
+    },
+    {
+      "name": "Resend / Retry Mechanism",
+      "summary": "Resend / Retry Mechanism: Behaviour: scheduled retry; Owner: ops team",
+      "key_points": [
+        "Behaviour: scheduled retry",
+        "Owner: ops team"
+      ],
+      "facts": [
+        {
+          "label": "Behaviour",
+          "tier": "inline-value",
+          "value": "scheduled retry",
+          "pointer_to": null,
+          "sources": [
+            {
+              "page_id": "9100003",
+              "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+              "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+              "confluence_version": 4
+            }
+          ],
+          "source_section_ids": [
+            "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour"
+          ]
+        },
+        {
+          "label": "Owner",
+          "tier": "inline-value",
+          "value": "ops team",
+          "pointer_to": null,
+          "sources": [
+            {
+              "page_id": "9100003",
+              "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+              "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+              "confluence_version": 4
+            }
+          ],
+          "source_section_ids": [
+            "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+          ]
+        }
+      ],
+      "evidence_keywords": [
+        "Resend / Retry Mechanism",
+        "Behaviour",
+        "scheduled retry",
+        "Owner",
+        "ops team"
+      ],
+      "source_section_ids": [
+        "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+        "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+      ],
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "field": "definition",
+      "tier": "narrative",
+      "value": "Testing, bounce back, and retry（又称 Testing and Access Rights, Bounce Back Handling）：For the exact retry counts and timing, refer to the Message Path Service Catalogue。 覆盖：Bounce Back Handling、Resend / Retry Mechanism。",
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ],
+      "evidence_keywords": [
+        "Testing, bounce back, and retry",
+        "Bounce Back Handling",
+        "Behaviour",
+        "mark undeliverable",
+        "Owner",
+        "ops team",
+        "Resend / Retry Mechanism",
+        "scheduled retry"
+      ],
+      "source_section_ids": [
+        "9100003#Testing, bounce back, and retry",
+        "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+        "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner",
+        "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+        "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+      ]
+    },
+    {
+      "field": "overview",
+      "tier": "narrative",
+      "value": "Bounce Back Handling — Behaviour: mark undeliverable; Owner: ops team\nResend / Retry Mechanism — Behaviour: scheduled retry; Owner: ops team",
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Bounce Back Handling > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        },
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ],
+      "evidence_keywords": [
+        "Testing, bounce back, and retry",
+        "Bounce Back Handling",
+        "Behaviour",
+        "mark undeliverable",
+        "Owner",
+        "ops team",
+        "Resend / Retry Mechanism",
+        "scheduled retry"
+      ],
+      "source_section_ids": [
+        "9100003#Testing, bounce back, and retry",
+        "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+        "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner",
+        "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+        "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner"
+      ]
+    },
+    {
+      "field": "pointer",
+      "tier": "pointer-only",
+      "value": null,
+      "pointer_to": "source page referenced by this section",
+      "sources": [
+        {
+          "page_id": "9100003",
+          "anchor": "MDC Template Governance and Testing > Testing, bounce back, and retry",
+          "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+          "confluence_version": 4
+        }
+      ],
+      "source_section_ids": [
+        "9100003#Testing, bounce back, and retry"
+      ]
+    }
+  ],
+  "flags": []
+}

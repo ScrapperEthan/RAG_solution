@@ -173,8 +173,14 @@
         <div class="eyebrow">Approved card evidence · visual drill path</div>
         <h1>卡片结构与回答路径</h1>
         <p>浏览 topic、subsection、fact 与 field，并把一次回答从命中卡片到引用证据的路径直接高亮在树上。</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--muted,#6b7280)">
+          <strong>这是什么页：</strong>卡片<em>结构</em>可视化（reduce 产出的 cards_index.json），<u>不是</u>主问答页。
+          下方提问框只用来在卡片树上<strong>高亮一次回答的下钻路径</strong>，方便看“命中哪张卡 → 取了哪条 fact → 回链哪个原文”。
+          要做带 LLM 思维链的主问答，请回 <a href="./index.html">问答页（index.html）</a>。
+          数据源：<code>GET /api/cards</code>（无数据时回退脱敏 sample）。
+        </p>
       </div>
-      <div id="sourceState" class="source-state">正在读取 cards_index.json…</div>
+      <div id="sourceState" class="source-state">正在读取 /api/cards…</div>
     </section>
 
     <section class="ask-panel">
@@ -325,14 +331,19 @@ async function initialize() {
     return;
   }
   try {
-    const response = await fetch("/outputs/cards_index.json", {cache:"no-store"});
+    const response = await fetch("/api/cards", {cache:"no-store"});
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const cards = await response.json();
+    if (!Array.isArray(cards) || cards.length === 0) {
+      useSample(false);
+      setSourceState(`<strong>/api/cards</strong> 返回空（流水线还没产出 cards_index.json）。已回退到<strong>脱敏 sample</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
+      return;
+    }
     setCards(cards, false);
-    setSourceState(`已从 <strong>/outputs/cards_index.json</strong> 读取 ${state.cards.length} 张卡。`);
+    setSourceState(`已从 <strong>/api/cards</strong> 读取 ${state.cards.length} 张卡（源文件 outputs/cards_index.json）。`);
   } catch (error) {
     useSample(false);
-    setSourceState(`无法自动读取 outputs/cards_index.json（${esc(error.message)}）。已回退到<strong>脱敏 sample</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
+    setSourceState(`无法自动读取 <strong>/api/cards</strong>（${esc(error.message)}）。已回退到<strong>脱敏 sample</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
   }
 }
 

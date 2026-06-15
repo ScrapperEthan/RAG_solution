@@ -30,19 +30,21 @@ class PipelineDemoTest(unittest.TestCase):
             text=True,
         )
 
-    def test_dm_card_has_conflict_and_new_batch_size(self) -> None:
-        card = json.loads((ROOT / "outputs" / "cards" / "DM_Plugin.json").read_text(encoding="utf-8"))
-        config = next(field for field in card["fields"] if field["field"] == "config")
-        self.assertIn("batch_size: 1000", config["value"])
-        self.assertTrue(config["conflict"])
+    def test_portal_card_has_inline_links_and_clean_summary(self) -> None:
+        card = json.loads((ROOT / "outputs" / "cards" / "MDC_Management_Portal.json").read_text(encoding="utf-8"))
+        prod = next(sub for sub in card["subsections"] if sub["name"] == "PROD Access right")
+        links = [fact["value"] for fact in prod["facts"] if fact["tier"] == "inline-value"]
+        self.assertTrue(any(str(value).startswith("https://mdc-portal-prod") for value in links))
         definition = next(field for field in card["fields"] if field["field"] == "definition")
-        self.assertNotIn("190055", {source["page_id"] for source in definition["sources"]})
+        self.assertNotIn("covers what-is", definition["value"])
+        self.assertIn("MDC Management Portal", definition["value"])
 
-    def test_review_queue_contains_known_items(self) -> None:
-        text = (ROOT / "outputs" / "review_queue.jsonl").read_text(encoding="utf-8")
-        self.assertIn("RQ-0011", text)
-        self.assertIn("RQ-0019", text)
-        self.assertIn("batch_size conflict", text)
+    def test_all_approved_topics_get_cards_without_unmatched(self) -> None:
+        cards = json.loads((ROOT / "outputs" / "cards_index.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(cards), 7)
+        review = (ROOT / "outputs" / "review_queue.jsonl").read_text(encoding="utf-8")
+        self.assertNotIn("unmatched-topic", review)
+        self.assertNotIn("unmatched-section", review)
 
     def test_eval_report_has_agentic_variant(self) -> None:
         report = json.loads((ROOT / "outputs" / "eval_report.json").read_text(encoding="utf-8"))
@@ -76,7 +78,7 @@ class PipelineDemoTest(unittest.TestCase):
         self.assertTrue(all(isinstance(row.get("module"), list) for row in summaries))
 
     def test_module_is_multivalue_across_card_inverted_and_refs(self) -> None:
-        card = json.loads((ROOT / "outputs" / "cards" / "DM_Plugin.json").read_text(encoding="utf-8"))
+        card = json.loads((ROOT / "outputs" / "cards" / "MDC_Management_Portal.json").read_text(encoding="utf-8"))
         self.assertEqual(len(card["module"]), 2)
         inverted = [
             json.loads(line)
@@ -117,9 +119,9 @@ class PipelineDemoTest(unittest.TestCase):
                 "--config",
                 "config.chroma.yaml",
                 "--query",
-                "DM plugin default batch_size?",
+                "Whatsapp delivery mode?",
                 "--filter",
-                "module=Delivery & tracking standard",
+                "module=Q2 - Engagement",
             ],
             cwd=str(ROOT),
             check=True,
@@ -128,7 +130,7 @@ class PipelineDemoTest(unittest.TestCase):
         )
         payload = json.loads(result.stdout)
         self.assertTrue(payload["hits"])
-        self.assertTrue(all("Delivery & tracking standard" in hit["module"] for hit in payload["hits"]))
+        self.assertTrue(all("Q2 - Engagement" in hit["module"] for hit in payload["hits"]))
 
 
 class ChunkingAndSchemaTest(unittest.TestCase):
@@ -146,13 +148,13 @@ class ChunkingAndSchemaTest(unittest.TestCase):
         self.assertTrue(all("(part " in section["heading_path"][-1] for section in sections))
 
     def test_map_schema_rejects_unknown_tier(self) -> None:
-        page = json.loads((ROOT / "outputs" / "map" / "map_123456.json").read_text(encoding="utf-8"))
+        page = json.loads((ROOT / "outputs" / "map" / "map_9100001.json").read_text(encoding="utf-8"))
         page["sections"][0]["tier"] = "guessed"
         with self.assertRaises(ValueError):
             validate_map_page(page)
 
     def test_card_schema_rejects_pointer_without_pointer_target(self) -> None:
-        card = json.loads((ROOT / "outputs" / "cards" / "DM_Plugin.json").read_text(encoding="utf-8"))
+        card = json.loads((ROOT / "outputs" / "cards" / "Testing_bounce_back_and_retry.json").read_text(encoding="utf-8"))
         pointer = next(field for field in card["fields"] if field["tier"] == "pointer-only")
         pointer.pop("pointer_to", None)
         with self.assertRaises(ValueError):
@@ -161,7 +163,7 @@ class ChunkingAndSchemaTest(unittest.TestCase):
     def test_merge_config_field_parses_datetime_before_choosing_newest(self) -> None:
         old = section_stub("S > Old", "batch_size: 500", "2026-06-02T08:00:00+08:00", 1)
         new = section_stub("S > New", "batch_size: 1000", "2026-06-02T01:00:00Z", 1)
-        field, conflicts = merge_config_field([old, new])
+        field, conflicts = merge_config_field([old, new], {"keywords_raw_agg": []})
         self.assertIn("batch_size: 1000", field["value"])
         self.assertTrue(conflicts)
 
@@ -296,6 +298,7 @@ def section_stub(anchor: str, fact_value: str, update_at: str, version: int) -> 
         "confluence_version": version,
         "update_at": update_at,
         "fact_value": fact_value,
+        "fact_values": [fact_value],
         "summary_en": "",
         "info_type": "config",
         "tier": "inline-value",

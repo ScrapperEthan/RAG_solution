@@ -9,10 +9,45 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+from backend.adapters.llm_mock import MockLLM
+from backend.answer.service import AnswerService, should_refuse
 from backend.web import create_app, stream_chunks
 
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+class AnswerRefusalTest(unittest.TestCase):
+    """Refusal must be driven by missing evidence, not by hard-coded topics.
+
+    Guards the fix for the old keyword refusal (sms/pricing/monthly cost/多少钱),
+    which wrongly refused real, answerable subjects such as the MDC "SMS"
+    notification channel whenever they appeared in a grounded question.
+    """
+
+    SMS_REF = {
+        "section_id": "C-0001#SMS",
+        "title": "MDC supported notification channels",
+        "heading_path": ["MDC supported notification channels", "SMS"],
+        "body_md": "SMS is a supported notification channel.",
+        "source_url": "https://example.test/c-0001",
+    }
+
+    def test_should_refuse_ignores_topic_keywords_when_refs_exist(self) -> None:
+        # SMS / pricing / 多少钱 must NOT force a refusal when evidence is present.
+        self.assertFalse(should_refuse("Does MDC support sending SMS?", [self.SMS_REF]))
+        self.assertFalse(should_refuse("monthly cost / pricing 多少钱?", [self.SMS_REF]))
+
+    def test_should_refuse_only_when_refs_missing(self) -> None:
+        self.assertTrue(should_refuse("Does MDC support sending SMS?", []))
+        self.assertFalse(should_refuse("anything", [self.SMS_REF]))
+
+    def test_answer_from_refs_refuses_via_missing_refs(self) -> None:
+        answerer = AnswerService(MockLLM())
+        refused = answerer.answer_from_refs("Does MDC support sending SMS?", [])
+        self.assertTrue(refused["answer"].startswith("NO_ANSWER"))
+        answered = answerer.answer_from_refs("Does MDC support sending SMS?", [self.SMS_REF])
+        self.assertFalse(answered["answer"].startswith("NO_ANSWER"))
 
 
 class WebDemoTest(unittest.TestCase):
@@ -94,32 +129,32 @@ class WebDemoTest(unittest.TestCase):
         self.assertEqual(events[0]["golden"]["q_id"], "G-002")
         self.assertTrue(any(event["type"] == "token" for event in events))
         result = next(event["result"] for event in events if event["type"] == "result")
-        self.assertIn("1000", result["answer"])
+        self.assertIn("real-time", result["answer"])
         self.assertEqual(result["execution"]["path"], "agentic-card-direct")
         self.assertEqual(result["execution"]["evidence_kind"], "card")
         self.assertTrue(result["card_evidence"])
 
     def test_pure_rag_returns_ranked_retrieval_evidence(self) -> None:
-        result = self.stream_result({"query": "What is the DM plugin?", "answer_mode": "pure-rag"})
+        result = self.stream_result({"query": "What is the MDC Management Portal?", "answer_mode": "pure-rag"})
         self.assertEqual(result["execution"]["path"], "rag-retrieval")
         self.assertEqual(result["execution"]["evidence_kind"], "retrieval")
         self.assertTrue(result["evidence_sections"])
         self.assertIsInstance(result["evidence_sections"][0]["score"], float)
 
     def test_agentic_concept_can_answer_from_card_without_retrieval(self) -> None:
-        result = self.stream_result({"query": "What is the DM plugin?", "answer_mode": "agentic"})
+        result = self.stream_result({"query": "What is the MDC Management Portal?", "answer_mode": "agentic"})
         self.assertEqual(result["execution"]["path"], "agentic-card-direct")
         self.assertEqual(result["execution"]["evidence_kind"], "card")
         self.assertTrue(result["card_evidence"])
         self.assertEqual(result["evidence_sections"], [])
 
     def test_agentic_chinese_concept_does_not_drill_on_generic_plugin_token(self) -> None:
-        result = self.stream_result({"query": "DM plugin 是干嘛的?", "answer_mode": "agentic"})
+        result = self.stream_result({"query": "MDC Management Portal 是干嘛的?", "answer_mode": "agentic"})
         self.assertEqual(result["execution"]["path"], "agentic-card-direct")
         self.assertFalse(result["execution"]["drilled"])
 
     def test_card_grounding_returns_sources_without_retrieval_scores(self) -> None:
-        result = self.stream_result({"query": "What is the DM plugin?", "answer_mode": "card-grounding"})
+        result = self.stream_result({"query": "What is the MDC Management Portal?", "answer_mode": "card-grounding"})
         self.assertEqual(result["execution"]["path"], "card-grounding")
         self.assertEqual(result["execution"]["family"], "llm-wiki")
         self.assertEqual(result["execution"]["evidence_kind"], "source")
@@ -127,7 +162,7 @@ class WebDemoTest(unittest.TestCase):
         self.assertIsNone(result["evidence_sections"][0]["score"])
 
     def test_llm_direct_does_not_claim_local_evidence(self) -> None:
-        result = self.stream_result({"query": "What is the DM plugin?", "answer_mode": "llm-direct"})
+        result = self.stream_result({"query": "What is the MDC Management Portal?", "answer_mode": "llm-direct"})
         self.assertEqual(result["execution"]["path"], "llm-direct")
         self.assertEqual(result["execution"]["family"], "baseline")
         self.assertEqual(result["execution"]["evidence_kind"], "none")

@@ -110,6 +110,7 @@ h1{margin:6px 0 0;font-size:28px;letter-spacing:-.03em}
     <div class="eyebrow">Human-in-the-loop gate · anti-fragmentation</div>
     <h1>候选 topic 审批</h1>
     <p>discover → 〈这道闸〉 → reduce 的人工环节。新页进来时,先<b>载入现有冻结词表</b>当合并目标,把"其实是老 topic 换了个名"的新候选 <b>合并到已有 🔒</b>(别名回填),真正的新 topic 才批准。导出 <code>keyword_table.jsonl</code> 整张更新表(含老行+新行)。</p>
+    <p style="margin-top:6px;font-size:12px;color:var(--muted)"><strong>这是什么页：</strong>人工冻结闸 —— <u>纯前端本地工具，不连后端</u>。输入：<code>proposed_keywords.json</code>（discover 产出）+ 现有 <code>keyword_table.jsonl</code>；输出：新的 <code>keyword_table.jsonl</code>，放到 <code>paths.keyword_table</code> 再让 opencode 跑 reduce。</p>
   </div>
 
   <div class="help">

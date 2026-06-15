@@ -183,6 +183,24 @@ class ReducerCleanTest(unittest.TestCase):
         validate_review_item(item)  # raises on failure
         self.assertEqual(item["type"], "unmatched-canonical")
         self.assertEqual(item["canonical_id"], "C-0001")
+        self.assertEqual(item["near_misses"], [])
+
+    def test_unmatched_canonical_surfaces_near_miss_sections(self) -> None:
+        # The topic's alias appears in a section body, but that section's main
+        # subject (heading) is something else -> no card, yet the near miss is
+        # surfaced so the owner can add an alias/subsection or drop the topic.
+        mention = _section(
+            ["Other Page", "Overview"],
+            {},
+            summary="See the notification channels matrix for the full list.",
+        )
+        self.assertEqual(match_section(mention, CANON), [])
+        item = unmatched_canonical_item("C-0001", CANON["C-0001"], [mention])
+        validate_review_item(item)
+        self.assertTrue(item["near_misses"])
+        self.assertEqual(item["near_misses"][0]["anchor"], "Other Page > Overview")
+        self.assertIn("notification channels", item["near_misses"][0]["matched_terms"])
+        self.assertIn("Other Page > Overview", item["options"][0])
 
     def test_cleaning_kills_echo_and_junk(self) -> None:
         self.assertNotIn("Q:", clean_narrative_text("Q: portal access right Q: portal access right"))

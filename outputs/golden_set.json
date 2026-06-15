@@ -1,169 +1,166 @@
 {
-  "frozen_hash": "1f108b5d2493f4bc5b08ca70e282ac1ef4f4aa5ab3829a0d1ab46f69886affff",
+  "frozen_hash": "0635065468ac268660327c4dbd5f76020c1c243920e051ba10fb545b4c4ae48e",
   "items": [
     {
       "q_id": "G-001",
-      "q_en": "What is the DM plugin?",
-      "q_zh": "DM plugin 是干嘛的?",
+      "q_en": "What notification channels does MDC support?",
+      "q_zh": "MDC 支持哪些通知渠道?",
       "type": "single",
       "gold_section_ids": [
-        "123456#What is the DM Plugin"
+        "9100001#MDC supported notification channels"
       ],
-      "gold_answer": "It is the Data Management plugin that batches and delivers messages to downstream channels; the core of the delivery pipeline.",
+      "gold_answer": "MDC supports PN, SMS, Email, Letter and Whatsapp as notification channels.",
       "human_checked": true
     },
     {
       "q_id": "G-002",
-      "q_en": "DM plugin default batch_size?",
-      "q_zh": "DM plugin 的 batch_size 默认是多少?",
+      "q_en": "What is the delivery mode for Whatsapp?",
+      "q_zh": "Whatsapp 的 delivery mode 是什么?",
       "type": "identifier-lookup",
       "gold_section_ids": [
-        "777001#DM Plugin Config (post-migration)"
+        "9100001#MDC supported notification channels > Whatsapp > Delivery Mode"
       ],
-      "gold_answer": "1000 (post-migration; it was 500 before the SFMC migration).",
+      "gold_answer": "real-time.",
       "human_checked": true
     },
     {
       "q_id": "G-003",
-      "q_en": "What is the default max_retry for the DM plugin?",
-      "q_zh": "DM plugin 的 max_retry 默认几次?",
+      "q_en": "What is the delivery mode for PN?",
+      "q_zh": "PN 的 delivery mode 是什么?",
       "type": "identifier-lookup",
       "gold_section_ids": [
-        "123456#Configuration"
+        "9100001#MDC supported notification channels > PN > Delivery Mode"
       ],
-      "gold_answer": "3",
+      "gold_answer": "real-time.",
       "human_checked": true
     },
     {
       "q_id": "G-004",
-      "q_en": "how many times does dm retry",
-      "q_zh": "dm 重试几次",
-      "type": "pointer-drill",
+      "q_en": "What is the MDC Management Portal?",
+      "q_zh": "MDC Management Portal 是什么?",
+      "type": "single",
       "gold_section_ids": [
-        "123456#Configuration"
+        "9100001#MDC Management Portal"
       ],
-      "gold_answer": "3 (the troubleshooting page only says retries are configurable; the actual value is in DM Plugin Overview > Configuration).",
+      "gold_answer": "The MDC Management Portal (a.k.a. MDC Messaging Platform) is where teams manage channels and request access rights.",
       "human_checked": true
     },
     {
       "q_id": "G-005",
-      "q_en": "How do the DM plugin and Journey plugin work together?",
-      "q_zh": "DM 和 journey 怎么配合?",
-      "type": "multihop",
+      "q_en": "What is the PROD access right link for the MDC portal?",
+      "q_zh": "MDC portal 的 PROD access right 申请链接是?",
+      "type": "identifier-lookup",
       "gold_section_ids": [
-        "123456#How it connects to the Journey Plugin",
-        "220110#Receiving from DM",
-        "140020#What is the Adaptor"
+        "9100001#MDC Management Portal > PROD Access right > Link"
       ],
-      "gold_answer": "The DM plugin hands messages to the Journey plugin through the adaptor, which translates the payload (campaign_id, user_id).",
+      "gold_answer": "https://mdc-portal-prod.example.local/access (needs line-manager approval).",
       "human_checked": true
     },
     {
       "q_id": "G-006",
-      "q_en": "what is the adaptor",
-      "q_zh": "adaptor 是什么",
-      "type": "single",
+      "q_en": "What is the UAT access right link for the MDC portal?",
+      "q_zh": "MDC portal 的 UAT access right 链接是?",
+      "type": "identifier-lookup",
       "gold_section_ids": [
-        "140020#What is the Adaptor"
+        "9100001#MDC Management Portal > UAT Access right > Link"
       ],
-      "gold_answer": "The bridge between the DM plugin and the Journey plugin (also spelled 'adapter' in older docs).",
+      "gold_answer": "https://mdc-portal-uat.example.local/access.",
       "human_checked": true
     },
     {
       "q_id": "G-007",
-      "q_en": "MDC OTP otp_length default",
-      "q_zh": "MDC OTP 的 otp_length 默认值",
+      "q_en": "What is the SLO baseline for use case M488?",
+      "q_zh": "use case M488 的 SLO baseline 是多少?",
       "type": "identifier-lookup",
       "gold_section_ids": [
-        "305001#OTP Generation Config"
+        "9100001#Notification Use Case Setup > M488 > SLO baseline"
       ],
-      "gold_answer": "6 digits.",
+      "gold_answer": "5 min.",
       "human_checked": true
     },
     {
       "q_id": "G-008",
-      "q_en": "How long is an MDC OTP valid for?",
-      "q_zh": "MDC OTP 有效期多久?",
-      "type": "identifier-lookup",
+      "q_en": "How is a notification use case set up?",
+      "q_zh": "notification use case 怎么创建?",
+      "type": "single",
       "gold_section_ids": [
-        "305001#OTP Generation Config"
+        "9100001#Notification Use Case Setup"
       ],
-      "gold_answer": "300 seconds (otp_ttl).",
+      "gold_answer": "A use case is created in the portal and mapped to a message path; each has an SLO baseline.",
       "human_checked": true
     },
     {
       "q_id": "G-009",
-      "q_en": "which error code means the DM plugin is rate limited?",
-      "q_zh": "DM plugin 被限流是哪个错误码?",
-      "type": "identifier-lookup",
+      "q_en": "What are the baseline SLO and actual performance for M488?",
+      "q_zh": "M488 的 baseline SLO 和实际表现分别是?",
+      "type": "multihop",
       "gold_section_ids": [
-        "200066#Common Errors"
+        "9100001#Notification Use Case Setup > M488 > SLO baseline",
+        "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO"
       ],
-      "gold_answer": "DM-429",
+      "gold_answer": "Baseline SLO 5 min; actual performance 4.2 min.",
       "human_checked": true
     },
     {
       "q_id": "G-010",
-      "q_en": "which component processes message batches?",
-      "q_zh": "消息批次是哪个组件处理的?",
+      "q_en": "What does the Message Path Service Catalogue record?",
+      "q_zh": "Message Path Service Catalogue 记录什么?",
       "type": "single",
       "gold_section_ids": [
-        "160033#Batch Processing Notes",
-        "123456#What is the DM Plugin"
+        "9100002#Message Path Service Catalogue"
       ],
-      "gold_answer": "The DM plugin (batch size governed by its configuration).",
+      "gold_answer": "The baseline SLO and actual performance rate per message path.",
       "human_checked": true
     },
     {
       "q_id": "G-011",
-      "q_en": "Does the DM plugin support sending SMS?",
-      "q_zh": "DM plugin 支持发短信吗?",
-      "type": "out-of-scope",
-      "gold_section_ids": "NO_ANSWER",
-      "gold_answer": "NO_ANSWER — not documented in the corpus.",
+      "q_en": "How are message templates governed and maintained?",
+      "q_zh": "消息模板怎么治理和维护?",
+      "type": "single",
+      "gold_section_ids": [
+        "9100003#Template Governance and Maintenance"
+      ],
+      "gold_answer": "Templates are created in the portal and recorded in the message inventory under template governance.",
       "human_checked": true
     },
     {
       "q_id": "G-012",
-      "q_en": "What is the monthly cost of the Journey plugin?",
-      "q_zh": "Journey plugin 每月多少钱?",
+      "q_en": "How does retry work after a bounce back?",
+      "q_zh": "bounce back 之后怎么重试?",
+      "type": "pointer-drill",
+      "gold_section_ids": [
+        "9100003#Testing, bounce back, and retry"
+      ],
+      "gold_answer": "Undeliverable messages are bounced and retried on a schedule; exact retry counts are in the Message Path Service Catalogue.",
+      "human_checked": true
+    },
+    {
+      "q_id": "G-013",
+      "q_en": "What is the MDC project engagement process?",
+      "q_zh": "MDC 项目的 engagement 流程是怎样的?",
+      "type": "single",
+      "gold_section_ids": [
+        "9100001#MDC project engagement process"
+      ],
+      "gold_answer": "Raise an onboarding enquiry via the engagement contact point, confirm requirements with governance, then schedule the onboarding session.",
+      "human_checked": true
+    },
+    {
+      "q_id": "G-014",
+      "q_en": "What is the per-SMS price in MDC?",
+      "q_zh": "MDC 发一条短信多少钱?",
       "type": "out-of-scope",
       "gold_section_ids": "NO_ANSWER",
       "gold_answer": "NO_ANSWER — pricing is not in the corpus.",
       "human_checked": true
     },
     {
-      "q_id": "G-013",
-      "q_en": "Describe the end-to-end message flow in the 2026 project.",
-      "q_zh": "2026 项目里消息端到端是怎么流转的?",
-      "type": "multihop",
-      "gold_section_ids": [
-        "190055#Architecture at a Glance"
-      ],
-      "gold_answer": "DM plugin → adaptor → Journey plugin; one-time passwords are handled separately by the MDC OTP Service.",
-      "human_checked": true
-    },
-    {
-      "q_id": "G-014",
-      "q_en": "Why did we choose a single adaptor layer instead of point-to-point?",
-      "q_zh": "为什么用单一 adaptor 层而不是点对点?",
-      "type": "single",
-      "gold_section_ids": [
-        "230088#Rationale"
-      ],
-      "gold_answer": "A single adaptor centralizes format changes (one place vs N×M mappings), de-risks migrations, and lets DM and Journey deploy independently.",
-      "human_checked": true
-    },
-    {
       "q_id": "G-015",
-      "q_en": "Was the DM plugin batch_size changed during the SFMC migration?",
-      "q_zh": "SFMC 迁移有没有改 DM plugin 的 batch_size?",
-      "type": "identifier-lookup",
-      "gold_section_ids": [
-        "777001#DM Plugin Config (post-migration)",
-        "123456#Configuration"
-      ],
-      "gold_answer": "Yes — increased from 500 to 1000 post-migration.",
+      "q_en": "Does the MDC portal support face-recognition login?",
+      "q_zh": "MDC portal 支持刷脸登录吗?",
+      "type": "out-of-scope",
+      "gold_section_ids": "NO_ANSWER",
+      "gold_answer": "NO_ANSWER — not documented in the corpus.",
       "human_checked": true
     }
   ]

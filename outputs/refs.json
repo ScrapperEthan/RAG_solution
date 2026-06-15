@@ -1,1131 +1,2134 @@
 [
   {
     "ref_id": 0,
-    "section_id": "123456#What is the DM Plugin",
-    "page_id": "123456",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-    "title": "DM Plugin Overview",
+    "section_id": "9100001#MDC supported notification channels",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
     "heading_path": [
-      "DM Plugin Overview",
-      "What is the DM Plugin"
+      "MDC Project Check List",
+      "MDC supported notification channels"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
     ],
-    "owner": "alice",
+    "owner": "mdc-team",
     "labels": [
-      "plugin",
-      "delivery"
+      "mdc",
+      "engagement",
+      "onboarding"
     ],
     "content_type": "what-is",
-    "component": "journey",
+    "component": "",
     "module": [
-      "Integration & API standard",
-      "Delivery & tracking standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {},
     "has_table": false,
     "has_image": false,
-    "body_md": "The Data Management plugin (**DM plugin**, sometimes abbreviated **DMP**) delivers\nmessages to downstream channels. It is the core component of the delivery pipeline and\nis responsible for batching, retrying, and handing messages off to the Journey plugin.",
-    "confluence_version": 7,
+    "body_md": "MDC supports several messaging channels for delivery. Each channel has its own\ndelivery mode, content template, and bounce back handling.",
+    "confluence_version": 31,
     "update_at": "2026-05-20T10:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "123456#Configuration",
-    "page_id": "123456",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-    "title": "DM Plugin Overview",
+    "section_id": "9100001#MDC supported notification channels > PN > Delivery Mode",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
     "heading_path": [
-      "DM Plugin Overview",
-      "Configuration"
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "PN",
+      "Delivery Mode"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
     ],
-    "owner": "alice",
+    "owner": "mdc-team",
     "labels": [
-      "plugin",
-      "delivery"
+      "mdc",
+      "engagement",
+      "onboarding"
     ],
-    "content_type": "config",
-    "component": "DM",
+    "content_type": "what-is",
+    "component": "",
     "module": [
-      "Integration & API standard",
-      "Delivery & tracking standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
-    "has_table": true,
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "PN",
+      "channel": "PN",
+      "attribute": "Delivery Mode"
+    },
+    "has_table": false,
     "has_image": false,
-    "body_md": "| Param        | Default | Notes                         |\n|--------------|---------|-------------------------------|\n| `batch_size` | 500     | maximum allowed value is 1000 |\n| `max_retry`  | 3       | per-message retry attempts    |",
-    "confluence_version": 7,
+    "body_md": "real-time",
+    "confluence_version": 31,
     "update_at": "2026-05-20T10:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "123456#How it connects to the Journey Plugin",
-    "page_id": "123456",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/DM-Plugin-Overview",
-    "title": "DM Plugin Overview",
+    "section_id": "9100001#MDC supported notification channels > PN > Template",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
     "heading_path": [
-      "DM Plugin Overview",
-      "How it connects to the Journey Plugin"
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "PN",
+      "Template"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
     ],
-    "owner": "alice",
+    "owner": "mdc-team",
     "labels": [
-      "plugin",
-      "delivery"
+      "mdc",
+      "engagement",
+      "onboarding"
     ],
-    "content_type": "how-to",
-    "component": "journey",
+    "content_type": "what-is",
+    "component": "",
     "module": [
-      "Integration & API standard",
-      "Delivery & tracking standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "PN",
+      "channel": "PN",
+      "attribute": "Template"
+    },
     "has_table": false,
     "has_image": false,
-    "body_md": "After processing, the DM plugin hands messages to the **Journey plugin** through the\n**adaptor**. The handshake payload includes `campaign_id` and `user_id`. See the\nJourney Plugin page for the full handshake details.",
-    "confluence_version": 7,
+    "body_md": "PN content template",
+    "confluence_version": 31,
     "update_at": "2026-05-20T10:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "140020#What is the Adaptor",
-    "page_id": "140020",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Adaptor",
-    "title": "Adaptor",
+    "section_id": "9100001#MDC supported notification channels > PN > Bounce Back",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
     "heading_path": [
-      "Adaptor",
-      "What is the Adaptor"
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "PN",
+      "Bounce Back"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
     ],
-    "owner": "bob",
+    "owner": "mdc-team",
     "labels": [
-      "plugin",
-      "integration"
+      "mdc",
+      "engagement",
+      "onboarding"
     ],
     "content_type": "what-is",
-    "component": "journey",
+    "component": "",
     "module": [
-      "Integration & API standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "PN",
+      "channel": "PN",
+      "attribute": "Bounce Back"
+    },
     "has_table": false,
     "has_image": false,
-    "body_md": "The **adaptor** (also spelled **adapter** in older documents) is the bridge between the\nDM plugin and the Journey plugin. It translates the DM plugin's output into the format the\nJourney plugin expects.",
-    "confluence_version": 5,
-    "update_at": "2026-05-18T14:00:00Z",
+    "body_md": "retry once",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "140020#Configuration",
-    "page_id": "140020",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Adaptor",
-    "title": "Adaptor",
+    "section_id": "9100001#MDC supported notification channels > SMS > Delivery Mode",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
     "heading_path": [
-      "Adaptor",
-      "Configuration"
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "SMS",
+      "Delivery Mode"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
     ],
-    "owner": "bob",
+    "owner": "mdc-team",
     "labels": [
-      "plugin",
-      "integration"
-    ],
-    "content_type": "config",
-    "component": "adaptor",
-    "module": [
-      "Integration & API standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": true,
-    "has_image": false,
-    "body_md": "| Param          | Default | Notes                              |\n|----------------|---------|------------------------------------|\n| `adaptor_mode` | sync    | `sync` or `async`                  |",
-    "confluence_version": 5,
-    "update_at": "2026-05-18T14:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "140020#Payload Mapping",
-    "page_id": "140020",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Adaptor",
-    "title": "Adaptor",
-    "heading_path": [
-      "Adaptor",
-      "Payload Mapping"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
-    ],
-    "owner": "bob",
-    "labels": [
-      "plugin",
-      "integration"
+      "mdc",
+      "engagement",
+      "onboarding"
     ],
     "content_type": "what-is",
-    "component": "journey",
+    "component": "",
     "module": [
-      "Integration & API standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "SMS",
+      "channel": "SMS",
+      "attribute": "Delivery Mode"
+    },
     "has_table": false,
     "has_image": false,
-    "body_md": "The adaptor maps DM output fields to Journey input fields: `msg_id` → `message_id`,\n`uid` → `user_id`. Unmapped fields are dropped.",
-    "confluence_version": 5,
-    "update_at": "2026-05-18T14:00:00Z",
+    "body_md": "batched",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "160033#Overview",
-    "page_id": "160033",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Message-Inventory",
-    "title": "Message Inventory",
+    "section_id": "9100001#MDC supported notification channels > SMS > Template",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
     "heading_path": [
-      "Message Inventory",
-      "Overview"
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "SMS",
+      "Template"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Message Inventory"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
     ],
-    "owner": "dan",
+    "owner": "mdc-team",
     "labels": [
-      "inventory",
-      "messages"
+      "mdc",
+      "engagement",
+      "onboarding"
     ],
     "content_type": "what-is",
-    "component": "common",
+    "component": "",
     "module": [
-      "Template & content standard",
-      "Delivery & tracking standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "SMS",
+      "channel": "SMS",
+      "attribute": "Template"
+    },
     "has_table": false,
     "has_image": false,
-    "body_md": "This page lists the message types in scope for the 2026 project and how each is produced\nand consumed.",
-    "confluence_version": 3,
-    "update_at": "2026-05-10T10:00:00Z",
+    "body_md": "SMS content template",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "160033#Batch Processing Notes",
-    "page_id": "160033",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Message-Inventory",
-    "title": "Message Inventory",
+    "section_id": "9100001#MDC supported notification channels > SMS > Bounce Back",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
     "heading_path": [
-      "Message Inventory",
-      "Batch Processing Notes"
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "SMS",
+      "Bounce Back"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Message Inventory"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
     ],
-    "owner": "dan",
+    "owner": "mdc-team",
     "labels": [
-      "inventory",
-      "messages"
-    ],
-    "content_type": "config",
-    "component": "DM",
-    "module": [
-      "Template & content standard",
-      "Delivery & tracking standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "Message batches are processed by the **DM plugin**; the number of messages per batch is\ngoverned by the DM plugin configuration (`batch_size`). Teams sizing throughput should\nrefer to the DM plugin configuration rather than assuming a fixed number here.",
-    "confluence_version": 3,
-    "update_at": "2026-05-10T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "180044#Delivery Process",
-    "page_id": "180044",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Delivery-WoW",
-    "title": "Delivery Way of Working",
-    "heading_path": [
-      "Delivery Way of Working",
-      "Delivery Process"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Way of Working"
-    ],
-    "owner": "erin",
-    "labels": [
-      "process",
-      "way-of-working"
+      "mdc",
+      "engagement",
+      "onboarding"
     ],
     "content_type": "what-is",
-    "component": "common",
+    "component": "",
     "module": [
-      "Operations & release standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "SMS",
+      "channel": "SMS",
+      "attribute": "Bounce Back"
+    },
     "has_table": false,
     "has_image": false,
-    "body_md": "The delivery process has four stages: planning, build, test, and release. Each stage has\nan entry and exit checklist. Releases are cut on a two-week cadence.",
+    "body_md": "resend after 5 min",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Email > Delivery Mode",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Email",
+      "Delivery Mode"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Email",
+      "channel": "Email",
+      "attribute": "Delivery Mode"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "batched",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Email > Template",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Email",
+      "Template"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Email",
+      "channel": "Email",
+      "attribute": "Template"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Email content template",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Email > Bounce Back",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Email",
+      "Bounce Back"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Email",
+      "channel": "Email",
+      "attribute": "Bounce Back"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "resend after 30 min",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Letter > Delivery Mode",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Letter",
+      "Delivery Mode"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Letter",
+      "channel": "Letter",
+      "attribute": "Delivery Mode"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "daily file",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Letter > Template",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Letter",
+      "Template"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Letter",
+      "channel": "Letter",
+      "attribute": "Template"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Letter content template",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Letter > Bounce Back",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Letter",
+      "Bounce Back"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Letter",
+      "channel": "Letter",
+      "attribute": "Bounce Back"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "manual follow-up",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Whatsapp > Delivery Mode",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Whatsapp",
+      "Delivery Mode"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Whatsapp",
+      "channel": "Whatsapp",
+      "attribute": "Delivery Mode"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "real-time",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Whatsapp > Template",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Whatsapp",
+      "Template"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Whatsapp",
+      "channel": "Whatsapp",
+      "attribute": "Template"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Whatsapp content template",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC supported notification channels > Whatsapp > Bounce Back",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC supported notification channels",
+      "Whatsapp",
+      "Bounce Back"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_supported_notification_channels",
+      "table_kind": "matrix",
+      "entity_key": "Channel",
+      "row_key": "Whatsapp",
+      "channel": "Whatsapp",
+      "attribute": "Bounce Back"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "retry once",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC Management Portal",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC Management Portal"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {},
+    "has_table": false,
+    "has_image": false,
+    "body_md": "The MDC Management Portal (also called the MDC Messaging Platform) is where teams\nmanage channels and request access rights for each environment.",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC Management Portal > Portal link > Link",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC Management Portal",
+      "Portal link",
+      "Link"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_management_portal",
+      "table_kind": "matrix",
+      "entity_key": "Environment",
+      "row_key": "Portal link",
+      "channel": "Portal link",
+      "attribute": "Link"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "https://mdc-portal.example.local",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC Management Portal > Portal link > Notes",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC Management Portal",
+      "Portal link",
+      "Notes"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_management_portal",
+      "table_kind": "matrix",
+      "entity_key": "Environment",
+      "row_key": "Portal link",
+      "channel": "Portal link",
+      "attribute": "Notes"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "landing page",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC Management Portal > UAT Access right > Link",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC Management Portal",
+      "UAT Access right",
+      "Link"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_management_portal",
+      "table_kind": "matrix",
+      "entity_key": "Environment",
+      "row_key": "UAT Access right",
+      "channel": "UAT Access right",
+      "attribute": "Link"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "https://mdc-portal-uat.example.local/access",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC Management Portal > UAT Access right > Notes",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC Management Portal",
+      "UAT Access right",
+      "Notes"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_management_portal",
+      "table_kind": "matrix",
+      "entity_key": "Environment",
+      "row_key": "UAT Access right",
+      "channel": "UAT Access right",
+      "attribute": "Notes"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "request via portal",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC Management Portal > PROD Access right > Link",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC Management Portal",
+      "PROD Access right",
+      "Link"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_management_portal",
+      "table_kind": "matrix",
+      "entity_key": "Environment",
+      "row_key": "PROD Access right",
+      "channel": "PROD Access right",
+      "attribute": "Link"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "https://mdc-portal-prod.example.local/access",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC Management Portal > PROD Access right > Notes",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC Management Portal",
+      "PROD Access right",
+      "Notes"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "mdc_management_portal",
+      "table_kind": "matrix",
+      "entity_key": "Environment",
+      "row_key": "PROD Access right",
+      "channel": "PROD Access right",
+      "attribute": "Notes"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "needs line-manager approval",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#Notification Use Case Setup",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "Notification Use Case Setup"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {},
+    "has_table": false,
+    "has_image": false,
+    "body_md": "A notification use case is created in the portal and mapped to a message path.",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#Notification Use Case Setup > M488 > Name",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "Notification Use Case Setup",
+      "M488",
+      "Name"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "notification_use_case_setup",
+      "table_kind": "matrix",
+      "entity_key": "Use Case ID",
+      "row_key": "M488",
+      "channel": "M488",
+      "attribute": "Name"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Payment OTP notification",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#Notification Use Case Setup > M488 > SLO baseline",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "Notification Use Case Setup",
+      "M488",
+      "SLO baseline"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "notification_use_case_setup",
+      "table_kind": "matrix",
+      "entity_key": "Use Case ID",
+      "row_key": "M488",
+      "channel": "M488",
+      "attribute": "SLO baseline"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "5 min",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#Notification Use Case Setup > M489 > Name",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "Notification Use Case Setup",
+      "M489",
+      "Name"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "notification_use_case_setup",
+      "table_kind": "matrix",
+      "entity_key": "Use Case ID",
+      "row_key": "M489",
+      "channel": "M489",
+      "attribute": "Name"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Statement ready notification",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#Notification Use Case Setup > M489 > SLO baseline",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "Notification Use Case Setup",
+      "M489",
+      "SLO baseline"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "notification_use_case_setup",
+      "table_kind": "matrix",
+      "entity_key": "Use Case ID",
+      "row_key": "M489",
+      "channel": "M489",
+      "attribute": "SLO baseline"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "30 min",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC project engagement process > Engagement steps > Step 1: Raise an onboarding enquiry via the engagement contact point.",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC project engagement process",
+      "Engagement steps",
+      "Step 1: Raise an onboarding enquiry via the engagement contact point."
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "block": "process",
+      "step": "1",
+      "step_text": "Raise an onboarding enquiry via the engagement contact point."
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "1. Raise an onboarding enquiry via the engagement contact point.",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC project engagement process > Engagement steps > Step 2: Confirm requirements with the MDC governance Process owner.",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC project engagement process",
+      "Engagement steps",
+      "Step 2: Confirm requirements with the MDC governance Process owner."
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "block": "process",
+      "step": "2",
+      "step_text": "Confirm requirements with the MDC governance Process owner."
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "2. Confirm requirements with the MDC governance Process owner.",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100001#MDC project engagement process > Engagement steps > Step 3: Schedule the technical onboarding session and confirm channels.",
+    "page_id": "9100001",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Project-Check-List",
+    "title": "MDC Project Check List",
+    "heading_path": [
+      "MDC Project Check List",
+      "MDC project engagement process",
+      "Engagement steps",
+      "Step 3: Schedule the technical onboarding session and confirm channels."
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Project Check List"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "engagement",
+      "onboarding"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "block": "process",
+      "step": "3",
+      "step_text": "Schedule the technical onboarding session and confirm channels."
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "3. Schedule the technical onboarding session and confirm channels.",
+    "confluence_version": 31,
+    "update_at": "2026-05-20T10:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100002#Message Path Service Catalogue",
+    "page_id": "9100002",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+    "title": "MDC Message Path Service Catalogue",
+    "heading_path": [
+      "MDC Message Path Service Catalogue",
+      "Message Path Service Catalogue"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Message Path Service Catalogue"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "service-standard"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {},
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Each notification use case runs over a message path with a published service\nstandard. The catalogue lists the baseline SLO and the actual performance rate.",
     "confluence_version": 6,
-    "update_at": "2026-05-22T10:00:00Z",
+    "update_at": "2026-05-28T09:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "180044#Roles and Responsibilities",
-    "page_id": "180044",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Delivery-WoW",
-    "title": "Delivery Way of Working",
+    "section_id": "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO",
+    "page_id": "9100002",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+    "title": "MDC Message Path Service Catalogue",
     "heading_path": [
-      "Delivery Way of Working",
-      "Roles and Responsibilities"
+      "MDC Message Path Service Catalogue",
+      "Message Path Service Catalogue",
+      "M488 payment path",
+      "service baseline SLO"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Way of Working"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Message Path Service Catalogue"
     ],
-    "owner": "erin",
+    "owner": "mdc-team",
     "labels": [
-      "process",
-      "way-of-working"
+      "mdc",
+      "service-standard"
     ],
     "content_type": "what-is",
-    "component": "OTP",
+    "component": "",
     "module": [
-      "Operations & release standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {
+      "table": "message_path_service_catalogue",
+      "table_kind": "matrix",
+      "entity_key": "Message Path",
+      "row_key": "M488 payment path",
+      "channel": "M488 payment path",
+      "attribute": "service baseline SLO"
+    },
     "has_table": false,
     "has_image": false,
-    "body_md": "The DM plugin and the adaptor are owned by the Platform team; the Journey plugin is owned\nby the Engagement team. The MDC OTP Service is owned by the Security team. Cross-team\nchanges require sign-off from both owning teams.",
+    "body_md": "5 min",
     "confluence_version": 6,
-    "update_at": "2026-05-22T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "190055#Introduction",
-    "page_id": "190055",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/2026-Planned-Project",
-    "title": "2026 Planned Project Overview",
-    "heading_path": [
-      "2026 Planned Project Overview",
-      "Introduction"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project"
-    ],
-    "owner": "alice",
-    "labels": [
-      "overview",
-      "index"
-    ],
-    "content_type": "what-is",
-    "component": "OTP",
-    "module": [
-      "Channel standard",
-      "MDC development guideline",
-      "Template & content standard",
-      "Integration & API standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "The 2026 Planned Project delivers the new messaging stack. Its main components are the\nDM plugin, the Journey plugin, the adaptor, and the MDC OTP Service.",
-    "confluence_version": 8,
-    "update_at": "2026-05-25T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "190055#Architecture at a Glance",
-    "page_id": "190055",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/2026-Planned-Project",
-    "title": "2026 Planned Project Overview",
-    "heading_path": [
-      "2026 Planned Project Overview",
-      "Architecture at a Glance"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project"
-    ],
-    "owner": "alice",
-    "labels": [
-      "overview",
-      "index"
-    ],
-    "content_type": "what-is",
-    "component": "OTP",
-    "module": [
-      "Channel standard",
-      "MDC development guideline",
-      "Template & content standard",
-      "Integration & API standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "Messages flow end to end as: **DM plugin → adaptor → Journey plugin**. One-time passwords\nare handled separately by the **MDC OTP Service**. The adaptor decouples DM from Journey so\neither side can change format independently.",
-    "confluence_version": 8,
-    "update_at": "2026-05-25T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "190055#Component Index",
-    "page_id": "190055",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/2026-Planned-Project",
-    "title": "2026 Planned Project Overview",
-    "heading_path": [
-      "2026 Planned Project Overview",
-      "Component Index"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project"
-    ],
-    "owner": "alice",
-    "labels": [
-      "overview",
-      "index"
-    ],
-    "content_type": "what-is",
-    "component": "OTP",
-    "module": [
-      "Channel standard",
-      "MDC development guideline",
-      "Template & content standard",
-      "Integration & API standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "- DM Plugin Overview — the delivery core\n- Journey Plugin Overview — journey orchestration\n- Adaptor — DM↔Journey bridge\n- MDC OTP Service — one-time passwords",
-    "confluence_version": 8,
-    "update_at": "2026-05-25T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "200066#Common Errors",
-    "page_id": "200066",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-    "title": "DM Plugin Troubleshooting",
-    "heading_path": [
-      "DM Plugin Troubleshooting",
-      "Common Errors"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
-    ],
-    "owner": "bob",
-    "labels": [
-      "plugin",
-      "troubleshoot",
-      "faq"
-    ],
-    "content_type": "troubleshoot",
-    "component": "DM",
-    "module": [
-      "Integration & API standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "- **DM-429**: the DM plugin is rate limited by a downstream channel. Reduce `batch_size`\n  or add backoff.\n- **DM-503**: downstream channel unavailable; messages are requeued.",
-    "confluence_version": 4,
-    "update_at": "2026-05-19T16:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "200066#Retry Behaviour",
-    "page_id": "200066",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-    "title": "DM Plugin Troubleshooting",
-    "heading_path": [
-      "DM Plugin Troubleshooting",
-      "Retry Behaviour"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
-    ],
-    "owner": "bob",
-    "labels": [
-      "plugin",
-      "troubleshoot",
-      "faq"
-    ],
-    "content_type": "troubleshoot",
-    "component": "DM",
-    "module": [
-      "Integration & API standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "The DM plugin **supports retry configuration**; configure it according to your channel's\nrate limits. (This page does not state the default number of retries — see the DM Plugin\nOverview Configuration for the actual value.)",
-    "confluence_version": 4,
-    "update_at": "2026-05-19T16:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "200066#FAQ",
-    "page_id": "200066",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/DM-Plugin-Troubleshooting",
-    "title": "DM Plugin Troubleshooting",
-    "heading_path": [
-      "DM Plugin Troubleshooting",
-      "FAQ"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
-    ],
-    "owner": "bob",
-    "labels": [
-      "plugin",
-      "troubleshoot",
-      "faq"
-    ],
-    "content_type": "troubleshoot",
-    "component": "common",
-    "module": [
-      "Integration & API standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "**Q: Does a DM-429 drop messages?** No — affected messages are retried subject to the\nretry configuration.",
-    "confluence_version": 4,
-    "update_at": "2026-05-19T16:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "210077#Capacity Planning",
-    "page_id": "210077",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Supply-and-Demand",
-    "title": "Supply and Demand (Capacity Planning)",
-    "heading_path": [
-      "Supply and Demand (Capacity Planning)",
-      "Capacity Planning"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Supply and Demand"
-    ],
-    "owner": "dan",
-    "labels": [
-      "capacity",
-      "planning"
-    ],
-    "content_type": "config",
-    "component": "common",
-    "module": [
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "Forecast monthly message volume and reserve capacity at the 95th percentile of the last\n12 months. Capacity reviews happen quarterly. This page is about planning numbers, not\ncomponent configuration.",
-    "confluence_version": 1,
-    "update_at": "2026-05-05T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "210077#Peak Handling",
-    "page_id": "210077",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Supply-and-Demand",
-    "title": "Supply and Demand (Capacity Planning)",
-    "heading_path": [
-      "Supply and Demand (Capacity Planning)",
-      "Peak Handling"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Supply and Demand"
-    ],
-    "owner": "dan",
-    "labels": [
-      "capacity",
-      "planning"
-    ],
-    "content_type": "what-is",
-    "component": "common",
-    "module": [
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "For seasonal peaks, pre-scale workers a week ahead. Note: this page intentionally does not\ncover plugin-level settings such as batch sizes or retries — those live on the component\npages.",
-    "confluence_version": 1,
-    "update_at": "2026-05-05T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "220110#What is the Journey Plugin",
-    "page_id": "220110",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-    "title": "Journey Plugin Overview",
-    "heading_path": [
-      "Journey Plugin Overview",
-      "What is the Journey Plugin"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
-    ],
-    "owner": "alice",
-    "labels": [
-      "plugin",
-      "journey"
-    ],
-    "content_type": "what-is",
-    "component": "journey",
-    "module": [
-      "Channel standard",
-      "Delivery & tracking standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "The **Journey plugin** orchestrates user journeys: it decides which next step or message\na user should receive based on journey rules. It consumes messages produced upstream by\nthe DM plugin.",
-    "confluence_version": 4,
-    "update_at": "2026-05-15T11:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "220110#Receiving from DM",
-    "page_id": "220110",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-    "title": "Journey Plugin Overview",
-    "heading_path": [
-      "Journey Plugin Overview",
-      "Receiving from DM"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
-    ],
-    "owner": "alice",
-    "labels": [
-      "plugin",
-      "journey"
-    ],
-    "content_type": "what-is",
-    "component": "journey",
-    "module": [
-      "Channel standard",
-      "Delivery & tracking standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "The Journey plugin receives messages from the **DM plugin** via the **adaptor**. The\nincoming payload includes `campaign_id` and `user_id`. If the adaptor is in async mode,\nmessages are buffered before the journey engine picks them up.",
-    "confluence_version": 4,
-    "update_at": "2026-05-15T11:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "220110#Configuration",
-    "page_id": "220110",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/Journey-Plugin-Overview",
-    "title": "Journey Plugin Overview",
-    "heading_path": [
-      "Journey Plugin Overview",
-      "Configuration"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Plugins"
-    ],
-    "owner": "alice",
-    "labels": [
-      "plugin",
-      "journey"
-    ],
-    "content_type": "config",
-    "component": "journey",
-    "module": [
-      "Channel standard",
-      "Delivery & tracking standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": true,
-    "has_image": false,
-    "body_md": "| Param                     | Default | Notes                          |\n|---------------------------|---------|--------------------------------|\n| `max_concurrent_journeys` | 50      | concurrent journeys per worker |",
-    "confluence_version": 4,
-    "update_at": "2026-05-15T11:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "230088#Decision",
-    "page_id": "230088",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-    "title": "Design Decision: Single Adaptor Layer",
-    "heading_path": [
-      "Design Decision: Single Adaptor Layer",
-      "Decision"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Design"
-    ],
-    "owner": "carol",
-    "labels": [
-      "design",
-      "decision",
-      "adr"
-    ],
-    "content_type": "decision",
-    "component": "journey",
-    "module": [
-      "Integration & API standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "We will use a **single adaptor** layer between the DM plugin and the Journey plugin,\nrather than point-to-point integrations between every producer and consumer.",
-    "confluence_version": 2,
-    "update_at": "2026-05-12T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "230088#Rationale",
-    "page_id": "230088",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-    "title": "Design Decision: Single Adaptor Layer",
-    "heading_path": [
-      "Design Decision: Single Adaptor Layer",
-      "Rationale"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Design"
-    ],
-    "owner": "carol",
-    "labels": [
-      "design",
-      "decision",
-      "adr"
-    ],
-    "content_type": "decision",
-    "component": "journey",
-    "module": [
-      "Integration & API standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "A single adaptor means format changes are handled in one place. Point-to-point would\nrequire N×M mappings and make migrations (e.g., SFMC) far riskier. The adaptor also lets\nDM and Journey deploy independently.",
-    "confluence_version": 2,
-    "update_at": "2026-05-12T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "230088#Consequences",
-    "page_id": "230088",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/ADR-Single-Adaptor",
-    "title": "Design Decision: Single Adaptor Layer",
-    "heading_path": [
-      "Design Decision: Single Adaptor Layer",
-      "Consequences"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Design"
-    ],
-    "owner": "carol",
-    "labels": [
-      "design",
-      "decision",
-      "adr"
-    ],
-    "content_type": "decision",
-    "component": "adaptor",
-    "module": [
-      "Integration & API standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "The adaptor becomes a critical path component and must be highly available. Its payload\nmapping (see the Adaptor page) is the single source of truth for field translation.",
-    "confluence_version": 2,
-    "update_at": "2026-05-12T10:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "305001#What is the MDC OTP Service",
-    "page_id": "305001",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/MDC-OTP-Service",
-    "title": "MDC OTP Service",
-    "heading_path": [
-      "MDC OTP Service",
-      "What is the MDC OTP Service"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Services"
-    ],
-    "owner": "carol",
-    "labels": [
-      "service",
-      "otp",
-      "mdc"
-    ],
-    "content_type": "what-is",
-    "component": "OTP",
-    "module": [
-      "MDC development guideline",
-      "Integration & API standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "The **MDC OTP Service** generates and validates one-time passwords (**OTP**) for the MDC\nflow. Note that \"OTP\" in this department most often refers specifically to this service,\nnot to OTP in general.",
-    "confluence_version": 2,
-    "update_at": "2026-04-30T08:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "305001#OTP Generation Config",
-    "page_id": "305001",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/MDC-OTP-Service",
-    "title": "MDC OTP Service",
-    "heading_path": [
-      "MDC OTP Service",
-      "OTP Generation Config"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Services"
-    ],
-    "owner": "carol",
-    "labels": [
-      "service",
-      "otp",
-      "mdc"
-    ],
-    "content_type": "config",
-    "component": "OTP",
-    "module": [
-      "MDC development guideline",
-      "Integration & API standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": true,
-    "has_image": false,
-    "body_md": "| Param        | Default | Notes                      |\n|--------------|---------|----------------------------|\n| `otp_length` | 6       | number of digits           |\n| `otp_ttl`    | 300     | time-to-live in seconds    |",
-    "confluence_version": 2,
-    "update_at": "2026-04-30T08:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "305001#Troubleshooting",
-    "page_id": "305001",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/MDC-OTP-Service",
-    "title": "MDC OTP Service",
-    "heading_path": [
-      "MDC OTP Service",
-      "Troubleshooting"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Services"
-    ],
-    "owner": "carol",
-    "labels": [
-      "service",
-      "otp",
-      "mdc"
-    ],
-    "content_type": "troubleshoot",
-    "component": "OTP",
-    "module": [
-      "MDC development guideline",
-      "Integration & API standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "If users report \"OTP expired\" errors, check clock skew between the issuing and validating\nnodes; an OTP is only valid within `otp_ttl` seconds of issuance.",
-    "confluence_version": 2,
-    "update_at": "2026-04-30T08:00:00Z",
-    "captured_at": "2026-06-04T00:00:00Z"
-  },
-  {
-    "ref_id": 0,
-    "section_id": "777001#Overview",
-    "page_id": "777001",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/SFMC-Migration",
-    "title": "SFMC Migration",
-    "heading_path": [
-      "SFMC Migration",
-      "Overview"
-    ],
-    "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Migration"
-    ],
-    "owner": "bob",
-    "labels": [
-      "migration",
-      "sfmc"
-    ],
-    "content_type": "config",
-    "component": "DM",
-    "module": [
-      "Channel standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
-    ],
-    "card_worthy": true,
-    "status": "",
-    "has_table": false,
-    "has_image": false,
-    "body_md": "This page tracks the migration from the legacy delivery stack to SFMC. It covers\nconfiguration changes to existing components, including the DM plugin.",
-    "confluence_version": 3,
     "update_at": "2026-05-28T09:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "777001#DM Plugin Config (post-migration)",
-    "page_id": "777001",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/SFMC-Migration",
-    "title": "SFMC Migration",
+    "section_id": "9100002#Message Path Service Catalogue > M488 payment path > actual performance rate",
+    "page_id": "9100002",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+    "title": "MDC Message Path Service Catalogue",
     "heading_path": [
-      "SFMC Migration",
-      "DM Plugin Config (post-migration)"
+      "MDC Message Path Service Catalogue",
+      "Message Path Service Catalogue",
+      "M488 payment path",
+      "actual performance rate"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Migration"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Message Path Service Catalogue"
     ],
-    "owner": "bob",
+    "owner": "mdc-team",
     "labels": [
-      "migration",
-      "sfmc"
+      "mdc",
+      "service-standard"
     ],
-    "content_type": "config",
-    "component": "DM",
+    "content_type": "what-is",
+    "component": "",
     "module": [
-      "Channel standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {
+      "table": "message_path_service_catalogue",
+      "table_kind": "matrix",
+      "entity_key": "Message Path",
+      "row_key": "M488 payment path",
+      "channel": "M488 payment path",
+      "attribute": "actual performance rate"
+    },
     "has_table": false,
     "has_image": false,
-    "body_md": "After migration, the **DM plugin** `batch_size` is increased to **1000** to handle the\nhigher post-migration volume. This supersedes the previous default. `max_retry` is\nunchanged.",
-    "confluence_version": 3,
+    "body_md": "4.2 min",
+    "confluence_version": 6,
     "update_at": "2026-05-28T09:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   },
   {
     "ref_id": 0,
-    "section_id": "777001#Known Issues",
-    "page_id": "777001",
-    "space": "DEPT",
-    "source_url": "https://confluence.local/x/SFMC-Migration",
-    "title": "SFMC Migration",
+    "section_id": "9100002#Message Path Service Catalogue > M489 statement path > service baseline SLO",
+    "page_id": "9100002",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+    "title": "MDC Message Path Service Catalogue",
     "heading_path": [
-      "SFMC Migration",
-      "Known Issues"
+      "MDC Message Path Service Catalogue",
+      "Message Path Service Catalogue",
+      "M489 statement path",
+      "service baseline SLO"
     ],
     "tree_path": [
-      "06-Delivery",
-      "10. Planned Project",
-      "2026 Planned Project",
-      "Migration"
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Message Path Service Catalogue"
     ],
-    "owner": "bob",
+    "owner": "mdc-team",
     "labels": [
-      "migration",
-      "sfmc"
+      "mdc",
+      "service-standard"
     ],
-    "content_type": "config",
-    "component": "DM",
+    "content_type": "what-is",
+    "component": "",
     "module": [
-      "Channel standard",
-      "Delivery & tracking standard",
-      "Operations & release standard"
+      "Q2 - Engagement",
+      "MDC Onboarding"
     ],
     "card_worthy": true,
     "status": "",
+    "metadata": {
+      "table": "message_path_service_catalogue",
+      "table_kind": "matrix",
+      "entity_key": "Message Path",
+      "row_key": "M489 statement path",
+      "channel": "M489 statement path",
+      "attribute": "service baseline SLO"
+    },
     "has_table": false,
     "has_image": false,
-    "body_md": "During cutover, duplicate sends were observed when `batch_size` was changed without\ndraining the queue first. Drain before changing batch configuration.",
-    "confluence_version": 3,
+    "body_md": "30 min",
+    "confluence_version": 6,
     "update_at": "2026-05-28T09:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100002#Message Path Service Catalogue > M489 statement path > actual performance rate",
+    "page_id": "9100002",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+    "title": "MDC Message Path Service Catalogue",
+    "heading_path": [
+      "MDC Message Path Service Catalogue",
+      "Message Path Service Catalogue",
+      "M489 statement path",
+      "actual performance rate"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Message Path Service Catalogue"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "service-standard"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "message_path_service_catalogue",
+      "table_kind": "matrix",
+      "entity_key": "Message Path",
+      "row_key": "M489 statement path",
+      "channel": "M489 statement path",
+      "attribute": "actual performance rate"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "22 min",
+    "confluence_version": 6,
+    "update_at": "2026-05-28T09:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Template Governance and Maintenance",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Template Governance and Maintenance"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {},
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Template Maintenance covers how message templates are created and governed, and\nhow each template is recorded in the message inventory.",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Template Governance and Maintenance > create template in portal > Owner",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Template Governance and Maintenance",
+      "create template in portal",
+      "Owner"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "template_governance_and_maintenance",
+      "table_kind": "matrix",
+      "entity_key": "Template Step",
+      "row_key": "create template in portal",
+      "channel": "create template in portal",
+      "attribute": "Owner"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "content team",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Template Governance and Maintenance > create template in portal > Tool",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Template Governance and Maintenance",
+      "create template in portal",
+      "Tool"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "template_governance_and_maintenance",
+      "table_kind": "matrix",
+      "entity_key": "Template Step",
+      "row_key": "create template in portal",
+      "channel": "create template in portal",
+      "attribute": "Tool"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "MDC portal",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Template Governance and Maintenance > message Inventory > Owner",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Template Governance and Maintenance",
+      "message Inventory",
+      "Owner"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "template_governance_and_maintenance",
+      "table_kind": "matrix",
+      "entity_key": "Template Step",
+      "row_key": "message Inventory",
+      "channel": "message Inventory",
+      "attribute": "Owner"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "governance team",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Template Governance and Maintenance > message Inventory > Tool",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Template Governance and Maintenance",
+      "message Inventory",
+      "Tool"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "template_governance_and_maintenance",
+      "table_kind": "matrix",
+      "entity_key": "Template Step",
+      "row_key": "message Inventory",
+      "channel": "message Inventory",
+      "attribute": "Tool"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "governance tool",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Testing, bounce back, and retry",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Testing, bounce back, and retry"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {},
+    "has_table": false,
+    "has_image": false,
+    "body_md": "Testing confirms a use case end to end before go-live. Undeliverable messages are\nhandled by bounce back and retry.",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Testing, bounce back, and retry > Bounce Back Handling > Behaviour",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Testing, bounce back, and retry",
+      "Bounce Back Handling",
+      "Behaviour"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "testing_bounce_back_and_retry",
+      "table_kind": "matrix",
+      "entity_key": "Mechanism",
+      "row_key": "Bounce Back Handling",
+      "channel": "Bounce Back Handling",
+      "attribute": "Behaviour"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "mark undeliverable",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Testing, bounce back, and retry > Bounce Back Handling > Owner",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Testing, bounce back, and retry",
+      "Bounce Back Handling",
+      "Owner"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "testing_bounce_back_and_retry",
+      "table_kind": "matrix",
+      "entity_key": "Mechanism",
+      "row_key": "Bounce Back Handling",
+      "channel": "Bounce Back Handling",
+      "attribute": "Owner"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "ops team",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Behaviour",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Testing, bounce back, and retry",
+      "Resend / Retry Mechanism",
+      "Behaviour"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "testing_bounce_back_and_retry",
+      "table_kind": "matrix",
+      "entity_key": "Mechanism",
+      "row_key": "Resend / Retry Mechanism",
+      "channel": "Resend / Retry Mechanism",
+      "attribute": "Behaviour"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "scheduled retry",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Testing, bounce back, and retry > Resend / Retry Mechanism > Owner",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Testing, bounce back, and retry",
+      "Resend / Retry Mechanism",
+      "Owner"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {
+      "table": "testing_bounce_back_and_retry",
+      "table_kind": "matrix",
+      "entity_key": "Mechanism",
+      "row_key": "Resend / Retry Mechanism",
+      "channel": "Resend / Retry Mechanism",
+      "attribute": "Owner"
+    },
+    "has_table": false,
+    "has_image": false,
+    "body_md": "ops team",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
+    "captured_at": "2026-06-04T00:00:00Z"
+  },
+  {
+    "ref_id": 0,
+    "section_id": "9100003#Testing, bounce back, and retry",
+    "page_id": "9100003",
+    "space": "MDC",
+    "source_url": "https://confluence.local/x/MDC-Template-and-Testing",
+    "title": "MDC Template Governance and Testing",
+    "heading_path": [
+      "MDC Template Governance and Testing",
+      "Testing, bounce back, and retry"
+    ],
+    "tree_path": [
+      "Q2 - Engagement",
+      "MDC Onboarding",
+      "MDC Template Governance and Testing"
+    ],
+    "owner": "mdc-team",
+    "labels": [
+      "mdc",
+      "template",
+      "testing"
+    ],
+    "content_type": "what-is",
+    "component": "",
+    "module": [
+      "Q2 - Engagement",
+      "MDC Onboarding"
+    ],
+    "card_worthy": true,
+    "status": "",
+    "metadata": {},
+    "has_table": false,
+    "has_image": false,
+    "body_md": "For the exact retry counts and timing, refer to the Message Path Service Catalogue.",
+    "confluence_version": 4,
+    "update_at": "2026-05-22T08:00:00Z",
     "captured_at": "2026-06-04T00:00:00Z"
   }
 ]

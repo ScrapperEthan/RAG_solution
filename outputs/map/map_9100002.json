@@ -1,0 +1,248 @@
+{
+  "page_id": "9100002",
+  "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+  "title": "MDC Message Path Service Catalogue",
+  "space": "MDC",
+  "tree_path": [
+    "Q2 - Engagement",
+    "MDC Onboarding",
+    "MDC Message Path Service Catalogue"
+  ],
+  "owner": "mdc-team",
+  "labels": [
+    "mdc",
+    "service-standard"
+  ],
+  "confluence_version": 6,
+  "update_at": "2026-05-28T09:00:00Z",
+  "captured_at": "2026-06-04T00:00:00Z",
+  "page_summary": {
+    "summary_en": "MDC Message Path Service Catalogue captures 4 matrix facts, 1 narrative sections. Key entities: Message Path Service Catalogue, M488 payment path, M489 statement path.",
+    "summary_zh": "MDC Message Path Service Catalogue 收录了 4 个矩阵事实、1 个叙述段落。 关键条目：Message Path Service Catalogue, M488 payment path, M489 statement path。",
+    "cross_questions_en": [
+      "What does MDC Message Path Service Catalogue capture?",
+      "How do the entities on this page relate?"
+    ],
+    "cross_questions_zh": [
+      "MDC Message Path Service Catalogue 收录了哪些内容？",
+      "本页各条目之间有什么关系？"
+    ]
+  },
+  "sections": [
+    {
+      "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue",
+      "heading_path": [
+        "MDC Message Path Service Catalogue",
+        "Message Path Service Catalogue"
+      ],
+      "concepts": [
+        "Message Path Service Catalogue"
+      ],
+      "keywords_raw": [
+        "Message Path Service Catalogue"
+      ],
+      "info_type": "what-is",
+      "tier": "narrative",
+      "fact_value": null,
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "Message Path Service Catalogue covers what-is information for Message Path Service Catalogue (narrative).",
+      "summary_zh": "Message Path Service Catalogue 说明 Message Path Service Catalogue 的 what-is 信息(narrative)。",
+      "questions_en": [
+        "What is Message Path Service Catalogue?",
+        "Message Path Service Catalogue what-is",
+        "Where is Message Path Service Catalogue documented?"
+      ],
+      "questions_zh": [
+        "Message Path Service Catalogue 是什么?",
+        "Message Path Service Catalogue what-is",
+        "Message Path Service Catalogue 在哪里说明?"
+      ],
+      "confidence": 0.86,
+      "section_id": "9100002#Message Path Service Catalogue",
+      "metadata": {},
+      "fact_values": []
+    },
+    {
+      "section_id": "9100002#Message Path Service Catalogue > M488 payment path > service baseline SLO",
+      "metadata": {
+        "table": "message_path_service_catalogue",
+        "table_kind": "matrix",
+        "entity_key": "Message Path",
+        "row_key": "M488 payment path",
+        "channel": "M488 payment path",
+        "attribute": "service baseline SLO"
+      },
+      "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > service baseline SLO",
+      "heading_path": [
+        "MDC Message Path Service Catalogue",
+        "Message Path Service Catalogue",
+        "M488 payment path",
+        "service baseline SLO"
+      ],
+      "concepts": [
+        "M488 payment path",
+        "service baseline SLO"
+      ],
+      "keywords_raw": [
+        "M488 payment path",
+        "service baseline SLO",
+        "5 min"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "5 min",
+      "fact_values": [
+        "5 min"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "service baseline SLO: 5 min",
+      "summary_zh": "service baseline SLO: 5 min",
+      "questions_en": [
+        "What is the service baseline SLO for M488 payment path?"
+      ],
+      "questions_zh": [
+        "M488 payment path 的 service baseline SLO 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100002#Message Path Service Catalogue > M488 payment path > actual performance rate",
+      "metadata": {
+        "table": "message_path_service_catalogue",
+        "table_kind": "matrix",
+        "entity_key": "Message Path",
+        "row_key": "M488 payment path",
+        "channel": "M488 payment path",
+        "attribute": "actual performance rate"
+      },
+      "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M488 payment path > actual performance rate",
+      "heading_path": [
+        "MDC Message Path Service Catalogue",
+        "Message Path Service Catalogue",
+        "M488 payment path",
+        "actual performance rate"
+      ],
+      "concepts": [
+        "M488 payment path",
+        "actual performance rate"
+      ],
+      "keywords_raw": [
+        "M488 payment path",
+        "actual performance rate",
+        "4.2 min"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "4.2 min",
+      "fact_values": [
+        "4.2 min"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "actual performance rate: 4.2 min",
+      "summary_zh": "actual performance rate: 4.2 min",
+      "questions_en": [
+        "What is the actual performance rate for M488 payment path?"
+      ],
+      "questions_zh": [
+        "M488 payment path 的 actual performance rate 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100002#Message Path Service Catalogue > M489 statement path > service baseline SLO",
+      "metadata": {
+        "table": "message_path_service_catalogue",
+        "table_kind": "matrix",
+        "entity_key": "Message Path",
+        "row_key": "M489 statement path",
+        "channel": "M489 statement path",
+        "attribute": "service baseline SLO"
+      },
+      "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > service baseline SLO",
+      "heading_path": [
+        "MDC Message Path Service Catalogue",
+        "Message Path Service Catalogue",
+        "M489 statement path",
+        "service baseline SLO"
+      ],
+      "concepts": [
+        "M489 statement path",
+        "service baseline SLO"
+      ],
+      "keywords_raw": [
+        "M489 statement path",
+        "service baseline SLO",
+        "30 min"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "30 min",
+      "fact_values": [
+        "30 min"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "service baseline SLO: 30 min",
+      "summary_zh": "service baseline SLO: 30 min",
+      "questions_en": [
+        "What is the service baseline SLO for M489 statement path?"
+      ],
+      "questions_zh": [
+        "M489 statement path 的 service baseline SLO 是什么？"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "section_id": "9100002#Message Path Service Catalogue > M489 statement path > actual performance rate",
+      "metadata": {
+        "table": "message_path_service_catalogue",
+        "table_kind": "matrix",
+        "entity_key": "Message Path",
+        "row_key": "M489 statement path",
+        "channel": "M489 statement path",
+        "attribute": "actual performance rate"
+      },
+      "anchor": "MDC Message Path Service Catalogue > Message Path Service Catalogue > M489 statement path > actual performance rate",
+      "heading_path": [
+        "MDC Message Path Service Catalogue",
+        "Message Path Service Catalogue",
+        "M489 statement path",
+        "actual performance rate"
+      ],
+      "concepts": [
+        "M489 statement path",
+        "actual performance rate"
+      ],
+      "keywords_raw": [
+        "M489 statement path",
+        "actual performance rate",
+        "22 min"
+      ],
+      "info_type": "reference",
+      "tier": "inline-value",
+      "fact_value": "22 min",
+      "fact_values": [
+        "22 min"
+      ],
+      "pointer_to": null,
+      "has_table": false,
+      "has_image": false,
+      "summary_en": "actual performance rate: 22 min",
+      "summary_zh": "actual performance rate: 22 min",
+      "questions_en": [
+        "What is the actual performance rate for M489 statement path?"
+      ],
+      "questions_zh": [
+        "M489 statement path 的 actual performance rate 是什么？"
+      ],
+      "confidence": 0.95
+    }
+  ]
+}

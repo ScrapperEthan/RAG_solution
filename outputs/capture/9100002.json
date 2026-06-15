@@ -1,0 +1,25 @@
+{
+  "page_id": "9100002",
+  "title": "MDC Message Path Service Catalogue",
+  "space": "MDC",
+  "source_url": "https://confluence.local/x/MDC-Message-Path-Service-Catalogue",
+  "owner": "mdc-team",
+  "labels": [
+    "mdc",
+    "service-standard"
+  ],
+  "captured_at": "2026-06-04T00:00:00Z",
+  "update_at": "2026-05-28T09:00:00Z",
+  "confluence_version": 6,
+  "tree_path": [
+    "Q2 - Engagement",
+    "MDC Onboarding",
+    "MDC Message Path Service Catalogue"
+  ],
+  "module": [
+    "Q2 - Engagement",
+    "MDC Onboarding"
+  ],
+  "card_worthy": true,
+  "body_md": "## Message Path Service Catalogue\n\nEach notification use case runs over a message path with a published service\nstandard. The catalogue lists the baseline SLO and the actual performance rate.\n\n| Message Path | service baseline SLO | actual performance rate |\n|---|---|---|\n| M488 payment path | 5 min | 4.2 min |\n| M489 statement path | 30 min | 22 min |\n"
+}

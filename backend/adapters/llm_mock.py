@@ -37,6 +37,8 @@ class MockLLM:
             return {"aliases": []}
         if "card_expand_boundary" in system:
             return {"boundary": mock_expand_boundary(json.loads(user))}
+        if "card_summarize" in system:
+            return mock_card_summary(json.loads(user))
         if "card_discover_topics" in system:
             return mock_discover(json.loads(user))
         if "answer_from_context" in system:
@@ -44,6 +46,8 @@ class MockLLM:
 
             payload = json.loads(user)
             return {"answer": synthesize_answer(payload["query"], payload["refs"])}
+        if "agentic_route_card" in system:
+            return {"canonical_ids": mock_route_card(json.loads(user))}
         if "agentic_classify_intent" in system or "classify_intent" in system:
             payload = parse_json_or_text(user)
             query = payload.get("query", user) if isinstance(payload, dict) else user
@@ -98,6 +102,42 @@ def mock_discover(payload: Dict) -> Dict:
             cluster["aliases"].append(term)
         cluster["evidence_keywords"].append(term)
     return {"mapped": mapped, "candidates": list(clusters.values()), "needs_review": []}
+
+
+def mock_route_card(payload: Dict) -> list:
+    """Deterministic offline stand-in for the LLM card router.
+
+    Only resolves unambiguous canonical_name/alias substring hits against the
+    catalog the router is given; returns [] otherwise so the caller falls back to
+    the full deterministic matcher (keeps offline behaviour identical to before).
+    The real in-network LLM does semantic selection over the same catalog.
+    """
+    query = str(payload.get("query", "")).lower()
+    for card in payload.get("cards") or []:
+        names = [card.get("canonical_name", ""), *(card.get("aliases") or [])]
+        if any(name and name.lower() in query for name in names):
+            return [card.get("canonical_id")]
+    return []
+
+
+def mock_card_summary(payload: Dict) -> Dict:
+    """Deterministic offline stand-in for the LLM card summarizer.
+
+    Joins the real intro prose + subsection names into a clean wiki-style opener.
+    The real in-network LLM writes a more fluent paragraph from the same inputs.
+    """
+    name = str(payload.get("canonical_name") or "").strip()
+    aliases = [str(a).strip() for a in (payload.get("aliases") or []) if str(a).strip()]
+    intros = [str(t).strip() for t in (payload.get("intro_texts") or []) if str(t).strip()]
+    subs = [str(s).strip() for s in (payload.get("subsections") or []) if str(s).strip()]
+    boundary = str(payload.get("boundary") or "").strip()
+    lead = intros[0] if intros else boundary
+    alias_zh = f"（又称 {', '.join(aliases[:2])}）" if aliases else ""
+    sub_zh = f" 覆盖：{'、'.join(subs[:6])}。" if subs else ""
+    sub_en = f" Covers: {', '.join(subs[:6])}." if subs else ""
+    zh = f"{name}{alias_zh}：{lead}".rstrip("。.") + "。" + sub_zh
+    en = f"{name}: {lead}".rstrip(". ") + "." + sub_en
+    return {"summary_zh": zh.strip(), "summary_en": en.strip()}
 
 
 def mock_expand_boundary(payload: Dict) -> str:

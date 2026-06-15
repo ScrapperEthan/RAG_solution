@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -14,6 +15,7 @@ from backend.reducer.canonicals import (
     load_vocabulary,
     normalize_term,
     render_registry_markdown,
+    term_in_text,
 )
 from backend.schemas.validation import validate_card, validate_inverted_row, validate_review_item
 from backend.util import clean_dir, read_json, write_json, write_jsonl
@@ -61,7 +63,7 @@ class ReducerService:
 
         cards: List[Dict] = []
         for cid, group in grouped.items():
-            card, conflicts = build_card(cid, group, canonicals)
+            card, conflicts = build_card(cid, group, canonicals, self.llm)
             validate_card(card)
             cards.append(card)
             review_queue.extend(conflicts)
@@ -69,7 +71,7 @@ class ReducerService:
 
         unmatched_topics = [cid for cid in canonicals if cid not in grouped]
         for cid in unmatched_topics:
-            review_queue.append(unmatched_canonical_item(cid, canonicals[cid]))
+            review_queue.append(unmatched_canonical_item(cid, canonicals[cid], sections))
         review_queue.extend(low_confidence_items(sections))
         deduped = dedupe_inverted(inverted_rows)
         for row in deduped:
@@ -157,7 +159,7 @@ def canonical_ids_from_metadata(section: Dict, canonicals: Dict[str, Dict]) -> L
 # Card assembly
 # ---------------------------------------------------------------------------
 
-def build_card(cid: str, sections: List[Dict], canonicals: Dict[str, Dict]) -> Tuple[Dict, List[Dict]]:
+def build_card(cid: str, sections: List[Dict], canonicals: Dict[str, Dict], llm: Optional[LLM] = None) -> Tuple[Dict, List[Dict]]:
     canonical = canonicals[cid]
     topic_class = canonical.get("topic_class") or infer_topic_class(canonical)
     evidence = aggregate_evidence(sections)
@@ -166,7 +168,7 @@ def build_card(cid: str, sections: List[Dict], canonicals: Dict[str, Dict]) -> T
     fields: List[Dict] = []
     queue: List[Dict] = []
 
-    definition = synthesize_definition(canonical, subsections)
+    definition = synthesize_card_summary(llm, canonical, sections, subsections)
     if definition:
         fields.append(narrative_field("definition", definition, sections, evidence))
 
@@ -261,8 +263,13 @@ def build_subsections(canonical: Dict, sections: List[Dict]) -> List[Dict]:
         if key:
             leftover.setdefault(key, []).append(section)
     existing = {row["name"].lower() for row in rows}
+    canonical_key = normalize_term(canonical.get("canonical_name", ""))
     for key, group in leftover.items():
         if key.lower() in existing:
+            continue
+        # The card's own intro prose (leaf == canonical name) belongs in the card
+        # summary/definition, not in a self-referential subsection.
+        if normalize_term(key) == canonical_key:
             continue
         row = _subsection_row(key, group)
         if row["facts"]:
@@ -377,6 +384,65 @@ def synthesize_definition(canonical: Dict, subsections: List[Dict]) -> str:
     if names:
         return f"{canonical['canonical_name']}：涵盖 " + "、".join(names) + "。"
     return ""
+
+
+CARD_SUMMARY_SYSTEM = """task: card_summarize
+Write one clean, human-readable summary for a knowledge card, grounded ONLY in the
+supplied intro_texts, boundary, and subsection names. Do not invent facts or values.
+Keep it to 1-2 sentences. Return STRICT JSON: {"summary_zh": string, "summary_en": string}."""
+
+CARD_SUMMARY_SCHEMA = {"type": "object", "required": ["summary_zh", "summary_en"]}
+
+
+def card_intro_texts(sections: List[Dict]) -> List[str]:
+    """The real intro/narrative prose of a card's sections (not the structured facts).
+
+    Used to write a clean wiki-style card summary instead of stitching the
+    machine-generated 'X covers what-is information for X' echo.
+    """
+    intros: List[str] = []
+    for section in sections:
+        if section.get("fact_values"):
+            continue
+        if section.get("tier") not in (None, "", "narrative"):
+            continue
+        body = clean_narrative_text(str(section.get("body_md") or ""))
+        if not body or is_junk_value(body):
+            continue
+        lowered = body.lower()
+        if "(narrative)" in lowered or " covers " in lowered or "covers what-is" in lowered:
+            continue  # drop the machine echo, keep only real prose
+        intros.append(body)
+    return dedupe_strings(intros)[:3]
+
+
+def synthesize_card_summary(llm: Optional[LLM], canonical: Dict, sections: List[Dict], subsections: List[Dict]) -> str:
+    """Wiki-style card opener: clean human-readable summary from real prose + boundary.
+
+    Uses the LLM port (real LLM in-network writes a fluent paragraph); the offline
+    MockLLM returns a deterministic clean join. Falls back to the boundary-based
+    definition if the model returns nothing."""
+    names = [s["name"] for s in subsections]
+    if llm is not None:
+        payload = {
+            "canonical_name": canonical.get("canonical_name", ""),
+            "aliases": canonical.get("aliases", [])[:3],
+            "boundary": canonical.get("boundary", ""),
+            "intro_texts": card_intro_texts(sections),
+            "subsections": names,
+        }
+        try:
+            response = llm.complete_json(
+                CARD_SUMMARY_SYSTEM,
+                json.dumps(payload, ensure_ascii=False),
+                schema=CARD_SUMMARY_SCHEMA,
+            )
+            summary = clean_narrative_text(str(response.get("summary_zh") or response.get("summary_en") or ""))
+            if summary:
+                return summary
+        except Exception:
+            pass
+    return synthesize_definition(canonical, subsections)
 
 
 def synthesize_overview(canonical: Dict, subsections: List[Dict]) -> str:
@@ -564,23 +630,67 @@ def conflict_item(cid: str, conflict: Dict, n: int) -> Dict:
     return {"queue_id": f"RQ-conflict-{cid}-{n:03d}", "type": "conflict", "canonical_id": cid, "field": "config", "detail": conflict["detail"], "options": conflict["options"], "status": "open"}
 
 
-def unmatched_canonical_item(cid: str, canonical: Dict) -> Dict:
+def near_miss_sections(canonical: Dict, sections: List[Dict], limit: int = 5) -> List[Dict]:
+    """Sections that mention this topic's name/alias but were not routed to it.
+
+    An approved topic gets no card when no section treats it as its *main subject*
+    (heading-path attribution + cross-reference exclusion). But the content usually
+    still lives on the page, nested under a broader section. Surface those near
+    misses so the keyword-table owner can add an alias/subsection (so one of them
+    attributes to this topic) instead of guessing why the card is missing.
+    """
+    terms = canonical_terms(canonical)
+    if not terms:
+        return []
+    hits: List[Dict] = []
+    for section in sections:
+        haystack = " ".join(
+            [
+                " ".join(str(item) for item in section.get("heading_path") or []),
+                " ".join(str(item) for item in section.get("concepts") or []),
+                " ".join(str(item) for item in section.get("keywords_raw") or []),
+                str(section.get("body_md") or ""),
+            ]
+        )
+        matched = [term for term in terms if term_in_text(term, haystack)]
+        if matched:
+            hits.append({"anchor": str(section.get("anchor") or section_id(section)), "matched_terms": matched})
+    hits.sort(key=lambda hit: len(hit["matched_terms"]), reverse=True)
+    return hits[:limit]
+
+
+def unmatched_canonical_item(cid: str, canonical: Dict, sections: Optional[List[Dict]] = None) -> Dict:
     """An approved topic that no section claimed -> surfaced, not silently dropped.
 
-    reduce only builds a card for a canonical that owns >=1 section, so an
-    approved topic with no owning section produces no card. Emit it to the review
-    queue so the keyword-table owner sees it (drop the topic, or fix extraction).
+    reduce only builds a card for a canonical that owns >=1 section, so an approved
+    topic with no owning section produces no card (design B: freeze is a candidate
+    set, not a contract to fabricate empty cards). Instead of a bare "matched no
+    section", attach the near-miss sections so the keyword-table owner can act:
+    add an alias/subsection so one of them becomes the main subject, or drop the
+    topic.
     """
+    near = near_miss_sections(canonical, sections or [])
+    if near:
+        options = [f"{hit['anchor']} (mentions: {', '.join(hit['matched_terms'])})" for hit in near]
+        detail = (
+            f"Approved topic '{canonical['canonical_name']}' is mentioned in {len(near)} section(s) "
+            "but none treats it as its main subject, so no card was built. Add an alias or subsection "
+            "so one of those sections attributes to this topic, or drop the topic from the keyword table."
+        )
+    else:
+        options = canonical.get("aliases", [])
+        detail = (
+            f"Approved topic '{canonical['canonical_name']}' matched no section and is not even mentioned "
+            "on the captured pages, so no card was built. Likely an extraction gap or a topic to drop."
+        )
     return {
         "queue_id": f"RQ-unmatched-topic-{cid}",
         "type": "unmatched-canonical",
         "canonical_id": cid,
         "field": "card",
-        "detail": (
-            f"Approved topic '{canonical['canonical_name']}' matched no section, so no card was built. "
-            "Review whether to drop it from the keyword table or fix extraction."
-        ),
-        "options": canonical.get("aliases", []),
+        "detail": detail,
+        "options": options,
+        "near_misses": near,
         "status": "open",
     }
 
