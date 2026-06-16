@@ -24,12 +24,38 @@
 3. **重跑流水线**（`ingest→…→load`，或 `pipeline demo` 的内网等价），让所有 outputs 用新的 `domains` 重生。
 4. 复测：检索 + 卡片 + module/domains 过滤（CLI `--filter domains=...`）正常。
 
-## 4. codex（前端）要做的 —— 前端改名 `module` → `domains`
-后端**已对旧前端兼容**，所以你改之前/之后 app 都能跑。请把前端也迁到 `domains`：
-- **文件**：`app.js` / `cards.html` / `debug-panel.js` / `index.html` / `offline-demo.js` / `approve.html` / `flow.html` / `style.css`。
-- **标识符/键**：`moduleSelect`→`domainSelect`、`renderModules`→`renderDomains`、`module-tags`/`is-module`/`module-edge*`/`module-group`/`module-title` 等 CSS 类、`moduleEdgeToggle`/`moduleEdgeField`、`includeModuleEdges`、`moduleKey`；读数据 `card.module`/`ref.module`→`.domains`、`payload.modules`→`payload.domains`、`retrieval.boost_modules`→`boost_domains`；发请求体 `module`→`domains`；展示文案 "module/域标签" 统一成 "domains/域"。
-- **测试**：`backend/tests/test_cards_knowledge_map.py` 与 `test_frontend_clarity.py` 断言的是前端字符串——**改前端时同步改这两份断言**（claude 这次特意没动它们，保持和现有前端一致）。
-- **改完后**通知，claude 删掉 §2 的后端兼容别名（清单见下）。
+## 4. codex（前端）执行清单 —— 前端改名 `module` → `domains`
+后端**已对旧前端全兼容**（§2），所以你可以**增量改、随时跑、app 全程不崩**。这是完整的独立任务，照下面做即可。
+
+**4.1 footprint（迁移时 `module` 出现次数，改完应≈0，`labels` 不算）**
+
+| 文件 | 次数 | 主要形态 |
+|---|---:|---|
+| `cards.html` | 35 | 知识图谱：`moduleEdge*` / `includeModuleEdges` / `moduleKey` / `is-module` 边 / `module-group`/`module-title` / `card.module` 读取 / 文案 |
+| `approve.html` | 16 | 词表审批页：字段名展示 + `module` 列 |
+| `app.js` | 14 | `moduleSelect` / `renderModules` / `request` 体 `module:` / `ref.module`/`card.module` 读取 / `module-tags` |
+| `flow.html` | 13 | 流程讲解页文案 + schema 示例里的 `"module"` |
+| `offline-demo.js` | 5 | 离线 mock 数据的 `module: [...]` / `modules: [...]` 键 |
+| `style.css` | 2 | `.module-tags` / `.module-edge-toggle` 等类名 |
+| `debug-panel.js` | 2 | `retrieval.boost_modules` 读取 |
+| `index.html` | 1 | `<select id="moduleSelect">` |
+
+**4.2 改名规则（标识符 → 数据键 → 文案）**
+- 标识符/CSS：`moduleSelect`→`domainSelect`、`renderModules`→`renderDomains`、`moduleEdgeToggle`/`moduleEdgeField`→`domainEdge*`、`includeModuleEdges`→`includeDomainEdges`、`moduleKey`→`domainKey`、`.module-tags`/`.module-edge*`/`.module-group`/`.module-title`/`.is-module`→`domain-*`（CSS 同步）。
+- 读后端数据：`card.module`/`ref.module`→`.domains`、`payload.modules`→`payload.domains`、`retrieval.boost_modules`→`boost_domains`、知识图谱边标签 `"module"`→`"domains"`。
+- 发请求体：`{ module: ... }`→`{ domains: ... }`。
+- 离线 mock（offline-demo.js）：把数据里的 `module:`/`modules:` 键改 `domains:`。
+- 展示文案："module / 域标签 / 模块" 统一成 "domains / 域"。
+- **不要动 `labels`**（Confluence 原生标签，和 domains 是两回事）。
+
+**4.3 同步改这两份测试断言**（claude 特意没动它们，保持与现有前端一致）：`backend/tests/test_cards_knowledge_map.py`、`backend/tests/test_frontend_clarity.py`——里面断言的是前端字符串（如 `mode:"module"`、`moduleKey`、`boost_modules`），改前端时一起改成 `domains` 版。
+
+**4.4 验收**
+- 浏览器：module 下拉能选并过滤、卡片/refs 上的域标签显示、cards.html 知识图谱的同域边渲染、debug 面板 "tag 加权" 显示 `boost_domains`。
+- 前端文件里 `module` 残留≈0（`labels` 除外）。
+- `grep -r module backend/tests/test_cards_knowledge_map.py backend/tests/test_frontend_clarity.py` 应只剩你已同步成 `domains` 的内容。
+- 全套 backend 测试仍绿。
+- **改完后**通知，claude 删掉 §2 的后端兼容别名（清单见 §5）。
 
 ## 5. 前端迁移完成后要删的后端兼容别名
 - `web.py`：`public_ref` 的 `"module"`、`/golden` 的 `"modules"`、`/cards` 的逐卡 `module`、`ChatRequest.module`（+ `resolve_chat` 的 `or request.module`）。
