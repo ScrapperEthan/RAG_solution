@@ -50,9 +50,11 @@ const pathLabels = {
   "card-direct": "Card direct",
   "card-grounding": "Card → source grounding",
   "card-grounding-then-rag-fallback": "Card drilldown → RAG fallback",
+  "card-grounding-then-sibling-card": "卡片下钻 → 同 tag 兄弟卡",
   "agentic-card-direct": "Agentic → Card direct",
   "agentic-source-drilldown": "Agentic → source drilldown",
   "agentic-source-drilldown-then-rag-fallback": "Agentic source drilldown → RAG fallback",
+  "agentic-source-drilldown-then-sibling-card": "Agentic 下钻 → 同 tag 兄弟卡",
   "llm-direct": "模型直答 · 无 grounding 基线",
 };
 const offlineDemoTiming = {
@@ -66,6 +68,8 @@ const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, mil
 const isRagFallbackResult = (result) =>
   String(result?.execution?.path || "").endsWith("-then-rag-fallback") ||
   Boolean(result?.debug?.drilldown && result?.debug?.retrieval);
+const isSiblingCardResult = (result) =>
+  String(result?.execution?.path || "").endsWith("-then-sibling-card");
 
 document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => switchView(button.dataset.view)));
 el("goldenModeBtn").addEventListener("click", () => setMode("golden"));
@@ -373,7 +377,7 @@ function offlineResultFor(request) {
     "匹配“请假申请规则”卡",
     "识别为精确能力问题，先回卡片 source 取证",
     "Card drilldown returned NO_ANSWER",
-    "Fallback to hybrid RAG retrieval",
+    "Fallback to tag-weighted hybrid RAG retrieval",
   ];
   let path = "agentic-card-direct";
   let evidenceKind = isOutOfScope ? "retrieval" : "card";
@@ -493,7 +497,7 @@ function offlineDebugFor(result, request, selected, source) {
       ]
     : [];
   const retrieval = result.execution?.evidence_kind === "retrieval"
-    ? { index: fallback ? "both" : "offline-demo", search: fallback ? "hybrid" : "synthetic", top_k: fallback ? 8 : 1, hits: [{ section_id: source.section_id, title: source.title, heading_path: source.heading_path, source_url: source.source_url, score: source.score }] }
+    ? { index: fallback ? "both" : "offline-demo", search: fallback ? "hybrid" : "synthetic", top_k: fallback ? 8 : 1, boost_modules: fallback ? selected.module : [], hits: [{ section_id: source.section_id, title: source.title, heading_path: source.heading_path, source_url: source.source_url, score: source.score }] }
     : null;
   const drilldown = result.execution?.evidence_kind === "source" || fallback
     ? {
@@ -553,6 +557,7 @@ function renderResult(result) {
   const execution = result.execution || {};
   const evidenceKind = execution.evidence_kind || "none";
   const fallbackToRag = isRagFallbackResult(result);
+  const siblingCardHop = isSiblingCardResult(result);
   const refs = result.evidence_sections || result.retrieved_sections || [];
   const cards = result.card_evidence || [];
   const actualPath = pathLabels[execution.path] || execution.path || "Unknown path";
@@ -565,7 +570,7 @@ function renderResult(result) {
     execution.drilled === true ? "<span>source drilled</span>" : "",
     `<span>${(result.citations || []).length} citations</span>`,
   ].join("");
-  renderEvidenceProvenance(evidenceKind, execution.drilled === true || result.drilled === true, fallbackToRag);
+  renderEvidenceProvenance(evidenceKind, execution.drilled === true || result.drilled === true, { fallbackToRag, siblingCardHop });
   renderExecutionTrace(execution);
   if (evidenceKind === "retrieval") {
     renderSectionEvidence(
@@ -577,7 +582,16 @@ function renderResult(result) {
       result
     );
   } else if (evidenceKind === "source") {
-    renderSectionEvidence(refs, false, "下钻原文", "Source sections followed from approved Card anchors", execution.card, result);
+    renderSectionEvidence(
+      refs,
+      false,
+      siblingCardHop ? "同 tag 兄弟卡下钻原文" : "下钻原文",
+      siblingCardHop
+        ? `原卡下钻返回 NO_ANSWER；顺 tag 跳到 ${execution.card?.canonical_id || "兄弟卡"} 后命中这些 source sections`
+        : "Source sections followed from approved Card anchors",
+      execution.card,
+      result
+    );
   } else if (evidenceKind === "card") {
     renderCardEvidence(cards, execution.card, result);
   } else {
@@ -594,9 +608,15 @@ function renderCurrentDebugPanel() {
   window.RAGDebug?.render(el("debugPanel"), state.lastResult, { requested: el("debugToggle").checked });
 }
 
-function renderEvidenceProvenance(evidenceKind, drilled, fallbackToRag = false) {
+function renderEvidenceProvenance(evidenceKind, drilled, options = {}) {
+  const fallbackToRag = options.fallbackToRag === true;
+  const siblingCardHop = options.siblingCardHop === true;
   const [baseLabel, kind] = evidenceKindCopy[evidenceKind] || evidenceKindCopy.none;
-  const label = fallbackToRag ? "证据来源：RAG 回退（卡片下钻未答上）" : baseLabel;
+  const label = fallbackToRag
+    ? "证据来源：RAG 回退（卡片下钻未答上）"
+    : siblingCardHop
+      ? "证据来源：同 tag 兄弟卡（原卡下钻未答上）"
+      : baseLabel;
   el("evidenceProvenance").innerHTML = `
     <span class="provenance-badge is-${kind}">${escapeHtml(label)}</span>
     <span class="provenance-badge is-drill">是否回原文：${drilled === true ? "是" : "否"}</span>`;
@@ -665,6 +685,7 @@ function renderCardEvidence(fields, card, result = null) {
 function renderMatchedCard(card, result = null) {
   if (!card?.canonical_id) return "";
   const fallbackToRag = isRagFallbackResult(result);
+  const siblingCardHop = isSiblingCardResult(result);
   const fullCard = result?.debug?.card_used || card;
   const modules = (fullCard.module || card.module || []).map((module) => `<span>${escapeHtml(module)}</span>`).join("");
   const subsections = Array.isArray(fullCard.subsections) ? fullCard.subsections.length : null;
@@ -673,15 +694,19 @@ function renderMatchedCard(card, result = null) {
     subsections !== null ? `${subsections} subsections` : "",
     fields !== null ? `${fields} fields` : "",
   ].filter(Boolean).join(" · ");
-  return `<article class="matched-card ${fallbackToRag ? "is-warning" : ""}">
+  const cardLabel = fallbackToRag ? "命中卡片 · 下钻未答上" : siblingCardHop ? "同 tag 兄弟卡 · 命中" : "命中卡片";
+  const cardCopy = fallbackToRag
+    ? '<p class="matched-card-warning">该卡 source 覆盖不全，系统已回退到 RAG；打开卡片结构可排查需要补哪段 source_section_ids。</p>'
+    : siblingCardHop
+      ? '<p>这是顺 tag 跳到的邻居卡，非原始路由卡；系统在原卡返回 NO_ANSWER 后用这张卡的 source sections 作答。</p>'
+      : fullCard.boundary
+        ? `<p>${escapeHtml(fullCard.boundary)}</p>`
+        : `<p>本次回答使用了这张审批卡；点开可查看 topic → subsection → fact → source_section_ids 的完整结构。</p>`;
+  return `<article class="matched-card ${fallbackToRag ? "is-warning" : ""} ${siblingCardHop ? "is-sibling" : ""}">
     <div class="matched-card-main">
-      <span>${fallbackToRag ? "命中卡片 · 下钻未答上" : "命中卡片"}</span>
+      <span>${cardLabel}</span>
       <strong>${escapeHtml(card.canonical_id)} · ${escapeHtml(card.canonical_name || "Unnamed card")}</strong>
-      ${fallbackToRag
-        ? '<p class="matched-card-warning">该卡 source 覆盖不全，系统已回退到 RAG；打开卡片结构可排查需要补哪段 source_section_ids。</p>'
-        : fullCard.boundary
-          ? `<p>${escapeHtml(fullCard.boundary)}</p>`
-          : `<p>本次回答使用了这张审批卡；点开可查看 topic → subsection → fact → source_section_ids 的完整结构。</p>`}
+      ${cardCopy}
       <div class="module-tags">${modules}${counts ? `<span>${escapeHtml(counts)}</span>` : ""}</div>
     </div>
     <a class="matched-card-link" href="${cardExplorerUrl(card.canonical_id)}">打开卡片结构</a>

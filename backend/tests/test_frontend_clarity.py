@@ -97,6 +97,8 @@ class FrontendClarityTest(unittest.TestCase):
             self.assertIn(copy, DEBUG_PANEL)
         self.assertIn('endsWith("-then-rag-fallback")', DEBUG_PANEL)
         self.assertIn("debug?.drilldown && debug?.retrieval", DEBUG_PANEL)
+        self.assertIn("tag 加权", DEBUG_PANEL)
+        self.assertIn("boost_modules", DEBUG_PANEL)
 
     def test_cards_page_renders_two_stage_fallback_and_marks_gap(self) -> None:
         self.assertNotIn("<script src=", CARDS.lower())
@@ -108,6 +110,29 @@ class FrontendClarityTest(unittest.TestCase):
         self.assertIn("fallback-gap", CARDS)
         self.assertIn("result?.debug?.drilldown && result?.debug?.retrieval", APP)
         self.assertIn("card-grounding-then-rag-fallback", APP)
+
+    def test_frontend_renders_sibling_card_hop_as_two_stage_chain(self) -> None:
+        for path in (
+            "card-grounding-then-sibling-card",
+            "agentic-source-drilldown-then-sibling-card",
+        ):
+            self.assertIn(path, APP)
+        for copy in (
+            'endsWith("-then-sibling-card")',
+            "同 tag 兄弟卡",
+            "顺 tag 跳到",
+            "非原始路由卡",
+        ):
+            self.assertIn(copy, APP)
+            self.assertIn(copy, CARDS)
+        for copy in (
+            "Original Card Drilldown Attempt",
+            "Sibling Card Hit",
+            "two-stage sibling-card",
+            "同 tag 兄弟卡命中",
+        ):
+            self.assertIn(copy, DEBUG_PANEL)
+            self.assertIn(copy, CARDS)
 
 
 if __name__ == "__main__":

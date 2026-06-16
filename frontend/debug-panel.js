@@ -25,6 +25,7 @@
   const anchorFor = (ref) => ref?.anchor || headingText(ref?.heading_path) || "";
   const scoreText = (score) => (typeof score === "number" ? score.toFixed(6) : hasValue(score) ? String(score) : "null");
   const isFallbackPath = (path) => String(path || "").endsWith("-then-rag-fallback");
+  const isSiblingCardPath = (path) => String(path || "").endsWith("-then-sibling-card");
 
   function safeUrl(value) {
     try {
@@ -86,12 +87,19 @@
     </article>`;
   }
 
+  function siblingCardId(execution, card) {
+    const hop = arrayOf(execution?.steps).find((step) => /Hop to sibling card sharing tag:/i.test(String(step)));
+    const [, parsedId] = String(hop || "").match(/Hop to sibling card sharing tag:\s*(.+)$/i) || [];
+    return card?.canonical_id || parsedId || "";
+  }
+
   function normalize(result) {
     const execution = result?.execution || {};
     const debug = result?.debug || null;
     const resultRefs = arrayOf(result?.evidence_sections || result?.retrieved_sections);
     const refsUsed = arrayOf(debug?.refs_used).length ? arrayOf(debug?.refs_used) : resultRefs;
     const fallback = isFallbackPath(execution.path) || Boolean(debug?.drilldown && debug?.retrieval);
+    const siblingCard = isSiblingCardPath(execution.path);
     const fallbackRouting = {
       method: execution.card ? "unknown-from-execution" : "none",
       llm_returned_ids: [],
@@ -132,6 +140,7 @@
       debug,
       execution,
       isFallback: fallback,
+      isSiblingCard: siblingCard,
       query: debug?.query ?? result?.query ?? "",
       answerMode: debug?.answer_mode ?? execution.requested_mode ?? "",
       intent: debug?.intent ?? execution.intent ?? null,
@@ -145,6 +154,7 @@
 
   function renderRetrieval(retrieval, options = {}) {
     const hits = arrayOf(retrieval?.hits);
+    const boostModules = arrayOf(retrieval?.boost_modules);
     const fallbackNote = options.fallback
       ? '<div class="debug-recovery"><strong>RAG 救场命中</strong><span>下面这些 hits 是真正喂给 LLM、产出最终答案的来源。</span></div>'
       : "";
@@ -167,6 +177,7 @@
       ["index", retrieval?.index],
       ["search", retrieval?.search],
       ["top_k", retrieval?.top_k],
+      ["tag 加权", boostModules.length ? boostModules.join(" / ") : null],
       ["hits.length", hits.length],
     ])}${table}${renderFieldTree(retrieval)}`;
   }
@@ -209,13 +220,34 @@
 
   function renderFallbackBridge(execution) {
     const steps = arrayOf(execution?.steps);
-    const bridgeSteps = steps.filter((step) => /NO_ANSWER|Fallback to hybrid RAG retrieval/i.test(String(step)));
+    const bridgeSteps = steps.filter((step) => /NO_ANSWER|Fallback to (?:tag-weighted )?hybrid RAG retrieval/i.test(String(step)));
     const rows = bridgeSteps.length
       ? bridgeSteps
       : ["Card drilldown returned NO_ANSWER", "Fallback to hybrid RAG retrieval"];
     return `<div class="debug-bridge">
       <strong>两段衔接</strong>
       <div>${rows.map((step, index) => `<span class="debug-bridge-step"><b>${index + 1}</b>${esc(step)}</span>`).join("")}</div>
+    </div>`;
+  }
+
+  function renderSiblingBridge(execution, card) {
+    const id = siblingCardId(execution, card);
+    const steps = arrayOf(execution?.steps);
+    const bridgeSteps = steps.filter((step) => /NO_ANSWER|Hop to sibling card sharing tag/i.test(String(step)));
+    const rows = bridgeSteps.length
+      ? bridgeSteps
+      : ["Card drilldown returned NO_ANSWER", `Hop to sibling card sharing tag: ${id || "sibling card"}`];
+    return `<div class="debug-bridge">
+      <strong>两段衔接</strong>
+      <div>${rows.map((step, index) => `<span class="debug-bridge-step"><b>${index + 1}</b>${esc(step)}</span>`).join("")}</div>
+    </div>`;
+  }
+
+  function renderSiblingHitNote(execution, card) {
+    const id = siblingCardId(execution, card);
+    return `<div class="debug-recovery">
+      <strong>同 tag 兄弟卡命中</strong>
+      <span>顺 tag 跳到 ${esc(id || "兄弟卡")} 后，由这张邻居卡的 source sections 产出最终答案；它不是原始路由卡。</span>
     </div>`;
   }
 
@@ -252,6 +284,8 @@
     const fields = arrayOf(card.fields);
     const gapHtml = options.fallback
       ? '<div class="debug-card-gap"><strong>该卡覆盖不全</strong><span>最终答案来自 RAG refs；这里保留命中的卡，方便排查哪些 subsection / fact 需要补 source。</span></div>'
+      : options.sibling
+        ? '<div class="debug-recovery"><strong>顺 tag 跳到的邻居卡</strong><span>这是同 tag 兄弟卡，非原始路由卡；最终答案来自它的下钻 source sections。</span></div>'
       : "";
     const subsectionHtml = subsections.length
       ? subsections
@@ -419,6 +453,29 @@
         renderHop(6, "Card Used", "保留命中卡片结构，用于定位 source 覆盖缺口", model.cardUsed, renderCard(model.cardUsed, { fallback: true })),
         renderHop(7, "Answer", "答案、引用、诊断、contexts、execution.steps", result, renderAnswer(result))
       );
+    } else if (model.isSiblingCard) {
+      const siblingId = siblingCardId(model.execution, model.cardUsed);
+      hops.push(
+        renderHop(
+          3,
+          "Original Card Drilldown Attempt",
+          "原始路由卡已尝试下钻，但本段没有产出最终答案",
+          model.execution,
+          `${renderSiblingBridge(model.execution, model.cardUsed)}<div class="debug-card-gap"><strong>已尝试，返回 NO_ANSWER</strong><span>后端当前只返回兄弟卡的 debug.drilldown；原卡尝试可从 execution.steps 追踪。</span></div>`,
+          "warning"
+        ),
+        renderHop(
+          4,
+          "Sibling Card Hit",
+          `顺 tag 跳到 ${siblingId || "兄弟卡"}，并下钻该卡 source sections`,
+          model.drilldown || null,
+          `${renderSiblingHitNote(model.execution, model.cardUsed)}${model.drilldown ? renderDrilldown(model.drilldown) : '<div class="debug-empty">debug.drilldown 为空：无法展示兄弟卡 gathered/resolved/missed。</div>'}`,
+          "recovery"
+        ),
+        renderHop(5, "Refs Used", "真正喂给 answer_from_refs 的兄弟卡 source refs_used", model.refsUsed, renderRefs(model.refsUsed)),
+        renderHop(6, "Card Used", "最终命中的同 tag 兄弟卡结构", model.cardUsed, renderCard(model.cardUsed, { sibling: true })),
+        renderHop(7, "Answer", "答案、引用、诊断、contexts、execution.steps", result, renderAnswer(result))
+      );
     } else {
       hops.push(
         renderHop(
@@ -439,10 +496,10 @@
       <header class="debug-panel-head">
         <div>
           <span>DEBUG 链路</span>
-          <h2>${model.isFallback ? "卡片下钻失败 → RAG 回退链路" : "召回链路逐跳字段"}</h2>
+          <h2>${model.isFallback ? "卡片下钻失败 → RAG 回退链路" : model.isSiblingCard ? "原卡下钻失败 → 同 tag 兄弟卡命中" : "召回链路逐跳字段"}</h2>
           <p>${hasDebug ? "后端返回了 result.debug，以下为真实逐跳链路。" : "后端未返回 result.debug，以下用现有 result 字段兜底展示，routing/gathered/missed 可能不完整。"}</p>
         </div>
-        <strong>${model.isFallback ? "two-stage fallback" : hasDebug ? "debug payload" : "fallback view"}</strong>
+        <strong>${model.isFallback ? "two-stage fallback" : model.isSiblingCard ? "two-stage sibling-card" : hasDebug ? "debug payload" : "fallback view"}</strong>
       </header>
       <div class="debug-hop-list">${hops.join("")}</div>
       ${renderJsonDetails(result, "查看完整 result JSON")}

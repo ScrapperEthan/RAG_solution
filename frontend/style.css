@@ -183,9 +183,11 @@ textarea[readonly] { color: #46514a; background: #f3f6f4; }
   padding: 14px; border: 1px solid #bddce6; border-radius: 11px; background: #f1f8fa;
 }
 .matched-card.is-warning { border-color: #ead8b4; background: #fff9ed; box-shadow: inset 4px 0 var(--gold); }
+.matched-card.is-sibling { border-color: #b9d9c6; background: #eef8f2; box-shadow: inset 4px 0 var(--green); }
 .matched-card-main { display: grid; gap: 6px; min-width: 0; }
 .matched-card-main > span { color: #176b87; font-size: 9px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .matched-card.is-warning .matched-card-main > span { color: #9a5c11; }
+.matched-card.is-sibling .matched-card-main > span { color: var(--green); }
 .matched-card-main strong { font-size: 13px; overflow-wrap: anywhere; }
 .matched-card-main p { color: #536058; font-size: 11px; line-height: 1.55; }
 .matched-card-warning { color: #795010 !important; }
