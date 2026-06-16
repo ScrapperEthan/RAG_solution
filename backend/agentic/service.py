@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -8,6 +9,8 @@ from backend.answer.service import AnswerService
 from backend.ports import LLM
 from backend.retrieve.service import Retriever
 from backend.util import read_json
+
+logger = logging.getLogger(__name__)
 
 
 INTENT_SYSTEM = """task: agentic_classify_intent
@@ -237,17 +240,37 @@ class AgenticService:
         return None
 
     def refs_for_card(self, card: Dict) -> List[Dict]:
-        section_ids = []
-        for field in card["fields"]:
-            for source in field.get("sources", []):
-                heading = source["anchor"].split(" > ")[-1]
-                section_ids.append(f"{source['page_id']}#{heading}")
+        """Follow a card back to its source sections in loaded_refs.json.
+
+        Use the card's recorded ``source_section_ids`` directly: they ARE the
+        loaded_refs keys (full heading-path form, see backend.util.section_id).
+        The old code rebuilt ``{page_id}#{anchor.split(' > ')[-1]}`` (leaf-only,
+        and ``anchor`` even carries the page title), which never matched the
+        full-path keys -> 0 refs -> empty context -> NO_ANSWER on every drilldown.
+
+        Subsections (and their facts) hold most of a card's evidence, so collect
+        the specific ones first, then the card-level field aggregates as fallback.
+        """
+        section_ids: List[str] = []
+        for sub in card.get("subsections", []):
+            for fact in sub.get("facts", []):
+                section_ids.extend(fact.get("source_section_ids", []))
+            section_ids.extend(sub.get("source_section_ids", []))
+        for field in card.get("fields", []):
+            section_ids.extend(field.get("source_section_ids", []))
         seen = set()
         refs = []
         for sid in section_ids:
             if sid in self.refs and sid not in seen:
                 refs.append(self.refs[sid])
                 seen.add(sid)
+        if not refs:
+            logger.warning(
+                "refs_for_card found 0 refs for card %s: none of its %d source_section_ids "
+                "resolve in loaded_refs.json (check reduce/load section_id consistency)",
+                card.get("canonical_id"),
+                len(section_ids),
+            )
         return refs[:8]
 
 
@@ -309,6 +332,15 @@ def with_execution(
     card: Optional[Dict] = None,
     intent: Optional[str] = None,
 ) -> Dict:
+    steps = list(steps)
+    diagnostic = None
+    # Make a silent failure visible: a source/retrieval path that produced no
+    # evidence yields NO_ANSWER for a reason the UI must show, not hide.
+    if evidence_kind in {"source", "retrieval"} and not result.get("evidence_sections"):
+        diagnostic = "drilldown/retrieval returned 0 source refs — answer is ungrounded"
+        steps.append("⚠ 命中 0 条原文证据：未取到可引用的来源段落，因此返回 NO_ANSWER")
+        logger.warning("%s produced 0 evidence sections for card %s", path, (card or {}).get("canonical_id"))
+    result["diagnostic"] = diagnostic
     result["execution"] = {
         "requested_mode": requested_mode,
         "path": path,
@@ -316,6 +348,7 @@ def with_execution(
         "steps": steps,
         "intent": intent,
         "drilled": result.get("drilled"),
+        "diagnostic": diagnostic,
         "card": (
             {
                 "canonical_id": card.get("canonical_id", ""),

@@ -5,6 +5,7 @@ from typing import Dict, List, Tuple
 
 from backend.ports import Embedder, VectorStore
 from backend.util import read_json, read_jsonl, write_json
+from backend.util import section_id as compute_section_id
 
 
 class LoadService:
@@ -67,7 +68,11 @@ def build_descriptions(outputs_dir: Path, ref_by_section: Dict[str, Dict]) -> Li
     for path in sorted((outputs_dir / "map").glob("map_*.json")):
         page = read_json(path)
         for section in page["sections"]:
-            sid = f"{page['page_id']}#{section['heading_path'][-1]}"
+            # Match loaded_refs by the FULL heading-path section_id (the real key,
+            # see backend.util.section_id). The old leaf-only "{page}#{heading[-1]}"
+            # missed every multi-level section, silently starving the descriptions
+            # (questions/summaries) retrieval index used by pure-rag.
+            sid = section.get("section_id") or compute_section_id(page["page_id"], section["heading_path"])
             ref = ref_by_section.get(sid)
             if not ref:
                 continue
