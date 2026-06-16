@@ -96,5 +96,89 @@ class WithExecutionDiagnosticTest(unittest.TestCase):
         self.assertIsNone(result["diagnostic"])
 
 
+class _StubAnswerer:
+    """Grounds an answer only when a ref body carries the ANSWER_HERE marker;
+    otherwise refuses with NO_ANSWER (mirrors the real grounded answerer)."""
+
+    def answer_from_refs(self, query, refs):
+        text = " ".join(r.get("body_md", "") for r in refs)
+        answer = "found it" if "ANSWER_HERE" in text else "NO_ANSWER — not grounded"
+        return {"answer": answer, "citations": [], "retrieved_section_ids": [], "contexts": []}
+
+
+class _StubRetriever:
+    def __init__(self, refs):
+        self._refs = refs
+        self.called = False
+
+    def retrieve(self, query, **kwargs):
+        self.called = True
+        return self._refs
+
+
+_FALLBACK_CARD = {
+    "canonical_id": "C-1",
+    "canonical_name": "Rate limit",
+    "module": [],
+    # A real, resolvable source section that does NOT contain the asked value:
+    # refs_for_card returns it (non-empty), but the answerer still refuses.
+    "subsections": [{"name": "s", "source_section_ids": ["P#A > B"], "facts": []}],
+    "fields": [],
+}
+
+
+def _fallback_service(card_section_body, rag_refs):
+    svc = AgenticService.__new__(AgenticService)
+    svc.cards = {}
+    svc.refs = {"P#A > B": {"section_id": "P#A > B", "body_md": card_section_body}}
+    svc.answerer = _StubAnswerer()
+    svc.retriever = _StubRetriever(rag_refs)
+    return svc
+
+
+class DrilldownFallbackTest(unittest.TestCase):
+    def test_no_answer_from_card_falls_back_to_rag(self):
+        rag_refs = [{"section_id": "P#X > Y", "body_md": "ANSWER_HERE 200/sec", "source_url": "u", "heading_path": []}]
+        svc = _fallback_service("irrelevant body", rag_refs)
+        result = svc._drilldown_with_fallback(
+            query="rate limit?",
+            card=_FALLBACK_CARD,
+            routing={"method": "llm-router"},
+            source="card-grounding",
+            path="card-grounding",
+            steps=["Match approved canonical card"],
+            intent=None,
+            variant={},
+            filters=None,
+            debug=True,
+        )
+        self.assertEqual(result["answer"], "found it")
+        self.assertTrue(svc.retriever.called)
+        self.assertEqual(result["execution"]["path"], "card-grounding-then-rag-fallback")
+        self.assertEqual(result["evidence_sections"], rag_refs)
+        # The failed card drilldown stays visible so under-built cards are diagnosable.
+        self.assertEqual(result["debug"]["drilldown"]["resolved_section_ids"], ["P#A > B"])
+        self.assertTrue(any("NO_ANSWER" in step for step in result["execution"]["steps"]))
+
+    def test_grounded_card_answer_never_touches_rag(self):
+        rag_refs = [{"section_id": "P#X > Y", "body_md": "ANSWER_HERE", "source_url": "u", "heading_path": []}]
+        svc = _fallback_service("ANSWER_HERE in the card section", rag_refs)
+        result = svc._drilldown_with_fallback(
+            query="rate limit?",
+            card=_FALLBACK_CARD,
+            routing={"method": "llm-router"},
+            source="card-grounding",
+            path="card-grounding",
+            steps=["Match approved canonical card"],
+            intent=None,
+            variant={},
+            filters=None,
+            debug=False,
+        )
+        self.assertEqual(result["answer"], "found it")
+        self.assertFalse(svc.retriever.called)
+        self.assertEqual(result["execution"]["path"], "card-grounding")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -56,6 +56,19 @@ Rules:
 ROUTER_SCHEMA = {"type": "object", "required": ["canonical_ids"]}
 
 
+def is_no_answer(answer: object) -> bool:
+    """True when a grounded answer refused: its text starts with NO_ANSWER.
+
+    This is the trigger for the card -> RAG fallback. The trigger is the refusal
+    TEXT, not empty refs: a matched card can resolve to real source sections that
+    simply do not hold the asked value, so ``refs`` is non-empty yet the grounded
+    answerer returns NO_ANSWER. Empty refs also yield NO_ANSWER (see
+    ``should_refuse``), so this single check covers both "card claimed nothing"
+    and "card claimed the wrong sections".
+    """
+    return isinstance(answer, str) and answer.strip().upper().startswith("NO_ANSWER")
+
+
 class AgenticService:
     def __init__(self, outputs_dir: Path, retriever: Retriever, answerer: AnswerService, llm: LLM):
         self.outputs_dir = outputs_dir
@@ -156,85 +169,47 @@ class AgenticService:
             return result
 
         if source == "card-grounding":
-            refs = self.refs_for_card(card)
-            result = self.answerer.answer_from_refs(query, refs)
-            result["drilled"] = True
-            result["evidence_sections"] = refs
-            result = with_execution(
-                result,
-                requested_mode=source,
-                path="card-grounding",
-                evidence_kind="source",
+            return self._drilldown_with_fallback(
+                query=query,
                 card=card,
+                routing=routing,
+                source=source,
+                path="card-grounding",
                 steps=["Match approved canonical card", "Follow card source anchors", "Generate answer from source sections"],
+                intent=None,
+                variant=variant,
+                filters=filters,
+                debug=debug,
             )
-            if debug:
-                result["debug"] = self._debug_payload(
-                    query=query,
-                    answer_mode=source,
-                    intent=None,
-                    routing=routing,
-                    retrieval=None,
-                    drilldown=self._debug_drilldown(card, refs),
-                    refs_used=refs,
-                    card_used=card,
-                )
-            return result
 
         if source == "agentic":
             intent = self.classify_intent(query)
             if intent == "exact" and not has_relevant_inline_value(card, query):
-                refs = self.refs_for_card(card)
-                result = self.answerer.answer_from_refs(query, refs)
-                result["drilled"] = True
-                result["evidence_sections"] = refs
-                result = with_execution(
-                    result,
-                    requested_mode=source,
-                    path="agentic-source-drilldown",
-                    evidence_kind="source",
+                return self._drilldown_with_fallback(
+                    query=query,
                     card=card,
-                    intent=intent,
+                    routing=routing,
+                    source=source,
+                    path="agentic-source-drilldown",
                     steps=["Match approved canonical card", "Classify intent as exact", "Inline value missing", "Drill down to source anchors"],
-                )
-                if debug:
-                    result["debug"] = self._debug_payload(
-                        query=query,
-                        answer_mode=source,
-                        intent=intent,
-                        routing=routing,
-                        retrieval=None,
-                        drilldown=self._debug_drilldown(card, refs),
-                        refs_used=refs,
-                        card_used=card,
-                    )
-                return result
-            if has_relevant_pointer_field(card, query):
-                refs = self.refs_for_card(card)
-                result = self.answerer.answer_from_refs(query, refs)
-                result["drilled"] = True
-                result["evidence_sections"] = refs
-                result = with_execution(
-                    result,
-                    requested_mode=source,
-                    path="agentic-source-drilldown",
-                    evidence_kind="source",
-                    card=card,
                     intent=intent,
-                    steps=["Match approved canonical card", f"Classify intent as {intent}", "Relevant field is pointer-only", "Drill down to source anchors"],
+                    variant=variant,
+                    filters=filters,
+                    debug=debug,
                 )
-                if debug:
-                    result["debug"] = self._debug_payload(
-                        query=query,
-                        answer_mode=source,
-                        intent=intent,
-                        routing=routing,
-                        retrieval=None,
-                        drilldown=self._debug_drilldown(card, refs),
-                        refs_used=refs,
-                        card_used=card,
-                    )
-                return result
+            if has_relevant_pointer_field(card, query):
+                return self._drilldown_with_fallback(
+                    query=query,
+                    card=card,
+                    routing=routing,
+                    source=source,
+                    path="agentic-source-drilldown",
+                    steps=["Match approved canonical card", f"Classify intent as {intent}", "Relevant field is pointer-only", "Drill down to source anchors"],
+                    intent=intent,
+                    variant=variant,
+                    filters=filters,
+                    debug=debug,
+                )
             result = answer_from_card(query, card, drilled=False, intent=intent)
             result = with_execution(
                 result,
@@ -259,6 +234,95 @@ class AgenticService:
             return result
 
         raise ValueError(f"Unknown answer_source: {source}")
+
+    def _drilldown_with_fallback(
+        self,
+        *,
+        query: str,
+        card: Dict,
+        routing: Dict,
+        source: str,
+        path: str,
+        steps: List[str],
+        intent: Optional[str],
+        variant: Dict,
+        filters: Optional[Dict],
+        debug: bool,
+    ) -> Dict:
+        """Answer from the matched card's own source sections; if that grounds
+        nothing, fall back to hybrid RAG so a card hit never answers WORSE than
+        pure RAG would.
+
+        Card precision is preserved on the hit path: when the card's sections
+        DO support the answer, RAG is never consulted and the answer stays
+        deterministic and auditable. RAG is brought in ONLY when the card path
+        refuses (``is_no_answer``) — i.e. the card claimed the wrong sections or
+        no sections at all. The failed card attempt stays in the trace
+        (``...-then-rag-fallback`` path + steps, and the drilldown debug block)
+        so under-built cards remain diagnosable instead of being silently masked.
+        """
+        refs = self.refs_for_card(card)
+        result = self.answerer.answer_from_refs(query, refs)
+        result["drilled"] = True
+        result["evidence_sections"] = refs
+        if not is_no_answer(result.get("answer")):
+            result = with_execution(
+                result,
+                requested_mode=source,
+                path=path,
+                evidence_kind="source",
+                card=card,
+                intent=intent,
+                steps=steps,
+            )
+            if debug:
+                result["debug"] = self._debug_payload(
+                    query=query,
+                    answer_mode=source,
+                    intent=intent,
+                    routing=routing,
+                    retrieval=None,
+                    drilldown=self._debug_drilldown(card, refs),
+                    refs_used=refs,
+                    card_used=card,
+                )
+            return result
+
+        rag_refs = self.retriever.retrieve(
+            query,
+            index="both",
+            search="hybrid",
+            top_k=8,
+            rerank=bool(variant.get("rerank", False)),
+            filters=filters,
+        )
+        result = self.answerer.answer_from_refs(query, rag_refs)
+        result["drilled"] = True
+        result["evidence_sections"] = rag_refs
+        result = with_execution(
+            result,
+            requested_mode=source,
+            path=f"{path}-then-rag-fallback",
+            evidence_kind="retrieval",
+            card=card,
+            intent=intent,
+            steps=steps + ["Card drilldown returned NO_ANSWER", "Fallback to hybrid RAG retrieval"],
+        )
+        if debug:
+            result["debug"] = self._debug_payload(
+                query=query,
+                answer_mode=source,
+                intent=intent,
+                routing=routing,
+                retrieval=self._debug_retrieval(
+                    {"index": "both", "search": "hybrid", "top_k": 8, "rerank": variant.get("rerank", False)},
+                    rag_refs,
+                ),
+                drilldown=self._debug_drilldown(card, refs),
+                refs_used=rag_refs,
+                card_used=card,
+            )
+        return result
 
     def classify_intent(self, query: str) -> str:
         response = self.llm.complete_json(
