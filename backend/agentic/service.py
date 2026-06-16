@@ -288,6 +288,50 @@ class AgenticService:
                 )
             return result
 
+        # Stay in the authoritative card layer first: hop to the best sibling
+        # card that shares a tag (module) with the matched card. The answer often
+        # lives in a neighbouring card rather than raw chunks, and this keeps the
+        # answer card-sourced and explainable. Bounded cost: sibling selection is
+        # deterministic (no LLM), and it adds at most ONE extra answer call, only
+        # on this already-failed path.
+        sibling = self._best_sibling_card(card, query)
+        if sibling is not None:
+            sibling_refs = self.refs_for_card(sibling)
+            sibling_result = self.answerer.answer_from_refs(query, sibling_refs)
+            sibling_result["drilled"] = True
+            sibling_result["evidence_sections"] = sibling_refs
+            if not is_no_answer(sibling_result.get("answer")):
+                sibling_result = with_execution(
+                    sibling_result,
+                    requested_mode=source,
+                    path=f"{path}-then-sibling-card",
+                    evidence_kind="source",
+                    card=sibling,
+                    intent=intent,
+                    steps=steps
+                    + [
+                        "Card drilldown returned NO_ANSWER",
+                        f"Hop to sibling card sharing tag: {sibling.get('canonical_id')}",
+                        "Answer from sibling card source sections",
+                    ],
+                )
+                if debug:
+                    sibling_result["debug"] = self._debug_payload(
+                        query=query,
+                        answer_mode=source,
+                        intent=intent,
+                        routing=routing,
+                        retrieval=None,
+                        drilldown=self._debug_drilldown(sibling, sibling_refs),
+                        refs_used=sibling_refs,
+                        card_used=sibling,
+                    )
+                return sibling_result
+
+        # Neither the matched card nor a tag-sibling could ground it -> hybrid
+        # RAG, tag-weighted by the original card's modules (soft boost only;
+        # never excludes, so a stale tag cannot wipe out results).
+        boost_modules = card.get("module", [])
         rag_refs = self.retriever.retrieve(
             query,
             index="both",
@@ -295,10 +339,15 @@ class AgenticService:
             top_k=8,
             rerank=bool(variant.get("rerank", False)),
             filters=filters,
+            boost_modules=boost_modules,
         )
         result = self.answerer.answer_from_refs(query, rag_refs)
         result["drilled"] = True
         result["evidence_sections"] = rag_refs
+        fallback_steps = steps + ["Card drilldown returned NO_ANSWER"]
+        if sibling is not None:
+            fallback_steps.append(f"Sibling card {sibling.get('canonical_id')} also returned NO_ANSWER")
+        fallback_steps.append("Fallback to tag-weighted hybrid RAG retrieval")
         result = with_execution(
             result,
             requested_mode=source,
@@ -306,7 +355,7 @@ class AgenticService:
             evidence_kind="retrieval",
             card=card,
             intent=intent,
-            steps=steps + ["Card drilldown returned NO_ANSWER", "Fallback to hybrid RAG retrieval"],
+            steps=fallback_steps,
         )
         if debug:
             result["debug"] = self._debug_payload(
@@ -315,7 +364,13 @@ class AgenticService:
                 intent=intent,
                 routing=routing,
                 retrieval=self._debug_retrieval(
-                    {"index": "both", "search": "hybrid", "top_k": 8, "rerank": variant.get("rerank", False)},
+                    {
+                        "index": "both",
+                        "search": "hybrid",
+                        "top_k": 8,
+                        "rerank": variant.get("rerank", False),
+                        "boost_modules": boost_modules,
+                    },
                     rag_refs,
                 ),
                 drilldown=self._debug_drilldown(card, refs),
@@ -412,6 +467,48 @@ class AgenticService:
             if any(token in card_text for token in lowered.split() if len(token) >= 4):
                 return card
         return None
+
+    def _sibling_cards(self, card: Dict) -> List[Dict]:
+        """Approved cards sharing at least one tag (module) with ``card``,
+        excluding the card itself. These are the tag-edges of the card graph."""
+        card_id = card.get("canonical_id")
+        tags = {module for module in card.get("module", []) if module}
+        if not tags:
+            return []
+        siblings = []
+        for cid, other in self.cards.items():
+            if cid == card_id:
+                continue
+            if tags.intersection(module for module in other.get("module", []) if module):
+                siblings.append(other)
+        return siblings
+
+    def _best_sibling_card(self, card: Dict, query: str) -> Optional[Dict]:
+        """Pick the single tag-sibling most likely to answer ``query``, scored
+        deterministically (NO LLM call) by name/alias/field overlap. Returns None
+        when no sibling shows any overlap, so the hop is skipped rather than
+        spending an answer call on an irrelevant card."""
+        lowered = query.lower()
+        best: Optional[Dict] = None
+        best_score = 0
+        for other in self._sibling_cards(card):
+            score = self._card_query_overlap(other, lowered)
+            if score > best_score:
+                best_score = score
+                best = other
+        return best if best_score > 0 else None
+
+    def _card_query_overlap(self, card: Dict, lowered_query: str) -> int:
+        """Cheap relevance of a card to a query. A card name/alias that literally
+        appears in the query is a strong signal (and works for CJK, where
+        whitespace tokenisation fails); latin token overlap is a weaker signal."""
+        names = [card.get("canonical_name", ""), *card.get("aliases", [])]
+        name_hits = sum(1 for name in names if name and name.lower() in lowered_query)
+        text = " ".join(
+            [*names, " ".join(str(field.get("value") or "") for field in card.get("fields", []))]
+        ).lower()
+        token_hits = sum(1 for token in lowered_query.split() if len(token) >= 3 and token in text)
+        return name_hits * 3 + token_hits
 
     def refs_for_card(self, card: Dict) -> List[Dict]:
         """Follow a card back to its source sections in loaded_refs.json.
@@ -517,6 +614,7 @@ class AgenticService:
             "search": variant.get("search", "hybrid"),
             "top_k": int(variant.get("top_k", 8)),
             "rerank": bool(variant.get("rerank", False)),
+            "boost_modules": list(variant.get("boost_modules", []) or []),
             "hits": [debug_ref_hit(ref) for ref in refs],
         }
 

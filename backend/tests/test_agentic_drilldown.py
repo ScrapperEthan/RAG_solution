@@ -110,9 +110,11 @@ class _StubRetriever:
     def __init__(self, refs):
         self._refs = refs
         self.called = False
+        self.last_kwargs = None
 
     def retrieve(self, query, **kwargs):
         self.called = True
+        self.last_kwargs = kwargs
         return self._refs
 
 
@@ -178,6 +180,81 @@ class DrilldownFallbackTest(unittest.TestCase):
         self.assertEqual(result["answer"], "found it")
         self.assertFalse(svc.retriever.called)
         self.assertEqual(result["execution"]["path"], "card-grounding")
+
+
+_PRIMARY_CARD = {
+    "canonical_id": "C-PRI",
+    "canonical_name": "请假申请",
+    "aliases": [],
+    "module": ["人事服务"],
+    "subsections": [{"name": "s", "source_section_ids": ["P#PRI"], "facts": []}],
+    "fields": [],
+}
+_SIBLING_CARD = {
+    "canonical_id": "C-SIB",
+    "canonical_name": "年假天数",
+    "aliases": ["年假"],
+    "module": ["人事服务"],  # shares the tag with the primary card
+    "subsections": [{"name": "s", "source_section_ids": ["P#SIB"], "facts": []}],
+    "fields": [],
+}
+
+
+def _sibling_service(primary_body, sibling_body, rag_refs):
+    svc = AgenticService.__new__(AgenticService)
+    svc.refs = {
+        "P#PRI": {"section_id": "P#PRI", "body_md": primary_body},
+        "P#SIB": {"section_id": "P#SIB", "body_md": sibling_body},
+    }
+    svc.cards = {"C-PRI": _PRIMARY_CARD, "C-SIB": _SIBLING_CARD}
+    svc.answerer = _StubAnswerer()
+    svc.retriever = _StubRetriever(rag_refs)
+    return svc
+
+
+def _drill(svc, query, debug=False):
+    return svc._drilldown_with_fallback(
+        query=query,
+        card=_PRIMARY_CARD,
+        routing={"method": "llm-router"},
+        source="card-grounding",
+        path="card-grounding",
+        steps=["Match approved canonical card"],
+        intent=None,
+        variant={},
+        filters=None,
+        debug=debug,
+    )
+
+
+_RAG = [{"section_id": "P#X", "body_md": "ANSWER_HERE from rag", "source_url": "u", "heading_path": []}]
+
+
+class DrilldownSiblingTest(unittest.TestCase):
+    def test_sibling_card_answers_before_touching_rag(self):
+        svc = _sibling_service("primary has no value", "ANSWER_HERE 年假 10 天", _RAG)
+        result = _drill(svc, "年假有几天？", debug=True)
+        self.assertEqual(result["answer"], "found it")
+        self.assertEqual(result["execution"]["path"], "card-grounding-then-sibling-card")
+        self.assertEqual(result["execution"]["card"]["canonical_id"], "C-SIB")
+        self.assertFalse(svc.retriever.called)  # stayed in the card layer
+        self.assertEqual(result["debug"]["card_used"]["canonical_id"], "C-SIB")
+
+    def test_no_relevant_sibling_falls_to_tag_weighted_rag(self):
+        svc = _sibling_service("primary has no value", "sibling has no value", _RAG)
+        result = _drill(svc, "完全无关 zzz")
+        self.assertEqual(result["answer"], "found it")
+        self.assertEqual(result["execution"]["path"], "card-grounding-then-rag-fallback")
+        self.assertTrue(svc.retriever.called)
+        # RAG fallback is tag-weighted by the original card's module.
+        self.assertEqual(svc.retriever.last_kwargs.get("boost_modules"), ["人事服务"])
+
+    def test_relevant_sibling_that_also_misses_falls_to_rag_with_note(self):
+        svc = _sibling_service("primary has no value", "sibling has no value", _RAG)
+        result = _drill(svc, "年假有几天？")  # overlaps the sibling, but its source lacks the answer
+        self.assertEqual(result["execution"]["path"], "card-grounding-then-rag-fallback")
+        self.assertTrue(any("C-SIB" in step for step in result["execution"]["steps"]))
+        self.assertEqual(svc.retriever.last_kwargs.get("boost_modules"), ["人事服务"])
 
 
 if __name__ == "__main__":
