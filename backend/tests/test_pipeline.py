@@ -272,6 +272,16 @@ class ChunkingAndSchemaTest(unittest.TestCase):
         self.assertIn("%s = ANY(module)", where)
         self.assertEqual(params, ["Integration & API standard", "page_id", "123456", "card_worthy", "true"])
 
+    def test_tag_boost_reorders_without_excluding(self) -> None:
+        store = FakeStore()
+        retriever = Retriever(FakeEmbedder(), store)
+        base = [ref["ref_id"] for ref in retriever.retrieve("integration", top_k=4)]
+        self.assertEqual(base, [1, 2])
+        boosted = [ref["ref_id"] for ref in retriever.retrieve("integration", top_k=4, boost_modules=["Delivery"])]
+        # Soft boost floats the Delivery-tagged ref to the top but drops nothing.
+        self.assertEqual(boosted, [2, 1])
+        self.assertEqual(sorted(boosted), [1, 2])
+
 
 def raw_page(body: str) -> dict:
     return {

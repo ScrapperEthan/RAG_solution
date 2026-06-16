@@ -5,6 +5,13 @@ from typing import Dict, List, Optional, Tuple
 from backend.ports import Embedder, Hit, Reranker, VectorStore
 
 
+# Soft, multiplicative boost for refs whose tag (module) matches the query's
+# inferred domain. It re-ranks within the already-retrieved candidates — it
+# never excludes anything (unlike a hard `filters` narrow), so a wrong/empty tag
+# can only fail to help, never wipe out results. Costs zero extra model calls.
+TAG_BOOST = 1.5
+
+
 class Retriever:
     def __init__(self, embedder: Embedder, store: VectorStore, reranker: Optional[Reranker] = None):
         self.embedder = embedder
@@ -22,6 +29,7 @@ class Retriever:
         rrf_k: int = 60,
         rerank: bool = False,
         filters: Optional[Dict] = None,
+        boost_modules: Optional[List[str]] = None,
     ) -> List[Dict]:
         query_vec = self.embedder.embed([query], kind="query")[0]
         ranked_lists: List[List[Hit]] = []
@@ -43,9 +51,13 @@ class Retriever:
         refs = self.store.get_refs(ref_ids)
         refs = [ref for ref in refs if matches_filters(ref, filters)]
         score_by_id = dict(fused_ids)
+        boost_set = {module for module in (boost_modules or []) if module}
         for ref in refs:
-            ref["score"] = score_by_id.get(ref["ref_id"], 0.0)
-        refs.sort(key=lambda ref: score_by_id.get(ref["ref_id"], 0.0), reverse=True)
+            score = score_by_id.get(ref["ref_id"], 0.0)
+            if boost_set and boost_set.intersection(ref.get("module", [])):
+                score *= TAG_BOOST
+            ref["score"] = score
+        refs.sort(key=lambda ref: ref["score"], reverse=True)
         if rerank:
             if self.reranker is None:
                 self.last_rerank_status = "placeholder: no reranker configured"

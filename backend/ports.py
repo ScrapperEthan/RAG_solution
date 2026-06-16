@@ -22,6 +22,13 @@ class RawPage(TypedDict):
     update_at: str
     confluence_version: int
     tree_path: List[str]
+    # `module` is the curated, Business-approved DOMAIN / TAG facet of a page
+    # (e.g. "请假", "Integration & API standard") — NOT a code module, and
+    # distinct from `labels` above (raw Confluence labels). It is the shared
+    # axis across cards and refs: used for retrieval filtering, tag-weighted
+    # ranking, sibling-card hops, and per-domain governance. Naming kept as
+    # `module` for now because it is a key in the approved vocabulary; a rename
+    # to `tags` is a data migration to bundle with the typed-tags upgrade.
     module: List[str]
     card_worthy: bool
     body_md: str
