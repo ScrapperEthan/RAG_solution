@@ -133,6 +133,36 @@ class WebDemoTest(unittest.TestCase):
         self.assertEqual(result["execution"]["path"], "agentic-card-direct")
         self.assertEqual(result["execution"]["evidence_kind"], "card")
         self.assertTrue(result["card_evidence"])
+        self.assertNotIn("debug", result)
+
+    def test_debug_chat_stream_includes_recall_chain(self) -> None:
+        result = self.stream_result(
+            {
+                "query": "What is the Delivery Mode for PN?",
+                "answer_mode": "card-grounding",
+                "debug": True,
+            }
+        )
+        self.assertIn("debug", result)
+        debug = result["debug"]
+        self.assertEqual(debug["answer_mode"], "card-grounding")
+        self.assertEqual(debug["routing"]["chosen_card"], result["execution"]["card"]["canonical_id"])
+        self.assertIsNotNone(debug["drilldown"])
+        self.assertTrue(debug["drilldown"]["gathered"])
+        self.assertTrue(debug["drilldown"]["resolved_section_ids"])
+        self.assertIn("missed_section_ids", debug["drilldown"])
+        self.assertTrue(debug["refs_used"])
+        self.assertIn("body_md", debug["refs_used"][0])
+        self.assertIn("subsections", debug["card_used"])
+
+    def test_debug_pure_rag_includes_retrieval_hits(self) -> None:
+        result = self.stream_result({"query": "What is the MDC Management Portal?", "answer_mode": "pure-rag", "debug": True})
+        self.assertIn("debug", result)
+        debug = result["debug"]
+        self.assertIsNotNone(debug["retrieval"])
+        self.assertTrue(debug["retrieval"]["hits"])
+        self.assertIn("score", debug["retrieval"]["hits"][0])
+        self.assertIsNone(debug["drilldown"])
 
     def test_pure_rag_returns_ranked_retrieval_evidence(self) -> None:
         result = self.stream_result({"query": "What is the MDC Management Portal?", "answer_mode": "pure-rag"})

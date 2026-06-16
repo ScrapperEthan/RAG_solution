@@ -71,6 +71,7 @@ class ChatRequest(BaseModel):
     language: str = "en"
     module: Optional[str] = None
     answer_mode: str = "agentic"
+    debug: bool = False
 
 
 class DemoRuntime:
@@ -110,11 +111,11 @@ class DemoRuntime:
         filters = {"module": request.module} if request.module else None
         return query, golden, filters
 
-    def answer(self, query: str, filters: Optional[Dict[str, str]], answer_mode: str) -> Dict[str, Any]:
+    def answer(self, query: str, filters: Optional[Dict[str, str]], answer_mode: str, debug: bool = False) -> Dict[str, Any]:
         self._ensure_services()
         assert self._agentic_service is not None
         if answer_mode == "llm-direct":
-            return self._answer_from_llm_direct(query)
+            return self._answer_from_llm_direct(query, debug=debug)
         variant = ANSWER_MODES.get(answer_mode)
         if variant is None:
             raise ValueError(f"Unknown answer_mode: {answer_mode}")
@@ -130,7 +131,7 @@ class DemoRuntime:
                     "rerank": bool(retrieval.get("rerank", False)),
                 }
             )
-        result = self._agentic_service.answer(query, variant, filters=filters)
+        result = self._agentic_service.answer(query, variant, filters=filters, debug=debug)
         result["execution"]["family"] = variant["family"]
         result["execution"]["family_label"] = variant["family_label"]
         sections = result.pop("evidence_sections", [])
@@ -141,10 +142,10 @@ class DemoRuntime:
             "evidence_sections": [public_ref(ref) for ref in sections],
         }
 
-    def _answer_from_llm_direct(self, query: str) -> Dict[str, Any]:
+    def _answer_from_llm_direct(self, query: str, debug: bool = False) -> Dict[str, Any]:
         assert self._llm is not None
         answer = self._llm.complete_text(LLM_DIRECT_SYSTEM, query)
-        return {
+        result = {
             "query": query,
             "answer": answer,
             "citations": [],
@@ -166,6 +167,23 @@ class DemoRuntime:
                 "card": None,
             },
         }
+        if debug:
+            result["debug"] = {
+                "query": query,
+                "answer_mode": "llm-direct",
+                "intent": None,
+                "routing": {
+                    "method": "none",
+                    "llm_returned_ids": [],
+                    "catalog_size": 0,
+                    "chosen_card": None,
+                },
+                "retrieval": None,
+                "drilldown": None,
+                "refs_used": [],
+                "card_used": None,
+            }
+        return result
 
     def _ensure_services(self) -> None:
         if self._agentic_service is not None:
@@ -269,7 +287,7 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
                 }
             )
             try:
-                result = await asyncio.to_thread(runtime.answer, query, filters, request.answer_mode)
+                result = await asyncio.to_thread(runtime.answer, query, filters, request.answer_mode, request.debug)
                 for chunk in stream_chunks(result["answer"]):
                     yield ndjson({"type": "token", "text": chunk})
                     await asyncio.sleep(0.018)

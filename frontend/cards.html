@@ -39,7 +39,7 @@
       padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.95);
       box-shadow: var(--shadow);
     }
-    .ask-row { display: grid; grid-template-columns: minmax(220px,1fr) 180px auto; gap: 9px; }
+    .ask-row { display: grid; grid-template-columns: minmax(220px,1fr) 180px 140px auto; gap: 9px; }
     .ask-row input, .search-input {
       width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--line);
       border-radius: 9px; background: #fbfcfb;
@@ -47,6 +47,11 @@
     .ask-panel textarea { min-height: 86px; }
     .ask-panel details { margin-top: 12px; }
     .ask-panel details summary { color: var(--muted); cursor: pointer; font-size: 11px; font-weight: 800; }
+    .debug-inline {
+      display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 0 10px;
+      border: 1px solid #d9e4de; border-radius: 9px; color: #4f5953; background: #f7faf8; font-size: 11px; font-weight: 900;
+    }
+    .debug-inline input { width: 15px; height: 15px; accent-color: var(--green); }
     .offline-grid { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 9px; margin-top: 9px; align-items: end; }
     .offline-grid textarea { margin: 0; }
     .ask-message { min-height: 18px; margin-top: 8px; color: var(--muted); font-size: 11px; }
@@ -238,6 +243,7 @@
           <option value="card-grounding">card-grounding</option>
           <option value="llm-direct">llm-direct</option>
         </select>
+        <label class="debug-inline"><input id="debugToggle" type="checkbox" /> Debug</label>
         <button id="askBtn" class="soft-button is-primary" type="submit">演示一次回答的下钻路径</button>
       </form>
       <div id="askMessage" class="ask-message">点演示后会自动回到“结构”，并高亮“问题 → 请假申请规则 → 每年 10 天 → 原文链接”。</div>
@@ -249,6 +255,8 @@
         </div>
       </details>
     </section>
+
+    <section id="debugPanel" class="debug-panel-host is-hidden"></section>
 
     <section class="view-toolbar" aria-label="卡片视图切换">
       <div class="view-switch" role="group">
@@ -299,6 +307,95 @@
     </section>
   </main>
 
+<script>
+(() => {
+  const escDebug = value => String(value ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const arrDebug = value => Array.isArray(value) ? value : [];
+  const isObjDebug = value => value !== null && typeof value === "object" && !Array.isArray(value);
+  const jsonDebug = value => {
+    try { return JSON.stringify(value, null, 2); } catch (_) { return String(value); }
+  };
+  const typeDebug = value => Array.isArray(value) ? `array[${value.length}]` : value === null ? "null" : typeof value;
+  const scalarDebug = value => {
+    if (value === null || value === undefined) return `<span class="debug-scalar is-null">${value === null ? "null" : "undefined"}</span>`;
+    if (typeof value === "boolean") return `<span class="debug-scalar is-bool">${value}</span>`;
+    if (typeof value === "number") return `<span class="debug-scalar is-number">${value}</span>`;
+    const textValue = String(value);
+    return textValue.length > 180 || textValue.includes("\n")
+      ? `<pre class="debug-long-text">${escDebug(textValue)}</pre>`
+      : `<span class="debug-scalar">${escDebug(textValue || "''")}</span>`;
+  };
+  const treeDebug = value => {
+    if (!isObjDebug(value) && !Array.isArray(value)) return scalarDebug(value);
+    const entries = Array.isArray(value) ? value.map((item,index) => [`[${index}]`, item]) : Object.entries(value);
+    if (!entries.length) return '<div class="debug-empty-inline">empty</div>';
+    return `<div class="debug-field-tree">${entries.map(([key,item]) => `
+      <div class="debug-field-row">
+        <div class="debug-key"><code>${escDebug(key)}</code><span>${escDebug(typeDebug(item))}</span></div>
+        <div class="debug-value">${isObjDebug(item) || Array.isArray(item) ? treeDebug(item) : scalarDebug(item)}</div>
+      </div>`).join("")}</div>`;
+  };
+  const detailsDebug = (payload, label = "查看原始 JSON") => `<details class="debug-json"><summary>${escDebug(label)}</summary><pre>${escDebug(jsonDebug(payload))}</pre></details>`;
+  const summaryDebug = rows => `<dl class="debug-summary">${rows.map(([k,v]) => `<div><dt>${escDebug(k)}</dt><dd>${scalarDebug(v)}</dd></div>`).join("")}</dl>`;
+  const hopDebug = (number, title, subtitle, payload, body = "") => `<article class="debug-hop">
+    <header><span>${number}</span><div><strong>${escDebug(title)}</strong><small>${escDebug(subtitle)}</small></div></header>
+    <div class="debug-hop-body">${body || treeDebug(payload)}</div>${detailsDebug(payload)}
+  </article>`;
+  const refsDebug = refs => refs.length ? refs.map((ref,index) => `<article class="debug-ref">
+    <header><span>${String(index + 1).padStart(2, "0")}</span><strong>${escDebug(ref.title || ref.section_id || "ref")}</strong></header>
+    ${summaryDebug([
+      ["section_id", ref.section_id],
+      ["anchor", ref.anchor || arrDebug(ref.heading_path).join(" > ")],
+      ["heading_path", arrDebug(ref.heading_path).join(" > ")],
+      ["source_url", ref.source_url],
+      ["score", ref.score],
+    ])}
+    <div class="debug-body-md"><strong>body_md</strong><pre>${escDebug(ref.body_md || "")}</pre></div>
+    ${detailsDebug(ref, "查看这条 ref 的原始 JSON")}
+  </article>`).join("") : '<div class="debug-empty">refs_used 为空。</div>';
+  window.RAGDebug = {
+    render(target, result, options = {}) {
+      if (!target) return;
+      if (!result || (!options.requested && !result.debug)) {
+        target.classList.add("is-hidden");
+        target.innerHTML = "";
+        return;
+      }
+      const execution = result.execution || {};
+      const debug = result.debug || {};
+      const refs = arrDebug(debug.refs_used).length ? arrDebug(debug.refs_used) : arrDebug(result.evidence_sections);
+      const routing = debug.routing || {method: execution.card ? "unknown-from-execution" : "none", llm_returned_ids: [], catalog_size: null, chosen_card: execution.card?.canonical_id || null};
+      const retrieval = debug.retrieval || (execution.evidence_kind === "retrieval" ? {hits: refs} : null);
+      const drilldown = debug.drilldown || (execution.evidence_kind === "source" ? {resolved_section_ids: refs.map(ref => ref.section_id), missed_section_ids: [], counts: {capped_to: refs.length}} : null);
+      const missed = arrDebug(drilldown?.missed_section_ids);
+      const retrievalBody = drilldown
+        ? `${missed.length ? `<div class="debug-missed"><strong>missed_section_ids</strong>${missed.map(sid => `<code>${escDebug(sid)}</code>`).join("")}</div>` : '<div class="debug-ok">missed_section_ids 为空。</div>'}${treeDebug(drilldown)}`
+        : treeDebug(retrieval);
+      const answerPayload = {
+        answer: result.answer,
+        citations: result.citations || [],
+        diagnostic: result.diagnostic || execution.diagnostic || null,
+        retrieved_section_ids: result.retrieved_section_ids || [],
+        contexts: result.contexts || [],
+        card_evidence: result.card_evidence || [],
+        execution,
+      };
+      target.classList.remove("is-hidden");
+      target.innerHTML = `<section class="debug-panel">
+        <header class="debug-panel-head"><div><span>DEBUG 链路</span><h2>召回链路逐跳字段</h2><p>${result.debug ? "后端返回了 result.debug，以下为真实逐跳链路。" : "后端未返回 result.debug，以下用现有 result 字段兜底展示。"}</p></div><strong>${result.debug ? "debug payload" : "fallback view"}</strong></header>
+        <div class="debug-hop-list">
+          ${hopDebug(1, "Query / Intent", "用户问题、请求模式、意图分类", {query: debug.query ?? result.query, answer_mode: debug.answer_mode ?? execution.requested_mode, intent: debug.intent ?? execution.intent})}
+          ${hopDebug(2, "Routing", "卡片路由方法、LLM 返回 id、最终命中卡", routing, `${summaryDebug([["method", routing.method],["chosen_card", routing.chosen_card],["catalog_size", routing.catalog_size],["llm_returned_ids", arrDebug(routing.llm_returned_ids).join(", ")]])}${treeDebug(routing)}`)}
+          ${hopDebug(3, drilldown ? "Drilldown" : "Retrieval", drilldown ? "卡片取证 gathered/resolved/missed" : "全库检索 hits/score", drilldown || retrieval, retrievalBody)}
+          ${hopDebug(4, "Refs Used", "真正喂给 answer_from_refs 的原文 refs_used", refs, refsDebug(refs))}
+          ${hopDebug(5, "Card Used", "命中卡片结构、subsections、facts、fields", debug.card_used || execution.card || null, treeDebug(debug.card_used || execution.card || null))}
+          ${hopDebug(6, "Answer", "答案、引用、诊断、contexts、execution.steps", answerPayload, treeDebug(answerPayload))}
+        </div>${detailsDebug(result, "查看完整 result JSON")}
+      </section>`;
+    }
+  };
+})();
+</script>
 <script>
 const SAMPLE_CARD = {
   canonical_id: "C-DEMO-LEAVE-RULES",
@@ -396,6 +493,69 @@ const SAMPLE_RESULT = {
   }
 };
 
+function sampleResult() {
+  const result = structuredClone(SAMPLE_RESULT);
+  if (!el("debugToggle")?.checked) return result;
+  const mode = el("answerMode")?.value || "agentic";
+  const ref = {
+    section_id: "demo-leave-policy#请假申请规则 > 可以请几天",
+    anchor: "请假申请规则 > 可以请几天",
+    title: "请假申请规则",
+    heading_path: ["请假申请规则", "可以请几天"],
+    source_url: "https://example.test/wiki/leave-policy",
+    module: ["人事服务", "请假"],
+    score: 0.93,
+    body_md: "请假申请规则\n员工每年有 10 天年假。该示例为脱敏演示数据。",
+  };
+  result.debug = {
+    query: result.query,
+    answer_mode: mode,
+    intent: "exact",
+    routing: {
+      method: "keyword-fallback",
+      llm_returned_ids: ["C-DEMO-LEAVE-RULES"],
+      catalog_size: SAMPLE_CARDS.length,
+      chosen_card: "C-DEMO-LEAVE-RULES",
+    },
+    retrieval: null,
+    drilldown: null,
+    refs_used: [],
+    card_used: SAMPLE_CARD,
+  };
+  if (mode === "pure-rag") {
+    result.card_evidence = [];
+    result.execution.path = "rag-retrieval";
+    result.execution.evidence_kind = "retrieval";
+    result.execution.card = null;
+    result.debug.routing = {method:"none",llm_returned_ids:[],catalog_size:SAMPLE_CARDS.length,chosen_card:null};
+    result.debug.card_used = null;
+  }
+  if (mode === "card-grounding") {
+    result.execution.path = "card-grounding";
+    result.execution.evidence_kind = "source";
+    result.execution.drilled = true;
+  }
+  if (mode === "card-grounding" || mode === "pure-rag") {
+    result.evidence_sections = [ref];
+    result.debug.refs_used = [ref];
+    result.debug.drilldown = mode === "card-grounding"
+      ? {
+          gathered: [
+            {origin:"fact",section_id:ref.section_id,subsection:"可以请几天",field:"annual_leave_days",label:"年假天数"},
+            {origin:"subsection",section_id:ref.section_id,subsection:"可以请几天",field:"",label:""},
+          ],
+          resolved_section_ids: [ref.section_id],
+          missed_section_ids: [],
+          counts: {gathered:2,resolved:1,missed:0,capped_to:1},
+        }
+      : null;
+    result.debug.retrieval = mode === "pure-rag"
+      ? {index:"offline-demo",search:"synthetic",top_k:1,hits:[{section_id:ref.section_id,title:ref.title,heading_path:ref.heading_path,source_url:ref.source_url,score:ref.score}]}
+      : null;
+  }
+  return result;
+}
+
 const state = { cards: [], selectedId: null, result: null, busy: false, sample: false, streamAnswer: "", view: "structure", includeModuleEdges: false };
 const el = id => document.getElementById(id);
 const arr = value => Array.isArray(value) ? value.filter(v => v !== null && v !== undefined && String(v).trim()) : [];
@@ -411,6 +571,7 @@ el("cardsFile").addEventListener("change", loadLocalCards);
 el("renderJsonBtn").addEventListener("click", renderPastedResult);
 el("structureViewBtn").addEventListener("click", () => setView("structure"));
 el("mapViewBtn").addEventListener("click", () => setView("map"));
+el("debugToggle").addEventListener("change", renderDebugPanel);
 el("moduleEdgeToggle").addEventListener("change", event => {
   state.includeModuleEdges = event.target.checked;
   renderKnowledgeMap();
@@ -458,16 +619,22 @@ function setCards(cards, sample) {
   if (!Array.isArray(cards)) throw new Error("cards_index.json 须为 card 数组");
   state.cards = cards;
   state.sample = sample;
-  state.selectedId = cards[0]?.canonical_id || null;
+  state.selectedId = initialCardId(cards) || cards[0]?.canonical_id || null;
   state.result = null;
   state.streamAnswer = "";
   renderAll();
 }
 
+function initialCardId(cards) {
+  const requested = new URLSearchParams(location.search).get("card");
+  if (!requested) return null;
+  return cards.some(card => card.canonical_id === requested) ? requested : null;
+}
+
 function useSample(renderPath) {
   setCards(structuredClone(SAMPLE_CARDS), true);
   setSourceState("当前使用<strong>脱敏请假示例</strong>，不包含真实内网数据。", true);
-  if (renderPath) applyResult(structuredClone(SAMPLE_RESULT), true);
+  if (renderPath) applyResult(sampleResult(), true);
 }
 
 function setSourceState(html, warning = false) {
@@ -493,7 +660,12 @@ function renderAll() {
   renderCardList();
   renderDrillBoard();
   renderCardDetail();
+  renderDebugPanel();
   if (state.view === "map") renderKnowledgeMap();
+}
+
+function renderDebugPanel() {
+  window.RAGDebug?.render(el("debugPanel"), state.result, {requested: el("debugToggle").checked});
 }
 
 function cardSearchText(card) {
@@ -878,13 +1050,13 @@ async function submitQuestion(event) {
     const response = await fetch("/api/chat/stream", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({query, answer_mode:el("answerMode").value, language:"zh", module:null})
+      body: JSON.stringify({query, answer_mode:el("answerMode").value, language:"zh", module:null, debug:el("debugToggle").checked})
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     await readNdjson(response);
   } catch (error) {
     useSample(false);
-    applyResult(structuredClone(SAMPLE_RESULT), true);
+    applyResult(sampleResult(), true);
     setAskMessage(`API 不可用（${error.message}），已回退并渲染脱敏请假示例路径。`, true);
   } finally {
     state.busy = false;

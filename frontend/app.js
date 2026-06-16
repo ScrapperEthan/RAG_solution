@@ -8,6 +8,7 @@ const state = {
   answerFamily: "agentic",
   offlineDemo: false,
   offlineReason: "",
+  lastResult: null,
 };
 
 const el = (id) => document.getElementById(id);
@@ -78,6 +79,7 @@ el("reloadEvalBtn").addEventListener("click", () => loadEvaluation(state.allowDe
 el("printEvalBtn").addEventListener("click", () => window.print());
 el("variantSelect").addEventListener("change", renderEvalItems);
 el("typeSelect").addEventListener("change", renderEvalItems);
+el("debugToggle").addEventListener("change", renderCurrentDebugPanel);
 
 initialize();
 
@@ -196,6 +198,7 @@ function selectedGolden() {
 }
 
 function resetAnswer(clearQuestion = true) {
+  state.lastResult = null;
   el("llmAnswer").className = "answer-copy is-empty";
   el("llmAnswer").textContent = "回答将在这里流式显示";
   el("llmMeta").innerHTML = "";
@@ -205,6 +208,7 @@ function resetAnswer(clearQuestion = true) {
   el("evidenceProvenance").innerHTML = "";
   el("executionTrace").innerHTML = "";
   el("evidenceList").innerHTML = '<div class="empty-state">提交问题后，将按实际路径展示检索章节、卡片字段、下钻原文，或说明没有可验证证据。</div>';
+  renderCurrentDebugPanel();
   setStatus("idle", "等待提问");
   if (clearQuestion && state.mode === "free") {
     el("activeQuestion").innerHTML = "<small>FREE QUESTION</small><strong>输入一个业务问题，查看实时回答与证据。</strong>";
@@ -263,6 +267,7 @@ async function submitQuestion(event) {
     language: el("languageSelect").value,
     module: el("moduleSelect").value || null,
     answer_mode: selectedAnswerMode(),
+    debug: el("debugToggle").checked,
   };
 
   try {
@@ -396,7 +401,7 @@ function offlineResultFor(request) {
     card = null;
   }
 
-  return {
+  const result = {
     query: request.query,
     answer,
     citations: evidenceKind === "none" ? [] : [source.source_url],
@@ -412,6 +417,77 @@ function offlineResultFor(request) {
       card,
       steps: selected.steps,
     },
+  };
+  if (request.debug) result.debug = offlineDebugFor(result, request, selected, source);
+  return result;
+}
+
+function offlineDebugFor(result, request, selected, source) {
+  const card = selected.card
+    ? {
+        canonical_id: selected.card.canonical_id,
+        canonical_name: selected.card.canonical_name,
+        module: selected.module,
+        boundary: "脱敏演示卡片，仅用于展示 Debug 面板结构。",
+        subsections: [
+          {
+            name: selected.source_title,
+            summary: selected.gold_answer,
+            source_section_ids: [selected.section_id],
+            facts: [
+              {
+                label: selected.field_label,
+                field: selected.field,
+                tier: "inline-value",
+                value: selected.value,
+                pointer_to: null,
+                source_section_ids: [selected.section_id],
+                sources: [{ anchor: selected.heading_path.join(" > "), source_url: source.source_url }],
+              },
+            ],
+          },
+        ],
+        fields: [
+          {
+            field: selected.field || "answer",
+            tier: "inline-value",
+            value: selected.value || selected.answer,
+            pointer_to: null,
+            source_section_ids: selected.field ? [selected.section_id] : [],
+          },
+        ],
+      }
+    : null;
+  const ref = {
+    ...source,
+    anchor: selected.heading_path.join(" > "),
+    body_md: `${selected.source_title}\n${selected.gold_answer}\n${selected.answer}`,
+  };
+  const usesSource = ["retrieval", "source"].includes(result.execution?.evidence_kind);
+  const gathered = card
+    ? [
+        { origin: "fact", section_id: selected.section_id, subsection: selected.source_title, field: selected.field || "", label: selected.field_label || "" },
+        { origin: "subsection", section_id: selected.section_id, subsection: selected.source_title, field: "", label: "" },
+      ]
+    : [];
+  return {
+    query: request.query,
+    answer_mode: request.answer_mode,
+    intent: result.execution?.intent || null,
+    routing: {
+      method: card ? "keyword-fallback" : "none",
+      llm_returned_ids: card ? [card.canonical_id] : [],
+      catalog_size: 4,
+      chosen_card: card?.canonical_id || null,
+    },
+    retrieval: result.execution?.evidence_kind === "retrieval"
+      ? { index: "offline-demo", search: "synthetic", top_k: 1, hits: [{ section_id: source.section_id, title: source.title, heading_path: source.heading_path, source_url: source.source_url, score: source.score }] }
+      : null,
+    drilldown: result.execution?.evidence_kind === "source"
+      ? { gathered, resolved_section_ids: [selected.section_id], missed_section_ids: [], counts: { gathered: gathered.length, resolved: 1, missed: 0, capped_to: 1 } }
+      : null,
+    refs_used: usesSource ? [ref] : [],
+    card_used: card,
   };
 }
 
@@ -443,6 +519,7 @@ function handleStreamEvent(event) {
 }
 
 function renderResult(result) {
+  state.lastResult = result;
   const execution = result.execution || {};
   const evidenceKind = execution.evidence_kind || "none";
   const refs = result.evidence_sections || result.retrieved_sections || [];
@@ -453,6 +530,7 @@ function renderResult(result) {
   el("llmMeta").innerHTML = [
     `<span>${escapeHtml(actualPath)}</span>`,
     execution.intent ? `<span>intent: ${escapeHtml(execution.intent)}</span>` : "",
+    execution.card ? `<span>card: ${escapeHtml(execution.card.canonical_id || "")} · ${escapeHtml(execution.card.canonical_name || "")}</span>` : "",
     execution.drilled === true ? "<span>source drilled</span>" : "",
     `<span>${(result.citations || []).length} citations</span>`,
   ].join("");
@@ -461,16 +539,21 @@ function renderResult(result) {
   if (evidenceKind === "retrieval") {
     renderSectionEvidence(refs, true, "检索证据", "Retrieved and ranked Confluence sections");
   } else if (evidenceKind === "source") {
-    renderSectionEvidence(refs, false, "下钻原文", "Source sections followed from approved Card anchors");
+    renderSectionEvidence(refs, false, "下钻原文", "Source sections followed from approved Card anchors", execution.card, result);
   } else if (evidenceKind === "card") {
-    renderCardEvidence(cards, execution.card);
+    renderCardEvidence(cards, execution.card, result);
   } else {
     el("evidenceTitle").textContent = "模型通道说明";
     el("evidenceSubtitle").textContent = "No local retrieval or Card evidence is available";
     el("evidenceCount").textContent = "无本地证据";
     el("evidenceList").innerHTML = '<div class="empty-state">该回答来自无 grounding 的模型直答基线，没有使用审批卡片库、检索或来源下钻，因此不展示本地证据或分数。</div>';
   }
+  renderCurrentDebugPanel();
   setStatus("complete", "回答完成");
+}
+
+function renderCurrentDebugPanel() {
+  window.RAGDebug?.render(el("debugPanel"), state.lastResult, { requested: el("debugToggle").checked });
 }
 
 function renderEvidenceProvenance(evidenceKind, drilled) {
@@ -494,10 +577,11 @@ function renderExecutionTrace(execution, progress = null) {
     : "";
 }
 
-function renderSectionEvidence(refs, showScore, title, subtitle) {
+function renderSectionEvidence(refs, showScore, title, subtitle, card = null, result = null) {
   el("evidenceTitle").textContent = title;
   el("evidenceSubtitle").textContent = subtitle;
   el("evidenceCount").textContent = `${refs.length} sections`;
+  const cardBanner = renderMatchedCard(card, result);
   el("evidenceList").innerHTML = refs.length
     ? refs
         .map((ref, index) => {
@@ -517,13 +601,15 @@ function renderSectionEvidence(refs, showScore, title, subtitle) {
         })
         .join("")
     : '<div class="empty-state">该路径没有返回可展示的原文章节。</div>';
+  el("evidenceList").innerHTML = `${cardBanner}${el("evidenceList").innerHTML}`;
 }
 
-function renderCardEvidence(fields, card) {
+function renderCardEvidence(fields, card, result = null) {
   el("evidenceTitle").textContent = "卡片证据";
   el("evidenceSubtitle").textContent = "Approved structured Card fields used for the answer";
   el("evidenceCount").textContent = `${fields.length} fields`;
-  el("evidenceList").innerHTML = fields.length
+  const cardBanner = renderMatchedCard(card, result);
+  el("evidenceList").innerHTML = cardBanner + (fields.length
     ? fields.map((field, index) => {
       const sources = (field.sources || []).map((source) =>
         `<a href="${escapeHtml(source.source_url || "#")}" target="_blank" rel="noreferrer">${escapeHtml(source.anchor || source.page_id)}</a>`
@@ -534,7 +620,32 @@ function renderCardEvidence(fields, card) {
         <p>${escapeHtml(field.value || field.pointer_to || "No inline value")}</p><div class="card-sources">${sources}</div></div>
       </article>`;
     }).join("")
-    : `<div class="empty-state">已匹配 ${escapeHtml(card?.canonical_name || "Card")}，但没有返回可展示字段。</div>`;
+    : `<div class="empty-state">已匹配 ${escapeHtml(card?.canonical_name || "Card")}，但没有返回可展示字段。</div>`);
+}
+
+function renderMatchedCard(card, result = null) {
+  if (!card?.canonical_id) return "";
+  const fullCard = result?.debug?.card_used || card;
+  const modules = (fullCard.module || card.module || []).map((module) => `<span>${escapeHtml(module)}</span>`).join("");
+  const subsections = Array.isArray(fullCard.subsections) ? fullCard.subsections.length : null;
+  const fields = Array.isArray(fullCard.fields) ? fullCard.fields.length : null;
+  const counts = [
+    subsections !== null ? `${subsections} subsections` : "",
+    fields !== null ? `${fields} fields` : "",
+  ].filter(Boolean).join(" · ");
+  return `<article class="matched-card">
+    <div class="matched-card-main">
+      <span>命中卡片</span>
+      <strong>${escapeHtml(card.canonical_id)} · ${escapeHtml(card.canonical_name || "Unnamed card")}</strong>
+      ${fullCard.boundary ? `<p>${escapeHtml(fullCard.boundary)}</p>` : `<p>本次回答使用了这张审批卡；点开可查看 topic → subsection → fact → source_section_ids 的完整结构。</p>`}
+      <div class="module-tags">${modules}${counts ? `<span>${escapeHtml(counts)}</span>` : ""}</div>
+    </div>
+    <a class="matched-card-link" href="${cardExplorerUrl(card.canonical_id)}">打开卡片结构</a>
+  </article>`;
+}
+
+function cardExplorerUrl(cardId) {
+  return `./cards.html?card=${encodeURIComponent(cardId)}`;
 }
 
 function setStatus(type, label) {

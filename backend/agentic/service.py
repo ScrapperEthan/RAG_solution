@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from backend.answer.service import AnswerService
 from backend.ports import LLM
@@ -57,7 +57,7 @@ class AgenticService:
         self.cards = load_cards(outputs_dir)
         self.refs = load_refs(outputs_dir)
 
-    def answer(self, query: str, variant: Dict, filters: Optional[Dict] = None) -> Dict:
+    def answer(self, query: str, variant: Dict, filters: Optional[Dict] = None, debug: bool = False) -> Dict:
         source = variant.get("answer_source", "pure-rag")
         if source == "pure-rag":
             refs = self.retriever.retrieve(
@@ -71,15 +71,27 @@ class AgenticService:
             result = self.answerer.answer_from_refs(query, refs)
             result["drilled"] = None
             result["evidence_sections"] = refs
-            return with_execution(
+            result = with_execution(
                 result,
                 requested_mode=source,
                 path="rag-retrieval",
                 evidence_kind="retrieval",
                 steps=["Run configured vector/full-text retrieval", "Generate answer from retrieved sections"],
             )
+            if debug:
+                result["debug"] = self._debug_payload(
+                    query=query,
+                    answer_mode=source,
+                    intent=None,
+                    routing=self._empty_routing(),
+                    retrieval=self._debug_retrieval(variant, refs),
+                    drilldown=None,
+                    refs_used=refs,
+                    card_used=None,
+                )
+            return result
 
-        card = self.find_card(query)
+        card, routing = self.find_card(query, return_meta=True)
         if not card:
             refs = self.retriever.retrieve(
                 query,
@@ -92,17 +104,29 @@ class AgenticService:
             result = self.answerer.answer_from_refs(query, refs)
             result["drilled"] = True
             result["evidence_sections"] = refs
-            return with_execution(
+            result = with_execution(
                 result,
                 requested_mode=source,
                 path="agentic-rag-fallback" if source == "agentic" else "rag-fallback",
                 evidence_kind="retrieval",
                 steps=["No approved card matched the question", "Fallback to hybrid RAG retrieval"],
             )
+            if debug:
+                result["debug"] = self._debug_payload(
+                    query=query,
+                    answer_mode=source,
+                    intent=None,
+                    routing=routing,
+                    retrieval=self._debug_retrieval({"index": "both", "search": "hybrid", "top_k": 8, "rerank": variant.get("rerank", False)}, refs),
+                    drilldown=None,
+                    refs_used=refs,
+                    card_used=None,
+                )
+            return result
 
         if source == "card-direct":
             result = answer_from_card(query, card, drilled=False)
-            return with_execution(
+            result = with_execution(
                 result,
                 requested_mode=source,
                 path="card-direct",
@@ -110,13 +134,25 @@ class AgenticService:
                 card=card,
                 steps=["Match approved canonical card", "Answer from card fields without source drilldown"],
             )
+            if debug:
+                result["debug"] = self._debug_payload(
+                    query=query,
+                    answer_mode=source,
+                    intent=None,
+                    routing=routing,
+                    retrieval=None,
+                    drilldown=None,
+                    refs_used=[],
+                    card_used=card,
+                )
+            return result
 
         if source == "card-grounding":
             refs = self.refs_for_card(card)
             result = self.answerer.answer_from_refs(query, refs)
             result["drilled"] = True
             result["evidence_sections"] = refs
-            return with_execution(
+            result = with_execution(
                 result,
                 requested_mode=source,
                 path="card-grounding",
@@ -124,6 +160,18 @@ class AgenticService:
                 card=card,
                 steps=["Match approved canonical card", "Follow card source anchors", "Generate answer from source sections"],
             )
+            if debug:
+                result["debug"] = self._debug_payload(
+                    query=query,
+                    answer_mode=source,
+                    intent=None,
+                    routing=routing,
+                    retrieval=None,
+                    drilldown=self._debug_drilldown(card, refs),
+                    refs_used=refs,
+                    card_used=card,
+                )
+            return result
 
         if source == "agentic":
             intent = self.classify_intent(query)
@@ -132,7 +180,7 @@ class AgenticService:
                 result = self.answerer.answer_from_refs(query, refs)
                 result["drilled"] = True
                 result["evidence_sections"] = refs
-                return with_execution(
+                result = with_execution(
                     result,
                     requested_mode=source,
                     path="agentic-source-drilldown",
@@ -141,12 +189,24 @@ class AgenticService:
                     intent=intent,
                     steps=["Match approved canonical card", "Classify intent as exact", "Inline value missing", "Drill down to source anchors"],
                 )
+                if debug:
+                    result["debug"] = self._debug_payload(
+                        query=query,
+                        answer_mode=source,
+                        intent=intent,
+                        routing=routing,
+                        retrieval=None,
+                        drilldown=self._debug_drilldown(card, refs),
+                        refs_used=refs,
+                        card_used=card,
+                    )
+                return result
             if has_relevant_pointer_field(card, query):
                 refs = self.refs_for_card(card)
                 result = self.answerer.answer_from_refs(query, refs)
                 result["drilled"] = True
                 result["evidence_sections"] = refs
-                return with_execution(
+                result = with_execution(
                     result,
                     requested_mode=source,
                     path="agentic-source-drilldown",
@@ -155,8 +215,20 @@ class AgenticService:
                     intent=intent,
                     steps=["Match approved canonical card", f"Classify intent as {intent}", "Relevant field is pointer-only", "Drill down to source anchors"],
                 )
+                if debug:
+                    result["debug"] = self._debug_payload(
+                        query=query,
+                        answer_mode=source,
+                        intent=intent,
+                        routing=routing,
+                        retrieval=None,
+                        drilldown=self._debug_drilldown(card, refs),
+                        refs_used=refs,
+                        card_used=card,
+                    )
+                return result
             result = answer_from_card(query, card, drilled=False, intent=intent)
-            return with_execution(
+            result = with_execution(
                 result,
                 requested_mode=source,
                 path="agentic-card-direct",
@@ -165,6 +237,18 @@ class AgenticService:
                 intent=intent,
                 steps=["Match approved canonical card", f"Classify intent as {intent}", "Use answerable card fields directly"],
             )
+            if debug:
+                result["debug"] = self._debug_payload(
+                    query=query,
+                    answer_mode=source,
+                    intent=intent,
+                    routing=routing,
+                    retrieval=None,
+                    drilldown=None,
+                    refs_used=[],
+                    card_used=card,
+                )
+            return result
 
         raise ValueError(f"Unknown answer_source: {source}")
 
@@ -179,22 +263,39 @@ class AgenticService:
             raise ValueError(f"Unknown agentic intent returned by LLM: {intent}")
         return intent
 
-    def find_card(self, query: str) -> Optional[Dict]:
+    def find_card(self, query: str, return_meta: bool = False):
         """Retrieve the card to answer from. No embedding: the LLM reads a compact
         card catalog and picks (primary); deterministic keyword/alias matching is
         the fallback when the LLM declines or the pipeline runs offline."""
-        routed = self.route_card_llm(query)
+        routed, llm_ids, catalog_size = self._route_card_llm_with_meta(query)
+        routing = {
+            "method": "none",
+            "llm_returned_ids": llm_ids,
+            "catalog_size": catalog_size,
+            "chosen_card": None,
+        }
         if routed is not None:
-            return routed
-        return self.match_card_keyword(query)
+            routing["method"] = "llm-router"
+            routing["chosen_card"] = routed.get("canonical_id")
+            return (routed, routing) if return_meta else routed
+        keyword = self.match_card_keyword(query)
+        if keyword is not None:
+            routing["method"] = "keyword-fallback"
+            routing["chosen_card"] = keyword.get("canonical_id")
+            return (keyword, routing) if return_meta else keyword
+        return (None, routing) if return_meta else None
 
     def route_card_llm(self, query: str) -> Optional[Dict]:
         """Let the LLM select a card from the catalog (id + name + aliases +
         boundary + module). The catalog is small enough to fit one prompt, so this
         single selection replaces vector retrieval. Returns None when the LLM
         declines or errors, so the caller falls back to keyword matching."""
+        routed, _, _ = self._route_card_llm_with_meta(query)
+        return routed
+
+    def _route_card_llm_with_meta(self, query: str) -> Tuple[Optional[Dict], List[str], int]:
         if not self.cards:
-            return None
+            return None, [], 0
         catalog = [
             {
                 "canonical_id": cid,
@@ -212,14 +313,15 @@ class AgenticService:
                 schema=ROUTER_SCHEMA,
             )
         except Exception:
-            return None
+            return None, [], len(catalog)
         ids = response.get("canonical_ids") if isinstance(response, dict) else None
+        ids = [str(cid) for cid in ids] if isinstance(ids, list) else []
         if not ids:
-            return None
+            return None, [], len(catalog)
         for cid in ids:
             if cid in self.cards:
-                return self.cards[cid]
-        return None
+                return self.cards[cid], ids, len(catalog)
+        return None, ids, len(catalog)
 
     def match_card_keyword(self, query: str) -> Optional[Dict]:
         lowered = query.lower()
@@ -251,16 +353,11 @@ class AgenticService:
         Subsections (and their facts) hold most of a card's evidence, so collect
         the specific ones first, then the card-level field aggregates as fallback.
         """
-        section_ids: List[str] = []
-        for sub in card.get("subsections", []):
-            for fact in sub.get("facts", []):
-                section_ids.extend(fact.get("source_section_ids", []))
-            section_ids.extend(sub.get("source_section_ids", []))
-        for field in card.get("fields", []):
-            section_ids.extend(field.get("source_section_ids", []))
+        section_ids = self._card_section_ids(card)
         seen = set()
         refs = []
-        for sid in section_ids:
+        for item in section_ids:
+            sid = item["section_id"]
             if sid in self.refs and sid not in seen:
                 refs.append(self.refs[sid])
                 seen.add(sid)
@@ -272,6 +369,119 @@ class AgenticService:
                 len(section_ids),
             )
         return refs[:8]
+
+    def _card_section_ids(self, card: Dict) -> List[Dict[str, str]]:
+        """Return source section ids in the exact order card drilldown uses."""
+        rows: List[Dict[str, str]] = []
+        for sub_index, sub in enumerate(card.get("subsections", [])):
+            subsection = str(sub.get("name") or f"subsection[{sub_index}]")
+            for fact_index, fact in enumerate(sub.get("facts", [])):
+                for sid in fact.get("source_section_ids", []):
+                    if sid:
+                        rows.append(
+                            {
+                                "origin": "fact",
+                                "section_id": str(sid),
+                                "subsection": subsection,
+                                "fact_index": str(fact_index),
+                                "field": str(fact.get("field") or ""),
+                                "label": str(fact.get("label") or ""),
+                            }
+                        )
+            for sid in sub.get("source_section_ids", []):
+                if sid:
+                    rows.append(
+                        {
+                            "origin": "subsection",
+                            "section_id": str(sid),
+                            "subsection": subsection,
+                            "fact_index": "",
+                            "field": "",
+                            "label": "",
+                        }
+                    )
+        for field_index, field in enumerate(card.get("fields", [])):
+            for sid in field.get("source_section_ids", []):
+                if sid:
+                    rows.append(
+                        {
+                            "origin": "field",
+                            "section_id": str(sid),
+                            "subsection": "",
+                            "fact_index": "",
+                            "field_index": str(field_index),
+                            "field": str(field.get("field") or ""),
+                            "label": str(field.get("label") or ""),
+                        }
+                    )
+        return rows
+
+    def _debug_payload(
+        self,
+        *,
+        query: str,
+        answer_mode: str,
+        intent: Optional[str],
+        routing: Dict[str, Any],
+        retrieval: Optional[Dict[str, Any]],
+        drilldown: Optional[Dict[str, Any]],
+        refs_used: List[Dict],
+        card_used: Optional[Dict],
+    ) -> Dict[str, Any]:
+        return {
+            "query": query,
+            "answer_mode": answer_mode,
+            "intent": intent,
+            "routing": routing,
+            "retrieval": retrieval,
+            "drilldown": drilldown,
+            "refs_used": [debug_ref(ref) for ref in refs_used],
+            "card_used": debug_card(card_used) if card_used else None,
+        }
+
+    def _debug_retrieval(self, variant: Dict, refs: List[Dict]) -> Dict[str, Any]:
+        return {
+            "index": variant.get("index", "both"),
+            "search": variant.get("search", "hybrid"),
+            "top_k": int(variant.get("top_k", 8)),
+            "rerank": bool(variant.get("rerank", False)),
+            "hits": [debug_ref_hit(ref) for ref in refs],
+        }
+
+    def _debug_drilldown(self, card: Dict, refs_used: List[Dict]) -> Dict[str, Any]:
+        gathered = self._card_section_ids(card)
+        resolved: List[str] = []
+        missed: List[str] = []
+        seen_resolved = set()
+        seen_missed = set()
+        for item in gathered:
+            sid = item["section_id"]
+            if sid in self.refs:
+                if sid not in seen_resolved:
+                    resolved.append(sid)
+                    seen_resolved.add(sid)
+            elif sid not in seen_missed:
+                missed.append(sid)
+                seen_missed.add(sid)
+        return {
+            "gathered": gathered,
+            "resolved_section_ids": resolved,
+            "missed_section_ids": missed,
+            "counts": {
+                "gathered": len(gathered),
+                "resolved": len(resolved),
+                "missed": len(missed),
+                "capped_to": len(refs_used),
+            },
+        }
+
+    def _empty_routing(self) -> Dict[str, Any]:
+        return {
+            "method": "none",
+            "llm_returned_ids": [],
+            "catalog_size": len(self.cards),
+            "chosen_card": None,
+        }
 
 
 def load_cards(outputs_dir: Path) -> Dict[str, Dict]:
@@ -286,6 +496,54 @@ def load_refs(outputs_dir: Path) -> Dict[str, Dict]:
     if not path.exists():
         return {}
     return {ref["section_id"]: ref for ref in read_json(path)}
+
+
+def debug_ref(ref: Dict) -> Dict[str, Any]:
+    score = ref.get("score")
+    heading_path = ref.get("heading_path", [])
+    return {
+        "section_id": ref.get("section_id", ""),
+        "anchor": ref.get("anchor") or " > ".join(heading_path),
+        "title": ref.get("title", ""),
+        "heading_path": heading_path,
+        "source_url": ref.get("source_url", ""),
+        "module": ref.get("module", []),
+        "score": round(float(score), 6) if isinstance(score, (int, float)) else None,
+        "body_md": ref.get("body_md", ""),
+    }
+
+
+def debug_ref_hit(ref: Dict) -> Dict[str, Any]:
+    score = ref.get("score")
+    return {
+        "section_id": ref.get("section_id", ""),
+        "title": ref.get("title", ""),
+        "heading_path": ref.get("heading_path", []),
+        "source_url": ref.get("source_url", ""),
+        "score": round(float(score), 6) if isinstance(score, (int, float)) else None,
+    }
+
+
+def debug_card(card: Dict) -> Dict[str, Any]:
+    keys = [
+        "canonical_id",
+        "canonical_name",
+        "topic_class",
+        "topic_type",
+        "aliases",
+        "module",
+        "boundary",
+        "status",
+        "keywords_raw_agg",
+        "concepts_agg",
+        "questions_agg_en",
+        "questions_agg_zh",
+        "source_section_ids",
+        "subsections",
+        "fields",
+        "flags",
+    ]
+    return {key: card.get(key) for key in keys if key in card}
 
 
 def answer_from_card(query: str, card: Dict, drilled: bool, intent: str = "concept") -> Dict:

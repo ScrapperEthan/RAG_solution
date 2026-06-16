@@ -106,6 +106,12 @@
               </label>
             </div>
 
+            <label class="debug-toggle">
+              <input id="debugToggle" type="checkbox" />
+              <span>Debug 模式</span>
+              <small>返回并展开召回链路每一跳的字段和值。</small>
+            </label>
+
             <form id="questionForm">
               <label class="field">
                 <span>当前问题</span>
@@ -160,6 +166,7 @@
                 <div class="empty-state">提交问题后，将按实际路径展示检索章节、卡片字段、下钻原文，或说明没有可验证证据。</div>
               </div>
             </div>
+            <div id="debugPanel" class="debug-panel-host is-hidden"></div>
           </section>
         </div>
       </section>
@@ -220,6 +227,7 @@
     </main>
 
     <script src="./offline-demo.js"></script>
+    <script src="./debug-panel.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
