@@ -40,3 +40,17 @@
 opencode 也指出：`answer_from_card()`（**卡片直答**）只从 `card["fields"]` 取值、**几乎不用 subsections**，而很多卡的关键细节在 subsections——所以即便 card-direct 走通，"直答"也偏弱（且它**不调 LLM、是确定性拼字段值**，这就是你看到"直接把卡片内容原文拿过来"的原因）。
 - 本次的 drilldown 修复已让 **agentic/卡片+取证** 路径把富证据的问题导向"回原文重新生成"，基本满足"看完原文再答"的诉求。
 - 若还要增强 card-direct 本身（让它也吃 subsections，或改成"把卡片喂给 LLM 读完再答"），那是**第二层、单独一轮**，需要时再开规格。
+
+## 6. 追加修复：LLM 回答"漏 channel"= drilldown 截断（已修）
+内网现象：问"MDC support 有哪些 channel"，应有 PN/SMS/Email/Letter/WhatsApp/WeChat，但 LLM 只答 2~3 个。**根因不是 LLM 漏读，是喂给它的原文不全**：`refs_for_card` 之前 `return refs[:8]`，而 channels 卡是矩阵（6 渠道 × 数个属性 ≈ 16~32 段），截到 8 段只覆盖前 2~3 个渠道，后面的渠道**根本没进 LLM 的 context**，所以它如实只答看到的那几个。
+- **修法**：cap 从 8 提到 `MAX_DRILLDOWN_REFS = 40`（矩阵格很小、单卡段数有界，token 安全）。验证：demo 的 channels 卡 drilldown 由 8 → **16，5 个渠道全部到达 LLM**。
+- 注意 **pure-rag 同样受 `retrieval.top_k`(默认 8) 限制**——枚举类问题（"列出所有 X"）走 pure-rag 也会漏，可在 `config.yaml` 调高 top_k；但卡片取证路径（已修）对"整卡枚举"更合适，因为它把整张卡的段落都给 LLM。
+
+## 7. 用 Debug 模式自查（codex 已实现，fb75882）
+前端勾选 **Debug 模式**（带 `debug:true`），回答后看链路面板，逐跳验证：
+1. **routing**：命中哪张卡、LLM 选的还是关键词兜底。
+2. **drilldown.counts**：`gathered`(收集) / `resolved`(命中) / `missed`(未命中) / **`capped_to`**(实际喂给 LLM 的条数)。
+   - `missed` 非空 → 还有 section_id 对不上 loaded_refs（再报 claude）。
+   - `gathered > capped_to` → 仍被截断（说明该卡段数 > 40，需再调 cap 或换枚举策略）。
+3. **refs_used[].body_md**：确认"含答案的原文段落"确实在里面（如所有渠道的 cell）。
+对"MDC support 有哪些 channel"：复测应看到 `resolved` 含全部渠道的 cell、`capped_to` ≥ 渠道数、答案列全。**若仍漏，把该问题的 `debug` JSON（脱敏）回报，claude 据此继续。**

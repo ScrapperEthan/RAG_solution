@@ -12,6 +12,14 @@ from backend.util import read_json
 
 logger = logging.getLogger(__name__)
 
+# Card drilldown feeds the matched card's source sections to the grounded
+# answerer. A matrix card (e.g. notification channels = 6 channels x several
+# attributes) has ~16-32 tiny cells; an "enumerate all X" question needs ALL of
+# them to reach the LLM, or the tail items (later channels) get silently dropped
+# from the answer. The old cap of 8 truncated mid-matrix. Keep a generous bound
+# for token safety — cells are small, and a single card's sections are bounded.
+MAX_DRILLDOWN_REFS = 40
+
 
 INTENT_SYSTEM = """task: agentic_classify_intent
 Classify a user question for a card + RAG agent. Return STRICT JSON:
@@ -368,7 +376,7 @@ class AgenticService:
                 card.get("canonical_id"),
                 len(section_ids),
             )
-        return refs[:8]
+        return refs[:MAX_DRILLDOWN_REFS]
 
     def _card_section_ids(self, card: Dict) -> List[Dict[str, str]]:
         """Return source section ids in the exact order card drilldown uses."""
