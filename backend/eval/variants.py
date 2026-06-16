@@ -27,8 +27,8 @@ def variants() -> List[Dict]:
         },
         {
             "id": "V3",
-            "label": "questions · vector · pure RAG",
-            "index": "questions",
+            "label": "descriptions · vector · pure RAG",
+            "index": "descriptions",
             "search": "vector",
             "rerank": False,
             "answer_source": "pure-rag",
@@ -37,8 +37,8 @@ def variants() -> List[Dict]:
         },
         {
             "id": "V4",
-            "label": "questions · hybrid · pure RAG",
-            "index": "questions",
+            "label": "descriptions · hybrid · pure RAG",
+            "index": "descriptions",
             "search": "hybrid",
             "rerank": False,
             "answer_source": "pure-rag",

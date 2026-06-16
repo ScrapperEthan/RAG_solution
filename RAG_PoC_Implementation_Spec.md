@@ -211,7 +211,7 @@ class Embedder(Protocol):
 query
   └─► (optional) metadata pre-filter  → SQL WHERE on content_type/component/tree_path/...
   └─► VECTOR search
-        • index=questions → search descriptions.embedding → map desc → ref_id
+        • index=descriptions → search descriptions.embedding → map desc → ref_id
         • index=body      → search refs.body_embedding
         • index=both      → search both, pool
         • always also search summaries.embedding (multi-hop)

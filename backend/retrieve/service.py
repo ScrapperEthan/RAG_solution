@@ -38,11 +38,11 @@ class Retriever:
 
         if index in {"body", "both"}:
             ranked_lists.append(self.store.search_vector("refs", query_vec, candidate_k, filters))
-        if index in {"questions", "both"}:
+        if index in {"descriptions", "both"}:
             ranked_lists.append(self.store.search_vector("descriptions", query_vec, candidate_k, filters))
         if search == "hybrid":
             ranked_lists.append(self.store.search_fts("refs", query, candidate_k, filters))
-            if index in {"questions", "both"}:
+            if index in {"descriptions", "both"}:
                 ranked_lists.append(self.store.search_fts("descriptions", query, candidate_k, filters))
 
         ranked_lists.append(self.store.search_vector("summaries", query_vec, min(candidate_k, 10), filters))
