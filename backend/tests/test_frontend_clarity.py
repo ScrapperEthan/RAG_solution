@@ -98,7 +98,7 @@ class FrontendClarityTest(unittest.TestCase):
         self.assertIn('endsWith("-then-rag-fallback")', DEBUG_PANEL)
         self.assertIn("debug?.drilldown && debug?.retrieval", DEBUG_PANEL)
         self.assertIn("tag 加权", DEBUG_PANEL)
-        self.assertIn("boost_modules", DEBUG_PANEL)
+        self.assertIn("boost_domains", DEBUG_PANEL)
 
     def test_cards_page_renders_two_stage_fallback_and_marks_gap(self) -> None:
         self.assertNotIn("<script src=", CARDS.lower())

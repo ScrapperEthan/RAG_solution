@@ -131,13 +131,13 @@ const QUERY_DIAGRAM = `
 
   <!-- Q -->
   <rect x="360" y="16" width="240" height="44" rx="10" fill="#fff" stroke="var(--line)" stroke-width="1.5"></rect>
-  <text x="480" y="43" text-anchor="middle" font-size="13" font-weight="800" fill="var(--ink)">用户问题（+ 可选 module 过滤）</text>
+  <text x="480" y="43" text-anchor="middle" font-size="13" font-weight="800" fill="var(--ink)">用户问题（+ 可选 domains 过滤）</text>
   <line x1="480" y1="60" x2="480" y2="90" stroke="#9aa39d" stroke-width="1.6" marker-end="url(#ah)"></line>
 
   <!-- Router -->
   <rect x="300" y="92" width="360" height="62" rx="10" fill="#fff" stroke="var(--green)" stroke-width="1.8"></rect>
   <text x="480" y="118" text-anchor="middle" font-size="13.5" font-weight="800" fill="var(--green)">① 找卡 · LLM 路由</text>
-  <text x="480" y="138" text-anchor="middle" font-size="11.5" fill="var(--muted)">读卡片目录：name · aliases · boundary · module</text>
+  <text x="480" y="138" text-anchor="middle" font-size="11.5" fill="var(--muted)">读卡片目录：name · aliases · boundary · domain</text>
   <text x="668" y="112" font-size="11" font-weight="700" fill="var(--blue)">← 无 embedding：</text>
   <text x="668" y="128" font-size="11" font-weight="700" fill="var(--blue)">选卡 = 检索</text>
   <line x1="480" y1="154" x2="480" y2="182" stroke="#9aa39d" stroke-width="1.6" marker-end="url(#ah)"></line>
@@ -381,14 +381,14 @@ S1(Whatsapp×Information) → {tier:"narrative", summary_zh:"Whatsapp 渠道的 
        take:"D1 高(0.86)、D2 低(0.41) 恰好互补：字面只共享 mdc/portal，但意思就是同一个。系统把疑点摆上桌，不替你拍板。"}},
 
   {n:"⑤",cls:"human",tag:["human","人工"],title:"人工闸：审 + 冻结词表",
-   doIt:"你（人）用 approve.html 打开候选清单 + 现有已冻结词表，逐条决定：<b>保留为新主题 / 合并到某已有主题</b>（它的名字会变成对方的别名）<b>/ 降级为子条目 / 丢弃</b>。顺手补全 boundary、module、subsection，导出整张“已批准词表”。",
+   doIt:"你（人）用 approve.html 打开候选清单 + 现有已冻结词表，逐条决定：<b>保留为新主题 / 合并到某已有主题</b>（它的名字会变成对方的别名）<b>/ 降级为子条目 / 丢弃</b>。顺手补全 boundary、domains、subsection，导出整张“已批准词表”。",
    why:"这是整条流水线<b>唯一需要人判断</b>的地方，也是“主题粒度稳不稳”的总闸。机器负责发现（覆盖广），人负责拍板（结构稳）。无 embedding 时，你在这里定的 <b>aliases / boundary</b> 直接就是 query 找卡的索引，质量是命根。",
    prod:"keyword_table.jsonl（approved，→ paths.keyword_table）",
    fields:[
     {f:"canonical_id",t:"string (C-####)",m:"正式稳定 id，一旦定下<b>永不复用、永不改</b>。",ex:'"C-0002"'},
     {f:"canonical_name",t:"string",m:"对外统一规范名。卡片合并、倒排表都以它为键。",ex:'"MDC Management Portal"'},
     {f:"aliases",t:"array<string>",m:"所有别名/同义/缩写。<b>合并、别名回填都往这里加</b>——越全召回越稳。",ex:'["MDC Messaging Platform","UAV Access Right","PROD Access Right"]'},
-    {f:"module",t:"array<enum>",enums:["Q2 - Engagement","MDC Onboarding","(本项目自定义域标签)"],m:"域标签，可多个。用于导航和检索预过滤。只打标签，绝不用来删页。",ex:'["Q2 - Engagement","MDC Onboarding"]'},
+    {f:"domains",t:"array<enum>",enums:["Q2 - Engagement","MDC Onboarding","(本项目自定义域标签)"],m:"域标签，可多个。用于导航和检索预过滤。只打标签，绝不用来删页。",ex:'["Q2 - Engagement","MDC Onboarding"]'},
     {f:"topic_type",t:"enum",enums:["component","process","service","initiative","planning","inventory"],m:"分类提示，只做提示、不参与分组。",ex:'"inventory"'},
     {f:"topic_class",t:"enum",enums:["workflow","system component","catalog"],m:"决定卡片<b>派生哪些字段</b>：workflow→trigger/steps；system component→purpose/capabilities；catalog→categories/sla。",ex:'"system component"'},
     {f:"boundary",t:"string",m:"范围边界：这个主题管到哪、不管哪。喂给 reduce 判断某段算不算它，专治一词多义误归。",ex:'"MDC portal 渠道管理与 UAT/PROD access right 申请链路"'},
@@ -400,7 +400,7 @@ S1(Whatsapp×Information) → {tier:"narrative", summary_zh:"Whatsapp 渠道的 
        code:`// 这是真实词表 inputs/keyword_table_3725660167.jsonl 的 C-0002 行（别名已是历次合并攒出来的）：
 {"canonical_id":"C-0002","canonical_name":"MDC Management Portal",
  "aliases":["MDC Messaging Platform","MDC Management Portal access right application and link","UAV Access Right","PROD Access Right"],
- "module":["Q2 - Engagement","MDC Onboarding"],"topic_type":"inventory","topic_class":"system component",
+ "domains":["Q2 - Engagement","MDC Onboarding"],"topic_type":"inventory","topic_class":"system component",
  "boundary":"MDC portal 渠道管理与 UAT/PROD access right 申请链路",
  "subsections":["Portal link","UAT Access right","PROD Access right"],"status":"approved"}`,
        take:"“合并”的本质 = 让候选名变成已有主题的一个别名。从此 reduce 把它的小块认成 C-0002。"}},
@@ -427,7 +427,7 @@ C-0002.boundary: "MDC portal 渠道管理与 UAT/PROD access right 申请链路"
    why:"这是“把散在多页的零碎事实按主题汇总成一张可用卡”的一步。一张卡天生融多页；冲突显式标注，是技术文档最易错处（同一参数多版本）的兜底。",
    prod:"outputs/cards/*.json + inverted_index.jsonl + review_queue.jsonl",
    fields:[
-    {f:"canonical_id / canonical_name / aliases / module / boundary / topic_class",t:"（透传自词表）",m:"卡片的身份与分类，原样来自 ⑤ 的冻结词表。",ex:'"C-0002" / "MDC Management Portal" / ...'},
+    {f:"canonical_id / canonical_name / aliases / domains / boundary / topic_class",t:"（透传自词表）",m:"卡片的身份与分类，原样来自 ⑤ 的冻结词表。",ex:'"C-0002" / "MDC Management Portal" / ...'},
     {f:"questions_agg_en / questions_agg_zh",t:"array<string>",m:"这张卡聚合的可回答问题。无 embedding 时，query 用它匹配用户问题。",ex:'["How to apply MDC portal PROD access right?"]'},
     {f:"subsections",t:"array<object>",m:"二级子条目，每个含 name / summary / fields / sources，按 metadata 路由填。",ex:'[{"name":"PROD Access right","fields":[...],"sources":[...]}]'},
     {f:"fields",t:"array<object>",m:"卡的正文知识条目，每条含 field / tier / value / sources。",ex:'[{"field":"definition","tier":"narrative","value":"...","sources":[...]}]'},
@@ -451,7 +451,7 @@ subsection "UAT Access right" : 同上
    prod:"向量库（chroma / pgvector …）",
    fields:[
     {f:"embedding",t:"array<number>",m:"卡片文本的向量表示。维度取决于模型（如 BGE-m3 = 1024 维）。",ex:"[0.013, -0.27, ...]"},
-    {f:"metadata",t:"object",m:"随向量存的过滤字段（canonical_id / module 等），供检索预过滤。",ex:'{"canonical_id":"C-0002","module":["Q2 - Engagement"]}'}
+    {f:"metadata",t:"object",m:"随向量存的过滤字段（canonical_id / domains 等），供检索预过滤。",ex:'{"canonical_id":"C-0002","domains":["Q2 - Engagement"]}'}
    ],
    problem:null,
    ex:{scenario:"无 embedding 方案：这步直接跳过。",
@@ -463,24 +463,24 @@ subsection "UAT Access right" : 同上
 query: {
   title: "用 cards 做问答（query time）",
   intro: "用户问题 → LLM 路由找卡 → 按字段 tier 取答（直答 / 转述 / 下钻）→ 带原文引用组装答案。下面这张<b>决策图</b>是整条 query 路径的一页总览，可直接截进汇报。",
-  callout: {cls:"blue", html:"⚑ <b>无 embedding</b>：找卡不靠向量，而靠 <b>LLM 读 card 目录选卡</b>（canonical_name + aliases + boundary + module + questions_agg）。代码在 <code>backend/agentic/service.py</code> 的 <code>route_card_llm()</code>，失败兜底 <code>match_card_keyword()</code>。所以 ⑤ 里别名/边界质量，直接决定这里找不找得到卡。"},
+  callout: {cls:"blue", html:"⚑ <b>无 embedding</b>：找卡不靠向量，而靠 <b>LLM 读 card 目录选卡</b>（canonical_name + aliases + boundary + domains + questions_agg）。代码在 <code>backend/agentic/service.py</code> 的 <code>route_card_llm()</code>，失败兜底 <code>match_card_keyword()</code>。所以 ⑤ 里别名/边界质量，直接决定这里找不找得到卡。"},
   diagram: QUERY_DIAGRAM,
   exTitle: "📌 贯穿例子：用户问『怎么申请 MDC Management Portal 的 PROD access right？』——看它怎么命中 C-0002 并答出 PROD 申请入口。另配两道对照题（概念题 / 指针下钻题）。",
   steps: [
   {n:"①",cls:"",tag:["page","输入"],title:"用户问题",
-   doIt:"用户用自然语言提问，可附带一个 module 提示缩小范围。",
+   doIt:"用户用自然语言提问，可附带一个 domains 提示缩小范围。",
    why:"问答的起点。措辞会影响下一步“选卡”能不能命中——这也是为什么 card 的别名要尽量全。",
-   prod:"query 字符串（+ 可选 module 过滤）",
+   prod:"query 字符串（+ 可选 domains 过滤）",
    fields:[
     {f:"query",t:"string",m:"用户的自然语言问题。",ex:'"怎么申请 MDC Management Portal 的 PROD access right？"'},
-    {f:"module (可选)",t:"enum",enums:["Q2 - Engagement","MDC Onboarding","留空 = 全部"],m:"可选的模块过滤，先把范围缩到某个域。",ex:'"MDC Onboarding"'}
+    {f:"domains (可选)",t:"enum",enums:["Q2 - Engagement","MDC Onboarding","留空 = 全部"],m:"可选的域过滤，先把范围缩到某个域。",ex:'"MDC Onboarding"'}
    ],
    problem:null,
-   ex:{scenario:"用户在问答框输入问题，没指定 module。",code:`"怎么申请 MDC Management Portal 的 PROD access right？"`,
+   ex:{scenario:"用户在问答框输入问题，没指定 domains。",code:`"怎么申请 MDC Management Portal 的 PROD access right？"`,
        take:"起点。系统接下来要在所有卡里找出“讲这事”的那张。"}},
 
   {n:"②",cls:"global",tag:["global","选卡"],title:"找到相关卡（LLM 路由）",
-   doIt:"把 card 目录（每张卡 canonical_id + canonical_name + aliases + boundary + module）拼成一份“菜单”给 LLM，让它<b>按意思</b>挑出相关卡的 canonical_id。<b>这一步就是无 embedding 方案的“检索”。</b> LLM 没挑出来时，兜底用确定性关键词/别名匹配。",
+   doIt:"把 card 目录（每张卡 canonical_id + canonical_name + aliases + boundary + domains）拼成一份“菜单”给 LLM，让它<b>按意思</b>挑出相关卡的 canonical_id。<b>这一步就是无 embedding 方案的“检索”。</b> LLM 没挑出来时，兜底用确定性关键词/别名匹配。",
    why:"这步决定“能不能找到对的卡”。目录只有几十~几百条，全塞进上下文不大，所以可以让 LLM 直接读着选——比向量更懂“换个说法的同一件事”。命中全靠 <b>aliases / boundary</b>：找不到多半是别名缺了，回 build ⑤ 补（D4 会让它越用越全）。",
    prod:"命中的 canonical_id(s) → card",
    fields:[

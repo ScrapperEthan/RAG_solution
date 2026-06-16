@@ -63,8 +63,8 @@
     .view-switch { display: flex; gap: 4px; padding: 3px; border-radius: 10px; background: #edf1ee; }
     .view-switch button { min-height: 34px; padding: 0 13px; border: 0; border-radius: 7px; color: var(--muted); background: transparent; font-weight: 800; }
     .view-switch button.is-active { color: #fff; background: var(--green); }
-    .module-edge-toggle { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; font-weight: 700; }
-    .module-edge-toggle input { accent-color: var(--green); }
+    .domain-edge-toggle { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .domain-edge-toggle input { accent-color: var(--green); }
     .workspace { display: grid; grid-template-columns: 320px minmax(0,1fr); gap: 16px; margin-top: 16px; align-items: start; }
     .map-workspace {
       margin-top: 16px; padding: 16px; border: 1px solid var(--line); border-radius: 16px;
@@ -82,7 +82,7 @@
     .knowledge-map { min-height: 600px; overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: radial-gradient(circle at 50% 45%, #fff 0, #f4f8f5 72%); }
     .knowledge-map svg { display: block; width: 100%; height: auto; min-height: 600px; }
     .graph-edge { stroke: #aebdb4; stroke-width: 1.6; stroke-opacity: .6; }
-    .graph-edge.is-module { stroke: #cbd4ce; stroke-width: 1; stroke-dasharray: 5 6; stroke-opacity: .45; }
+    .graph-edge.is-domain { stroke: #cbd4ce; stroke-width: 1; stroke-dasharray: 5 6; stroke-opacity: .45; }
     .graph-node { cursor: pointer; }
     .graph-node circle { stroke: #fff; stroke-width: 3; filter: drop-shadow(0 4px 7px rgba(31,48,39,.16)); transition: stroke-width .15s ease, transform .15s ease; }
     .graph-node:hover circle { stroke-width: 6; }
@@ -105,8 +105,8 @@
     .tier.inline-value { color: var(--green); background: var(--green-soft); }
     .tier.pointer-only { color: #176b87; background: #e4f2f5; }
     .card-list { max-height: calc(100vh - 225px); overflow: auto; padding: 8px; }
-    .module-group + .module-group { margin-top: 10px; }
-    .module-title { padding: 6px 7px; color: var(--muted); font-size: 9px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+    .domain-group + .domain-group { margin-top: 10px; }
+    .domain-title { padding: 6px 7px; color: var(--muted); font-size: 9px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
     .card-choice {
       display: grid; gap: 5px; width: 100%; margin: 3px 0; padding: 10px; border: 1px solid transparent;
       border-radius: 9px; color: var(--ink); background: transparent; text-align: left;
@@ -266,9 +266,9 @@
         <button id="structureViewBtn" class="is-active" type="button">结构</button>
         <button id="mapViewBtn" type="button">知识地图</button>
       </div>
-      <label id="moduleEdgeField" class="module-edge-toggle" hidden>
-        <input id="moduleEdgeToggle" type="checkbox" />
-        同时显示同一业务模块的弱关联（虚线）
+      <label id="domainEdgeField" class="domain-edge-toggle" hidden>
+        <input id="domainEdgeToggle" type="checkbox" />
+        同时显示同一域的弱关联（虚线）
       </label>
     </section>
 
@@ -394,7 +394,7 @@
 
   const retrievalDebug = (retrieval, fallback) => {
     const hits = arrDebug(retrieval?.hits);
-    const boostModules = arrDebug(retrieval?.boost_modules);
+    const boostDomains = arrDebug(retrieval?.boost_domains);
     const note = fallback
       ? '<div class="debug-recovery"><strong>RAG 救场命中</strong><span>下面这些 hits 是真正喂给 LLM、产出最终答案的来源。</span></div>'
       : "";
@@ -405,7 +405,7 @@
         <td>${escDebug(arrDebug(hit.heading_path).join(" > "))}</td><td><code>${escDebug(hit.score ?? "null")}</code></td>
       </tr>`).join("")}</tbody>
     </table></div>` : '<div class="debug-empty-inline">retrieval.hits 为空</div>';
-    return `${note}${summaryDebug([["index", retrieval?.index],["search", retrieval?.search],["top_k", retrieval?.top_k],["tag 加权", boostModules.length ? boostModules.join(" / ") : null],["hits.length", hits.length]])}${table}${treeDebug(retrieval)}`;
+    return `${note}${summaryDebug([["index", retrieval?.index],["search", retrieval?.search],["top_k", retrieval?.top_k],["tag 加权", boostDomains.length ? boostDomains.join(" / ") : null],["hits.length", hits.length]])}${table}${treeDebug(retrieval)}`;
   };
 
   const bridgeDebug = execution => {
@@ -428,7 +428,7 @@
     ${summaryDebug([
       ["canonical_id", card.canonical_id],
       ["canonical_name", card.canonical_name],
-      ["module", arrDebug(card.module).join(" / ")],
+      ["domains", arrDebug(card.domains).join(" / ")],
       ["subsections.length", arrDebug(card.subsections).length],
       ["fields.length", arrDebug(card.fields).length],
     ])}${treeDebug(card)}
@@ -505,7 +505,7 @@ const SAMPLE_CARD = {
   canonical_name: "请假申请规则",
   topic_class: "reference",
   aliases: ["年假规则", "请假规定"],
-  module: ["人事服务", "请假"],
+  domains: ["人事服务", "请假"],
   boundary: "回答员工有多少年假、去哪里提交请假申请。所有内容均为脱敏演示数据。",
   topic_type: "reference",
   status: "approved",
@@ -559,19 +559,19 @@ const SAMPLE_CARDS = [
   SAMPLE_CARD,
   {
     canonical_id:"C-DEMO-LEAVE-FLOW", canonical_name:"请假审批流程", topic_class:"workflow", aliases:["请假怎么审批"],
-    module:["人事服务","请假"], boundary:"说明提交请假申请后，申请会经过哪些步骤。", topic_type:"process", status:"approved",
+    domains:["人事服务","请假"], boundary:"说明提交请假申请后，申请会经过哪些步骤。", topic_type:"process", status:"approved",
     subsections:[{name:"审批步骤",summary:"提交后先由直属经理审批。",facts:[{label:"第一审批人",field:"first_approver",tier:"inline-value",value:"直属经理",sources:[{page_id:"demo-leave-flow",anchor:"请假审批流程 > 审批步骤",source_url:"https://example.test/wiki/leave-flow",confluence_version:1}],source_section_ids:["demo-leave-flow#请假审批流程 > 审批步骤"]}],sources:[],source_section_ids:[]}],
     fields:[{field:"related_components",tier:"narrative",value:"审批前需要查看请假规则。",soft_links:["C-DEMO-LEAVE-RULES","C-DEMO-LEAVE-HELP"],sources:[],source_section_ids:[]}], flags:[]
   },
   {
     canonical_id:"C-DEMO-LEAVE-BALANCE", canonical_name:"年假余额查询", topic_class:"reference", aliases:["剩余年假"],
-    module:["人事服务","请假"], boundary:"说明员工去哪里查看自己还剩多少年假。", topic_type:"reference", status:"approved",
+    domains:["人事服务","请假"], boundary:"说明员工去哪里查看自己还剩多少年假。", topic_type:"reference", status:"approved",
     subsections:[{name:"查询入口",summary:"余额会显示在员工服务台。",facts:[{label:"查询位置",field:"balance_entry",tier:"inline-value",value:"员工服务台 > 我的假期",sources:[{page_id:"demo-leave-balance",anchor:"年假余额查询 > 查询入口",source_url:"https://example.test/wiki/leave-balance",confluence_version:1}],source_section_ids:["demo-leave-balance#年假余额查询 > 查询入口"]}],sources:[],source_section_ids:[]}],
     fields:[{field:"related_components",tier:"narrative",value:"查询余额时通常还要查看请假规则。",soft_links:["C-DEMO-LEAVE-RULES"],sources:[],source_section_ids:[]}], flags:[]
   },
   {
     canonical_id:"C-DEMO-LEAVE-HELP", canonical_name:"请假问题找谁", topic_class:"reference", aliases:["请假联系人"],
-    module:["人事服务","员工帮助"], boundary:"说明请假申请卡住或规则看不懂时联系谁。", topic_type:"reference", status:"approved",
+    domains:["人事服务","员工帮助"], boundary:"说明请假申请卡住或规则看不懂时联系谁。", topic_type:"reference", status:"approved",
     subsections:[{name:"联系方式",summary:"这里保存演示用的帮助邮箱。",facts:[{label:"帮助邮箱",field:"help_email",tier:"inline-value",value:"hr-help@example.test",sources:[{page_id:"demo-leave-help",anchor:"请假问题找谁 > 联系方式",source_url:"https://example.test/wiki/leave-help",confluence_version:1}],source_section_ids:["demo-leave-help#请假问题找谁 > 联系方式"]}],sources:[],source_section_ids:[]}],
     fields:[{field:"related_components",tier:"narrative",value:"可协助处理请假规则与审批流程问题。",soft_links:["C-DEMO-LEAVE-RULES","C-DEMO-LEAVE-FLOW"],sources:[],source_section_ids:[]}], flags:[]
   }
@@ -592,7 +592,7 @@ const SAMPLE_RESULT = {
     steps: ["找到已审批的“请假申请规则”卡", "识别问题是在询问明确数值", "直接使用卡片里的“年假天数”事实"],
     intent: "exact",
     drilled: false,
-    card: {canonical_id:"C-DEMO-LEAVE-RULES",canonical_name:"请假申请规则",module:["人事服务","请假"]}
+    card: {canonical_id:"C-DEMO-LEAVE-RULES",canonical_name:"请假申请规则",domains:["人事服务","请假"]}
   }
 };
 
@@ -606,7 +606,7 @@ function sampleResult() {
     title: "请假申请规则",
     heading_path: ["请假申请规则", "可以请几天"],
     source_url: "https://example.test/wiki/leave-policy",
-    module: ["人事服务", "请假"],
+    domains: ["人事服务", "请假"],
     score: 0.93,
     body_md: "请假申请规则\n员工每年有 10 天年假。该示例为脱敏演示数据。",
   };
@@ -622,7 +622,7 @@ function sampleResult() {
     result.execution.evidence_kind = "retrieval";
     result.execution.intent = "exact";
     result.execution.drilled = true;
-    result.execution.card = {canonical_id:"C-DEMO-LEAVE-RULES",canonical_name:"请假申请规则",module:["人事服务","请假"]};
+    result.execution.card = {canonical_id:"C-DEMO-LEAVE-RULES",canonical_name:"请假申请规则",domains:["人事服务","请假"]};
     result.execution.steps = [
       "匹配“请假申请规则”卡",
       "识别为精确能力问题，先回卡片 source 取证",
@@ -689,12 +689,12 @@ function sampleResult() {
       counts: {gathered:2,resolved:1,missed:0,capped_to:1},
       note: "脱敏样例：卡片 source 已解析，但没有回答刷脸审批能力，因此回退 RAG。",
     };
-    result.debug.retrieval = {index:"both",search:"hybrid",top_k:8,boost_modules:["人事服务","请假"],hits:[{section_id:ref.section_id,title:ref.title,heading_path:ref.heading_path,source_url:ref.source_url,score:ref.score}]};
+    result.debug.retrieval = {index:"both",search:"hybrid",top_k:8,boost_domains:["人事服务","请假"],hits:[{section_id:ref.section_id,title:ref.title,heading_path:ref.heading_path,source_url:ref.source_url,score:ref.score}]};
   }
   return result;
 }
 
-const state = { cards: [], selectedId: null, result: null, busy: false, sample: false, streamAnswer: "", view: "structure", includeModuleEdges: false };
+const state = { cards: [], selectedId: null, result: null, busy: false, sample: false, streamAnswer: "", view: "structure", includeDomainEdges: false };
 const el = id => document.getElementById(id);
 const arr = value => Array.isArray(value) ? value.filter(v => v !== null && v !== undefined && String(v).trim()) : [];
 const esc = value => String(value ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -715,8 +715,8 @@ el("renderJsonBtn").addEventListener("click", renderPastedResult);
 el("structureViewBtn").addEventListener("click", () => setView("structure"));
 el("mapViewBtn").addEventListener("click", () => setView("map"));
 el("debugToggle").addEventListener("change", renderDebugPanel);
-el("moduleEdgeToggle").addEventListener("change", event => {
-  state.includeModuleEdges = event.target.checked;
+el("domainEdgeToggle").addEventListener("change", event => {
+  state.includeDomainEdges = event.target.checked;
   renderKnowledgeMap();
 });
 el("cardList").addEventListener("click", event => {
@@ -818,8 +818,8 @@ function cardSearchText(card) {
   ].join(" ").toLowerCase();
 }
 
-function moduleKey(card) {
-  return arr(card.module).join(" / ") || "未分组";
+function domainKey(card) {
+  return arr(card.domains).join(" / ") || "未分组";
 }
 
 function setView(view) {
@@ -828,7 +828,7 @@ function setView(view) {
   el("mapViewBtn").classList.toggle("is-active", view === "map");
   el("structureWorkspace").hidden = view !== "structure";
   el("mapWorkspace").hidden = view !== "map";
-  el("moduleEdgeField").hidden = view !== "map";
+  el("domainEdgeField").hidden = view !== "map";
   if (view === "map") renderKnowledgeMap();
 }
 
@@ -849,11 +849,11 @@ function graphData() {
     arr(field.soft_links).forEach(target => addEdge(id, String(target), "related"));
   }));
   const explicitCount = edges.length;
-  if (state.includeModuleEdges) {
+  if (state.includeDomainEdges) {
     for (let i = 0; i < nodes.length; i += 1) {
       for (let j = i + 1; j < nodes.length; j += 1) {
-        const left = new Set(arr(nodes[i].card.module));
-        if (arr(nodes[j].card.module).some(module => left.has(module))) addEdge(nodes[i].id, nodes[j].id, "module");
+        const left = new Set(arr(nodes[i].card.domains));
+        if (arr(nodes[j].card.domains).some(domain => left.has(domain))) addEdge(nodes[i].id, nodes[j].id, "domains");
       }
     }
   }
@@ -862,7 +862,7 @@ function graphData() {
 
 function graphGroups(nodes, edges, explicitCount) {
   const useCommunities = explicitCount >= Math.max(1, Math.floor(nodes.length / 3));
-  if (!useCommunities) return {mode:"module", groups:new Map(nodes.map(node => [node.id, moduleKey(node.card)]))};
+  if (!useCommunities) return {mode:"domains", groups:new Map(nodes.map(node => [node.id, domainKey(node.card)]))};
   const adjacency = new Map(nodes.map(node => [node.id, []]));
   edges.forEach(edge => {
     adjacency.get(edge.source).push(edge.target);
@@ -925,8 +925,8 @@ function layoutGraph(nodes, edges) {
       let dx = b.x - a.x;
       let dy = b.y - a.y;
       const distance = Math.max(Math.hypot(dx, dy), 1);
-      const target = edge.type === "module" ? 210 : 145;
-      const force = (distance - target) * (edge.type === "module" ? .006 : .012);
+      const target = edge.type === "domains" ? 210 : 145;
+      const force = (distance - target) * (edge.type === "domains" ? .006 : .012);
       dx /= distance; dy /= distance;
       a.vx += dx * force; a.vy += dy * force;
       b.vx -= dx * force; b.vy -= dy * force;
@@ -960,21 +960,21 @@ function renderKnowledgeMap() {
   const edgeSvg = edges.map(edge => {
     const a = positions.get(edge.source);
     const b = positions.get(edge.target);
-    return `<line class="graph-edge ${edge.type === "module" ? "is-module" : ""}" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" />`;
+    return `<line class="graph-edge ${edge.type === "domains" ? "is-domain" : ""}" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" />`;
   }).join("");
   const nodeSvg = nodes.map(node => {
     const point = positions.get(node.id);
     const degree = adjacency.get(node.id);
     const radius = Math.min(25, 13 + degree * 2.2);
-    const modules = arr(node.card.module).join(" / ") || "未分组";
+    const domains = arr(node.card.domains).join(" / ") || "未分组";
     return `<g class="graph-node ${node.id === state.selectedId ? "is-selected" : ""}" data-map-card-id="${esc(node.id)}" transform="translate(${point.x.toFixed(1)} ${point.y.toFixed(1)})">
-      <title>${esc(node.card.canonical_name || node.id)} · 业务模块：${esc(modules)} · 关联卡片：${degree} 张</title>
+      <title>${esc(node.card.canonical_name || node.id)} · 域：${esc(domains)} · 关联卡片：${degree} 张</title>
       <circle r="${radius}" fill="${colors.get(groups.get(node.id))}" />
       <text y="${radius + 18}" text-anchor="middle">${esc(shortLabel(node.card.canonical_name || node.id))}</text>
     </g>`;
   }).join("");
   el("knowledgeMap").innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="知识地图">${edgeSvg}${nodeSvg}</svg>`;
-  el("mapStatus").textContent = `${nodes.length} 张知识卡 · ${explicitCount} 条明确关联 · ${mode === "community" ? "按相关知识分组" : "按业务模块分组"}`;
+  el("mapStatus").textContent = `${nodes.length} 张知识卡 · ${explicitCount} 条明确关联 · ${mode === "community" ? "按相关知识分组" : "按域分组"}`;
   el("mapEmptyNote").hidden = explicitCount > 0;
   el("mapLegend").innerHTML = groupNames.map(group => `<span><i style="background:${colors.get(group)}"></i>${esc(group)}</span>`).join("");
   el("knowledgeMap").querySelectorAll("[data-map-card-id]").forEach(node => node.addEventListener("click", () => {
@@ -991,14 +991,14 @@ function renderCardList() {
   const visible = state.cards.filter(card => !query || cardSearchText(card).includes(query));
   const groups = new Map();
   visible.forEach(card => {
-    const key = moduleKey(card);
+    const key = domainKey(card);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(card);
   });
   const hitId = state.result?.execution?.card?.canonical_id;
-  el("cardList").innerHTML = visible.length ? [...groups.entries()].sort(([a],[b]) => a.localeCompare(b)).map(([module, cards]) => `
-    <section class="module-group">
-      <div class="module-title">${esc(module)} · ${cards.length}</div>
+  el("cardList").innerHTML = visible.length ? [...groups.entries()].sort(([a],[b]) => a.localeCompare(b)).map(([domain, cards]) => `
+    <section class="domain-group">
+      <div class="domain-title">${esc(domain)} · ${cards.length}</div>
       ${cards.sort((a,b) => String(a.canonical_name).localeCompare(String(b.canonical_name))).map(card => `
         <button class="card-choice ${card.canonical_id === state.selectedId ? "is-selected" : ""} ${card.canonical_id === hitId ? "path-hit" : ""}" type="button" data-card-id="${esc(card.canonical_id)}">
           <span class="choice-title">${esc(card.canonical_name || card.canonical_id)}</span>
@@ -1115,7 +1115,7 @@ function renderCardDetail() {
       <p>${fallbackToRag ? "该卡已命中并尝试下钻，但返回 NO_ANSWER；最终答案来自 RAG 回退命中的原文。" : siblingCardHop ? "这是顺 tag 跳到的邻居卡，非原始路由卡；最终答案来自这张兄弟卡的下钻 source sections。" : esc(card.boundary || "未提供 boundary")}</p>
       <div class="meta-chips">
         ${arr(card.aliases).map(value => `<span class="meta-chip">alias · ${esc(value)}</span>`).join("")}
-        ${arr(card.module).map(value => `<span class="meta-chip">module · ${esc(value)}</span>`).join("")}
+        ${arr(card.domains).map(value => `<span class="meta-chip">domains · ${esc(value)}</span>`).join("")}
         ${card.topic_class ? `<span class="meta-chip">${esc(card.topic_class)}</span>` : ""}
         ${card.status ? `<span class="meta-chip">${esc(card.status)}</span>` : ""}
         ${fallbackToRag ? '<span class="meta-chip flag">该卡覆盖不全</span>' : ""}
@@ -1213,7 +1213,7 @@ async function submitQuestion(event) {
     const response = await fetch("/api/chat/stream", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({query, answer_mode:el("answerMode").value, language:"zh", module:null, debug:el("debugToggle").checked})
+      body: JSON.stringify({query, answer_mode:el("answerMode").value, language:"zh", domains:null, debug:el("debugToggle").checked})
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     await readNdjson(response);

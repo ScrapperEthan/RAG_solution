@@ -126,13 +126,13 @@ h1{margin:6px 0 0;font-size:28px;letter-spacing:-.03em}
   <div class="empty" id="empty">还没有数据。点「加载样例」预览防碎片化流程,或「载入 proposed_keywords.json」+「载入现有冻结词表」开始正式审批。</div>
 
   <div class="foot">
-    导出 schema：<code>{canonical_id, canonical_name, aliases[], module[], topic_type, topic_class, boundary, subsections[], confidence, status:"approved"}</code><br>
+    导出 schema：<code>{canonical_id, canonical_name, aliases[], domains[], topic_type, topic_class, boundary, subsections[], confidence, status:"approved"}</code><br>
     对应 <code>handoff/09 §4.2</code> + <code>handoff/13</code>(合并模型 D3/D4)。导出后放到 <code>paths.keyword_table</code>,再让 opencode 跑 reduce。
   </div>
 </main>
 
 <script>
-const MODULES_DEFAULT = [
+const DOMAINS_DEFAULT = [
   "Integration & API standard","Delivery & tracking standard","Channel standard",
   "MDC development guideline","Operations & release standard","Template & content standard"
 ];
@@ -140,34 +140,34 @@ const TOPIC_TYPES   = ["","component","process","service","initiative","planning
 const TOPIC_CLASSES = ["","workflow","system_component","catalog"];
 
 const SAMPLE = {
-  modules: MODULES_DEFAULT,
+  domains: DOMAINS_DEFAULT,
   frozen: [
     {canonical_id:"C-0001",canonical_name:"MDC supported notification channels",aliases:["notification channels","channels"],
-     module:["Channel standard"],topic_type:"inventory",topic_class:"catalog",
+     domains:["Channel standard"],topic_type:"inventory",topic_class:"catalog",
      boundary:"MDC 支持的渠道及各渠道属性。",subsections:["PN","SMS","Email","Letter","whatsApp","WeChat"],confidence:0.9,status:"approved"},
     {canonical_id:"C-0002",canonical_name:"MDC Management Portal",aliases:["MDC Management Portal access","Portal access"],
-     module:["02 - Engagement","MDC Onboarding"],topic_type:"component",topic_class:"system_component",
+     domains:["02 - Engagement","MDC Onboarding"],topic_type:"component",topic_class:"system_component",
      boundary:"MDC Management Portal 的访问入口、环境链接与 access-right 申请信息。",
      subsections:["Portal links","UAT Access Right","PROD Access Right","permNetID"],confidence:0.9,status:"approved"}
   ],
   candidates: [
     {canonical_id:"C-PROP-0001",canonical_name:"MDC Portal access right",aliases:["portal access right"],
      topic_summary:"新页里又讲了 portal 访问权限申请(其实是老 C-0002)。",evidence_keywords:["portal","access right","UAT","PROD"],
-     suggested_module:["MDC Onboarding"],suggested_topic_type:"component",source_section_ids:["NEWPAGE#Access"],support:2,status:"proposed",
+     suggested_domains:["MDC Onboarding"],suggested_topic_type:"component",source_section_ids:["NEWPAGE#Access"],support:2,status:"proposed",
      nearest_existing:{canonical_id:"C-0002",name:"MDC Management Portal",similarity:0.82,reason:"都讲 portal 访问入口与 access right"}},
     {canonical_id:"C-PROP-0002",canonical_name:"Bulk SMS Throttling",aliases:["throttling","rate limit"],
      topic_summary:"新页讲 SMS 批量限流(真·新 topic)。",evidence_keywords:["throttle","rate limit","SMS"],
-     suggested_module:["Delivery & tracking standard"],suggested_boundary:"SMS 批量发送的限流与配额。",
+     suggested_domains:["Delivery & tracking standard"],suggested_boundary:"SMS 批量发送的限流与配额。",
      suggested_topic_type:"component",suggested_topic_class:"system_component",source_section_ids:["NEWPAGE#Throttle"],support:3,status:"proposed"},
     {canonical_id:"C-PROP-0003",canonical_name:"notification channel",aliases:[],
      topic_summary:"疑似与 C-0001 重复(单复数/措辞差异)。",evidence_keywords:["notification channel"],
-     suggested_module:["Channel standard"],suggested_topic_type:"inventory",suggested_topic_class:"catalog",
+     suggested_domains:["Channel standard"],suggested_topic_type:"inventory",suggested_topic_class:"catalog",
      source_section_ids:["NEWPAGE#Chan"],support:1,status:"proposed",
      dup_warning:[{canonical_id:"C-0001",name:"MDC supported notification channels",score:0.71}]}
   ]
 };
 
-let state = { rows: [], modules: MODULES_DEFAULT.slice() };
+let state = { rows: [], domains: DOMAINS_DEFAULT.slice() };
 let uid = 0;
 
 function arr(v){
@@ -184,7 +184,7 @@ function toRow(c, frozen){
     aliases:arr(c.aliases),
     topic_summary:c.topic_summary||"",
     evidence_keywords:arr(c.evidence_keywords),
-    module:arr(c.suggested_module||c.module),
+    domains:arr(c.suggested_domains||c.domains),
     boundary:c.suggested_boundary||c.boundary||"",
     boundary_stale:!!c.boundary_stale,
     topic_type:c.suggested_topic_type||c.topic_type||"",
@@ -204,7 +204,7 @@ function ingestVocab(){
   state.rows.forEach(r=>{
     if (r.topic_type && !TOPIC_TYPES.includes(r.topic_type)) TOPIC_TYPES.push(r.topic_type);
     if (r.topic_class && !TOPIC_CLASSES.includes(r.topic_class)) TOPIC_CLASSES.push(r.topic_class);
-    r.module.forEach(m=>{ if(!state.modules.includes(m)) state.modules.push(m); });
+    r.domains.forEach(m=>{ if(!state.domains.includes(m)) state.domains.push(m); });
   });
 }
 function loadProposed(raw){
@@ -212,7 +212,7 @@ function loadProposed(raw){
   if (Array.isArray(raw)){ candidates=raw; }
   else {
     candidates=raw.candidates||[];
-    if (Array.isArray(raw.modules)&&raw.modules.length) raw.modules.forEach(m=>{ if(!state.modules.includes(m)) state.modules.push(m); });
+    if (Array.isArray(raw.domains)&&raw.domains.length) raw.domains.forEach(m=>{ if(!state.domains.includes(m)) state.domains.push(m); });
     if (Array.isArray(raw.frozen)) raw.frozen.forEach(f=>state.rows.push(toRow(f,true)));
   }
   candidates.forEach(c=>state.rows.push(toRow(c,false)));
@@ -312,7 +312,7 @@ function rowHtml(r){
     : `<input type="text" data-field="canonical_id" data-uid="${r.uid}" value="${escA(r.canonical_id)}" />`;
   const typeSel = TOPIC_TYPES.map(t=>`<option value="${escA(t)}" ${t===r.topic_type?"selected":""}>${t||"(未定)"}</option>`).join("");
   const classSel = TOPIC_CLASSES.map(t=>`<option value="${escA(t)}" ${t===r.topic_class?"selected":""}>${t||"(未定)"}</option>`).join("");
-  const modChips = state.modules.map(m=>`<span class="chip mod ${r.module.includes(m)?"on":""}" data-action="toggleMod" data-uid="${r.uid}" data-mod="${escA(m)}">${esc(m)}</span>`).join("");
+  const modChips = state.domains.map(m=>`<span class="chip mod ${r.domains.includes(m)?"on":""}" data-action="toggleMod" data-uid="${r.uid}" data-mod="${escA(m)}">${esc(m)}</span>`).join("");
   const subChips = r.subsections.map((s,i)=>`<span class="chip sub"><b>${esc(s)}</b><span class="x" data-action="delSub" data-uid="${r.uid}" data-idx="${i}">×</span></span>`).join("") || `<span style="color:#9aa39d;font-size:11px">（无子条目）</span>`;
   const kw = r.evidence_keywords.map(k=>`<span>${esc(k)}</span>`).join("");
   return `
@@ -335,7 +335,7 @@ function rowHtml(r){
         <textarea data-field="boundary" data-uid="${r.uid}">${esc(r.boundary)}</textarea></div>
       <div class="fld"><label>topic_type</label><select data-field="topic_type" data-uid="${r.uid}">${typeSel}</select></div>
       <div class="fld"><label>topic_class（决定派生字段）</label><select data-field="topic_class" data-uid="${r.uid}">${classSel}</select></div>
-      <div class="fld full"><label>module（域标签，可多选）</label><div class="modchips">${modChips}</div></div>
+      <div class="fld full"><label>domains（域标签，可多选）</label><div class="modchips">${modChips}</div></div>
       <div class="fld full"><label>subsections（二级子条目）</label>
         <div class="subchips">${subChips}</div>
         <div class="subadd">
@@ -358,8 +358,8 @@ list.addEventListener("click", e=>{
   const r = state.rows.find(x=>x.uid===t.dataset.uid); if(!r) return;
   const act = t.dataset.action;
   if (act==="toggleMod"){
-    syncFromDom(); const m=t.dataset.mod; const i=r.module.indexOf(m);
-    if(i>=0) r.module.splice(i,1); else r.module.push(m); render();
+    syncFromDom(); const m=t.dataset.mod; const i=r.domains.indexOf(m);
+    if(i>=0) r.domains.splice(i,1); else r.domains.push(m); render();
   } else if (act==="addSub"){
     syncFromDom(); const inp=document.querySelector(`[data-subnew="${r.uid}"]`); const v=inp&&inp.value.trim();
     if(v&&!r.subsections.includes(v)) r.subsections.push(v); render();
@@ -443,7 +443,7 @@ document.getElementById("exportBtn").onclick = ()=>{
   const lines = kept.map(r=>{
     const obj = {
       canonical_id:r.canonical_id.trim(), canonical_name:r.canonical_name.trim(),
-      aliases:r.aliases, module:r.module, topic_type:r.topic_type||"", topic_class:r.topic_class||"",
+      aliases:r.aliases, domains:r.domains, topic_type:r.topic_type||"", topic_class:r.topic_class||"",
       boundary:r.boundary.trim(), subsections:r.subsections, confidence:r.confidence, status:"approved"
     };
     if (r.boundary_stale) obj.boundary_stale = true;   // 让 refine-boundaries 知道这条要 AI 重写 boundary

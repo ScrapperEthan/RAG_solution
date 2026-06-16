@@ -101,7 +101,7 @@ async function initialize() {
     state.golden = payload.items || [];
     state.health = health;
     renderGoldenOptions();
-    renderModules(payload.modules || []);
+    renderDomains(payload.domains || []);
     renderHealth(health);
     renderDemoBanner();
     updateAnswerMode();
@@ -124,7 +124,7 @@ function activateOfflineDemo(reason) {
   state.health = demo.health;
   state.report = null;
   renderGoldenOptions();
-  renderModules(demo.modules);
+  renderDomains(demo.domains);
   renderHealth(demo.health);
   renderDemoBanner();
   el("demoTip").textContent = "当前是脱敏离线演示：点击开始回答后，执行步骤会逐个高亮，全部完成后再展示答案与证据。";
@@ -166,10 +166,10 @@ function renderGoldenOptions() {
     .join("");
 }
 
-function renderModules(modules) {
-  el("moduleSelect").innerHTML =
-    '<option value="">全部模块</option>' +
-    modules.map((module) => `<option value="${escapeHtml(module)}">${escapeHtml(module)}</option>`).join("");
+function renderDomains(domains) {
+  el("domainSelect").innerHTML =
+    '<option value="">全部域</option>' +
+    domains.map((domain) => `<option value="${escapeHtml(domain)}">${escapeHtml(domain)}</option>`).join("");
 }
 
 function renderHealth(health) {
@@ -274,7 +274,7 @@ async function submitQuestion(event) {
     query,
     golden_id: state.mode === "golden" ? el("goldenSelect").value : null,
     language: el("languageSelect").value,
-    module: el("moduleSelect").value || null,
+    domains: el("domainSelect").value || null,
     answer_mode: selectedAnswerMode(),
     debug: el("debugToggle").checked,
   };
@@ -357,7 +357,7 @@ function offlineResultFor(request) {
     title: selected.source_title,
     section_id: selected.section_id,
     heading_path: selected.heading_path,
-    module: selected.module,
+    domains: selected.domains,
     source_url: `https://example.test/wiki/${selected.q_id.toLowerCase()}`,
     score: 0.93,
   };
@@ -371,7 +371,7 @@ function offlineResultFor(request) {
   }] : [];
   const isOutOfScope = selected.type === "out-of-scope";
   const fallbackCard = isOutOfScope
-    ? { canonical_id: "C-DEMO-LEAVE-RULES", canonical_name: "请假申请规则", module: selected.module }
+    ? { canonical_id: "C-DEMO-LEAVE-RULES", canonical_name: "请假申请规则", domains: selected.domains }
     : null;
   const fallbackSteps = [
     "匹配“请假申请规则”卡",
@@ -453,7 +453,7 @@ function offlineDebugFor(result, request, selected, source) {
     ? {
         canonical_id: executionCard.canonical_id,
         canonical_name: executionCard.canonical_name,
-        module: selected.module,
+        domains: selected.domains,
         boundary: "脱敏演示卡片，仅用于展示 Debug 面板结构。",
         subsections: [
           {
@@ -497,7 +497,7 @@ function offlineDebugFor(result, request, selected, source) {
       ]
     : [];
   const retrieval = result.execution?.evidence_kind === "retrieval"
-    ? { index: fallback ? "both" : "offline-demo", search: fallback ? "hybrid" : "synthetic", top_k: fallback ? 8 : 1, boost_modules: fallback ? selected.module : [], hits: [{ section_id: source.section_id, title: source.title, heading_path: source.heading_path, source_url: source.source_url, score: source.score }] }
+    ? { index: fallback ? "both" : "offline-demo", search: fallback ? "hybrid" : "synthetic", top_k: fallback ? 8 : 1, boost_domains: fallback ? selected.domains : [], hits: [{ section_id: source.section_id, title: source.title, heading_path: source.heading_path, source_url: source.source_url, score: source.score }] }
     : null;
   const drilldown = result.execution?.evidence_kind === "source" || fallback
     ? {
@@ -645,7 +645,7 @@ function renderSectionEvidence(refs, showScore, title, subtitle, card = null, re
     ? refs
         .map((ref, index) => {
           const heading = (ref.heading_path || []).join(" › ");
-          const modules = (ref.module || []).map((module) => `<span>${escapeHtml(module)}</span>`).join("");
+          const domains = (ref.domains || []).map((domain) => `<span>${escapeHtml(domain)}</span>`).join("");
           const sourceTitle = ref.source_url
             ? `<a href="${escapeHtml(ref.source_url)}" target="_blank" rel="noreferrer">${escapeHtml(ref.title || ref.section_id)}</a>`
             : `<strong>${escapeHtml(ref.title || ref.section_id)}</strong>`;
@@ -655,7 +655,7 @@ function renderSectionEvidence(refs, showScore, title, subtitle, card = null, re
           return `<article class="evidence-card">
             <div class="evidence-rank">${String(index + 1).padStart(2, "0")}</div>
             <div><div class="evidence-title">${sourceTitle}<code>${escapeHtml(ref.section_id)}</code></div>
-            <p>${escapeHtml(heading)}</p><div class="module-tags">${modules}</div></div>${score}
+            <p>${escapeHtml(heading)}</p><div class="domain-tags">${domains}</div></div>${score}
           </article>`;
         })
         .join("")
@@ -687,7 +687,7 @@ function renderMatchedCard(card, result = null) {
   const fallbackToRag = isRagFallbackResult(result);
   const siblingCardHop = isSiblingCardResult(result);
   const fullCard = result?.debug?.card_used || card;
-  const modules = (fullCard.module || card.module || []).map((module) => `<span>${escapeHtml(module)}</span>`).join("");
+  const domains = (fullCard.domains || card.domains || []).map((domain) => `<span>${escapeHtml(domain)}</span>`).join("");
   const subsections = Array.isArray(fullCard.subsections) ? fullCard.subsections.length : null;
   const fields = Array.isArray(fullCard.fields) ? fullCard.fields.length : null;
   const counts = [
@@ -707,7 +707,7 @@ function renderMatchedCard(card, result = null) {
       <span>${cardLabel}</span>
       <strong>${escapeHtml(card.canonical_id)} · ${escapeHtml(card.canonical_name || "Unnamed card")}</strong>
       ${cardCopy}
-      <div class="module-tags">${modules}${counts ? `<span>${escapeHtml(counts)}</span>` : ""}</div>
+      <div class="domain-tags">${domains}${counts ? `<span>${escapeHtml(counts)}</span>` : ""}</div>
     </div>
     <a class="matched-card-link" href="${cardExplorerUrl(card.canonical_id)}">打开卡片结构</a>
   </article>`;

@@ -17,8 +17,8 @@ class CardsKnowledgeMapTest(unittest.TestCase):
         self.assertIn('<section id="structureWorkspace" class="workspace">', CARDS)
         self.assertIn('<section id="mapWorkspace" class="map-workspace" hidden>', CARDS)
         self.assertIn('const state = { cards: [], selectedId: null', CARDS)
-        self.assertIn('view: "structure", includeModuleEdges: false', CARDS)
-        self.assertIn('el("moduleEdgeField").hidden = view !== "map";', CARDS)
+        self.assertIn('view: "structure", includeDomainEdges: false', CARDS)
+        self.assertIn('el("domainEdgeField").hidden = view !== "map";', CARDS)
 
     def test_related_component_edges_are_undirected_and_deduplicated(self) -> None:
         self.assertIn('field.field === "related_components"', CARDS)
@@ -28,13 +28,13 @@ class CardsKnowledgeMapTest(unittest.TestCase):
         self.assertIn("if (seen.has(key)) return;", CARDS)
         self.assertIn("if (!ids.has(source) || !ids.has(target) || source === target) return;", CARDS)
 
-    def test_community_coloring_module_fallback_and_legend_are_present(self) -> None:
+    def test_community_coloring_domains_fallback_and_legend_are_present(self) -> None:
         self.assertIn("function graphGroups(nodes, edges, explicitCount)", CARDS)
-        self.assertIn('return {mode:"module", groups:new Map(nodes.map(node => [node.id, moduleKey(node.card)]))};', CARDS)
+        self.assertIn('return {mode:"domains", groups:new Map(nodes.map(node => [node.id, domainKey(node.card)]))};', CARDS)
         self.assertIn("const labels = new Map(nodes.map(node => [node.id, node.id]));", CARDS)
         self.assertIn('`相关知识组 ${index + 1}`', CARDS)
-        self.assertIn('id="moduleEdgeToggle"', CARDS)
-        self.assertIn('addEdge(nodes[i].id, nodes[j].id, "module")', CARDS)
+        self.assertIn('id="domainEdgeToggle"', CARDS)
+        self.assertIn('addEdge(nodes[i].id, nodes[j].id, "domains")', CARDS)
         self.assertIn('id="mapLegend" class="map-legend"', CARDS)
         self.assertIn("这些知识卡目前还没有明确关联；仍可点击圆点查看每张卡。", CARDS)
 

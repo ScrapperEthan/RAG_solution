@@ -132,7 +132,7 @@ textarea[readonly] { color: #46514a; background: #f3f6f4; }
 .answer-copy.streaming::after { content: ""; display: inline-block; width: 7px; height: 15px; margin-left: 3px; vertical-align: -2px; background: var(--green); animation: blink .8s infinite; }
 .error-copy { color: var(--red); }
 .answer-card footer { display: flex; flex-wrap: wrap; gap: 6px; min-height: 38px; padding: 8px 12px; border-top: 1px solid var(--line); background: #fbfcfb; }
-.answer-card footer span, .module-tags span { padding: 4px 7px; border-radius: 999px; color: #5e6c64; background: #edf2ef; font-size: 9px; font-weight: 700; }
+.answer-card footer span, .domain-tags span { padding: 4px 7px; border-radius: 999px; color: #5e6c64; background: #edf2ef; font-size: 9px; font-weight: 700; }
 .evidence-section { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
 .evidence-heading strong, .evidence-heading span { display: block; }
 .evidence-heading strong { font-size: 14px; }
@@ -168,7 +168,7 @@ textarea[readonly] { color: #46514a; background: #f3f6f4; }
 .evidence-title a:hover { color: var(--green); }
 .evidence-title code { color: var(--muted); font-size: 9px; }
 .evidence-card p { margin: 5px 0 7px; color: var(--muted); font-size: 10px; }
-.module-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.domain-tags { display: flex; flex-wrap: wrap; gap: 4px; }
 .score-value { color: var(--green); font: 700 10px Consolas, monospace; }
 .evidence-kind { padding: 4px 7px; border-radius: 999px; color: #6d5a28; background: var(--gold-soft); font-size: 8px; font-weight: 800; text-transform: uppercase; }
 .card-evidence { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 13px; border: 1px solid #dce7e1; border-radius: 10px; background: #f8fbf9; }

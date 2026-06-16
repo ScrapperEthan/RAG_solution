@@ -154,7 +154,7 @@
 
   function renderRetrieval(retrieval, options = {}) {
     const hits = arrayOf(retrieval?.hits);
-    const boostModules = arrayOf(retrieval?.boost_modules);
+    const boostDomains = arrayOf(retrieval?.boost_domains);
     const fallbackNote = options.fallback
       ? '<div class="debug-recovery"><strong>RAG 救场命中</strong><span>下面这些 hits 是真正喂给 LLM、产出最终答案的来源。</span></div>'
       : "";
@@ -177,7 +177,7 @@
       ["index", retrieval?.index],
       ["search", retrieval?.search],
       ["top_k", retrieval?.top_k],
-      ["tag 加权", boostModules.length ? boostModules.join(" / ") : null],
+      ["tag 加权", boostDomains.length ? boostDomains.join(" / ") : null],
       ["hits.length", hits.length],
     ])}${table}${renderFieldTree(retrieval)}`;
   }
@@ -347,7 +347,7 @@
         ["topic_class", card.topic_class],
         ["topic_type", card.topic_type],
         ["status", card.status],
-        ["module", arrayOf(card.module).join(" / ")],
+        ["domains", arrayOf(card.domains).join(" / ")],
         ["subsections.length", subsections.length],
         ["fields.length", fields.length],
       ])}
