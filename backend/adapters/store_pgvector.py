@@ -16,7 +16,7 @@ FILTER_KEY_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
 class PgVectorStore:
-    """pgvector 存储；module 使用 text[] 并建立 GIN 索引。"""
+    """pgvector 存储；domains 使用 text[] 并建立 GIN 索引。"""
 
     def __init__(self, dsn: str, dim: int):
         self.dsn = dsn
@@ -32,7 +32,7 @@ class PgVectorStore:
             CREATE TABLE refs (
                 ref_id BIGINT PRIMARY KEY,
                 row_json JSONB NOT NULL,
-                module TEXT[] NOT NULL DEFAULT '{{}}',
+                domains TEXT[] NOT NULL DEFAULT '{{}}',
                 body_md TEXT NOT NULL,
                 body_embedding VECTOR({self.dim}) NOT NULL
             )
@@ -42,7 +42,7 @@ class PgVectorStore:
                 desc_id TEXT PRIMARY KEY,
                 ref_id BIGINT NOT NULL,
                 row_json JSONB NOT NULL,
-                module TEXT[] NOT NULL DEFAULT '{{}}',
+                domains TEXT[] NOT NULL DEFAULT '{{}}',
                 text TEXT NOT NULL,
                 embedding VECTOR({self.dim}) NOT NULL
             )
@@ -53,14 +53,14 @@ class PgVectorStore:
                 ref_ids BIGINT[] NOT NULL DEFAULT '{{}}',
                 page_id TEXT NOT NULL,
                 row_json JSONB NOT NULL,
-                module TEXT[] NOT NULL DEFAULT '{{}}',
+                domains TEXT[] NOT NULL DEFAULT '{{}}',
                 text TEXT NOT NULL,
                 embedding VECTOR({self.dim}) NOT NULL
             )
             """,
-            "CREATE INDEX refs_module_gin ON refs USING GIN (module)",
-            "CREATE INDEX descriptions_module_gin ON descriptions USING GIN (module)",
-            "CREATE INDEX summaries_module_gin ON summaries USING GIN (module)",
+            "CREATE INDEX refs_domains_gin ON refs USING GIN (domains)",
+            "CREATE INDEX descriptions_domains_gin ON descriptions USING GIN (domains)",
+            "CREATE INDEX summaries_domains_gin ON summaries USING GIN (domains)",
         ]
         with self._connect(register_vector_type=False) as conn:
             with conn.cursor() as cur:
@@ -69,46 +69,46 @@ class PgVectorStore:
 
     def upsert_refs(self, rows: List[Dict]) -> None:
         query = """
-            INSERT INTO refs (ref_id, row_json, module, body_md, body_embedding)
+            INSERT INTO refs (ref_id, row_json, domains, body_md, body_embedding)
             VALUES (%s, %s, %s, %s, %s)
             ON CONFLICT (ref_id) DO UPDATE SET
                 row_json = EXCLUDED.row_json,
-                module = EXCLUDED.module,
+                domains = EXCLUDED.domains,
                 body_md = EXCLUDED.body_md,
                 body_embedding = EXCLUDED.body_embedding
         """
         values = [
-            (row["ref_id"], self._jsonb(row), row.get("module", []), row["body_md"], row["body_embedding"])
+            (row["ref_id"], self._jsonb(row), row.get("domains", []), row["body_md"], row["body_embedding"])
             for row in rows
         ]
         self._executemany(query, values)
 
     def upsert_descriptions(self, rows: List[Dict]) -> None:
         query = """
-            INSERT INTO descriptions (desc_id, ref_id, row_json, module, text, embedding)
+            INSERT INTO descriptions (desc_id, ref_id, row_json, domains, text, embedding)
             VALUES (%s, %s, %s, %s, %s, %s)
             ON CONFLICT (desc_id) DO UPDATE SET
                 ref_id = EXCLUDED.ref_id,
                 row_json = EXCLUDED.row_json,
-                module = EXCLUDED.module,
+                domains = EXCLUDED.domains,
                 text = EXCLUDED.text,
                 embedding = EXCLUDED.embedding
         """
         values = [
-            (row["desc_id"], row["ref_id"], self._jsonb(row), row.get("module", []), row["text"], row["embedding"])
+            (row["desc_id"], row["ref_id"], self._jsonb(row), row.get("domains", []), row["text"], row["embedding"])
             for row in rows
         ]
         self._executemany(query, values)
 
     def upsert_summaries(self, rows: List[Dict]) -> None:
         query = """
-            INSERT INTO summaries (sum_id, ref_ids, page_id, row_json, module, text, embedding)
+            INSERT INTO summaries (sum_id, ref_ids, page_id, row_json, domains, text, embedding)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (sum_id) DO UPDATE SET
                 ref_ids = EXCLUDED.ref_ids,
                 page_id = EXCLUDED.page_id,
                 row_json = EXCLUDED.row_json,
-                module = EXCLUDED.module,
+                domains = EXCLUDED.domains,
                 text = EXCLUDED.text,
                 embedding = EXCLUDED.embedding
         """
@@ -118,7 +118,7 @@ class PgVectorStore:
                 row.get("ref_ids", []),
                 row["page_id"],
                 self._jsonb(row),
-                row.get("module", []),
+                row.get("domains", []),
                 row["text"],
                 row["embedding"],
             )
@@ -210,8 +210,8 @@ def filter_sql(filters: Optional[Dict]) -> Tuple[str, List]:
     clauses = []
     params: List = []
     for key, value in filters.items():
-        if key == "module":
-            clauses.append("%s = ANY(module)")
+        if key == "domains":
+            clauses.append("%s = ANY(domains)")
             params.append(value)
             continue
         if not FILTER_KEY_RE.fullmatch(key):

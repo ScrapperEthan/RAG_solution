@@ -18,7 +18,7 @@ def _page(body: str) -> dict:
     return {
         "page_id": "P1", "title": "Test Page", "space": "S", "source_url": "u",
         "owner": "o", "labels": [], "captured_at": "t", "update_at": "t",
-        "confluence_version": 1, "tree_path": [], "module": [], "card_worthy": True,
+        "confluence_version": 1, "tree_path": [], "domains": [], "card_worthy": True,
         "body_md": body,
     }
 

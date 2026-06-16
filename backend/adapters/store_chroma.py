@@ -181,8 +181,8 @@ def flat_metadata(row: Dict, ref_id: Optional[int] = None) -> Dict:
             metadata[key] = str(row[key])
     if "card_worthy" in row:
         metadata["card_worthy"] = bool(row["card_worthy"])
-    for module in row.get("module", []):
-        metadata[module_facet_key(str(module))] = True
+    for module in row.get("domains", []):
+        metadata[domain_facet_key(str(module))] = True
     return metadata
 
 
@@ -191,8 +191,8 @@ def chroma_where(filters: Optional[Dict]) -> Optional[Dict]:
         return None
     clauses = []
     for key, value in filters.items():
-        if key == "module":
-            clauses.append({module_facet_key(str(value)): True})
+        if key == "domains":
+            clauses.append({domain_facet_key(str(value)): True})
         elif isinstance(value, bool):
             clauses.append({key: value})
         else:
@@ -215,9 +215,9 @@ def matches(row: Dict, filters: Optional[Dict]) -> bool:
     return True
 
 
-def module_facet_key(module: str) -> str:
+def domain_facet_key(module: str) -> str:
     digest = hashlib.sha1(module.encode("utf-8")).hexdigest()[:12]
-    return f"module__{digest}"
+    return f"domain__{digest}"
 
 
 def tokens(text: str) -> List[str]:

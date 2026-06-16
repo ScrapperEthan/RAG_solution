@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from backend.domains import domain_matches
 from backend.ports import Hit
 
 
@@ -89,7 +90,10 @@ class JsonVectorStore:
             return True
         for key, value in filters.items():
             row_value = row.get(key)
-            if isinstance(row_value, list):
+            if key == "domains" and isinstance(row_value, list):
+                if not any(domain_matches(value, entry) for entry in row_value):
+                    return False
+            elif isinstance(row_value, list):
                 if value not in row_value:
                     return False
             elif row_value != value:

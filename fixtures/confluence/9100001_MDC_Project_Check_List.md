@@ -5,7 +5,7 @@ space: "MDC"
 source_url: "https://confluence.local/x/MDC-Project-Check-List"
 owner: "mdc-team"
 labels: ["mdc", "engagement", "onboarding"]
-module: ["Q2 - Engagement", "MDC Onboarding"]
+domains: ["Q2 - Engagement", "MDC Onboarding"]
 tree_path: ["Q2 - Engagement", "MDC Onboarding", "MDC Project Check List"]
 update_at: "2026-05-20T10:00:00Z"
 confluence_version: 31

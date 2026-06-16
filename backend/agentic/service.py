@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from backend.answer.service import AnswerService
+from backend.domains import domain_matches
 from backend.ports import LLM
 from backend.retrieve.service import Retriever
 from backend.util import read_json
@@ -41,7 +42,7 @@ INTENT_SCHEMA = {"type": "object", "required": ["intent"]}
 ROUTER_SYSTEM = """task: agentic_route_card
 Select the approved knowledge card(s) that can answer the user question.
 You receive a compact card catalog: each entry has canonical_id, canonical_name,
-aliases, boundary, and module. There is no vector index — this selection IS the
+aliases, boundary, and domains. There is no vector index — this selection IS the
 retrieval step. Return STRICT JSON: {"canonical_ids": [string, ...]}.
 
 Rules:
@@ -331,7 +332,7 @@ class AgenticService:
         # Neither the matched card nor a tag-sibling could ground it -> hybrid
         # RAG, tag-weighted by the original card's modules (soft boost only;
         # never excludes, so a stale tag cannot wipe out results).
-        boost_modules = card.get("module", [])
+        boost_domains = card.get("domains", [])
         rag_refs = self.retriever.retrieve(
             query,
             index="both",
@@ -339,7 +340,7 @@ class AgenticService:
             top_k=8,
             rerank=bool(variant.get("rerank", False)),
             filters=filters,
-            boost_modules=boost_modules,
+            boost_domains=boost_domains,
         )
         result = self.answerer.answer_from_refs(query, rag_refs)
         result["drilled"] = True
@@ -369,7 +370,7 @@ class AgenticService:
                         "search": "hybrid",
                         "top_k": 8,
                         "rerank": variant.get("rerank", False),
-                        "boost_modules": boost_modules,
+                        "boost_domains": boost_domains,
                     },
                     rag_refs,
                 ),
@@ -414,7 +415,7 @@ class AgenticService:
 
     def route_card_llm(self, query: str) -> Optional[Dict]:
         """Let the LLM select a card from the catalog (id + name + aliases +
-        boundary + module). The catalog is small enough to fit one prompt, so this
+        boundary + domains). The catalog is small enough to fit one prompt, so this
         single selection replaces vector retrieval. Returns None when the LLM
         declines or errors, so the caller falls back to keyword matching."""
         routed, _, _ = self._route_card_llm_with_meta(query)
@@ -429,7 +430,7 @@ class AgenticService:
                 "canonical_name": card["canonical_name"],
                 "aliases": card.get("aliases", []),
                 "boundary": card.get("boundary", ""),
-                "module": card.get("module", []),
+                "domains": card.get("domains", []),
             }
             for cid, card in self.cards.items()
         ]
@@ -469,17 +470,19 @@ class AgenticService:
         return None
 
     def _sibling_cards(self, card: Dict) -> List[Dict]:
-        """Approved cards sharing at least one tag (module) with ``card``,
-        excluding the card itself. These are the tag-edges of the card graph."""
+        """Approved cards sharing at least one domain tag with ``card``,
+        excluding the card itself. These are the tag-edges of the card graph;
+        matching is namespace-aware (see backend.domains.domain_matches)."""
         card_id = card.get("canonical_id")
-        tags = {module for module in card.get("module", []) if module}
+        tags = [tag for tag in card.get("domains", []) if tag]
         if not tags:
             return []
         siblings = []
         for cid, other in self.cards.items():
             if cid == card_id:
                 continue
-            if tags.intersection(module for module in other.get("module", []) if module):
+            other_tags = [tag for tag in other.get("domains", []) if tag]
+            if any(domain_matches(tag, other_tag) for tag in tags for other_tag in other_tags):
                 siblings.append(other)
         return siblings
 
@@ -614,7 +617,8 @@ class AgenticService:
             "search": variant.get("search", "hybrid"),
             "top_k": int(variant.get("top_k", 8)),
             "rerank": bool(variant.get("rerank", False)),
-            "boost_modules": list(variant.get("boost_modules", []) or []),
+            "boost_domains": list(variant.get("boost_domains", []) or []),
+            "boost_modules": list(variant.get("boost_domains", []) or []),  # legacy alias for frontend (handoff/33)
             "hits": [debug_ref_hit(ref) for ref in refs],
         }
 
@@ -677,7 +681,7 @@ def debug_ref(ref: Dict) -> Dict[str, Any]:
         "title": ref.get("title", ""),
         "heading_path": heading_path,
         "source_url": ref.get("source_url", ""),
-        "module": ref.get("module", []),
+        "domains": ref.get("domains", []),
         "score": round(float(score), 6) if isinstance(score, (int, float)) else None,
         "body_md": ref.get("body_md", ""),
     }
@@ -701,7 +705,7 @@ def debug_card(card: Dict) -> Dict[str, Any]:
         "topic_class",
         "topic_type",
         "aliases",
-        "module",
+        "domains",
         "boundary",
         "status",
         "keywords_raw_agg",
@@ -781,7 +785,7 @@ def with_execution(
             {
                 "canonical_id": card.get("canonical_id", ""),
                 "canonical_name": card.get("canonical_name", ""),
-                "module": card.get("module", []),
+                "domains": card.get("domains", []),
             }
             if card
             else None

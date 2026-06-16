@@ -59,7 +59,7 @@ class DiscoverService:
             schema=DISCOVER_SCHEMA,
         )
         candidates = self._build_candidates(response, term_sections, approved)
-        write_json(self.outputs_dir / "proposed_keywords.json", {"candidates": candidates, "modules": modules})
+        write_json(self.outputs_dir / "proposed_keywords.json", {"candidates": candidates, "domains": modules})
         write_jsonl(self.outputs_dir / "proposed_keywords.jsonl", candidates)
         (self.outputs_dir / "proposed_keywords_review.md").write_text(render_review_md(candidates), encoding="utf-8")
         return {"candidates": len(candidates), "needs_review": sum(1 for c in candidates if c["status"] == "needs_review")}
@@ -70,7 +70,7 @@ class DiscoverService:
         modules: List[str] = []
         for path in sorted((self.outputs_dir / "map").glob("map_*.json")):
             page = read_json(path)
-            for module in (page.get("module") or page.get("labels") or []):
+            for module in (page.get("domains") or page.get("labels") or []):
                 if module and module not in modules:
                     modules.append(module)
             for section in page.get("sections", []):
@@ -117,7 +117,7 @@ class DiscoverService:
                     "aliases": aliases,
                     "topic_summary": str(raw.get("topic_summary") or "").strip(),
                     "evidence_keywords": evidence,
-                    "suggested_module": _clean_list(raw.get("suggested_module")),
+                    "suggested_domains": _clean_list(raw.get("suggested_domains")),
                     "suggested_boundary": str(raw.get("suggested_boundary") or "").strip(),
                     "suggested_topic_type": str(raw.get("suggested_topic_type") or "").strip(),
                     "suggested_topic_class": str(raw.get("suggested_topic_class") or "").strip(),

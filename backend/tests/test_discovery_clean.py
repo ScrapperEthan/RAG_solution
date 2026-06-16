@@ -48,7 +48,7 @@ class DiscoverServiceTest(unittest.TestCase):
                 json.dumps(
                     {
                         "page_id": "P",
-                        "module": ["Channel standard"],
+                        "domains": ["Channel standard"],
                         "sections": [
                             {"section_id": "P#a", "concepts": ["Notification Preferences"], "keywords_raw": ["Bulk SMS Throttling", "PN"]},
                         ],
@@ -65,7 +65,7 @@ class DiscoverServiceTest(unittest.TestCase):
             self.assertFalse((out / "cards").exists(), "discover must NOT build cards")
             payload = json.loads((out / "proposed_keywords.json").read_text(encoding="utf-8"))
             self.assertIn("candidates", payload)
-            self.assertIn("Channel standard", payload["modules"])
+            self.assertIn("Channel standard", payload["domains"])
 
             by_name = {c["canonical_name"]: c for c in payload["candidates"]}
             self.assertTrue(all(c["canonical_id"].startswith("C-PROP-") for c in payload["candidates"]))

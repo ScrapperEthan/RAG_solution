@@ -38,8 +38,8 @@ class FileConfluenceSource:
             "update_at": str(meta.get("update_at", "")),
             "confluence_version": int(meta.get("confluence_version", 0)),
             "tree_path": list(meta.get("tree_path", [])),
-            "module": list(meta.get("module", [])),
-            "card_worthy": bool(meta.get("card_worthy", bool(meta.get("module", [])))),
+            "domains": list(meta.get("domains") or meta.get("module") or []),
+            "card_worthy": bool(meta.get("card_worthy", bool(meta.get("domains") or meta.get("module")))),
             "body_md": body.strip() + "\n",
         }
 

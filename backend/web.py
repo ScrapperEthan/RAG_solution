@@ -69,7 +69,8 @@ class ChatRequest(BaseModel):
     query: str = ""
     golden_id: Optional[str] = None
     language: str = "en"
-    module: Optional[str] = None
+    domains: Optional[str] = None
+    module: Optional[str] = None  # legacy alias accepted from the frontend (handoff/33)
     answer_mode: str = "agentic"
     debug: bool = False
 
@@ -86,13 +87,13 @@ class DemoRuntime:
         self._agentic_service: Optional[AgenticService] = None
         self._llm = None
 
-    def modules(self) -> List[str]:
+    def domains(self) -> List[str]:
         rows = read_jsonl(resolve_path(self.config["paths"]["keyword_table"]))
         modules = {
             module
             for row in rows
             if row.get("status") == "approved"
-            for module in row.get("module", [])
+            for module in row.get("domains", [])
             if isinstance(module, str) and module.strip()
         }
         return sorted(modules)
@@ -108,7 +109,8 @@ class DemoRuntime:
             query = str(golden.get(query_key) or golden.get("q_en") or "").strip()
         if not query:
             raise HTTPException(status_code=422, detail="A query or golden_id is required")
-        filters = {"module": request.module} if request.module else None
+        domain_filter = request.domains or request.module
+        filters = {"domains": domain_filter} if domain_filter else None
         return query, golden, filters
 
     def answer(self, query: str, filters: Optional[Dict[str, str]], answer_mode: str, debug: bool = False) -> Dict[str, Any]:
@@ -206,7 +208,8 @@ def public_ref(ref: Dict[str, Any]) -> Dict[str, Any]:
         "title": ref.get("title", ""),
         "heading_path": ref.get("heading_path", []),
         "source_url": ref.get("source_url", ""),
-        "module": ref.get("module", []),
+        "domains": ref.get("domains", []),
+        "module": ref.get("domains", []),  # legacy alias; frontend migrates to `domains` (handoff/33)
         "score": round(float(score), 6) if isinstance(score, (int, float)) else None,
         "body_md": ref.get("body_md", ""),
     }
@@ -248,14 +251,19 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
 
     @app.get("/api/golden")
     def golden() -> Dict[str, Any]:
-        return {"items": runtime.golden_items, "modules": runtime.modules()}
+        domains = runtime.domains()
+        return {"items": runtime.golden_items, "domains": domains, "modules": domains}
 
     @app.get("/api/cards")
     def cards() -> JSONResponse:
         # Read-only feed for frontend/cards.html (the card visualizer). Returns the
         # cards_index.json array, or [] before the pipeline has produced cards.
         path = runtime.outputs_dir / "cards_index.json"
-        return JSONResponse(read_json(path) if path.exists() else [])
+        cards = read_json(path) if path.exists() else []
+        for card in cards:
+            if isinstance(card, dict) and "module" not in card:
+                card["module"] = card.get("domains", [])  # legacy alias for frontend (handoff/33)
+        return JSONResponse(cards)
 
     @app.get("/api/eval-report")
     def eval_report(allow_demo: bool = False) -> JSONResponse:

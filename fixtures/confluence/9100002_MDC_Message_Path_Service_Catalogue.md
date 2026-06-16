@@ -5,7 +5,7 @@ space: "MDC"
 source_url: "https://confluence.local/x/MDC-Message-Path-Service-Catalogue"
 owner: "mdc-team"
 labels: ["mdc", "service-standard"]
-module: ["Q2 - Engagement", "MDC Onboarding"]
+domains: ["Q2 - Engagement", "MDC Onboarding"]
 tree_path: ["Q2 - Engagement", "MDC Onboarding", "MDC Message Path Service Catalogue"]
 update_at: "2026-05-28T09:00:00Z"
 confluence_version: 6

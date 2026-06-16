@@ -455,7 +455,7 @@ def make_section(page: RawPage, heading_path: List[str], body: str) -> Dict:
         "labels": page["labels"],
         "content_type": infer_content_type(page["labels"], leaf, body),
         "component": "",
-        "module": list(page.get("module", [])),
+        "domains": list(page.get("domains", [])),
         "card_worthy": bool(page.get("card_worthy", True)),
         "status": "",
         "metadata": {},

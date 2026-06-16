@@ -92,7 +92,7 @@ def normalize_concept(raw: Dict) -> Dict:
         "canonical_id": canonical_id,
         "canonical_name": canonical_name,
         "aliases": list_value(raw.get("aliases")),
-        "module": list_value(raw.get("module")),
+        "domains": list_value(raw.get("domains") or raw.get("module")),  # accept legacy `module` key
         "topic_type": str(raw.get("topic_type") or raw.get("type") or "").strip(),
         "topic_class": str(raw.get("topic_class") or raw.get("class") or "").strip(),
         "subsections": list_value(raw.get("subsections") or raw.get("subsection") or raw.get("children")),
@@ -225,16 +225,16 @@ def render_registry_markdown(canonicals: Dict[str, Dict]) -> str:
     lines = [
         "# Approved Keyword Table Snapshot",
         "",
-        "| canonical_id | canonical_name | aliases | module | topic_type | confidence | boundary | related_pages | status |",
+        "| canonical_id | canonical_name | aliases | domains | topic_type | confidence | boundary | related_pages | status |",
         "|---|---|---|---|---|---:|---|---|---|",
     ]
     for item in canonicals.values():
         lines.append(
-            "| {canonical_id} | {canonical_name} | {aliases} | {module} | {topic_type} | {confidence:.2f} | {boundary} | {related_pages} | {status} |".format(
+            "| {canonical_id} | {canonical_name} | {aliases} | {domains} | {topic_type} | {confidence:.2f} | {boundary} | {related_pages} | {status} |".format(
                 canonical_id=item["canonical_id"],
                 canonical_name=item["canonical_name"],
                 aliases="; ".join(item["aliases"]),
-                module="; ".join(item["module"]),
+                domains="; ".join(item["domains"]),
                 topic_type=item["topic_type"],
                 confidence=item["confidence"],
                 boundary=item["boundary"],

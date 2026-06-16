@@ -76,19 +76,19 @@ class PipelineDemoTest(unittest.TestCase):
         self.assertTrue(all(str(row["sum_id"]).startswith("s") for row in summaries))
         self.assertTrue(all("ref_id" not in row for row in summaries))
         self.assertTrue(all(row.get("ref_ids") for row in summaries))
-        self.assertTrue(all(isinstance(row.get("module"), list) for row in summaries))
+        self.assertTrue(all(isinstance(row.get("domains"), list) for row in summaries))
 
     def test_module_is_multivalue_across_card_inverted_and_refs(self) -> None:
         card = json.loads((ROOT / "outputs" / "cards" / "MDC_Management_Portal.json").read_text(encoding="utf-8"))
-        self.assertEqual(len(card["module"]), 2)
+        self.assertEqual(len(card["domains"]), 2)
         inverted = [
             json.loads(line)
             for line in (ROOT / "outputs" / "inverted_index.jsonl").read_text(encoding="utf-8").splitlines()
             if line.strip()
         ]
-        self.assertTrue(all(isinstance(row["module"], list) for row in inverted))
+        self.assertTrue(all(isinstance(row["domains"], list) for row in inverted))
         refs = json.loads((ROOT / "outputs" / "loaded_refs.json").read_text(encoding="utf-8"))
-        self.assertTrue(all(isinstance(row["module"], list) for row in refs))
+        self.assertTrue(all(isinstance(row["domains"], list) for row in refs))
 
     def test_demo_keeps_every_fixture_page(self) -> None:
         fixture_pages = list((ROOT / "fixtures" / "confluence").glob("*.md"))
@@ -122,7 +122,7 @@ class PipelineDemoTest(unittest.TestCase):
                 "--query",
                 "Whatsapp delivery mode?",
                 "--filter",
-                "module=Q2 - Engagement",
+                "domains=Q2 - Engagement",
             ],
             cwd=str(ROOT),
             check=True,
@@ -131,7 +131,7 @@ class PipelineDemoTest(unittest.TestCase):
         )
         payload = json.loads(result.stdout)
         self.assertTrue(payload["hits"])
-        self.assertTrue(all("Q2 - Engagement" in hit["module"] for hit in payload["hits"]))
+        self.assertTrue(all("Q2 - Engagement" in hit["domains"] for hit in payload["hits"]))
 
 
 class ChunkingAndSchemaTest(unittest.TestCase):
@@ -179,7 +179,7 @@ class ChunkingAndSchemaTest(unittest.TestCase):
                                 "canonical_id": "C-1",
                                 "topic": "DM Plugin",
                                 "aliases": ["DMP", "Data Management"],
-                                "module": ["Integration", "Delivery"],
+                                "domains": ["Integration", "Delivery"],
                                 "related page": ["P-1"],
                                 "status": "approved",
                             }
@@ -191,7 +191,7 @@ class ChunkingAndSchemaTest(unittest.TestCase):
             )
             vocabulary = load_vocabulary(path)
             self.assertEqual(set(vocabulary), {"C-1"})
-            self.assertEqual(vocabulary["C-1"]["module"], ["Integration", "Delivery"])
+            self.assertEqual(vocabulary["C-1"]["domains"], ["Integration", "Delivery"])
             self.assertEqual(
                 canonical_ids_for(
                     {
@@ -264,12 +264,12 @@ class ChunkingAndSchemaTest(unittest.TestCase):
     def test_summary_expansion_respects_module_filter(self) -> None:
         store = FakeStore()
         retriever = Retriever(FakeEmbedder(), store)
-        refs = retriever.retrieve("integration", top_k=4, filters={"module": "Integration"})
+        refs = retriever.retrieve("integration", top_k=4, filters={"domains": "Integration"})
         self.assertEqual([ref["ref_id"] for ref in refs], [1])
 
     def test_pgvector_module_filter_uses_array_membership(self) -> None:
-        where, params = filter_sql({"module": "Integration & API standard", "page_id": "123456", "card_worthy": True})
-        self.assertIn("%s = ANY(module)", where)
+        where, params = filter_sql({"domains": "Integration & API standard", "page_id": "123456", "card_worthy": True})
+        self.assertIn("%s = ANY(domains)", where)
         self.assertEqual(params, ["Integration & API standard", "page_id", "123456", "card_worthy", "true"])
 
     def test_tag_boost_reorders_without_excluding(self) -> None:
@@ -277,10 +277,18 @@ class ChunkingAndSchemaTest(unittest.TestCase):
         retriever = Retriever(FakeEmbedder(), store)
         base = [ref["ref_id"] for ref in retriever.retrieve("integration", top_k=4)]
         self.assertEqual(base, [1, 2])
-        boosted = [ref["ref_id"] for ref in retriever.retrieve("integration", top_k=4, boost_modules=["Delivery"])]
+        boosted = [ref["ref_id"] for ref in retriever.retrieve("integration", top_k=4, boost_domains=["Delivery"])]
         # Soft boost floats the Delivery-tagged ref to the top but drops nothing.
         self.assertEqual(boosted, [2, 1])
         self.assertEqual(sorted(boosted), [1, 2])
+
+    def test_namespaced_domain_filter_matches_by_value(self) -> None:
+        store = FakeStore()
+        store.refs[0] = {**store.refs[0], "domains": ["system:Integration"]}
+        retriever = Retriever(FakeEmbedder(), store)
+        # A bare "Integration" query still matches the namespaced "system:Integration".
+        refs = retriever.retrieve("integration", top_k=4, filters={"domains": "Integration"})
+        self.assertEqual([ref["ref_id"] for ref in refs], [1])
 
 
 def raw_page(body: str) -> dict:
@@ -295,7 +303,7 @@ def raw_page(body: str) -> dict:
         "update_at": "2026-06-04T00:00:00Z",
         "confluence_version": 1,
         "tree_path": ["Root"],
-        "module": [],
+        "domains": [],
         "card_worthy": False,
         "body_md": body,
     }
@@ -329,8 +337,8 @@ class FakeEmbedder:
 class FakeStore:
     def __init__(self) -> None:
         self.refs = [
-            {"ref_id": 1, "section_id": "P#A", "body_md": "A", "module": ["Integration"], "score": 0.0},
-            {"ref_id": 2, "section_id": "P#B", "body_md": "B", "module": ["Delivery"], "score": 0.0},
+            {"ref_id": 1, "section_id": "P#A", "body_md": "A", "domains": ["Integration"], "score": 0.0},
+            {"ref_id": 2, "section_id": "P#B", "body_md": "B", "domains": ["Delivery"], "score": 0.0},
         ]
 
     def search_vector(self, table, query_vec, k, filters=None):

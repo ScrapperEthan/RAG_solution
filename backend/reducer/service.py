@@ -217,7 +217,7 @@ def build_card(cid: str, sections: List[Dict], canonicals: Dict[str, Dict], llm:
         "canonical_name": canonical["canonical_name"],
         "topic_class": topic_class,
         "aliases": canonical.get("aliases", []),
-        "module": canonical.get("module", []),
+        "domains": canonical.get("domains", []),
         "boundary": canonical.get("boundary", ""),
         "topic_type": canonical.get("topic_type", ""),
         "status": canonical.get("status", "approved"),
@@ -824,7 +824,7 @@ def inverted_row(cid: str, section: Dict, canonicals: Dict[str, Dict]) -> Dict:
     return {
         "canonical_id": cid,
         "canonical_name": canonical["canonical_name"],
-        "module": canonical.get("module", []),
+        "domains": canonical.get("domains", []),
         "page_id": section["page_id"],
         "anchor": str(section.get("anchor") or section_id(section)),
         "section_id": section_id(section),

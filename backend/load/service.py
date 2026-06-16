@@ -17,7 +17,7 @@ class LoadService:
     def run(self) -> Dict[str, int]:
         refs = read_json(self.outputs_dir / "refs.json")
         refs = assign_ref_ids(refs)
-        refs = attach_modules(refs, self.outputs_dir / "inverted_index.jsonl")
+        refs = attach_domains(refs, self.outputs_dir / "inverted_index.jsonl")
         ref_by_section = {row["section_id"]: row for row in refs}
         refs_by_page = refs_grouped_by_page(refs)
 
@@ -89,7 +89,7 @@ def build_descriptions(outputs_dir: Path, ref_by_section: Dict[str, Dict]) -> Li
                         "kind": kind,
                         "lang": "zh" if contains_cjk(text) else "en",
                         "text": text,
-                        "module": list(ref.get("module", [])),
+                        "domains": list(ref.get("domains", [])),
                         "card_worthy": bool(ref.get("card_worthy", False)),
                     }
                 )
@@ -105,7 +105,7 @@ def build_summaries(outputs_dir: Path, refs_by_page: Dict[str, List[Dict]]) -> L
         page_refs = refs_by_page.get(page["page_id"], [])
         if not page_refs:
             continue
-        modules = dedupe(module for ref in page_refs for module in ref.get("module", []))
+        modules = dedupe(module for ref in page_refs for module in ref.get("domains", []))
         for lang_key in ("summary_en", "summary_zh"):
             rows.append(
                 {
@@ -114,7 +114,7 @@ def build_summaries(outputs_dir: Path, refs_by_page: Dict[str, List[Dict]]) -> L
                     "page_id": page["page_id"],
                     "tree_path": page["tree_path"],
                     "text": page["page_summary"][lang_key],
-                    "module": modules,
+                    "domains": modules,
                     "card_worthy": any(ref.get("card_worthy", False) for ref in page_refs),
                 }
             )
@@ -126,18 +126,18 @@ def contains_cjk(text: str) -> bool:
     return any("\u4e00" <= ch <= "\u9fff" for ch in text)
 
 
-def attach_modules(refs: List[Dict], inverted_path: Path) -> List[Dict]:
+def attach_domains(refs: List[Dict], inverted_path: Path) -> List[Dict]:
     derived_by_section: Dict[str, List[str]] = {}
     for row in read_jsonl(inverted_path):
-        derived_by_section.setdefault(row["section_id"], []).extend(row.get("module", []))
+        derived_by_section.setdefault(row["section_id"], []).extend(row.get("domains", []))
 
     rows = []
     for ref in refs:
         row = dict(ref)
-        explicit = list(row.get("module", []))
+        explicit = list(row.get("domains", []))
         derived = derived_by_section.get(row["section_id"], [])
-        row["module"] = dedupe([*explicit, *derived])
-        row["card_worthy"] = bool(row.get("card_worthy", bool(row["module"])))
+        row["domains"] = dedupe([*explicit, *derived])
+        row["card_worthy"] = bool(row.get("card_worthy", bool(row["domains"])))
         rows.append(row)
     return rows
 

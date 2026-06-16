@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Tuple
 
+from backend.domains import domain_matches
 from backend.ports import Embedder, Hit, Reranker, VectorStore
 
 
@@ -29,7 +30,7 @@ class Retriever:
         rrf_k: int = 60,
         rerank: bool = False,
         filters: Optional[Dict] = None,
-        boost_modules: Optional[List[str]] = None,
+        boost_domains: Optional[List[str]] = None,
     ) -> List[Dict]:
         query_vec = self.embedder.embed([query], kind="query")[0]
         ranked_lists: List[List[Hit]] = []
@@ -51,10 +52,11 @@ class Retriever:
         refs = self.store.get_refs(ref_ids)
         refs = [ref for ref in refs if matches_filters(ref, filters)]
         score_by_id = dict(fused_ids)
-        boost_set = {module for module in (boost_modules or []) if module}
+        boost_set = [tag for tag in (boost_domains or []) if tag]
         for ref in refs:
             score = score_by_id.get(ref["ref_id"], 0.0)
-            if boost_set and boost_set.intersection(ref.get("module", [])):
+            ref_domains = ref.get("domains", [])
+            if boost_set and any(domain_matches(tag, entry) for tag in boost_set for entry in ref_domains):
                 score *= TAG_BOOST
             ref["score"] = score
         refs.sort(key=lambda ref: ref["score"], reverse=True)
@@ -97,7 +99,10 @@ def matches_filters(row: Dict, filters: Optional[Dict]) -> bool:
         return True
     for key, value in filters.items():
         row_value = row.get(key)
-        if isinstance(row_value, list):
+        if key == "domains" and isinstance(row_value, list):
+            if not any(domain_matches(value, entry) for entry in row_value):
+                return False
+        elif isinstance(row_value, list):
             if value not in row_value:
                 return False
         elif row_value != value:

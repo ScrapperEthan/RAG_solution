@@ -5,7 +5,7 @@ space: "MDC"
 source_url: "https://confluence.local/x/MDC-Template-and-Testing"
 owner: "mdc-team"
 labels: ["mdc", "template", "testing"]
-module: ["Q2 - Engagement", "MDC Onboarding"]
+domains: ["Q2 - Engagement", "MDC Onboarding"]
 tree_path: ["Q2 - Engagement", "MDC Onboarding", "MDC Template Governance and Testing"]
 update_at: "2026-05-22T08:00:00Z"
 confluence_version: 4

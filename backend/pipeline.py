@@ -149,7 +149,7 @@ def run_retrieve(config: Dict[str, Any], outputs_dir: Path, query: str, filters:
                 "title": ref["title"],
                 "heading_path": ref["heading_path"],
                 "score": ref.get("score", 0.0),
-                "module": ref.get("module", []),
+                "domains": ref.get("domains", []),
             }
             for ref in refs
         ],

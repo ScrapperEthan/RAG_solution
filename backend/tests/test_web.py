@@ -67,7 +67,7 @@ class WebDemoTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         payload = response.json()
         self.assertEqual(len(payload["items"]), 15)
-        self.assertTrue(payload["modules"])
+        self.assertTrue(payload["domains"])
 
     def test_mock_eval_report_requires_explicit_opt_in(self) -> None:
         blocked = self.client.get("/api/eval-report")
