@@ -13,6 +13,7 @@ STYLE = (ROOT / "frontend" / "style.css").read_text(encoding="utf-8")
 CARDS = (ROOT / "frontend" / "cards.html").read_text(encoding="utf-8")
 FLOW = (ROOT / "frontend" / "flow.html").read_text(encoding="utf-8")
 OFFLINE_DEMO = (ROOT / "frontend" / "offline-demo.js").read_text(encoding="utf-8")
+DEBUG_PANEL = (ROOT / "frontend" / "debug-panel.js").read_text(encoding="utf-8")
 
 
 class FrontendClarityTest(unittest.TestCase):
@@ -83,6 +84,30 @@ class FrontendClarityTest(unittest.TestCase):
         self.assertIn('aria-current="step"', APP)
         for css_class in (".trace-step.is-active", ".trace-step.is-complete", ".trace-step.is-pending"):
             self.assertIn(css_class, STYLE)
+
+    def test_debug_panel_renders_card_then_rag_fallback_as_two_stage_chain(self) -> None:
+        for copy in (
+            "Card Drilldown Attempt",
+            "Fallback Retrieval",
+            "卡片下钻失败 → RAG 回退链路",
+            "已尝试，返回 NO_ANSWER",
+            "该卡覆盖不全",
+            "RAG 救场命中",
+        ):
+            self.assertIn(copy, DEBUG_PANEL)
+        self.assertIn('endsWith("-then-rag-fallback")', DEBUG_PANEL)
+        self.assertIn("debug?.drilldown && debug?.retrieval", DEBUG_PANEL)
+
+    def test_cards_page_renders_two_stage_fallback_and_marks_gap(self) -> None:
+        self.assertNotIn("<script src=", CARDS.lower())
+        self.assertIn("Card Drilldown Attempt", CARDS)
+        self.assertIn("Fallback Retrieval", CARDS)
+        self.assertIn("agentic-source-drilldown-then-rag-fallback", CARDS)
+        self.assertIn("Card drilldown returned NO_ANSWER", CARDS)
+        self.assertIn("该卡 source 覆盖不全", CARDS)
+        self.assertIn("fallback-gap", CARDS)
+        self.assertIn("result?.debug?.drilldown && result?.debug?.retrieval", APP)
+        self.assertIn("card-grounding-then-rag-fallback", APP)
 
 
 if __name__ == "__main__":

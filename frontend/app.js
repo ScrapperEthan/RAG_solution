@@ -49,8 +49,10 @@ const pathLabels = {
   "rag-fallback": "Card miss → RAG fallback",
   "card-direct": "Card direct",
   "card-grounding": "Card → source grounding",
+  "card-grounding-then-rag-fallback": "Card drilldown → RAG fallback",
   "agentic-card-direct": "Agentic → Card direct",
   "agentic-source-drilldown": "Agentic → source drilldown",
+  "agentic-source-drilldown-then-rag-fallback": "Agentic source drilldown → RAG fallback",
   "llm-direct": "模型直答 · 无 grounding 基线",
 };
 const offlineDemoTiming = {
@@ -61,6 +63,9 @@ const offlineDemoTiming = {
   answerChunk: 65,
 };
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+const isRagFallbackResult = (result) =>
+  String(result?.execution?.path || "").endsWith("-then-rag-fallback") ||
+  Boolean(result?.debug?.drilldown && result?.debug?.retrieval);
 
 document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => switchView(button.dataset.view)));
 el("goldenModeBtn").addEventListener("click", () => setMode("golden"));
@@ -361,6 +366,15 @@ function offlineResultFor(request) {
     source_section_ids: [selected.section_id],
   }] : [];
   const isOutOfScope = selected.type === "out-of-scope";
+  const fallbackCard = isOutOfScope
+    ? { canonical_id: "C-DEMO-LEAVE-RULES", canonical_name: "请假申请规则", module: selected.module }
+    : null;
+  const fallbackSteps = [
+    "匹配“请假申请规则”卡",
+    "识别为精确能力问题，先回卡片 source 取证",
+    "Card drilldown returned NO_ANSWER",
+    "Fallback to hybrid RAG retrieval",
+  ];
   let path = "agentic-card-direct";
   let evidenceKind = isOutOfScope ? "retrieval" : "card";
   let drilled = false;
@@ -374,10 +388,14 @@ function offlineResultFor(request) {
     evidenceSections = [source];
     card = null;
   } else if (mode === "card-grounding") {
-    path = "card-grounding";
+    path = selected.card ? "card-grounding" : "card-grounding-then-rag-fallback";
     evidenceKind = selected.card ? "source" : "retrieval";
     drilled = true;
     evidenceSections = [source];
+    card = selected.card || fallbackCard;
+    if (!selected.card && fallbackCard) {
+      answer = "脱敏知识库没有记录刷脸审批功能；系统已从 RAG 回退命中的原文确认不能凭空猜测。";
+    }
   } else if (mode === "card-direct") {
     path = "card-direct";
     evidenceKind = selected.card ? "card" : "none";
@@ -395,10 +413,12 @@ function offlineResultFor(request) {
     drilled = true;
     evidenceSections = [source];
   } else if (isOutOfScope) {
-    path = "agentic-rag-fallback";
+    path = "agentic-source-drilldown-then-rag-fallback";
     evidenceKind = "retrieval";
+    drilled = true;
     evidenceSections = [source];
-    card = null;
+    card = fallbackCard;
+    answer = "脱敏知识库没有记录刷脸审批功能；系统先尝试“请假申请规则”卡片取证，得到 NO_ANSWER 后回退到 RAG 检索确认。";
   }
 
   const result = {
@@ -415,7 +435,7 @@ function offlineResultFor(request) {
       intent: isOutOfScope ? "out-of-scope" : selected.type,
       drilled,
       card,
-      steps: selected.steps,
+      steps: isRagFallbackResult({ execution: { path } }) ? fallbackSteps : selected.steps,
     },
   };
   if (request.debug) result.debug = offlineDebugFor(result, request, selected, source);
@@ -423,10 +443,12 @@ function offlineResultFor(request) {
 }
 
 function offlineDebugFor(result, request, selected, source) {
-  const card = selected.card
+  const executionCard = result.execution?.card || selected.card;
+  const fallback = isRagFallbackResult(result);
+  const card = executionCard
     ? {
-        canonical_id: selected.card.canonical_id,
-        canonical_name: selected.card.canonical_name,
+        canonical_id: executionCard.canonical_id,
+        canonical_name: executionCard.canonical_name,
         module: selected.module,
         boundary: "脱敏演示卡片，仅用于展示 Debug 面板结构。",
         subsections: [
@@ -470,6 +492,18 @@ function offlineDebugFor(result, request, selected, source) {
         { origin: "subsection", section_id: selected.section_id, subsection: selected.source_title, field: "", label: "" },
       ]
     : [];
+  const retrieval = result.execution?.evidence_kind === "retrieval"
+    ? { index: fallback ? "both" : "offline-demo", search: fallback ? "hybrid" : "synthetic", top_k: fallback ? 8 : 1, hits: [{ section_id: source.section_id, title: source.title, heading_path: source.heading_path, source_url: source.source_url, score: source.score }] }
+    : null;
+  const drilldown = result.execution?.evidence_kind === "source" || fallback
+    ? {
+        gathered,
+        resolved_section_ids: card ? [selected.section_id] : [],
+        missed_section_ids: [],
+        counts: { gathered: gathered.length, resolved: card ? 1 : 0, missed: 0, capped_to: card ? 1 : 0 },
+        note: fallback ? "Card drilldown returned NO_ANSWER in the offline demo, then RAG supplied the final refs." : undefined,
+      }
+    : null;
   return {
     query: request.query,
     answer_mode: request.answer_mode,
@@ -480,12 +514,8 @@ function offlineDebugFor(result, request, selected, source) {
       catalog_size: 4,
       chosen_card: card?.canonical_id || null,
     },
-    retrieval: result.execution?.evidence_kind === "retrieval"
-      ? { index: "offline-demo", search: "synthetic", top_k: 1, hits: [{ section_id: source.section_id, title: source.title, heading_path: source.heading_path, source_url: source.source_url, score: source.score }] }
-      : null,
-    drilldown: result.execution?.evidence_kind === "source"
-      ? { gathered, resolved_section_ids: [selected.section_id], missed_section_ids: [], counts: { gathered: gathered.length, resolved: 1, missed: 0, capped_to: 1 } }
-      : null,
+    retrieval,
+    drilldown,
     refs_used: usesSource ? [ref] : [],
     card_used: card,
   };
@@ -522,6 +552,7 @@ function renderResult(result) {
   state.lastResult = result;
   const execution = result.execution || {};
   const evidenceKind = execution.evidence_kind || "none";
+  const fallbackToRag = isRagFallbackResult(result);
   const refs = result.evidence_sections || result.retrieved_sections || [];
   const cards = result.card_evidence || [];
   const actualPath = pathLabels[execution.path] || execution.path || "Unknown path";
@@ -534,10 +565,17 @@ function renderResult(result) {
     execution.drilled === true ? "<span>source drilled</span>" : "",
     `<span>${(result.citations || []).length} citations</span>`,
   ].join("");
-  renderEvidenceProvenance(evidenceKind, execution.drilled === true || result.drilled === true);
+  renderEvidenceProvenance(evidenceKind, execution.drilled === true || result.drilled === true, fallbackToRag);
   renderExecutionTrace(execution);
   if (evidenceKind === "retrieval") {
-    renderSectionEvidence(refs, true, "检索证据", "Retrieved and ranked Confluence sections");
+    renderSectionEvidence(
+      refs,
+      true,
+      fallbackToRag ? "RAG 回退证据" : "检索证据",
+      fallbackToRag ? "Card drilldown returned NO_ANSWER; final answer uses these RAG hits" : "Retrieved and ranked Confluence sections",
+      fallbackToRag ? execution.card : null,
+      result
+    );
   } else if (evidenceKind === "source") {
     renderSectionEvidence(refs, false, "下钻原文", "Source sections followed from approved Card anchors", execution.card, result);
   } else if (evidenceKind === "card") {
@@ -556,8 +594,9 @@ function renderCurrentDebugPanel() {
   window.RAGDebug?.render(el("debugPanel"), state.lastResult, { requested: el("debugToggle").checked });
 }
 
-function renderEvidenceProvenance(evidenceKind, drilled) {
-  const [label, kind] = evidenceKindCopy[evidenceKind] || evidenceKindCopy.none;
+function renderEvidenceProvenance(evidenceKind, drilled, fallbackToRag = false) {
+  const [baseLabel, kind] = evidenceKindCopy[evidenceKind] || evidenceKindCopy.none;
+  const label = fallbackToRag ? "证据来源：RAG 回退（卡片下钻未答上）" : baseLabel;
   el("evidenceProvenance").innerHTML = `
     <span class="provenance-badge is-${kind}">${escapeHtml(label)}</span>
     <span class="provenance-badge is-drill">是否回原文：${drilled === true ? "是" : "否"}</span>`;
@@ -625,6 +664,7 @@ function renderCardEvidence(fields, card, result = null) {
 
 function renderMatchedCard(card, result = null) {
   if (!card?.canonical_id) return "";
+  const fallbackToRag = isRagFallbackResult(result);
   const fullCard = result?.debug?.card_used || card;
   const modules = (fullCard.module || card.module || []).map((module) => `<span>${escapeHtml(module)}</span>`).join("");
   const subsections = Array.isArray(fullCard.subsections) ? fullCard.subsections.length : null;
@@ -633,11 +673,15 @@ function renderMatchedCard(card, result = null) {
     subsections !== null ? `${subsections} subsections` : "",
     fields !== null ? `${fields} fields` : "",
   ].filter(Boolean).join(" · ");
-  return `<article class="matched-card">
+  return `<article class="matched-card ${fallbackToRag ? "is-warning" : ""}">
     <div class="matched-card-main">
-      <span>命中卡片</span>
+      <span>${fallbackToRag ? "命中卡片 · 下钻未答上" : "命中卡片"}</span>
       <strong>${escapeHtml(card.canonical_id)} · ${escapeHtml(card.canonical_name || "Unnamed card")}</strong>
-      ${fullCard.boundary ? `<p>${escapeHtml(fullCard.boundary)}</p>` : `<p>本次回答使用了这张审批卡；点开可查看 topic → subsection → fact → source_section_ids 的完整结构。</p>`}
+      ${fallbackToRag
+        ? '<p class="matched-card-warning">该卡 source 覆盖不全，系统已回退到 RAG；打开卡片结构可排查需要补哪段 source_section_ids。</p>'
+        : fullCard.boundary
+          ? `<p>${escapeHtml(fullCard.boundary)}</p>`
+          : `<p>本次回答使用了这张审批卡；点开可查看 topic → subsection → fact → source_section_ids 的完整结构。</p>`}
       <div class="module-tags">${modules}${counts ? `<span>${escapeHtml(counts)}</span>` : ""}</div>
     </div>
     <a class="matched-card-link" href="${cardExplorerUrl(card.canonical_id)}">打开卡片结构</a>

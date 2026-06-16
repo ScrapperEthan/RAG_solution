@@ -125,6 +125,7 @@
       position: relative; padding: 12px 13px 12px 46px; border: 1px solid var(--line); border-radius: 11px;
       background: #fbfcfb; line-height: 1.55;
     }
+    .drill-stage.is-warning { border-color: #ead8b4; background: #fff9ed; box-shadow: inset 4px 0 var(--gold); }
     .drill-stage .stage-no, .path-order {
       display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: #fff;
       background: var(--green); font-size: 10px; font-weight: 900;
@@ -138,6 +139,7 @@
     .step-chip b { display: grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; color: #fff; background: var(--green); font-size: 8px; }
     .card-head { position: relative; padding: 4px 2px 18px; border-bottom: 1px solid var(--line); }
     .card-head.path-hit { padding-left: 42px; }
+    .card-head.fallback-gap { border-bottom-color: #ead8b4; background: #fff9ed; }
     .card-head .path-order { position: absolute; left: 3px; top: 5px; background: var(--gold); }
     .card-id { color: var(--green); font: 800 10px Consolas,monospace; letter-spacing: .08em; }
     .card-head h2 { margin: 5px 0 8px; font-size: 24px; letter-spacing: -.025em; }
@@ -311,7 +313,7 @@
 (() => {
   const escDebug = value => String(value ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const arrDebug = value => Array.isArray(value) ? value : [];
-  const isObjDebug = value => value !== null && typeof value === "object" && !Array.isArray(value);
+  const objDebug = value => value !== null && typeof value === "object" && !Array.isArray(value);
   const jsonDebug = value => {
     try { return JSON.stringify(value, null, 2); } catch (_) { return String(value); }
   };
@@ -326,33 +328,95 @@
       : `<span class="debug-scalar">${escDebug(textValue || "''")}</span>`;
   };
   const treeDebug = value => {
-    if (!isObjDebug(value) && !Array.isArray(value)) return scalarDebug(value);
+    if (!objDebug(value) && !Array.isArray(value)) return scalarDebug(value);
     const entries = Array.isArray(value) ? value.map((item,index) => [`[${index}]`, item]) : Object.entries(value);
     if (!entries.length) return '<div class="debug-empty-inline">empty</div>';
     return `<div class="debug-field-tree">${entries.map(([key,item]) => `
       <div class="debug-field-row">
         <div class="debug-key"><code>${escDebug(key)}</code><span>${escDebug(typeDebug(item))}</span></div>
-        <div class="debug-value">${isObjDebug(item) || Array.isArray(item) ? treeDebug(item) : scalarDebug(item)}</div>
+        <div class="debug-value">${objDebug(item) || Array.isArray(item) ? treeDebug(item) : scalarDebug(item)}</div>
       </div>`).join("")}</div>`;
   };
   const detailsDebug = (payload, label = "查看原始 JSON") => `<details class="debug-json"><summary>${escDebug(label)}</summary><pre>${escDebug(jsonDebug(payload))}</pre></details>`;
   const summaryDebug = rows => `<dl class="debug-summary">${rows.map(([k,v]) => `<div><dt>${escDebug(k)}</dt><dd>${scalarDebug(v)}</dd></div>`).join("")}</dl>`;
-  const hopDebug = (number, title, subtitle, payload, body = "") => `<article class="debug-hop">
+  const hopDebug = (number, title, subtitle, payload, body = "", tone = "") => `<article class="debug-hop ${tone ? `is-${escDebug(tone)}` : ""}">
     <header><span>${number}</span><div><strong>${escDebug(title)}</strong><small>${escDebug(subtitle)}</small></div></header>
     <div class="debug-hop-body">${body || treeDebug(payload)}</div>${detailsDebug(payload)}
   </article>`;
+  const headingDebug = ref => arrDebug(ref?.heading_path).join(" > ");
+  const isFallbackDebug = result => String(result?.execution?.path || "").endsWith("-then-rag-fallback") || Boolean(result?.debug?.drilldown && result?.debug?.retrieval);
+
   const refsDebug = refs => refs.length ? refs.map((ref,index) => `<article class="debug-ref">
     <header><span>${String(index + 1).padStart(2, "0")}</span><strong>${escDebug(ref.title || ref.section_id || "ref")}</strong></header>
     ${summaryDebug([
       ["section_id", ref.section_id],
-      ["anchor", ref.anchor || arrDebug(ref.heading_path).join(" > ")],
-      ["heading_path", arrDebug(ref.heading_path).join(" > ")],
+      ["anchor", ref.anchor || headingDebug(ref)],
+      ["heading_path", headingDebug(ref)],
       ["source_url", ref.source_url],
       ["score", ref.score],
     ])}
     <div class="debug-body-md"><strong>body_md</strong><pre>${escDebug(ref.body_md || "")}</pre></div>
     ${detailsDebug(ref, "查看这条 ref 的原始 JSON")}
   </article>`).join("") : '<div class="debug-empty">refs_used 为空。</div>';
+
+  const drillDebug = (drilldown, failed) => {
+    const gathered = arrDebug(drilldown?.gathered);
+    const missed = arrDebug(drilldown?.missed_section_ids);
+    const failedHtml = failed
+      ? '<div class="debug-card-gap"><strong>已尝试，返回 NO_ANSWER</strong><span>这张卡命中了主题，但它声明的 source sections 没有覆盖本题答案；需要补卡或修正 source_section_ids。</span></div>'
+      : "";
+    const missedHtml = missed.length
+      ? `<div class="debug-missed"><strong>missed_section_ids</strong><span>收集到但 loaded_refs 未命中。</span>${missed.map(sid => `<code>${escDebug(sid)}</code>`).join("")}</div>`
+      : '<div class="debug-ok">missed_section_ids 为空，收集到的 section_id 均可解析或没有执行卡片取证。</div>';
+    const table = gathered.length ? `<div class="debug-table-wrap"><table class="debug-table">
+      <thead><tr><th>#</th><th>origin</th><th>field / label</th><th>section_id</th></tr></thead>
+      <tbody>${gathered.map((item,index) => `<tr>
+        <td>${index + 1}</td><td><code>${escDebug(item.origin)}</code></td>
+        <td>${escDebug([item.subsection,item.field,item.label].filter(Boolean).join(" / "))}</td>
+        <td><code>${escDebug(item.section_id)}</code></td>
+      </tr>`).join("")}</tbody>
+    </table></div>` : '<div class="debug-empty-inline">debug.drilldown.gathered 为空或后端未返回。</div>';
+    return `${failedHtml}${summaryDebug([
+      ["counts.gathered", drilldown?.counts?.gathered],
+      ["counts.resolved", drilldown?.counts?.resolved],
+      ["counts.missed", drilldown?.counts?.missed],
+      ["counts.capped_to", drilldown?.counts?.capped_to],
+      ["resolved_section_ids.length", arrDebug(drilldown?.resolved_section_ids).length],
+    ])}${missedHtml}${table}${treeDebug(drilldown)}`;
+  };
+
+  const retrievalDebug = (retrieval, fallback) => {
+    const hits = arrDebug(retrieval?.hits);
+    const note = fallback
+      ? '<div class="debug-recovery"><strong>RAG 救场命中</strong><span>下面这些 hits 是真正喂给 LLM、产出最终答案的来源。</span></div>'
+      : "";
+    const table = hits.length ? `<div class="debug-table-wrap"><table class="debug-table">
+      <thead><tr><th>#</th><th>section_id</th><th>heading_path</th><th>score</th></tr></thead>
+      <tbody>${hits.map((hit,index) => `<tr>
+        <td>${index + 1}</td><td><code>${escDebug(hit.section_id)}</code></td>
+        <td>${escDebug(arrDebug(hit.heading_path).join(" > "))}</td><td><code>${escDebug(hit.score ?? "null")}</code></td>
+      </tr>`).join("")}</tbody>
+    </table></div>` : '<div class="debug-empty-inline">retrieval.hits 为空</div>';
+    return `${note}${summaryDebug([["index", retrieval?.index],["search", retrieval?.search],["top_k", retrieval?.top_k],["hits.length", hits.length]])}${table}${treeDebug(retrieval)}`;
+  };
+
+  const bridgeDebug = execution => {
+    const bridgeSteps = arrDebug(execution?.steps).filter(step => /NO_ANSWER|Fallback to hybrid RAG retrieval/i.test(String(step)));
+    const rows = bridgeSteps.length ? bridgeSteps : ["Card drilldown returned NO_ANSWER", "Fallback to hybrid RAG retrieval"];
+    return `<div class="debug-bridge"><strong>两段衔接</strong><div>${rows.map((step,index) => `<span class="debug-bridge-step"><b>${index + 1}</b>${escDebug(step)}</span>`).join("")}</div></div>`;
+  };
+
+  const cardDebug = (card, fallback) => card ? `<div class="debug-card-structure">
+    ${fallback ? '<div class="debug-card-gap"><strong>该卡覆盖不全</strong><span>最终答案来自 RAG refs；这里保留命中的卡，方便排查哪些 subsection / fact 需要补 source。</span></div>' : ""}
+    ${summaryDebug([
+      ["canonical_id", card.canonical_id],
+      ["canonical_name", card.canonical_name],
+      ["module", arrDebug(card.module).join(" / ")],
+      ["subsections.length", arrDebug(card.subsections).length],
+      ["fields.length", arrDebug(card.fields).length],
+    ])}${treeDebug(card)}
+  </div>` : '<div class="debug-empty">card_used 为 null：本次没有命中知识卡。</div>';
+
   window.RAGDebug = {
     render(target, result, options = {}) {
       if (!target) return;
@@ -364,13 +428,10 @@
       const execution = result.execution || {};
       const debug = result.debug || {};
       const refs = arrDebug(debug.refs_used).length ? arrDebug(debug.refs_used) : arrDebug(result.evidence_sections);
+      const fallback = isFallbackDebug(result);
       const routing = debug.routing || {method: execution.card ? "unknown-from-execution" : "none", llm_returned_ids: [], catalog_size: null, chosen_card: execution.card?.canonical_id || null};
-      const retrieval = debug.retrieval || (execution.evidence_kind === "retrieval" ? {hits: refs} : null);
-      const drilldown = debug.drilldown || (execution.evidence_kind === "source" ? {resolved_section_ids: refs.map(ref => ref.section_id), missed_section_ids: [], counts: {capped_to: refs.length}} : null);
-      const missed = arrDebug(drilldown?.missed_section_ids);
-      const retrievalBody = drilldown
-        ? `${missed.length ? `<div class="debug-missed"><strong>missed_section_ids</strong>${missed.map(sid => `<code>${escDebug(sid)}</code>`).join("")}</div>` : '<div class="debug-ok">missed_section_ids 为空。</div>'}${treeDebug(drilldown)}`
-        : treeDebug(retrieval);
+      const retrieval = debug.retrieval || (execution.evidence_kind === "retrieval" ? {index:"unknown",search:"unknown",top_k:refs.length,hits:refs} : null);
+      const drilldown = debug.drilldown || ((execution.evidence_kind === "source" || fallback) ? {gathered:[],resolved_section_ids:[],missed_section_ids:[],counts:{gathered:null,resolved:null,missed:null,capped_to:null}} : null);
       const answerPayload = {
         answer: result.answer,
         citations: result.citations || [],
@@ -378,19 +439,34 @@
         retrieved_section_ids: result.retrieved_section_ids || [],
         contexts: result.contexts || [],
         card_evidence: result.card_evidence || [],
+        evidence_sections: result.evidence_sections || [],
         execution,
       };
+      const hops = [
+        hopDebug(1, "Query / Intent", "用户问题、请求模式、意图分类", {query: debug.query ?? result.query, answer_mode: debug.answer_mode ?? execution.requested_mode, intent: debug.intent ?? execution.intent}),
+        hopDebug(2, "Routing", "卡片路由方法、LLM 返回 id、最终命中卡", routing, `${summaryDebug([["method", routing.method],["chosen_card", routing.chosen_card],["catalog_size", routing.catalog_size],["llm_returned_ids", arrDebug(routing.llm_returned_ids).join(", ")]])}${treeDebug(routing)}`),
+      ];
+      if (fallback) {
+        hops.push(
+          hopDebug(3, "Card Drilldown Attempt", "命中的卡已下钻，但本段没有产出最终答案", drilldown, drillDebug(drilldown, true), "warning"),
+          hopDebug(4, "Fallback Retrieval", "Card drilldown returned NO_ANSWER 后，回退到 hybrid RAG hits", retrieval, `${bridgeDebug(execution)}${retrieval ? retrievalDebug(retrieval, true) : '<div class="debug-empty">debug.retrieval 为空。</div>'}`, "recovery"),
+          hopDebug(5, "Refs Used", "真正喂给 answer_from_refs 的 RAG refs_used", refs, refsDebug(refs)),
+          hopDebug(6, "Card Used", "保留命中卡片结构，用于定位 source 覆盖缺口", debug.card_used || execution.card || null, cardDebug(debug.card_used || execution.card || null, true)),
+          hopDebug(7, "Answer", "答案、引用、诊断、contexts、execution.steps", answerPayload, treeDebug(answerPayload))
+        );
+      } else {
+        const thirdPayload = drilldown || retrieval;
+        hops.push(
+          hopDebug(3, drilldown ? "Drilldown" : "Retrieval", drilldown ? "卡片取证 gathered/resolved/missed" : "全库检索 hits/score", thirdPayload, drilldown ? drillDebug(drilldown, false) : retrievalDebug(retrieval, false), arrDebug(drilldown?.missed_section_ids).length ? "warning" : ""),
+          hopDebug(4, "Refs Used", "真正喂给 answer_from_refs 的原文 refs_used", refs, refsDebug(refs)),
+          hopDebug(5, "Card Used", "命中卡片结构、subsections、facts、fields", debug.card_used || execution.card || null, cardDebug(debug.card_used || execution.card || null, false)),
+          hopDebug(6, "Answer", "答案、引用、诊断、contexts、execution.steps", answerPayload, treeDebug(answerPayload))
+        );
+      }
       target.classList.remove("is-hidden");
       target.innerHTML = `<section class="debug-panel">
-        <header class="debug-panel-head"><div><span>DEBUG 链路</span><h2>召回链路逐跳字段</h2><p>${result.debug ? "后端返回了 result.debug，以下为真实逐跳链路。" : "后端未返回 result.debug，以下用现有 result 字段兜底展示。"}</p></div><strong>${result.debug ? "debug payload" : "fallback view"}</strong></header>
-        <div class="debug-hop-list">
-          ${hopDebug(1, "Query / Intent", "用户问题、请求模式、意图分类", {query: debug.query ?? result.query, answer_mode: debug.answer_mode ?? execution.requested_mode, intent: debug.intent ?? execution.intent})}
-          ${hopDebug(2, "Routing", "卡片路由方法、LLM 返回 id、最终命中卡", routing, `${summaryDebug([["method", routing.method],["chosen_card", routing.chosen_card],["catalog_size", routing.catalog_size],["llm_returned_ids", arrDebug(routing.llm_returned_ids).join(", ")]])}${treeDebug(routing)}`)}
-          ${hopDebug(3, drilldown ? "Drilldown" : "Retrieval", drilldown ? "卡片取证 gathered/resolved/missed" : "全库检索 hits/score", drilldown || retrieval, retrievalBody)}
-          ${hopDebug(4, "Refs Used", "真正喂给 answer_from_refs 的原文 refs_used", refs, refsDebug(refs))}
-          ${hopDebug(5, "Card Used", "命中卡片结构、subsections、facts、fields", debug.card_used || execution.card || null, treeDebug(debug.card_used || execution.card || null))}
-          ${hopDebug(6, "Answer", "答案、引用、诊断、contexts、execution.steps", answerPayload, treeDebug(answerPayload))}
-        </div>${detailsDebug(result, "查看完整 result JSON")}
+        <header class="debug-panel-head"><div><span>DEBUG 链路</span><h2>${fallback ? "卡片下钻失败 → RAG 回退链路" : "召回链路逐跳字段"}</h2><p>${result.debug ? "后端返回了 result.debug，以下为真实逐跳链路。" : "后端未返回 result.debug，以下用现有 result 字段兜底展示。"}</p></div><strong>${fallback ? "two-stage fallback" : result.debug ? "debug payload" : "fallback view"}</strong></header>
+        <div class="debug-hop-list">${hops.join("")}</div>${detailsDebug(result, "查看完整 result JSON")}
       </section>`;
     }
   };
@@ -495,8 +571,8 @@ const SAMPLE_RESULT = {
 
 function sampleResult() {
   const result = structuredClone(SAMPLE_RESULT);
-  if (!el("debugToggle")?.checked) return result;
   const mode = el("answerMode")?.value || "agentic";
+  const wantsFallback = /刷脸|覆盖不全|fallback|回退|NO_ANSWER/i.test(el("queryInput")?.value || "");
   const ref = {
     section_id: "demo-leave-policy#请假申请规则 > 可以请几天",
     anchor: "请假申请规则 > 可以请几天",
@@ -507,6 +583,27 @@ function sampleResult() {
     score: 0.93,
     body_md: "请假申请规则\n员工每年有 10 天年假。该示例为脱敏演示数据。",
   };
+  if (wantsFallback && mode !== "pure-rag" && mode !== "llm-direct") {
+    result.query = el("queryInput")?.value || "请假系统支持刷脸审批吗？";
+    result.answer = "脱敏知识库没有记录刷脸审批功能；系统先尝试“请假申请规则”卡片取证，得到 NO_ANSWER 后回退到 RAG 检索确认。";
+    result.citations = [ref.source_url];
+    result.retrieved_section_ids = [ref.section_id];
+    result.drilled = true;
+    result.card_evidence = [];
+    result.evidence_sections = [ref];
+    result.execution.path = mode === "card-grounding" ? "card-grounding-then-rag-fallback" : "agentic-source-drilldown-then-rag-fallback";
+    result.execution.evidence_kind = "retrieval";
+    result.execution.intent = "exact";
+    result.execution.drilled = true;
+    result.execution.card = {canonical_id:"C-DEMO-LEAVE-RULES",canonical_name:"请假申请规则",module:["人事服务","请假"]};
+    result.execution.steps = [
+      "匹配“请假申请规则”卡",
+      "识别为精确能力问题，先回卡片 source 取证",
+      "Card drilldown returned NO_ANSWER",
+      "Fallback to hybrid RAG retrieval",
+    ];
+  }
+  if (!el("debugToggle")?.checked) return result;
   result.debug = {
     query: result.query,
     answer_mode: mode,
@@ -530,12 +627,12 @@ function sampleResult() {
     result.debug.routing = {method:"none",llm_returned_ids:[],catalog_size:SAMPLE_CARDS.length,chosen_card:null};
     result.debug.card_used = null;
   }
-  if (mode === "card-grounding") {
+  if (mode === "card-grounding" && !wantsFallback) {
     result.execution.path = "card-grounding";
     result.execution.evidence_kind = "source";
     result.execution.drilled = true;
   }
-  if (mode === "card-grounding" || mode === "pure-rag") {
+  if ((mode === "card-grounding" && !wantsFallback) || mode === "pure-rag") {
     result.evidence_sections = [ref];
     result.debug.refs_used = [ref];
     result.debug.drilldown = mode === "card-grounding"
@@ -553,6 +650,20 @@ function sampleResult() {
       ? {index:"offline-demo",search:"synthetic",top_k:1,hits:[{section_id:ref.section_id,title:ref.title,heading_path:ref.heading_path,source_url:ref.source_url,score:ref.score}]}
       : null;
   }
+  if (wantsFallback && mode !== "pure-rag" && mode !== "llm-direct") {
+    result.debug.refs_used = [ref];
+    result.debug.drilldown = {
+      gathered: [
+        {origin:"fact",section_id:ref.section_id,subsection:"可以请几天",field:"annual_leave_days",label:"年假天数"},
+        {origin:"subsection",section_id:ref.section_id,subsection:"可以请几天",field:"",label:""},
+      ],
+      resolved_section_ids: [ref.section_id],
+      missed_section_ids: [],
+      counts: {gathered:2,resolved:1,missed:0,capped_to:1},
+      note: "脱敏样例：卡片 source 已解析，但没有回答刷脸审批能力，因此回退 RAG。",
+    };
+    result.debug.retrieval = {index:"both",search:"hybrid",top_k:8,hits:[{section_id:ref.section_id,title:ref.title,heading_path:ref.heading_path,source_url:ref.source_url,score:ref.score}]};
+  }
   return result;
 }
 
@@ -562,6 +673,9 @@ const arr = value => Array.isArray(value) ? value.filter(v => v !== null && v !=
 const esc = value => String(value ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const text = value => value === null || value === undefined || value === "" ? "—" : String(value);
 const norm = value => String(value ?? "").trim().toLowerCase();
+const isRagFallbackResult = result =>
+  String(result?.execution?.path || "").endsWith("-then-rag-fallback") ||
+  Boolean(result?.debug?.drilldown && result?.debug?.retrieval);
 
 el("askForm").addEventListener("submit", submitQuestion);
 el("searchInput").addEventListener("input", renderCardList);
@@ -904,6 +1018,11 @@ function cardHitTokens(result) {
   const add = value => { if (value !== null && value !== undefined && String(value).trim()) tokens.add(norm(value)); };
   const evidence = [...arr(result?.card_evidence), ...arr(result?.evidence_sections)];
   arr(result?.retrieved_section_ids).forEach(add);
+  arr(result?.debug?.drilldown?.resolved_section_ids).forEach(add);
+  arr(result?.debug?.drilldown?.missed_section_ids).forEach(add);
+  arr(result?.debug?.drilldown?.gathered).forEach(item => {
+    [item.section_id, item.subsection, item.field, item.label].forEach(add);
+  });
   evidence.forEach(item => {
     const headingPath = arr(item.heading_path);
     [item.field, item.label, item.value, item.pointer_to, item.section_id, ...(arr(item.source_section_ids)), headingPath.at(-1)].forEach(add);
@@ -954,20 +1073,22 @@ function renderCardDetail() {
     return;
   }
   const topicHit = state.result?.execution?.card?.canonical_id === card.canonical_id;
+  const fallbackToRag = topicHit && isRagFallbackResult(state.result);
   const subsections = arr(card.subsections);
   const fields = arr(card.fields);
   el("cardDetail").className = "";
   el("cardDetail").innerHTML = `
-    <header class="card-head ${topicHit ? "path-hit" : ""}">
+    <header class="card-head ${topicHit ? "path-hit" : ""} ${fallbackToRag ? "fallback-gap" : ""}">
       ${topicHit ? '<span class="path-order">2</span>' : ""}
       <div class="card-id">${esc(card.canonical_id || "NO-ID")}</div>
       <h2>${esc(card.canonical_name || "Unnamed card")}</h2>
-      <p>${esc(card.boundary || "未提供 boundary")}</p>
+      <p>${fallbackToRag ? "该卡已命中并尝试下钻，但返回 NO_ANSWER；最终答案来自 RAG 回退命中的原文。" : esc(card.boundary || "未提供 boundary")}</p>
       <div class="meta-chips">
         ${arr(card.aliases).map(value => `<span class="meta-chip">alias · ${esc(value)}</span>`).join("")}
         ${arr(card.module).map(value => `<span class="meta-chip">module · ${esc(value)}</span>`).join("")}
         ${card.topic_class ? `<span class="meta-chip">${esc(card.topic_class)}</span>` : ""}
         ${card.status ? `<span class="meta-chip">${esc(card.status)}</span>` : ""}
+        ${fallbackToRag ? '<span class="meta-chip flag">该卡覆盖不全</span>' : ""}
         ${arr(card.flags).map(value => `<span class="meta-chip flag">flag · ${esc(typeof value === "string" ? value : JSON.stringify(value))}</span>`).join("")}
       </div>
       ${idListHtml(card.source_section_ids)}
@@ -1019,14 +1140,22 @@ function renderDrillBoard() {
   }
   const execution = result.execution || {};
   const card = execution.card;
+  const fallbackToRag = isRagFallbackResult(result);
   const evidenceCount = arr(result.card_evidence).length + arr(result.evidence_sections).length;
   const citations = arr(result.citations);
+  const stage2Text = card
+    ? `${esc(card.canonical_id)} · ${esc(card.canonical_name)}${fallbackToRag ? "（该卡 source 覆盖不全，已回退 RAG）" : ""}`
+    : "没有命中卡片，进入备用检索路径";
+  const stage4Title = fallbackToRag ? "RAG 回退命中" : `找到答案依据 · ${esc(execution.evidence_kind || "none")}`;
+  const stage4Text = fallbackToRag
+    ? `卡片下钻返回 NO_ANSWER；最终答案来自 ${arr(result.evidence_sections).length} 条 RAG 命中原文。`
+    : `${evidenceCount} 条卡片事实或原文段落已映射到下方结构。`;
   el("drillBoard").className = "drill-board";
   el("drillBoard").innerHTML = `
     <article class="drill-stage" data-stage="1"><span class="stage-no">1</span><strong>用户问题 · 意图 ${esc(execution.intent || "unknown")}</strong><p>${esc(result.query || el("queryInput").value)}</p></article>
-    <article class="drill-stage" data-stage="2"><span class="stage-no">2</span><strong>命中知识卡</strong><p>${card ? `${esc(card.canonical_id)} · ${esc(card.canonical_name)}` : "没有命中卡片，进入备用检索路径"}</p></article>
+    <article class="drill-stage ${fallbackToRag ? "is-warning" : ""}" data-stage="2"><span class="stage-no">2</span><strong>命中知识卡</strong><p>${stage2Text}</p></article>
     <article class="drill-stage" data-stage="3"><span class="stage-no">3</span><strong>系统采取的路径 · ${esc(execution.path || "unknown")}</strong><div class="steps">${arr(execution.steps).map((step,index) => `<span class="step-chip"><b>${index + 1}</b>${esc(step)}</span>`).join("") || "没有返回执行步骤"}</div></article>
-    <article class="drill-stage" data-stage="4"><span class="stage-no">4</span><strong>找到答案依据 · ${esc(execution.evidence_kind || "none")}</strong><p>${evidenceCount} 条卡片事实或原文段落已映射到下方结构。</p></article>
+    <article class="drill-stage ${fallbackToRag ? "is-warning" : ""}" data-stage="4"><span class="stage-no">4</span><strong>${stage4Title}</strong><p>${stage4Text}</p></article>
     <article class="drill-stage" data-stage="5"><span class="stage-no">5</span><strong>生成答案 + 原文链接</strong><p>${esc(result.answer || state.streamAnswer || "—")}</p><div class="source-list">${citations.map(url => {
       const href = safeUrl(url);
       return href ? `<div class="source-row"><a href="${esc(href)}" target="_blank" rel="noreferrer">${esc(url)}</a></div>` : `<div class="source-row"><span>${esc(url)}</span></div>`;

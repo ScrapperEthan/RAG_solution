@@ -24,6 +24,7 @@
   const headingText = (headingPath) => arrayOf(headingPath).join(" > ");
   const anchorFor = (ref) => ref?.anchor || headingText(ref?.heading_path) || "";
   const scoreText = (score) => (typeof score === "number" ? score.toFixed(6) : hasValue(score) ? String(score) : "null");
+  const isFallbackPath = (path) => String(path || "").endsWith("-then-rag-fallback");
 
   function safeUrl(value) {
     try {
@@ -90,6 +91,7 @@
     const debug = result?.debug || null;
     const resultRefs = arrayOf(result?.evidence_sections || result?.retrieved_sections);
     const refsUsed = arrayOf(debug?.refs_used).length ? arrayOf(debug?.refs_used) : resultRefs;
+    const fallback = isFallbackPath(execution.path) || Boolean(debug?.drilldown && debug?.retrieval);
     const fallbackRouting = {
       method: execution.card ? "unknown-from-execution" : "none",
       llm_returned_ids: [],
@@ -112,18 +114,24 @@
           }
         : null;
     const fallbackDrilldown =
-      execution.evidence_kind === "source"
+      execution.evidence_kind === "source" || (fallback && execution.card)
         ? {
             gathered: [],
-            resolved_section_ids: refsUsed.map((ref) => ref.section_id).filter(Boolean),
+            resolved_section_ids: execution.evidence_kind === "source" ? refsUsed.map((ref) => ref.section_id).filter(Boolean) : [],
             missed_section_ids: [],
-            counts: { gathered: null, resolved: refsUsed.length, missed: null, capped_to: refsUsed.length },
+            counts: {
+              gathered: null,
+              resolved: execution.evidence_kind === "source" ? refsUsed.length : null,
+              missed: null,
+              capped_to: execution.evidence_kind === "source" ? refsUsed.length : null,
+            },
             note: "后端未返回 debug.drilldown，无法看到 gathered 与 missed 的完整内部状态。",
           }
         : null;
     return {
       debug,
       execution,
+      isFallback: fallback,
       query: debug?.query ?? result?.query ?? "",
       answerMode: debug?.answer_mode ?? execution.requested_mode ?? "",
       intent: debug?.intent ?? execution.intent ?? null,
@@ -135,8 +143,11 @@
     };
   }
 
-  function renderRetrieval(retrieval) {
+  function renderRetrieval(retrieval, options = {}) {
     const hits = arrayOf(retrieval?.hits);
+    const fallbackNote = options.fallback
+      ? '<div class="debug-recovery"><strong>RAG 救场命中</strong><span>下面这些 hits 是真正喂给 LLM、产出最终答案的来源。</span></div>'
+      : "";
     const table = hits.length
       ? `<div class="debug-table-wrap"><table class="debug-table">
           <thead><tr><th>#</th><th>section_id</th><th>heading_path</th><th>score</th></tr></thead>
@@ -152,7 +163,7 @@
             .join("")}</tbody>
         </table></div>`
       : '<div class="debug-empty-inline">retrieval.hits 为空</div>';
-    return `${renderSummary([
+    return `${fallbackNote}${renderSummary([
       ["index", retrieval?.index],
       ["search", retrieval?.search],
       ["top_k", retrieval?.top_k],
@@ -160,10 +171,13 @@
     ])}${table}${renderFieldTree(retrieval)}`;
   }
 
-  function renderDrilldown(drilldown) {
+  function renderDrilldown(drilldown, options = {}) {
     const gathered = arrayOf(drilldown?.gathered);
     const resolved = arrayOf(drilldown?.resolved_section_ids);
     const missed = arrayOf(drilldown?.missed_section_ids);
+    const failedHtml = options.failed
+      ? '<div class="debug-card-gap"><strong>已尝试，返回 NO_ANSWER</strong><span>这张卡命中了主题，但它声明的 source sections 没有覆盖本题答案；需要补卡或修正 source_section_ids。</span></div>'
+      : "";
     const missedHtml = missed.length
       ? `<div class="debug-missed"><strong>missed_section_ids</strong><span>收集到但 loaded_refs 未命中，取证会在这里断掉。</span>${missed
           .map((sid) => `<code>${esc(sid)}</code>`)
@@ -184,13 +198,25 @@
             .join("")}</tbody>
         </table></div>`
       : '<div class="debug-empty-inline">debug.drilldown.gathered 为空或后端未返回。</div>';
-    return `${renderSummary([
+    return `${failedHtml}${renderSummary([
       ["counts.gathered", drilldown?.counts?.gathered],
       ["counts.resolved", drilldown?.counts?.resolved],
       ["counts.missed", drilldown?.counts?.missed],
       ["counts.capped_to", drilldown?.counts?.capped_to],
       ["resolved_section_ids.length", resolved.length],
     ])}${missedHtml}${gatheredTable}${renderFieldTree(drilldown)}`;
+  }
+
+  function renderFallbackBridge(execution) {
+    const steps = arrayOf(execution?.steps);
+    const bridgeSteps = steps.filter((step) => /NO_ANSWER|Fallback to hybrid RAG retrieval/i.test(String(step)));
+    const rows = bridgeSteps.length
+      ? bridgeSteps
+      : ["Card drilldown returned NO_ANSWER", "Fallback to hybrid RAG retrieval"];
+    return `<div class="debug-bridge">
+      <strong>两段衔接</strong>
+      <div>${rows.map((step, index) => `<span class="debug-bridge-step"><b>${index + 1}</b>${esc(step)}</span>`).join("")}</div>
+    </div>`;
   }
 
   function renderRefs(refs) {
@@ -220,10 +246,13 @@
     return rows.length ? `<div class="debug-id-list">${rows.map((sid) => `<code>${esc(sid)}</code>`).join("")}</div>` : "";
   }
 
-  function renderCard(card) {
+  function renderCard(card, options = {}) {
     if (!card) return '<div class="debug-empty">card_used 为 null：本次没有命中知识卡。</div>';
     const subsections = arrayOf(card.subsections);
     const fields = arrayOf(card.fields);
+    const gapHtml = options.fallback
+      ? '<div class="debug-card-gap"><strong>该卡覆盖不全</strong><span>最终答案来自 RAG refs；这里保留命中的卡，方便排查哪些 subsection / fact 需要补 source。</span></div>'
+      : "";
     const subsectionHtml = subsections.length
       ? subsections
           .map((sub, index) => {
@@ -277,6 +306,7 @@
           .join("")
       : '<div class="debug-empty-inline">card_used.fields 为空</div>';
     return `<div class="debug-card-structure">
+      ${gapHtml}
       ${renderSummary([
         ["canonical_id", card.canonical_id],
         ["canonical_name", card.canonical_name],
@@ -335,7 +365,7 @@
     const model = normalize(result);
     const hasDebug = Boolean(model.debug);
     const retrievalOrDrill = model.drilldown
-      ? renderDrilldown(model.drilldown)
+      ? renderDrilldown(model.drilldown, { failed: model.isFallback })
       : model.retrieval
         ? renderRetrieval(model.retrieval)
         : '<div class="debug-empty">本次路径没有 retrieval 或 drilldown 对象。</div>';
@@ -364,39 +394,55 @@
           ["llm_returned_ids", arrayOf(model.routing?.llm_returned_ids).join(", ")],
         ])}${renderFieldTree(model.routing)}`
       ),
-      renderHop(
-        3,
-        model.drilldown ? "Drilldown" : "Retrieval",
-        model.drilldown ? "卡片 source_section_ids 收集、命中、未命中" : "全库检索命中章节与分数",
-        model.drilldown || model.retrieval || null,
-        retrievalOrDrill,
-        arrayOf(model.drilldown?.missed_section_ids).length ? "warning" : ""
-      ),
-      renderHop(
-        4,
-        "Refs Used",
-        "真正喂给 answer_from_refs 的原文 refs_used",
-        model.refsUsed,
-        renderRefs(model.refsUsed)
-      ),
-      renderHop(
-        5,
-        "Card Used",
-        "命中卡片结构、subsections、facts、fields 与 source_section_ids",
-        model.cardUsed,
-        renderCard(model.cardUsed)
-      ),
-      renderHop(6, "Answer", "答案、引用、诊断、contexts、execution.steps", result, renderAnswer(result)),
     ];
+    if (model.isFallback) {
+      hops.push(
+        renderHop(
+          3,
+          "Card Drilldown Attempt",
+          "命中的卡已下钻，但本段没有产出最终答案",
+          model.drilldown || null,
+          model.drilldown
+            ? renderDrilldown(model.drilldown, { failed: true })
+            : '<div class="debug-card-gap"><strong>已尝试，返回 NO_ANSWER</strong><span>后端未返回 debug.drilldown，无法展开 gathered/resolved/missed。</span></div>',
+          "warning"
+        ),
+        renderHop(
+          4,
+          "Fallback Retrieval",
+          "Card drilldown returned NO_ANSWER 后，回退到 hybrid RAG hits",
+          model.retrieval || null,
+          `${renderFallbackBridge(model.execution)}${model.retrieval ? renderRetrieval(model.retrieval, { fallback: true }) : '<div class="debug-empty">debug.retrieval 为空：无法展示 RAG 救场 hits。</div>'}`,
+          "recovery"
+        ),
+        renderHop(5, "Refs Used", "真正喂给 answer_from_refs 的 RAG refs_used", model.refsUsed, renderRefs(model.refsUsed)),
+        renderHop(6, "Card Used", "保留命中卡片结构，用于定位 source 覆盖缺口", model.cardUsed, renderCard(model.cardUsed, { fallback: true })),
+        renderHop(7, "Answer", "答案、引用、诊断、contexts、execution.steps", result, renderAnswer(result))
+      );
+    } else {
+      hops.push(
+        renderHop(
+          3,
+          model.drilldown ? "Drilldown" : "Retrieval",
+          model.drilldown ? "卡片 source_section_ids 收集、命中、未命中" : "全库检索命中章节与分数",
+          model.drilldown || model.retrieval || null,
+          retrievalOrDrill,
+          arrayOf(model.drilldown?.missed_section_ids).length ? "warning" : ""
+        ),
+        renderHop(4, "Refs Used", "真正喂给 answer_from_refs 的原文 refs_used", model.refsUsed, renderRefs(model.refsUsed)),
+        renderHop(5, "Card Used", "命中卡片结构、subsections、facts、fields 与 source_section_ids", model.cardUsed, renderCard(model.cardUsed)),
+        renderHop(6, "Answer", "答案、引用、诊断、contexts、execution.steps", result, renderAnswer(result))
+      );
+    }
     target.classList.remove("is-hidden");
     target.innerHTML = `<section class="debug-panel">
       <header class="debug-panel-head">
         <div>
           <span>DEBUG 链路</span>
-          <h2>召回链路逐跳字段</h2>
+          <h2>${model.isFallback ? "卡片下钻失败 → RAG 回退链路" : "召回链路逐跳字段"}</h2>
           <p>${hasDebug ? "后端返回了 result.debug，以下为真实逐跳链路。" : "后端未返回 result.debug，以下用现有 result 字段兜底展示，routing/gathered/missed 可能不完整。"}</p>
         </div>
-        <strong>${hasDebug ? "debug payload" : "fallback view"}</strong>
+        <strong>${model.isFallback ? "two-stage fallback" : hasDebug ? "debug payload" : "fallback view"}</strong>
       </header>
       <div class="debug-hop-list">${hops.join("")}</div>
       ${renderJsonDetails(result, "查看完整 result JSON")}
