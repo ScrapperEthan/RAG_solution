@@ -9,6 +9,7 @@ from typing import Any, Dict, Iterable, List, Optional
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -237,6 +238,12 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
     config = load_config(config_path)
     runtime = DemoRuntime(config)
     app = FastAPI(title="Confluence RAG PoC Demo", version="0.1.0")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     @app.get("/api/health")
     def health() -> Dict[str, Any]:

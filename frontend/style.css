@@ -41,12 +41,19 @@ button:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3p
 .tabs { display: flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: #eef1ee; }
 .tab { padding: 9px 18px; border: 0; border-radius: 8px; color: var(--muted); background: transparent; font-weight: 700; }
 .tab.is-active { color: var(--ink); background: white; box-shadow: 0 3px 12px rgba(25, 45, 34, .08); }
-.system-status { justify-self: end; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; font-weight: 700; }
+.backend-control { justify-self: end; display: flex; align-items: center; justify-content: end; gap: 10px; min-width: 0; }
+.system-status { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; font-weight: 700; white-space: nowrap; }
 .system-status span { width: 8px; height: 8px; border-radius: 50%; background: #9aa39d; }
 .system-status.is-online span { background: var(--green-bright); box-shadow: 0 0 0 5px rgba(32, 164, 116, .12); }
 .system-status.is-demo { color: #795010; }
 .system-status.is-demo span { background: var(--gold); box-shadow: 0 0 0 5px rgba(165, 110, 24, .12); }
 .system-status.is-error span { background: var(--red); }
+.backend-switch {
+  min-height: 32px; padding: 0 11px; border: 1px solid var(--line); border-radius: 8px;
+  color: #536058; background: #fff; font-size: 11px; font-weight: 800; white-space: nowrap;
+}
+.backend-switch:hover { border-color: var(--green); color: var(--green); }
+.backend-switch:disabled { cursor: wait; opacity: .62; }
 .demo-banner { display: flex; gap: 14px; padding: 10px 36px; color: #795010; background: var(--gold-soft); border-bottom: 1px solid #ead8b4; font-size: 12px; }
 
 main { width: min(1480px, calc(100% - 48px)); margin: 0 auto 54px; }

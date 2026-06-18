@@ -8,10 +8,17 @@ const state = {
   answerFamily: "agentic",
   offlineDemo: false,
   offlineReason: "",
+  apiBase: "",
+  backendPreference: safeLocalStorageGet("rag_backend_mode") || "auto",
+  reconnectTimer: null,
+  reconnecting: false,
   lastResult: null,
 };
 
 const el = (id) => document.getElementById(id);
+const API_BASE_STORAGE_KEY = "rag_api_base";
+const BACKEND_MODE_STORAGE_KEY = "rag_backend_mode";
+const DEFAULT_API_BASES = ["http://127.0.0.1:8765", "http://localhost:8765"];
 const escapeHtml = (value) =>
   String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -89,37 +96,196 @@ el("printEvalBtn").addEventListener("click", () => window.print());
 el("variantSelect").addEventListener("change", renderEvalItems);
 el("typeSelect").addEventListener("change", renderEvalItems);
 el("debugToggle").addEventListener("change", renderCurrentDebugPanel);
+el("backendSwitchBtn").addEventListener("click", handleBackendSwitch);
 
 initialize();
 
 async function initialize() {
+  renderConnectionControl();
+  if (state.backendPreference === "offline") {
+    activateOfflineDemo("已手动选择离线演示");
+    return;
+  }
   try {
-    const [healthResponse, goldenResponse] = await Promise.all([fetch("/api/health"), fetch("/api/golden")]);
-    if (!healthResponse.ok || !goldenResponse.ok) throw new Error("Demo API is unavailable");
-    const health = await healthResponse.json();
-    const payload = await goldenResponse.json();
-    state.golden = payload.items || [];
+    await connectToBackend();
+  } catch (error) {
+    activateOfflineDemo(error.message);
+  }
+}
+
+function safeLocalStorageGet(key) {
+  try {
+    return window.localStorage?.getItem(key) || "";
+  } catch (_) {
+    return "";
+  }
+}
+
+function safeLocalStorageSet(key, value) {
+  try {
+    window.localStorage?.setItem(key, value);
+  } catch (_) {
+    // Storage can be unavailable under local file previews; the in-memory state is enough.
+  }
+}
+
+function normalizeApiBase(value) {
+  if (value === null || value === undefined) return null;
+  const trimmed = String(value).trim();
+  if (!trimmed || trimmed === "same-origin") return "";
+  return trimmed.replace(/\/+$/, "");
+}
+
+function apiUrl(path, base = state.apiBase) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return base ? `${base}${normalizedPath}` : normalizedPath;
+}
+
+function apiFetch(path, options = {}) {
+  return fetch(apiUrl(path), options);
+}
+
+function candidateApiBases(preferredBase = null) {
+  const params = new URLSearchParams(window.location.search);
+  const fromQuery = params.get("api") || params.get("apiBase");
+  const saved = safeLocalStorageGet(API_BASE_STORAGE_KEY);
+  const sameOrigin = ["http:", "https:"].includes(window.location.protocol) ? "" : null;
+  const candidates = [preferredBase, fromQuery, saved, sameOrigin, ...DEFAULT_API_BASES]
+    .map(normalizeApiBase)
+    .filter((base) => base !== null);
+  return [...new Set(candidates)];
+}
+
+function displayApiBase(base) {
+  return base || "same-origin";
+}
+
+async function loadBackendData(preferredBase = null) {
+  const errors = [];
+  for (const base of candidateApiBases(preferredBase)) {
+    try {
+      const [healthResponse, goldenResponse] = await Promise.all([
+        fetch(apiUrl("/api/health", base), { cache: "no-store" }),
+        fetch(apiUrl("/api/golden", base), { cache: "no-store" }),
+      ]);
+      if (!healthResponse.ok || !goldenResponse.ok) {
+        throw new Error(`HTTP ${healthResponse.status}/${goldenResponse.status}`);
+      }
+      return {
+        base,
+        health: await healthResponse.json(),
+        payload: await goldenResponse.json(),
+      };
+    } catch (error) {
+      errors.push(`${displayApiBase(base)}: ${error.message}`);
+    }
+  }
+  throw new Error(`Demo API is unavailable (${errors.join("; ")})`);
+}
+
+async function connectToBackend({ silent = false, preferredBase = null } = {}) {
+  if (state.reconnecting) return false;
+  state.reconnecting = true;
+  renderConnectionControl();
+  try {
+    const { base, health, payload } = await loadBackendData(preferredBase);
+    state.apiBase = base;
+    state.offlineDemo = false;
+    state.offlineReason = "";
     state.health = health;
+    state.golden = payload.items || [];
+    state.report = null;
+    state.allowDemoReport = false;
+    state.backendPreference = "auto";
+    safeLocalStorageSet(API_BASE_STORAGE_KEY, base);
+    safeLocalStorageSet(BACKEND_MODE_STORAGE_KEY, "auto");
+    stopBackendAutoReconnect();
     renderGoldenOptions();
     renderDomains(payload.domains || []);
     renderHealth(health);
     renderDemoBanner();
     updateAnswerMode();
-    syncGoldenQuestion();
+    if (state.mode === "golden") {
+      syncGoldenQuestion();
+    } else {
+      resetAnswer(false);
+    }
+    if (!silent) setStatus("idle", "已连接后端");
+    if (el("evaluationView").hidden === false) loadEvaluation(false);
+    return true;
+  } catch (error) {
+    if (!silent) setStatus("error", "后端连接失败");
+    throw error;
+  } finally {
+    state.reconnecting = false;
+    renderConnectionControl();
+  }
+}
+
+function startBackendAutoReconnect() {
+  if (state.reconnectTimer || state.backendPreference === "offline") return;
+  state.reconnectTimer = window.setInterval(() => {
+    if (!state.offlineDemo || state.busy || state.reconnecting) return;
+    connectToBackend({ silent: true }).catch(() => {});
+  }, 5000);
+}
+
+function stopBackendAutoReconnect() {
+  if (!state.reconnectTimer) return;
+  window.clearInterval(state.reconnectTimer);
+  state.reconnectTimer = null;
+}
+
+async function handleBackendSwitch() {
+  const button = el("backendSwitchBtn");
+  button.disabled = true;
+  try {
+    if (state.offlineDemo) {
+      state.backendPreference = "auto";
+      safeLocalStorageSet(BACKEND_MODE_STORAGE_KEY, "auto");
+      setStatus("working", "正在连接后端");
+      await connectToBackend();
+    } else {
+      state.backendPreference = "offline";
+      safeLocalStorageSet(BACKEND_MODE_STORAGE_KEY, "offline");
+      activateOfflineDemo("已手动切换到离线演示");
+      setStatus("idle", "已切换离线演示");
+    }
   } catch (error) {
     activateOfflineDemo(error.message);
+    setStatus("error", "后端连接失败");
+  } finally {
+    button.disabled = false;
+    renderConnectionControl();
   }
+}
+
+function renderConnectionControl() {
+  const button = el("backendSwitchBtn");
+  if (!button) return;
+  if (state.reconnecting) {
+    button.textContent = "连接中...";
+    button.disabled = true;
+    return;
+  }
+  button.disabled = false;
+  button.textContent = state.offlineDemo ? "连接真实后端" : "使用离线演示";
+  button.title = state.offlineDemo
+    ? "尝试连接同源 API，或本机 http://127.0.0.1:8765"
+    : `当前 API：${displayApiBase(state.apiBase)}`;
 }
 
 function activateOfflineDemo(reason) {
   const demo = window.OFFLINE_DEMO;
   if (!demo) {
     renderHealth(null);
+    renderConnectionControl();
     setStatus("error", reason || "离线演示数据不可用");
     return;
   }
   state.offlineDemo = true;
   state.offlineReason = reason || "未连接后端服务";
+  state.apiBase = "";
   state.golden = demo.items;
   state.health = demo.health;
   state.report = null;
@@ -129,7 +295,17 @@ function activateOfflineDemo(reason) {
   renderDemoBanner();
   el("demoTip").textContent = "当前是脱敏离线演示：点击开始回答后，执行步骤会逐个高亮，全部完成后再展示答案与证据。";
   updateAnswerMode();
-  syncGoldenQuestion();
+  if (state.mode === "golden") {
+    syncGoldenQuestion();
+  } else {
+    resetAnswer(false);
+  }
+  renderConnectionControl();
+  if (state.backendPreference === "offline") {
+    stopBackendAutoReconnect();
+  } else {
+    startBackendAutoReconnect();
+  }
 }
 
 function switchView(view) {
@@ -177,16 +353,20 @@ function renderHealth(health) {
   if (state.offlineDemo) {
     status.className = "system-status is-demo";
     status.innerHTML = "<span></span>离线演示 · 无需后端";
+    renderConnectionControl();
     return;
   }
   if (!health) {
     status.className = "system-status is-error";
     status.innerHTML = "<span></span>服务未连接";
+    renderConnectionControl();
     return;
   }
   const providers = health.providers || {};
+  const baseLabel = state.apiBase ? ` · ${escapeHtml(state.apiBase.replace(/^https?:\/\//, ""))}` : "";
   status.className = "system-status is-online";
-  status.innerHTML = `<span></span>已连接 · ${escapeHtml(providers.llm || "LLM")} / ${escapeHtml(providers.store || "store")}`;
+  status.innerHTML = `<span></span>已连接后端 · ${escapeHtml(providers.llm || "LLM")} / ${escapeHtml(providers.store || "store")}${baseLabel}`;
+  renderConnectionControl();
 }
 
 function syncGoldenQuestion() {
@@ -284,7 +464,7 @@ async function submitQuestion(event) {
       await runOfflineQuestion(request);
       return;
     }
-    const response = await fetch("/api/chat/stream", {
+    const response = await apiFetch("/api/chat/stream", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(request),
@@ -734,7 +914,7 @@ async function loadEvaluation(allowDemo = false) {
     return;
   }
   try {
-    const response = await fetch(`/api/eval-report?allow_demo=${allowDemo ? "true" : "false"}&t=${Date.now()}`);
+    const response = await apiFetch(`/api/eval-report?allow_demo=${allowDemo ? "true" : "false"}&t=${Date.now()}`);
     if (response.status === 409) {
       showDemoReportGate();
       return;
@@ -758,7 +938,10 @@ function renderDemoBanner() {
   const banner = el("demoBanner");
   if (state.offlineDemo) {
     banner.hidden = false;
-    banner.innerHTML = `<strong>脱敏离线演示</strong><span>未连接后端，已自动启用内置示例。实时问答、回答路径和评估看板均可直接操作；刷新页面即可重新尝试连接真实 API。</span>`;
+    const retryCopy = state.backendPreference === "offline"
+      ? "已手动停留在内置示例；点击顶部“连接真实后端”可立即重试。"
+      : "正在后台自动探测真实 API；后端启动后会自动切换，也可点击顶部“连接真实后端”立即重试。";
+    banner.innerHTML = `<strong>脱敏离线演示</strong><span>${retryCopy} 实时问答、回答路径和评估看板均可直接操作。</span>`;
     return;
   }
   const providers = state.health?.providers || {};

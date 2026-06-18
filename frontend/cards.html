@@ -694,17 +694,60 @@ function sampleResult() {
   return result;
 }
 
-const state = { cards: [], selectedId: null, result: null, busy: false, sample: false, streamAnswer: "", view: "structure", includeDomainEdges: false };
+const state = { cards: [], selectedId: null, result: null, busy: false, sample: false, streamAnswer: "", view: "structure", includeDomainEdges: false, apiBase: "" };
 const el = id => document.getElementById(id);
 const arr = value => Array.isArray(value) ? value.filter(v => v !== null && v !== undefined && String(v).trim()) : [];
 const esc = value => String(value ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const text = value => value === null || value === undefined || value === "" ? "—" : String(value);
 const norm = value => String(value ?? "").trim().toLowerCase();
+const DEFAULT_API_BASES = ["http://127.0.0.1:8765", "http://localhost:8765"];
 const isRagFallbackResult = result =>
   String(result?.execution?.path || "").endsWith("-then-rag-fallback") ||
   Boolean(result?.debug?.drilldown && result?.debug?.retrieval);
 const isSiblingCardResult = result =>
   String(result?.execution?.path || "").endsWith("-then-sibling-card");
+
+function storageGet(key) {
+  try { return window.localStorage?.getItem(key) || ""; } catch (_) { return ""; }
+}
+function storageSet(key, value) {
+  try { window.localStorage?.setItem(key, value); } catch (_) {}
+}
+function normalizeApiBase(value) {
+  if (value === null || value === undefined) return null;
+  const trimmed = String(value).trim();
+  if (!trimmed || trimmed === "same-origin") return "";
+  return trimmed.replace(/\/+$/, "");
+}
+function apiUrl(path, base = state.apiBase) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return base ? `${base}${normalizedPath}` : normalizedPath;
+}
+function candidateApiBases() {
+  const params = new URLSearchParams(window.location.search);
+  const sameOrigin = ["http:", "https:"].includes(window.location.protocol) ? "" : null;
+  return [...new Set([state.apiBase, params.get("api") || params.get("apiBase"), storageGet("rag_api_base"), sameOrigin, ...DEFAULT_API_BASES]
+    .map(normalizeApiBase)
+    .filter(base => base !== null))];
+}
+async function apiFetch(path, options = {}) {
+  let lastError = null;
+  const bases = candidateApiBases();
+  for (const [index, base] of bases.entries()) {
+    try {
+      const response = await fetch(apiUrl(path, base), options);
+      if (response.ok || index === bases.length - 1 || ![404, 405].includes(response.status)) {
+        state.apiBase = base;
+        storageSet("rag_api_base", base);
+        return response;
+      }
+      lastError = new Error(`HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error("API unavailable");
+}
 
 el("askForm").addEventListener("submit", submitQuestion);
 el("searchInput").addEventListener("input", renderCardList);
@@ -742,7 +785,7 @@ async function initialize() {
     return;
   }
   try {
-    const response = await fetch("/api/cards", {cache:"no-store"});
+    const response = await apiFetch("/api/cards", {cache:"no-store"});
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const cards = await response.json();
     if (!Array.isArray(cards) || cards.length === 0) {
@@ -1210,7 +1253,7 @@ async function submitQuestion(event) {
   renderDrillBoard();
   el("structureWorkspace").scrollIntoView({behavior:"smooth", block:"start"});
   try {
-    const response = await fetch("/api/chat/stream", {
+    const response = await apiFetch("/api/chat/stream", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({query, answer_mode:el("answerMode").value, language:"zh", domains:null, debug:el("debugToggle").checked})
