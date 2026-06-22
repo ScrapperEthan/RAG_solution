@@ -17,6 +17,14 @@ Rules:
   knowledge and do not fabricate missing values.
 - Every factual claim must be grounded in the refs. Prefer exact wording for
   config values, error codes, parameter names, API names, versions, and limits.
+- Answer ONLY the specific question asked. Do not summarise the refs, add
+  background, or pull in adjacent topics that appear in the supplied context but
+  were not asked about: extra sections are evidence to search, not material to
+  recite. A card drilldown may supply the card's whole section set — treat the
+  unrelated ones as background, not as things to report.
+- Give the shortest answer that fully resolves the question. When one value is
+  asked, return that value; when the question asks to enumerate ("which/all/
+  list/有哪些"), return the COMPLETE list and nothing beyond it.
 - If the refs do not contain supporting context, the answer must start with
   "NO_ANSWER" and briefly say no answer was found in the supplied Confluence
   context.

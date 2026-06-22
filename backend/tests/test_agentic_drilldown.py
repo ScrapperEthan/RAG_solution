@@ -69,6 +69,47 @@ class RefsForCardTest(unittest.TestCase):
         self.assertEqual(debug["missed_section_ids"], ["P#Miss"])
         self.assertEqual(debug["counts"]["capped_to"], 1)
 
+    def test_query_ranks_relevant_section_first_without_dropping(self):
+        # Document order puts the off-topic section first; a query about the
+        # second section must float it up so the answerer sees it before the cap,
+        # but NO section is dropped (ranking only reorders).
+        refs = {
+            "P#A > Timeout": {"section_id": "P#A > Timeout", "title": "Timeout", "body_md": "connection timeout settings"},
+            "P#A > Retry": {"section_id": "P#A > Retry", "title": "Retry", "body_md": "max_retry default is 3"},
+        }
+        card = {
+            "subsections": [
+                {"source_section_ids": ["P#A > Timeout"], "facts": []},
+                {"source_section_ids": ["P#A > Retry"], "facts": []},
+            ],
+            "fields": [],
+        }
+        svc = _service_with_refs(refs)
+        ranked = svc.refs_for_card(card, "what is the max_retry default")
+        self.assertEqual([r["section_id"] for r in ranked], ["P#A > Retry", "P#A > Timeout"])
+        # No query -> document order preserved (back-compat with existing callers).
+        unranked = svc.refs_for_card(card)
+        self.assertEqual([r["section_id"] for r in unranked], ["P#A > Timeout", "P#A > Retry"])
+
+    def test_cjk_and_enumerate_query_preserve_full_set_in_order(self):
+        # A CJK-only query has no latin tokens -> every cell scores 0 -> the full
+        # matrix is kept in document order (handoff/28 enumeration contract).
+        refs = {
+            "P#C > SMS": {"section_id": "P#C > SMS", "title": "SMS", "body_md": "SMS via telecom A"},
+            "P#C > Email": {"section_id": "P#C > Email", "title": "Email", "body_md": "Email via SMTP"},
+            "P#C > PN": {"section_id": "P#C > PN", "title": "PN", "body_md": "Push via APNS"},
+        }
+        card = {
+            "subsections": [
+                {"source_section_ids": ["P#C > SMS"], "facts": []},
+                {"source_section_ids": ["P#C > Email"], "facts": []},
+                {"source_section_ids": ["P#C > PN"], "facts": []},
+            ],
+            "fields": [],
+        }
+        ranked = _service_with_refs(refs).refs_for_card(card, "支持哪些渠道")
+        self.assertEqual([r["section_id"] for r in ranked], ["P#C > SMS", "P#C > Email", "P#C > PN"])
+
 
 class WithExecutionDiagnosticTest(unittest.TestCase):
     def test_empty_source_evidence_surfaces_diagnostic(self):

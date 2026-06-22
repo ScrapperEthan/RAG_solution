@@ -262,7 +262,7 @@ class AgenticService:
         (``...-then-rag-fallback`` path + steps, and the drilldown debug block)
         so under-built cards remain diagnosable instead of being silently masked.
         """
-        refs = self.refs_for_card(card)
+        refs = self.refs_for_card(card, query)
         result = self.answerer.answer_from_refs(query, refs)
         result["drilled"] = True
         result["evidence_sections"] = refs
@@ -297,7 +297,7 @@ class AgenticService:
         # on this already-failed path.
         sibling = self._best_sibling_card(card, query)
         if sibling is not None:
-            sibling_refs = self.refs_for_card(sibling)
+            sibling_refs = self.refs_for_card(sibling, query)
             sibling_result = self.answerer.answer_from_refs(query, sibling_refs)
             sibling_result["drilled"] = True
             sibling_result["evidence_sections"] = sibling_refs
@@ -513,7 +513,7 @@ class AgenticService:
         token_hits = sum(1 for token in lowered_query.split() if len(token) >= 3 and token in text)
         return name_hits * 3 + token_hits
 
-    def refs_for_card(self, card: Dict) -> List[Dict]:
+    def refs_for_card(self, card: Dict, query: Optional[str] = None) -> List[Dict]:
         """Follow a card back to its source sections in loaded_refs.json.
 
         Use the card's recorded ``source_section_ids`` directly: they ARE the
@@ -524,6 +524,13 @@ class AgenticService:
 
         Subsections (and their facts) hold most of a card's evidence, so collect
         the specific ones first, then the card-level field aggregates as fallback.
+
+        When ``query`` is given the resolved sections are ranked against it
+        (most relevant first) BEFORE the MAX_DRILLDOWN_REFS cap, so the
+        answer-bearing section is salient and survives truncation on a big card,
+        instead of being handed to the grounded answerer in raw document order.
+        Ranking never drops a section, so a matrix card still enumerates fully
+        (its cells tie and keep document order); see ``_rank_refs_for_query``.
         """
         section_ids = self._card_section_ids(card)
         seen = set()
@@ -540,7 +547,38 @@ class AgenticService:
                 card.get("canonical_id"),
                 len(section_ids),
             )
-        return refs[:MAX_DRILLDOWN_REFS]
+            return refs
+        return self._rank_refs_for_query(refs, query)[:MAX_DRILLDOWN_REFS]
+
+    def _rank_refs_for_query(self, refs: List[Dict], query: Optional[str]) -> List[Dict]:
+        """Order a card's resolved source sections by query relevance, most
+        relevant first, WITHOUT dropping any.
+
+        This is the fix for agentic drilldown feeding the answerer the card's
+        sections in raw document order: pure-rag ranks its top_k by the question,
+        drilldown did not rank at all, so the answer-bearing section could sit
+        far down (buried in, or truncated past the cap by, tangential sections)
+        and the grounded answerer would summarise the whole card instead of
+        answering the asked point. Ranking is stable (ties keep document order)
+        and removes nothing, so an "enumerate all X" question over a matrix card
+        keeps every cell and the full-enumeration cap (MAX_DRILLDOWN_REFS) still
+        holds. A query with no latin tokens (e.g. CJK-only) scores every section
+        0 -> order unchanged; those rely on the tightened ANSWER_SYSTEM brake.
+        """
+        if not query:
+            return refs
+        indexed = list(enumerate(refs))
+        indexed.sort(key=lambda pair: (-self._ref_query_overlap(pair[1], query), pair[0]))
+        return [ref for _, ref in indexed]
+
+    @staticmethod
+    def _ref_query_overlap(ref: Dict, query: str) -> int:
+        """Count of distinct salient (len >= 3) query tokens present in the ref's
+        title/body. Latin-token overlap, consistent with how the router and
+        sibling selection already score relevance; a CJK-only query yields 0."""
+        text = f"{ref.get('title', '')} {ref.get('body_md', '')}".lower()
+        tokens = {token for token in query.lower().split() if len(token) >= 3}
+        return sum(1 for token in tokens if token in text)
 
     def _card_section_ids(self, card: Dict) -> List[Dict[str, str]]:
         """Return source section ids in the exact order card drilldown uses."""
