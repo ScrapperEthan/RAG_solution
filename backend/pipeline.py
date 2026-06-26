@@ -13,6 +13,7 @@ from backend.factory import build_confluence_source, build_embedder, build_llm, 
 from backend.ingest.service import IngestionService
 from backend.load.service import LoadService
 from backend.mapper.service import MapperService
+from backend.reducer.conflicts import ConflictReviewService
 from backend.reducer.service import ReducerService
 from backend.retrieve.service import Retriever
 from backend.util import ensure_dir
@@ -22,7 +23,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Confluence RAG/card PoC pipeline")
     parser.add_argument(
         "command",
-        choices=["ingest", "map", "discover", "reduce", "refine-boundaries", "load", "retrieve", "answer", "eval", "demo", "status"],
+        choices=["ingest", "map", "discover", "reduce", "review-conflicts", "refine-boundaries", "load", "retrieve", "answer", "eval", "demo", "status"],
     )
     parser.add_argument("--config", default="config.yaml")
     parser.add_argument("--query", default="")
@@ -40,6 +41,7 @@ def main() -> None:
         print_json("ingest", run_ingest(config, outputs_dir))
         print_json("map", run_map(config, outputs_dir))
         print_json("reduce", run_reduce(config, outputs_dir))
+        print_json("review-conflicts", run_review_conflicts(config, outputs_dir))
         print_json("load", run_load(config, outputs_dir))
         report = run_eval(config, outputs_dir)
         print_json(
@@ -60,6 +62,8 @@ def main() -> None:
         print_json("discover", run_discover(config, outputs_dir))
     elif args.command == "reduce":
         print_json("reduce", run_reduce(config, outputs_dir))
+    elif args.command == "review-conflicts":
+        print_json("review-conflicts", run_review_conflicts(config, outputs_dir))
     elif args.command == "refine-boundaries":
         print_json("refine-boundaries", run_refine_boundaries(config))
     elif args.command == "load":
@@ -93,6 +97,13 @@ def run_reduce(config: Dict[str, Any], outputs_dir: Path) -> Dict[str, int]:
         resolve_path(config["paths"]["keyword_table"]),
         resolve_aliases=bool(config.get("reduce", {}).get("resolve_aliases", False)),
     ).run()
+
+
+def run_review_conflicts(config: Dict[str, Any], outputs_dir: Path) -> Dict[str, int]:
+    # LLM reviews each reduce conflict (recommendation + reasoning), the decision
+    # ledger is applied, and resolved values are written back into the cards.
+    llm = build_llm(config)
+    return ConflictReviewService(outputs_dir, llm).run()
 
 
 def run_discover(config: Dict[str, Any], outputs_dir: Path) -> Dict[str, int]:
@@ -188,8 +199,12 @@ def output_status(outputs_dir: Path) -> Dict[str, bool]:
 
 def clean_demo_outputs(outputs_dir: Path) -> None:
     ensure_dir(outputs_dir)
+    # conflict_decisions.jsonl is the durable human-approval ledger; never wipe it
+    # on a rebuild (review-conflicts re-applies it to the fresh cards). chroma is
+    # skipped because it is an expensive external store, not a pipeline artifact.
+    preserve = {"chroma", "conflict_decisions.jsonl"}
     for child in outputs_dir.iterdir():
-        if child.name == "chroma":
+        if child.name in preserve:
             continue
         if child.is_dir():
             shutil.rmtree(child)

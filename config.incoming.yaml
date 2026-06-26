@@ -1,0 +1,39 @@
+# Same as config.yaml but ingests the existing md fixtures PLUS new pages dropped
+# into inbox/ as JSON (provider: file+json), so a new page can conflict with
+# existing content and exercise the conflict-review flow end to end. See
+# handoff/35 and inbox/README.md.
+#
+#   python -m backend.pipeline demo --config config.incoming.yaml
+
+providers:
+  confluence: file+json
+  llm: mock
+  embedder: hash
+  store: json
+
+slice:
+  root: "Q2 - Engagement/MDC Onboarding"
+
+paths:
+  fixtures_dir: fixtures/confluence
+  incoming_dir: inbox
+  golden_seed: fixtures/golden_seed/golden_seed.jsonl
+  outputs_dir: outputs
+  keyword_registry: card_ingestion_sop/templates/canonical_keywords_受控词表.md
+
+store:
+  path: outputs/store/store.json
+  chroma_path: outputs/chroma
+  dsn: postgresql://postgres:postgres@localhost:5432/rag_poc
+
+retrieval:
+  index: both
+  search: hybrid
+  top_k: 8
+  rrf_k: 60
+  rerank: false
+
+chunk:
+  min_merge_tokens: 0
+  max_tokens: 1000
+  overlap_tokens: 50

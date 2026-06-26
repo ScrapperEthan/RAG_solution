@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict
 
 from backend.adapters.confluence_file import FileConfluenceSource
+from backend.adapters.confluence_json import CompositeConfluenceSource, JsonConfluenceSource
 from backend.adapters.confluence_mcp import McpConfluenceSource
 from backend.adapters.embedder_hash import HashEmbedder
 from backend.adapters.embedder_intranet import IntranetEmbedder
@@ -23,6 +24,15 @@ def build_confluence_source(config: Dict[str, Any]) -> ConfluenceSource:
     provider = config["providers"]["confluence"]
     if provider == "file":
         return FileConfluenceSource(resolve_path(config["paths"]["fixtures_dir"]))
+    if provider == "json":
+        return JsonConfluenceSource(resolve_path(config["paths"].get("incoming_dir", "inbox")))
+    if provider == "file+json":
+        # Existing Confluence (md fixtures) PLUS new pages dropped as JSON, so the
+        # new content can conflict with what is already there. See handoff/35.
+        return CompositeConfluenceSource([
+            FileConfluenceSource(resolve_path(config["paths"]["fixtures_dir"])),
+            JsonConfluenceSource(resolve_path(config["paths"].get("incoming_dir", "inbox"))),
+        ])
     if provider == "mcp":
         return McpConfluenceSource(config)
     raise ValueError(f"Unknown confluence provider: {provider}")

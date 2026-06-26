@@ -395,6 +395,7 @@ def resolve_subsection_fact_conflicts(facts: List[Dict]) -> Tuple[List[Dict], Li
                     {
                         "value": clean_inline_value(candidate["value"]),
                         "page_id": candidate["_section"].get("page_id", ""),
+                        "source_url": candidate["_section"].get("source_url", ""),
                         "confluence_version": candidate["_section"].get("confluence_version", ""),
                         "update_at": candidate["_section"].get("update_at", ""),
                     }
@@ -546,7 +547,22 @@ def merge_config_field(sections: List[Dict], evidence: Dict) -> Tuple[Dict, List
                 for c in candidates
             ]
             detail_rows.extend(rows)
-            conflicts.append({"detail": f"{name} conflict; temporarily chose newest value {chosen['value']}.", "options": [r["value"] + f" ({r['page_id']})" for r in rows]})
+            conflicts.append({
+                "detail": f"{name} conflict; temporarily chose newest value {chosen['value']}.",
+                "options": [r["value"] + f" ({r['page_id']})" for r in rows],
+                "name": name,
+                "chosen": chosen["value"],
+                "candidates": [
+                    {
+                        "value": c["value"],
+                        "page_id": c["section"]["page_id"],
+                        "source_url": c["section"].get("source_url", ""),
+                        "confluence_version": c["section"]["confluence_version"],
+                        "update_at": c["section"]["update_at"],
+                    }
+                    for c in candidates
+                ],
+            })
 
     field = {
         "field": "config",
@@ -690,8 +706,32 @@ def narrative_fact_value(section: Dict) -> str:
 # Review queue / inverted index / helpers
 # ---------------------------------------------------------------------------
 
+def conflict_id(cid: str, scope: str, label: str) -> str:
+    """Stable id for one field-level conflict.
+
+    Keyed on (canonical, scope, normalized label) — NOT on the values — so a
+    human/LLM decision recorded against it survives a full reduce rebuild, while
+    a changed candidate *set* is detected separately via the value fingerprint.
+    """
+    return "CF-" + stable_short(f"{cid}|{scope}|{normalize_term(label)}")
+
+
 def conflict_item(cid: str, conflict: Dict, n: int) -> Dict:
-    return {"queue_id": f"RQ-conflict-{cid}-{n:03d}", "type": "conflict", "canonical_id": cid, "field": "config", "detail": conflict["detail"], "options": conflict["options"], "status": "open"}
+    return {
+        "queue_id": f"RQ-conflict-{cid}-{n:03d}",
+        "type": "conflict",
+        "canonical_id": cid,
+        "field": "config",
+        "detail": conflict["detail"],
+        "options": conflict["options"],
+        "status": "open",
+        # Structured payload for the conflict reviewer / approve UI (handoff/35).
+        "conflict_id": conflict_id(cid, "config", conflict.get("name", "config")),
+        "label": conflict.get("name", "config"),
+        "subsection": "config",
+        "candidates": conflict.get("candidates", []),
+        "auto_choice": conflict.get("chosen", ""),
+    }
 
 
 def fact_conflict_item(cid: str, subsection_name: str, conflict: Dict) -> Dict:
@@ -712,6 +752,12 @@ def fact_conflict_item(cid: str, subsection_name: str, conflict: Dict) -> Dict:
             for candidate in candidates
         ],
         "status": "open",
+        # Structured payload for the conflict reviewer / approve UI (handoff/35).
+        "conflict_id": conflict_id(cid, subsection_name, normalized_label),
+        "label": label,
+        "subsection": subsection_name,
+        "candidates": candidates,
+        "auto_choice": conflict["chosen"],
     }
 
 

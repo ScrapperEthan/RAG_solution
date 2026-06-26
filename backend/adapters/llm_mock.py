@@ -41,6 +41,8 @@ class MockLLM:
             return mock_card_summary(json.loads(user))
         if "card_discover_topics" in system:
             return mock_discover(json.loads(user))
+        if "card_review_conflict" in system:
+            return mock_review_conflict(json.loads(user))
         if "answer_from_context" in system:
             from backend.answer.service import synthesize_answer
 
@@ -102,6 +104,45 @@ def mock_discover(payload: Dict) -> Dict:
             cluster["aliases"].append(term)
         cluster["evidence_keywords"].append(term)
     return {"mapped": mapped, "candidates": list(clusters.values()), "needs_review": []}
+
+
+def mock_review_conflict(payload: Dict) -> Dict:
+    """Deterministic offline stand-in for the LLM conflict reviewer.
+
+    Recommends the newest value (the pipeline's auto choice) and flags risk by how
+    different the candidate values look: two distinct *numeric* values is high risk
+    (picking the newest could silently ship wrong data); plain text edits are
+    medium; whitespace-only differences are low. The real in-network LLM reasons
+    over the same candidates and writes a fuller justification."""
+    candidates = payload.get("candidates") or []
+    values = [str(c.get("value", "")).strip() for c in candidates]
+    auto = str(payload.get("auto_choice") or (values[-1] if values else ""))
+    label = str(payload.get("label") or payload.get("field") or "this field")
+
+    distinct = {v for v in values if v}
+    digit_sets = {re.sub(r"[^0-9]", "", v) for v in values if re.search(r"\d", v)}
+    if len(digit_sets) > 1:
+        risk = "high"
+    elif len(distinct) > 1:
+        risk = "medium"
+    else:
+        risk = "low"
+    confidence = 0.55 if risk == "high" else (0.75 if risk == "medium" else 0.95)
+    reason_zh = (
+        f"“{label}”有 {len(distinct)} 个不同取值，已暂选最新版本 “{auto}”。"
+        + ("候选值数字明显不同，自动取最新可能漏掉一次真实变更，建议人工确认后再批准。" if risk == "high" else "若最新版本即权威来源，可直接批准最新值。")
+    )
+    reason_en = (
+        f"'{label}' has {len(distinct)} distinct values; kept the newest '{auto}'. "
+        + ("Numeric values differ materially, so verify before approving." if risk == "high" else "Approve the newest if it is the authoritative source.")
+    )
+    return {
+        "recommended_value": auto,
+        "reason_zh": reason_zh,
+        "reason_en": reason_en,
+        "confidence": confidence,
+        "risk": risk,
+    }
 
 
 def mock_route_card(payload: Dict) -> list:

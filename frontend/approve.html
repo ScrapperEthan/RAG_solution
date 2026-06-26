@@ -86,6 +86,47 @@ h1{margin:6px 0 0;font-size:28px;letter-spacing:-.03em}
 .empty{margin-top:30px;padding:40px;border:1px dashed #d7ddd8;border-radius:14px;background:#fff;text-align:center;color:#8c9690}
 .foot{margin:26px 4px 0;color:var(--muted);font-size:11px;line-height:1.6}
 @media(max-width:820px){.row-body{grid-template-columns:1fr}}
+/* Live field-conflict review (handoff/35) — pulled from /api/conflicts. The most
+   urgent thing to clear when approving, so it sits above the keyword list and is
+   loudly red until a human freezes a decision. */
+.cfwrap{margin:18px 4px 0;display:grid;gap:12px}
+.cfhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cfhead h2{margin:0;font-size:16px;letter-spacing:-.02em}
+.cfcount{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;color:#fff;background:var(--red)}
+.cfcount.zero{background:var(--green-bright)}
+.cfhint{color:var(--muted);font-size:11px}
+.cf{border:1px solid var(--red);border-left:6px solid var(--red);border-radius:12px;background:var(--red-soft);box-shadow:var(--shadow);overflow:hidden}
+.cf.is-resolved{border-color:#cdd8d1;border-left-color:var(--green-bright);background:#fff}
+.cf.is-stale{border-left-color:var(--gold)}
+.cf-head{display:flex;align-items:center;gap:10px;padding:11px 14px;flex-wrap:wrap;border-bottom:1px solid rgba(181,71,60,.25)}
+.cf.is-resolved .cf-head{border-bottom-color:var(--line)}
+.cf-title{flex:1;min-width:180px;font-weight:800}
+.cf-title small{display:block;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+.cf-badge{padding:3px 9px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap}
+.cf-badge.open{color:#fff;background:var(--red)}
+.cf-badge.stale{color:#6e4b16;background:var(--gold-soft);border:1px solid #e0c489}
+.cf-badge.resolved{color:#fff;background:var(--green-bright)}
+.cf-badge.risk-high{color:#fff;background:#a3271b}
+.cf-badge.risk-medium{color:#6e4b16;background:var(--gold-soft);border:1px solid #e0c489}
+.cf-badge.risk-low{color:#46514a;background:#e3e9e5}
+.cf-body{display:grid;gap:12px;padding:14px;grid-template-columns:1fr 1fr}
+.cf-cands{display:grid;gap:8px}
+.cf-cand{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.cf-cand.is-auto{border-color:#c9a24a}
+.cf-cand.is-chosen{border-color:var(--green-bright);background:var(--green-soft)}
+.cf-cand .v{flex:1;font-weight:700;word-break:break-word}
+.cf-cand .m{font:10px Consolas,monospace;color:#8a938d;white-space:nowrap}
+.cf-cand .tag{font-size:9px;font-weight:800;padding:2px 6px;border-radius:999px;background:#f3e4c2;color:#6e4b16;white-space:nowrap}
+.cf-pick{min-height:30px;padding:0 11px;border:1px solid var(--green);border-radius:8px;background:#fff;font-weight:700;color:var(--green);white-space:nowrap}
+.cf-pick:hover{background:var(--green-soft)}
+.cf-advice{display:grid;gap:6px;padding:11px 12px;border:1px dashed #d7ddd8;border-radius:9px;background:#fbfcfb;align-content:start}
+.cf-advice .lbl{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#4f5953}
+.cf-advice .rec{font-weight:800}
+.cf-advice .why{color:#566159;line-height:1.6}
+.cf-advice .accept{margin-top:4px;min-height:34px;padding:0 14px;border:0;border-radius:8px;background:var(--green);color:#fff;font-weight:800;cursor:pointer}
+.cf-advice .accept:hover{background:#0f523b}
+.cf-resolved-note{grid-column:1/-1;padding:8px 12px;border-radius:8px;background:var(--green-soft);color:var(--green);font-size:11px;font-weight:700}
+@media(max-width:820px){.cf-body{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -110,8 +151,17 @@ h1{margin:6px 0 0;font-size:28px;letter-spacing:-.03em}
     <div class="eyebrow">Human-in-the-loop gate · anti-fragmentation</div>
     <h1>候选 topic 审批</h1>
     <p>discover → 〈这道闸〉 → reduce 的人工环节。新页进来时,先<b>载入现有冻结词表</b>当合并目标,把"其实是老 topic 换了个名"的新候选 <b>合并到已有 🔒</b>(别名回填),真正的新 topic 才批准。导出 <code>keyword_table.jsonl</code> 整张更新表(含老行+新行)。</p>
-    <p style="margin-top:6px;font-size:12px;color:var(--muted)"><strong>这是什么页：</strong>人工冻结闸 —— <u>纯前端本地工具，不连后端</u>。输入：<code>proposed_keywords.json</code>（discover 产出）+ 现有 <code>keyword_table.jsonl</code>；输出：新的 <code>keyword_table.jsonl</code>，放到 <code>paths.keyword_table</code> 再让 opencode 跑 reduce。</p>
+    <p style="margin-top:6px;font-size:12px;color:var(--muted)"><strong>这是什么页：</strong>人工冻结闸。<u>词表审批是纯前端本地工具</u>（输入 <code>proposed_keywords.json</code> + 现有 <code>keyword_table.jsonl</code>，输出新的 <code>keyword_table.jsonl</code>）。上方<strong>字段冲突复核</strong>则是<u>实时连后端</u>的：经后端服务打开本页（或带 <code>?api=</code>）时，会从 <code>/api/conflicts</code> 拉取冲突并把裁决写回账本。</p>
   </div>
+
+  <section class="cfwrap" id="conflictsPanel" hidden>
+    <div class="cfhead">
+      <h2>字段冲突复核</h2>
+      <span class="cfcount" id="cfCount">0</span>
+      <span class="cfhint">approve 前先清掉红色冲突：同一字段出现多个取值，reduce 暂取最新；大模型已给出建议与风险，需人工确认后冻结（决定写入账本，重建后仍生效）。</span>
+    </div>
+    <div class="list" id="cfList"></div>
+  </section>
 
   <div class="help">
     <b>防碎片化用法(关键):</b>
@@ -455,6 +505,101 @@ document.getElementById("exportBtn").onclick = ()=>{
 };
 
 render();
+
+// ---------------------------------------------------------------------------
+// Live field-conflict review (handoff/35). Self-contained: pulls /api/conflicts,
+// renders each conflict red with the LLM recommendation, and POSTs the human
+// decision to /api/conflicts/resolve. Degrades silently when opened as a file://
+// with no backend — the keyword approve tool above still works offline.
+// ---------------------------------------------------------------------------
+(function conflictReview(){
+  const panel = document.getElementById("conflictsPanel");
+  const listEl = document.getElementById("cfList");
+  const countEl = document.getElementById("cfCount");
+  if(!panel || !listEl || !countEl) return;
+
+  const params = new URLSearchParams(location.search);
+  const apiBase = (params.get("api")||"").replace(/\/+$/,"")
+    || (["http:","https:"].includes(location.protocol) ? "" : "http://127.0.0.1:8765");
+  const apiUrl = p => apiBase ? apiBase + p : p;
+  const esc = v => String(v==null?"":v).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const riskZh = r => ({high:"高",medium:"中",low:"低"}[r] || r || "—");
+
+  function candHtml(c, r, chosen){
+    const isAuto = String(c.value) === String(r.auto_choice);
+    const isChosen = chosen!=null && String(c.value) === String(chosen);
+    const meta = [c.page_id, c.confluence_version ? ("v"+c.confluence_version) : "", c.update_at].filter(Boolean).join(" · ");
+    const pick = chosen!=null ? "" : `<button class="cf-pick" data-cf="${esc(r.conflict_id)}" data-val="${esc(c.value)}">选这个</button>`;
+    return `<div class="cf-cand ${isAuto?"is-auto":""} ${isChosen?"is-chosen":""}">
+      <span class="v">${esc(c.value)}</span>
+      ${isAuto?'<span class="tag">系统暂取最新</span>':""}
+      <span class="m">${esc(meta)}</span>${pick}</div>`;
+  }
+
+  function cardHtml(r){
+    const review = r.llm_review || {};
+    const resolved = r.status === "resolved";
+    const chosen = resolved && r.decision ? r.decision.chosen_value : null;
+    const cls = resolved ? "is-resolved" : (r.status === "stale" ? "is-stale" : "");
+    const statusBadge = resolved ? '<span class="cf-badge resolved">已裁决</span>'
+      : r.status === "stale" ? '<span class="cf-badge stale">需复核 · 有新值</span>'
+      : '<span class="cf-badge open">待裁决</span>';
+    const riskBadge = review.risk ? `<span class="cf-badge risk-${esc(review.risk)}">风险 ${riskZh(review.risk)}</span>` : "";
+    const cands = (r.candidates||[]).map(c => candHtml(c, r, chosen)).join("");
+    const conf = review.confidence!=null ? Math.round(review.confidence*100)+"%" : "—";
+    const advice = resolved
+      ? `<div class="cf-resolved-note">✓ 已采用 “${esc(chosen)}”${r.decision&&r.decision.decided_by?`（${esc(r.decision.decided_by)}）`:""}。该决定已写入冻结账本，重建后仍生效。</div>`
+      : `<div class="cf-advice">
+          <span class="lbl">大模型建议</span>
+          <div class="rec">建议采用：${esc(review.recommended_value||r.auto_choice||"—")} <small style="color:var(--muted)">置信度 ${conf}</small></div>
+          <div class="why">${esc(review.reason_zh||review.reason_en||"（后端未跑 LLM 复核；运行 pipeline review-conflicts 生成建议）")}</div>
+          <button class="accept" data-cf="${esc(r.conflict_id)}" data-val="${esc(review.recommended_value||r.auto_choice||"")}">采纳建议并冻结</button>
+        </div>`;
+    return `<div class="cf ${cls}">
+      <div class="cf-head">
+        <div class="cf-title">${esc(r.canonical_name||r.canonical_id)}<small>${esc(r.field||"")}</small></div>
+        ${riskBadge}${statusBadge}
+      </div>
+      <div class="cf-body"><div class="cf-cands">${cands}</div>${advice}</div>
+    </div>`;
+  }
+
+  function render(records){
+    panel.hidden = false;
+    const open = records.filter(r => r.status==="open" || r.status==="stale");
+    countEl.textContent = open.length;
+    countEl.classList.toggle("zero", open.length === 0);
+    listEl.innerHTML = records.length
+      ? records.map(cardHtml).join("")
+      : '<div class="cfhint">✓ 当前没有字段冲突。</div>';
+  }
+
+  async function load(){
+    try{
+      const res = await fetch(apiUrl("/api/conflicts"), {cache:"no-store"});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      render(await res.json());
+    }catch(_){
+      panel.hidden = true;  // no backend (file:// preview) — stay out of the way
+    }
+  }
+
+  listEl.addEventListener("click", async e => {
+    const btn = e.target.closest("[data-cf]");
+    if(!btn) return;
+    btn.disabled = true;
+    try{
+      const res = await fetch(apiUrl("/api/conflicts/resolve"), {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({conflict_id: btn.dataset.cf, chosen_value: btn.dataset.val, decided_by:"approve-ui"}),
+      });
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      await load();
+    }catch(err){ alert("冻结冲突决定失败："+err.message); btn.disabled = false; }
+  });
+
+  load();
+})();
 </script>
 </body>
 </html>

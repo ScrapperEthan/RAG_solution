@@ -19,6 +19,7 @@ from backend.answer.service import AnswerService
 from backend.config import load_config, resolve_path
 from backend.factory import build_embedder, build_llm, build_reranker, build_store
 from backend.pipeline import output_status
+from backend.reducer.conflicts import read_conflicts, record_decision
 from backend.retrieve.service import Retriever
 from backend.util import read_json, read_jsonl
 
@@ -74,6 +75,12 @@ class ChatRequest(BaseModel):
     module: Optional[str] = None  # legacy alias accepted from the frontend (handoff/33)
     answer_mode: str = "agentic"
     debug: bool = False
+
+
+class ConflictResolveRequest(BaseModel):
+    conflict_id: str
+    chosen_value: str
+    decided_by: str = "human"
 
 
 class DemoRuntime:
@@ -304,6 +311,7 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
     def health() -> Dict[str, Any]:
         eval_report_path = runtime.outputs_dir / "eval_report.json"
         cards = read_cards(runtime.outputs_dir)
+        conflicts = read_conflicts(runtime.outputs_dir)
         return {
             "status": "ok",
             "providers": config["providers"],
@@ -315,6 +323,10 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
             # answers still come from the synthetic corpus. See handoff/34.
             "cards_mode": cards_mode(cards),
             "cards_count": len(cards),
+            # Field-level conflicts awaiting human approval (see handoff/35). The
+            # approve page surfaces these in red so they are not missed.
+            "conflict_count": len(conflicts),
+            "open_conflict_count": sum(1 for c in conflicts if c.get("status") in {"open", "stale"}),
         }
 
     @app.get("/api/golden")
@@ -334,6 +346,28 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
         # Header lets a CLI self-check (curl -I) read demo/real without parsing
         # the whole array. Mirrors /api/health.cards_mode. See handoff/34.
         return JSONResponse(cards, headers={"X-Cards-Mode": cards_mode(cards)})
+
+    @app.get("/api/conflicts")
+    def conflicts() -> JSONResponse:
+        # Reviewed field-level conflicts (reduce auto-chose newest; LLM added a
+        # recommendation + reason). The approve page renders these red until a
+        # human freezes a decision via /api/conflicts/resolve. See handoff/35.
+        records = read_conflicts(runtime.outputs_dir)
+        open_count = sum(1 for c in records if c.get("status") in {"open", "stale"})
+        return JSONResponse(records, headers={"X-Open-Conflicts": str(open_count)})
+
+    @app.post("/api/conflicts/resolve")
+    def resolve_conflict(request: ConflictResolveRequest) -> Dict[str, Any]:
+        try:
+            updated = record_decision(
+                runtime.outputs_dir,
+                request.conflict_id,
+                request.chosen_value,
+                decided_by=request.decided_by or "human",
+            )
+        except KeyError:
+            raise HTTPException(status_code=404, detail=f"Unknown conflict_id: {request.conflict_id}")
+        return {"status": "ok", "conflict": updated}
 
     @app.get("/api/eval-report")
     def eval_report(allow_demo: bool = False) -> JSONResponse:

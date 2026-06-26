@@ -1,0 +1,14 @@
+{
+  "page_id": "9100050",
+  "title": "MDC Management Portal — 2026 refresh",
+  "space": "MDC",
+  "source_url": "https://confluence.local/x/MDC-Portal-2026-Refresh",
+  "owner": "mdc-team",
+  "labels": ["mdc", "portal"],
+  "domains": ["Q2 - Engagement", "MDC Onboarding"],
+  "tree_path": ["Q2 - Engagement", "MDC Onboarding", "MDC Management Portal Refresh"],
+  "update_at": "2026-06-25T10:00:00Z",
+  "confluence_version": 1,
+  "card_worthy": true,
+  "body_md": "## MDC Management Portal\n\nThe MDC Management Portal moved to a new landing page in the 2026 refresh.\n\n| Environment | Link | Notes |\n|---|---|---|\n| Portal link | https://mdc-portal-2026.example.local | new 2026 landing page |\n| UAT Access right | https://mdc-portal-uat.example.local/access | request via portal |\n| PROD Access right | https://mdc-portal-prod.example.local/access | needs line-manager approval |\n"
+}

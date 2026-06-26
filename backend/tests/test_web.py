@@ -85,6 +85,96 @@ class CardsModeTest(unittest.TestCase):
         self.assertEqual(cards_mode([real, demo]), "demo")
 
 
+class ConflictEndpointTest(unittest.TestCase):
+    """/api/conflicts feed + /api/conflicts/resolve write-back, isolated outputs."""
+
+    def setUp(self) -> None:
+        import yaml
+
+        from backend.adapters.llm_mock import MockLLM as _MockLLM
+        from backend.reducer.conflicts import ConflictReviewService
+        from backend.reducer.service import conflict_id
+        from backend.util import write_json, write_jsonl
+
+        self._tmp = tempfile.TemporaryDirectory()
+        self.outputs = Path(self._tmp.name) / "outputs"
+        self.outputs.mkdir(parents=True)
+        self.cid = conflict_id("C-1", "PN", "SLO")
+        write_jsonl(
+            self.outputs / "review_queue.jsonl",
+            [
+                {
+                    "queue_id": "RQ-factconflict-C-1-abc",
+                    "type": "fact-conflict",
+                    "canonical_id": "C-1",
+                    "field": "PN / SLO",
+                    "detail": "Subsection 'PN' label 'SLO' has 2 conflicting values; temporarily kept newest '8h'.",
+                    "options": ["4h (old, v4, 2026-01-01)", "8h (new, v8, 2026-02-01)"],
+                    "status": "open",
+                    "conflict_id": self.cid,
+                    "label": "SLO",
+                    "subsection": "PN",
+                    "auto_choice": "8h",
+                    "candidates": [
+                        {"value": "4h", "page_id": "old", "source_url": "u1", "confluence_version": 4, "update_at": "2026-01-01"},
+                        {"value": "8h", "page_id": "new", "source_url": "u2", "confluence_version": 8, "update_at": "2026-02-01"},
+                    ],
+                }
+            ],
+        )
+        write_json(
+            self.outputs / "cards_index.json",
+            [
+                {
+                    "canonical_id": "C-1",
+                    "canonical_name": "Payment Notify",
+                    "subsections": [{"name": "PN", "facts": [{"label": "SLO", "tier": "inline-value", "value": "8h"}], "sources": []}],
+                    "fields": [],
+                    "flags": ["subsection 'PN' label 'SLO' has conflicting values"],
+                }
+            ],
+        )
+        ConflictReviewService(self.outputs, _MockLLM()).run()
+
+        cfg_path = Path(self._tmp.name) / "config.yaml"
+        cfg_path.write_text(yaml.safe_dump({"paths": {"outputs_dir": str(self.outputs)}}), encoding="utf-8")
+        self.client = TestClient(create_app(str(cfg_path)))
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def test_conflicts_feed_carries_llm_review_and_open_header(self) -> None:
+        response = self.client.get("/api/conflicts")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get("X-Open-Conflicts"), "1")
+        records = response.json()
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["llm_review"]["risk"], "high")
+
+    def test_health_reports_open_conflict_count(self) -> None:
+        payload = self.client.get("/api/health").json()
+        self.assertEqual(payload["conflict_count"], 1)
+        self.assertEqual(payload["open_conflict_count"], 1)
+
+    def test_resolve_freezes_decision_and_rewrites_card(self) -> None:
+        response = self.client.post(
+            "/api/conflicts/resolve",
+            json={"conflict_id": self.cid, "chosen_value": "4h", "decided_by": "ethan"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["conflict"]["status"], "resolved")
+        self.assertEqual(self.client.get("/api/health").json()["open_conflict_count"], 0)
+        card = self.client.get("/api/cards").json()[0]
+        self.assertEqual(card["subsections"][0]["facts"][0]["value"], "4h")
+
+    def test_resolve_unknown_conflict_is_404(self) -> None:
+        response = self.client.post(
+            "/api/conflicts/resolve",
+            json={"conflict_id": "CF-nope", "chosen_value": "x"},
+        )
+        self.assertEqual(response.status_code, 404)
+
+
 class WebDemoTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
