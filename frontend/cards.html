@@ -16,6 +16,18 @@
       background: rgba(249,250,248,.92); backdrop-filter: blur(18px);
     }
     .cards-topbar .top-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+    /* Loud warning when the loaded cards are synthetic demo data (mirrors the
+       index page demo-banner). The sourceState box alone is too easy to miss. */
+    .cards-demo-banner {
+      position: sticky; top: 76px; z-index: 19; display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline;
+      padding: 12px 36px; color: #fff; font-weight: 700; font-size: 13px;
+      border-bottom: 3px solid #7a2018;
+      background: repeating-linear-gradient(45deg, #b5473c 0, #b5473c 16px, #9e3b32 16px, #9e3b32 32px);
+      box-shadow: 0 6px 22px rgba(122,32,24,.28);
+    }
+    .cards-demo-banner strong { font-size: 14px; }
+    .cards-demo-banner span { font-weight: 600; opacity: .96; }
+    .cards-demo-banner code { padding: 1px 5px; border-radius: 5px; background: rgba(255,255,255,.22); font-size: 11px; }
     .nav-link, .soft-button, .copy-button {
       border: 1px solid var(--line); border-radius: 9px; color: var(--ink); background: #fff;
       font-weight: 700; text-decoration: none;
@@ -211,10 +223,11 @@
     <div class="top-actions">
       <input id="cardsFile" type="file" accept=".json,application/json" hidden />
       <button id="loadCardsBtn" class="soft-button" type="button">载入 cards_index.json</button>
-      <button id="sampleBtn" class="soft-button" type="button">打开请假示例</button>
       <a class="nav-link" href="./index.html">返回问答</a>
     </div>
   </header>
+
+  <div id="demoCardsBanner" class="cards-demo-banner" hidden></div>
 
   <main class="cards-main">
     <section class="cards-hero">
@@ -700,6 +713,31 @@ const arr = value => Array.isArray(value) ? value.filter(v => v !== null && v !=
 const esc = value => String(value ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const text = value => value === null || value === undefined || value === "" ? "—" : String(value);
 const norm = value => String(value ?? "").trim().toLowerCase();
+// Synthetic-corpus fingerprints — must mirror backend/web.py cards_mode() and
+// handoff/34. Any single hit means these are demo cards, not real intranet data.
+const DEMO_CARD_HOSTS = ["confluence.local", "example.test"];
+const DEMO_CARD_PAGE_PREFIX = "910000";
+const DEMO_CARD_ID_PREFIX = "C-DEMO";
+const cardSources = card => [
+  ...arr(card?.fields).flatMap(f => arr(f?.sources)),
+  ...arr(card?.subsections).flatMap(s => [...arr(s?.sources), ...arr(s?.facts).flatMap(fact => arr(fact?.sources))]),
+];
+const cardIsDemo = card => {
+  if (String(card?.canonical_id ?? "").startsWith(DEMO_CARD_ID_PREFIX)) return true;
+  return cardSources(card).some(s =>
+    String(s?.page_id ?? "").startsWith(DEMO_CARD_PAGE_PREFIX) ||
+    DEMO_CARD_HOSTS.some(host => String(s?.source_url ?? "").includes(host))
+  );
+};
+const cardsAreDemo = cards => Array.isArray(cards) && cards.some(cardIsDemo);
+function renderDemoCardsBanner(demo) {
+  const banner = el("demoCardsBanner");
+  if (!banner) return;
+  banner.hidden = !demo;
+  banner.innerHTML = demo
+    ? `<strong>⚠ 脱敏 DEMO 卡片 · 非真实内网数据</strong><span>当前卡片命中 demo 指纹（<code>confluence.local</code> / <code>example.test</code> / 9100001-3）。接入真实卡片与自检步骤见 handoff/34。</span>`
+    : "";
+}
 const DEFAULT_API_BASES = ["http://127.0.0.1:8765", "http://localhost:8765"];
 const isRagFallbackResult = result =>
   String(result?.execution?.path || "").endsWith("-then-rag-fallback") ||
@@ -751,7 +789,6 @@ async function apiFetch(path, options = {}) {
 
 el("askForm").addEventListener("submit", submitQuestion);
 el("searchInput").addEventListener("input", renderCardList);
-el("sampleBtn").addEventListener("click", () => useSample(true));
 el("loadCardsBtn").addEventListener("click", () => el("cardsFile").click());
 el("cardsFile").addEventListener("change", loadLocalCards);
 el("renderJsonBtn").addEventListener("click", renderPastedResult);
@@ -789,15 +826,18 @@ async function initialize() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const cards = await response.json();
     if (!Array.isArray(cards) || cards.length === 0) {
-      useSample(false);
-      setSourceState(`<strong>/api/cards</strong> 返回空（流水线还没产出 cards_index.json）。已回退到<strong>脱敏请假示例</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
+      setCards([], false);
+      setSourceState(`<strong>/api/cards</strong> 返回空（流水线还没产出 cards_index.json）。<strong>不回退脱敏示例</strong>——可点击“载入 cards_index.json”读取真实文件，或先在内网产卡（见 handoff/34）。`, true);
       return;
     }
     setCards(cards, false);
-    setSourceState(`已从 <strong>/api/cards</strong> 读取 ${state.cards.length} 张卡（源文件 outputs/cards_index.json）。`);
+    setSourceState(cardsAreDemo(cards)
+      ? `已从 <strong>/api/cards</strong> 读取 ${state.cards.length} 张卡，但内容命中<strong>脱敏 demo 指纹</strong>（confluence.local / example.test / 9100001-3）——这些不是真实内网卡片。接入真实卡片见 handoff/34。`
+      : `已从 <strong>/api/cards</strong> 读取 ${state.cards.length} 张真实卡（源文件 outputs/cards_index.json）。`,
+      cardsAreDemo(cards));
   } catch (error) {
-    useSample(false);
-    setSourceState(`无法自动读取 <strong>/api/cards</strong>（${esc(error.message)}）。已回退到<strong>脱敏请假示例</strong>；也可点击“载入 cards_index.json”读取真实文件。`, true);
+    setCards([], false);
+    setSourceState(`无法读取 <strong>/api/cards</strong>（${esc(error.message)}）。<strong>不回退脱敏示例</strong>——请确认后端已启动；也可点击“载入 cards_index.json”读取真实文件。`, true);
   }
 }
 
@@ -808,6 +848,7 @@ function setCards(cards, sample) {
   state.selectedId = initialCardId(cards) || cards[0]?.canonical_id || null;
   state.result = null;
   state.streamAnswer = "";
+  renderDemoCardsBanner(sample || cardsAreDemo(cards));
   renderAll();
 }
 
@@ -1261,9 +1302,10 @@ async function submitQuestion(event) {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     await readNdjson(response);
   } catch (error) {
-    useSample(false);
-    applyResult(sampleResult(), true);
-    setAskMessage(`API 不可用（${error.message}），已回退并渲染脱敏请假示例路径。`, true);
+    // Never silently swap real cards for mock on a transient request failure —
+    // that is the "connected to backend yet still showing mock" trap. Keep the
+    // real cards/answer state intact and surface the error instead. (handoff/34)
+    setAskMessage(`请求 /api/chat/stream 失败（${error.message}）。已保留当前真实卡片，未回退脱敏示例——请确认后端在线后重试。`, true);
   } finally {
     state.busy = false;
     el("askBtn").disabled = false;

@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 
 from backend.adapters.llm_mock import MockLLM
 from backend.answer.service import AnswerService, should_refuse
-from backend.web import create_app, stream_chunks
+from backend.web import card_is_demo, cards_mode, create_app, stream_chunks
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -50,6 +50,41 @@ class AnswerRefusalTest(unittest.TestCase):
         self.assertFalse(answered["answer"].startswith("NO_ANSWER"))
 
 
+class CardsModeTest(unittest.TestCase):
+    """Demo-corpus detection so a real backend can never silently serve mock cards."""
+
+    REAL_SOURCE = {"page_id": "557281", "source_url": "https://confluence.corp.acme.com/x/abc"}
+
+    def test_empty_card_set_is_empty(self) -> None:
+        self.assertEqual(cards_mode([]), "empty")
+
+    def test_real_card_has_no_demo_fingerprint(self) -> None:
+        real = {"canonical_id": "C-0001", "subsections": [{"facts": [{"sources": [self.REAL_SOURCE]}]}]}
+        self.assertFalse(card_is_demo(real))
+        self.assertEqual(cards_mode([real]), "real")
+
+    def test_confluence_local_host_is_demo(self) -> None:
+        card = {"canonical_id": "C-0001", "fields": [{"sources": [{"page_id": "557281", "source_url": "https://confluence.local/x/abc"}]}]}
+        self.assertTrue(card_is_demo(card))
+        self.assertEqual(cards_mode([card]), "demo")
+
+    def test_example_test_host_is_demo(self) -> None:
+        card = {"canonical_id": "C-0001", "subsections": [{"sources": [{"source_url": "https://example.test/c-0001"}]}]}
+        self.assertTrue(card_is_demo(card))
+
+    def test_synthetic_page_id_is_demo(self) -> None:
+        card = {"canonical_id": "C-0001", "subsections": [{"facts": [{"sources": [{"page_id": "9100001", "source_url": "https://confluence.corp.acme.com/x"}]}]}]}
+        self.assertTrue(card_is_demo(card))
+
+    def test_c_demo_canonical_id_is_demo(self) -> None:
+        self.assertTrue(card_is_demo({"canonical_id": "C-DEMO-LEAVE-RULES"}))
+
+    def test_one_demo_card_taints_the_whole_set(self) -> None:
+        real = {"canonical_id": "C-0002", "fields": [{"sources": [self.REAL_SOURCE]}]}
+        demo = {"canonical_id": "C-DEMO-X"}
+        self.assertEqual(cards_mode([real, demo]), "demo")
+
+
 class WebDemoTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -61,6 +96,16 @@ class WebDemoTest(unittest.TestCase):
             text=True,
         )
         cls.client = TestClient(create_app())
+
+    def test_health_flags_demo_cards(self) -> None:
+        payload = self.client.get("/api/health").json()
+        self.assertEqual(payload["cards_mode"], "demo")
+        self.assertGreater(payload["cards_count"], 0)
+
+    def test_cards_endpoint_advertises_demo_mode_header(self) -> None:
+        response = self.client.get("/api/cards")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get("X-Cards-Mode"), "demo")
 
     def test_golden_endpoint_returns_questions_and_modules(self) -> None:
         response = self.client.get("/api/golden")

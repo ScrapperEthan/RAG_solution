@@ -76,6 +76,22 @@ class FrontendClarityTest(unittest.TestCase):
             self.assertIn(copy, OFFLINE_DEMO)
         self.assertIn(".system-status.is-demo", STYLE)
 
+    def test_demo_data_is_loudly_flagged_on_both_pages(self) -> None:
+        # Index page: the loud banner must fire on demo CARDS, not only on
+        # mock/hash providers — that is the intranet trap (real providers + a
+        # leftover synthetic cards_index.json).
+        self.assertIn('state.health?.cards_mode === "demo"', APP)
+        self.assertIn("DEMO / 合成数据", APP)
+        self.assertIn('"demo-banner is-loud"', APP)
+        self.assertIn(".demo-banner.is-loud", STYLE)
+        # Cards page: dedicated loud banner with the same fingerprints mirrored
+        # client-side (cards.html may not embed external <script src=>).
+        self.assertIn('id="demoCardsBanner"', CARDS)
+        self.assertIn("cardsAreDemo", CARDS)
+        self.assertIn("脱敏 DEMO 卡片", CARDS)
+        for marker in ("confluence.local", "example.test", "C-DEMO"):
+            self.assertIn(marker, CARDS)
+
     def test_offline_demo_moves_slowly_and_highlights_the_active_step(self) -> None:
         self.assertIn("const offlineDemoTiming", APP)
         self.assertIn("stepHold: 1600", APP)

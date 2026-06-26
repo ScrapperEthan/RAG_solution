@@ -234,6 +234,61 @@ def report_mode(path: Path) -> str:
     return "demo" if "hash" in embedding_model or judge == "mock" else "real"
 
 
+# Fingerprints of the synthetic/demo corpus. The fixture corpus under
+# fixtures/confluence uses these on purpose: page ids 9100001-3, the fake hosts
+# confluence.local / example.test, and the C-DEMO-* sample card ids. Real
+# intranet cards carry NONE of them, so any single hit means the served cards
+# are still demo data even when llm/embedder providers look real. Keep this in
+# sync with handoff/34 and fixtures/README.md.
+DEMO_CARD_PAGE_PREFIX = "910000"
+DEMO_CARD_HOSTS = ("confluence.local", "example.test")
+DEMO_CARD_ID_PREFIX = "C-DEMO"
+
+
+def _iter_card_sources(card: Dict[str, Any]) -> Iterable[Dict[str, Any]]:
+    for field in card.get("fields", []) or []:
+        for source in field.get("sources", []) or []:
+            yield source
+    for sub in card.get("subsections", []) or []:
+        for source in sub.get("sources", []) or []:
+            yield source
+        for fact in sub.get("facts", []) or []:
+            for source in fact.get("sources", []) or []:
+                yield source
+
+
+def card_is_demo(card: Dict[str, Any]) -> bool:
+    """True if a single card carries any synthetic-corpus fingerprint."""
+    if not isinstance(card, dict):
+        return False
+    if str(card.get("canonical_id", "")).startswith(DEMO_CARD_ID_PREFIX):
+        return True
+    for source in _iter_card_sources(card):
+        if str(source.get("page_id", "")).startswith(DEMO_CARD_PAGE_PREFIX):
+            return True
+        url = str(source.get("source_url", ""))
+        if any(host in url for host in DEMO_CARD_HOSTS):
+            return True
+    return False
+
+
+def cards_mode(cards: List[Dict[str, Any]]) -> str:
+    """Classify the served card set as ``empty`` / ``demo`` / ``real``.
+
+    Conservative on purpose: one demo fingerprint anywhere flips the whole set
+    to ``demo`` so a half-synthetic corpus can never masquerade as real.
+    """
+    if not cards:
+        return "empty"
+    return "demo" if any(card_is_demo(card) for card in cards) else "real"
+
+
+def read_cards(outputs_dir: Path) -> List[Dict[str, Any]]:
+    path = outputs_dir / "cards_index.json"
+    cards = read_json(path) if path.exists() else []
+    return cards if isinstance(cards, list) else []
+
+
 def create_app(config_path: str = "config.yaml") -> FastAPI:
     config = load_config(config_path)
     runtime = DemoRuntime(config)
@@ -248,12 +303,18 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
     @app.get("/api/health")
     def health() -> Dict[str, Any]:
         eval_report_path = runtime.outputs_dir / "eval_report.json"
+        cards = read_cards(runtime.outputs_dir)
         return {
             "status": "ok",
             "providers": config["providers"],
             "outputs": output_status(runtime.outputs_dir),
             "golden_size": len(runtime.golden_items),
             "eval_report_mode": report_mode(eval_report_path),
+            # Whether the served cards are synthetic demo data. "demo" fires even
+            # when llm/embedder providers are real, so the frontend can warn that
+            # answers still come from the synthetic corpus. See handoff/34.
+            "cards_mode": cards_mode(cards),
+            "cards_count": len(cards),
         }
 
     @app.get("/api/golden")
@@ -270,7 +331,9 @@ def create_app(config_path: str = "config.yaml") -> FastAPI:
         for card in cards:
             if isinstance(card, dict) and "module" not in card:
                 card["module"] = card.get("domains", [])  # legacy alias for frontend (handoff/33)
-        return JSONResponse(cards)
+        # Header lets a CLI self-check (curl -I) read demo/real without parsing
+        # the whole array. Mirrors /api/health.cards_mode. See handoff/34.
+        return JSONResponse(cards, headers={"X-Cards-Mode": cards_mode(cards)})
 
     @app.get("/api/eval-report")
     def eval_report(allow_demo: bool = False) -> JSONResponse:

@@ -55,6 +55,22 @@ button:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3p
 .backend-switch:hover { border-color: var(--green); color: var(--green); }
 .backend-switch:disabled { cursor: wait; opacity: .62; }
 .demo-banner { display: flex; gap: 14px; padding: 10px 36px; color: #795010; background: var(--gold-soft); border-bottom: 1px solid #ead8b4; font-size: 12px; }
+/* Loud, impossible-to-miss warning: the demo data is realistic enough that a
+   thin gold strip got ignored after going intranet. Sticky red/amber striped
+   bar with a pulse so "this is NOT real data" can never be mistaken. */
+.demo-banner.is-loud {
+  position: sticky; top: 56px; z-index: 9; flex-wrap: wrap; align-items: baseline;
+  padding: 13px 36px; color: #fff; font-size: 13px; font-weight: 700;
+  border-bottom: 3px solid #7a2018;
+  background: repeating-linear-gradient(45deg, #b5473c 0, #b5473c 16px, #9e3b32 16px, #9e3b32 32px);
+  box-shadow: 0 6px 22px rgba(122, 32, 24, .28);
+  animation: demoBannerPulse 2.2s ease-in-out infinite;
+}
+.demo-banner.is-loud strong { font-size: 14px; letter-spacing: .01em; }
+.demo-banner.is-loud span { font-weight: 600; opacity: .96; }
+.demo-banner.is-loud code { padding: 1px 5px; border-radius: 5px; background: rgba(255, 255, 255, .22); font-size: 11px; }
+@keyframes demoBannerPulse { 0%, 100% { box-shadow: 0 6px 22px rgba(122, 32, 24, .28); } 50% { box-shadow: 0 6px 30px rgba(181, 71, 60, .55); } }
+@media (prefers-reduced-motion: reduce) { .demo-banner.is-loud { animation: none; } }
 
 main { width: min(1480px, calc(100% - 48px)); margin: 0 auto 54px; }
 .hero { display: flex; justify-content: space-between; align-items: end; gap: 30px; padding: 52px 6px 30px; }

@@ -51,10 +51,25 @@ class CardsKnowledgeMapTest(unittest.TestCase):
         for old_copy in ("Sample Service Support", "Sample Runbook", "Sample Escalation"):
             self.assertNotIn(old_copy, CARDS)
         self.assertIn("const SAMPLE_CARDS = [", CARDS)
+        # The offline sample is now reachable ONLY by the explicit ?sample=1
+        # opt-in (loudly flagged), never as an automatic fallback.
         self.assertIn("setCards(structuredClone(SAMPLE_CARDS), true);", CARDS)
-        self.assertIn("if (!Array.isArray(cards) || cards.length === 0)", CARDS)
-        self.assertIn("useSample(false);", CARDS)
+        self.assertIn('get("sample") === "1"', CARDS)
         self.assertNotIn("hsbc", CARDS.lower())
+
+    def test_unavailable_cards_never_silently_fall_back_to_mock(self) -> None:
+        # The core "connected to backend yet still showing mock" fix: an empty
+        # or failed /api/cards, and a failed /api/chat/stream, must NOT swap the
+        # real cards for the offline sample. They show an honest empty/error
+        # state instead. See handoff/34.
+        self.assertIn("if (!Array.isArray(cards) || cards.length === 0)", CARDS)
+        # Every silent fallback went through useSample(false); none remain.
+        # sampleResult()/applyResult survive only inside useSample for ?sample=1.
+        self.assertNotIn("useSample(false)", CARDS)
+        self.assertIn("setCards([], false);", CARDS)
+        self.assertIn("不回退脱敏示例", CARDS)
+        # The footgun one-click "load sample" button is gone too.
+        self.assertNotIn('id="sampleBtn"', CARDS)
 
     def test_clicking_map_node_returns_to_structure_and_opens_card(self) -> None:
         self.assertIn('data-map-card-id="${esc(node.id)}"', CARDS)

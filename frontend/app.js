@@ -938,19 +938,29 @@ function renderDemoBanner() {
   const banner = el("demoBanner");
   if (state.offlineDemo) {
     banner.hidden = false;
+    banner.className = "demo-banner is-loud";
     const retryCopy = state.backendPreference === "offline"
       ? "已手动停留在内置示例；点击顶部“连接真实后端”可立即重试。"
       : "正在后台自动探测真实 API；后端启动后会自动切换，也可点击顶部“连接真实后端”立即重试。";
-    banner.innerHTML = `<strong>脱敏离线演示</strong><span>${retryCopy} 实时问答、回答路径和评估看板均可直接操作。</span>`;
+    banner.innerHTML = `<strong>⚠ 脱敏离线演示 · 非真实数据</strong><span>${retryCopy} 实时问答、回答路径和评估看板均可直接操作。</span>`;
     return;
   }
   const providers = state.health?.providers || {};
-  const demoProvider = providers.llm === "mock" || providers.embedder === "hash";
-  const demo = demoProvider || isDemoReport(state.report);
+  const mockProvider = providers.llm === "mock" || providers.embedder === "hash";
+  const demoCards = state.health?.cards_mode === "demo";
+  const demoReport = !mockProvider && !demoCards && isDemoReport(state.report);
+  const demo = mockProvider || demoCards || demoReport;
   banner.hidden = !demo;
-  banner.innerHTML = demo
-    ? `<strong>DEMO / synthetic data</strong><span>检测到 mock/hash provider。评估看板不会自动加载 Demo 报告。</span>`
-    : "";
+  banner.className = demo ? "demo-banner is-loud" : "demo-banner";
+  if (!demo) {
+    banner.innerHTML = "";
+    return;
+  }
+  const reasons = [];
+  if (mockProvider) reasons.push(`mock/hash provider（llm=${providers.llm || "?"} · embedder=${providers.embedder || "?"}）`);
+  if (demoCards) reasons.push("卡片库是脱敏合成语料（cards_index.json 命中 demo 指纹）");
+  if (demoReport) reasons.push("评估报告为 mock judge / hash embedding");
+  banner.innerHTML = `<strong>⚠ DEMO / 合成数据 · 非真实内网结果</strong><span>检测到：${reasons.join("；")}。请勿用于汇报；判定依据见 <code>/api/health</code> 的 <code>cards_mode</code> 字段与 handoff/34。</span>`;
 }
 
 function isDemoReport(payload) {
